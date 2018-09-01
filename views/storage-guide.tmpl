@@ -7,6 +7,8 @@
 {% set app_permission_link = "[Dashboard > Data > Settings > User Account](/dashboard/storage.html?appid={{appid}}#/storage/conf)" %}
 {% set query_result_limit = "A query returns 100 records by default. You can change the number of  results by setting limit. See [Limiting Query Results](#limiting-query-results) for more info." %}
 
+{# <base target="_blank" href="https://leancloud.cn/"> #}
+
 # Cloud Storage Guide
 
 Storing data on LeanCloud and getting it back is what our JavaScript SDK is good at. 
@@ -84,20 +86,22 @@ AV.init('APP_ID', 'APP_KEY');
 
 Check out our Github repo https://github.com/leancloud/javascript-sdk/releases for more releases and file formats.
 
-If you are planning to use our JavaScript SDK inside Android WebView, please check out [WebView](#WebView) section of this guide.
+If you are planning to use our JavaScript SDK inside Android WebView, please check out [WebView](#webview) section of this guide.
 
-If you rely on features of [LiveQuery](livequery.html), include the following npm module instead: 
+<a id="setup-livequery" name="setup-livequery"></a>If you rely on features of [Live Queries](#live-queries), include the following npm module instead: 
 
 ```js
-// no need to require 'leancloud-storage' package again
+// no need to require 'leancloud-storage' package if the following line is present
 var AV = require('leancloud-storage/live-query');
 ```
 Or loading it using `<script>` tag: 
 
 ```html
-<!-- no need to load av-min.js again -->
+<!-- no need to load av-min.js if the following script is present -->
 <script src="//cdn.jsdelivr.net/npm/leancloud-storage@{{jssdkversion}}/dist/av-live-query-min.js"></script>
 ```
+
+In addition, you need to go to your app's [LeanCloud Dashboard > Storage > Settings page](/dashboard/storage.html?appid={{appid}}#/storage/conf), and check the **Enable LiveQuery** option under the **Misc** section before you can expect it to work.
 
 ### Initializing Your Application
 
@@ -648,7 +652,7 @@ A simple rule of thumb for choosing between Array or Join Table is to look at wh
 
 If there are less than 100 objects, go with Array. But if you want to attach any metadata to the relationship between two entities or apply some kind of sorting on either side, then, the Join Table will be your best bet.
 
-> Modeling relationships in data is a hard subject, in general. We have written a dedicated article to address [Data Modeling](data-modeling.html) in greater detail, which we recommend you peruse.
+> Modeling relationships in data is a hard subject, in general. We have written a dedicated article to address [Data Modeling](data-modeling.html) in greater detail, which we recommend perusing.
 
 ## Queries
 
@@ -782,17 +786,17 @@ query.containedIn('priority', [1, 2]);
 // ----------------
 // vs. multiple queries
 // ----------------
-var priority1 = new AV.Query('Todo');
-priority1.equalTo('priority', 1);
+var priorityOne = new AV.Query('Todo');
+priorityOne.equalTo('priority', 1);
 
-var priority2 = new AV.Query('Todo');
-priority2.equalTo('priority', 2);
+var priorityTwo = new AV.Query('Todo');
+priorityTwo.equalTo('priority', 2);
 
-var priority1Or2 = AV.Query.or(
-  priority1,
-  priority2
+var priorityOneOrTwo = AV.Query.or(
+  priorityOne,
+  priorityTwo
 );
-priority1Or2.find().then(function(results){
+priorityOneOrTwo.find().then(function(results){
 
 })
 // kind of verbose :(
@@ -1122,7 +1126,7 @@ query.find().then(function(results){
 {% endblock %}
 
 {# ### Performance
-
+ 
 影响查询性能的因素很多。特别是当查询结果的数量超过 10 万，查询性能可能会显著下降或出现瓶颈。以下列举一些容易降低性能的查询方式，开发者可以据此进行有针对性的调整和优化，或尽量避免使用。
 
 - 不等于和不包含查询（无法使用索引）
@@ -1131,6 +1135,160 @@ query.find().then(function(results){
 - skip 跳过较多的行数（相当于需要先查出被跳过的那些行）
 - 无索引的排序（另外除非复合索引同时覆盖了查询和排序，否则只有其中一个能使用索引）
 - 无索引的查询（另外除非复合索引同时覆盖了所有条件，否则未覆盖到的条件无法使用索引，如果未覆盖的条件区分度较低将会扫描较多的数据） #}
+
+## Live Queries
+
+As the name suggests, a live query derives from a normal [`AV.Query`](#queries) but with enhanced capability. It allows you to automatically synchronize data changes from one client to other clients without writing complex code, making it suitable for apps that need real-time support.
+
+Suppose you are building an app that allows multiple users to edit the same file at the same time. `AV.Query` would not be an ideal tool since it is based on a pull model and you can not know when to query from the cloud to get the updates.
+
+To solve this problem, we introduce LiveQuery. This tool allows you to subscribe to an `AV.Query` you are interested in. Once subscribed, the cloud will notify clients by generating the event messages whenever an `AV.Object` that matches the `AV.Query` is created or updated, in real-time.
+
+Behind the scene, we use WebSocket connections to communicate with the cloud and maintain the subscription status of clients. We think in most cases it isn't necessary to deal with the WebSocket connection directly. Thus, we developed a simple API to let you focus on your own business logic.
+
+Starting from Android SDK v4.2.0, JavaScript SDK v3.0.0 and iOS SDK v5.0.0, live queries is supported with [additional setup](#setup-livequery).
+
+LiveQuery has both free and paid plans. Check out [the pricing page](https://blog.leancloud.cn/6295/) to learn about your free quota and options.
+
+### Initializing LiveQuery
+
+To use LiveQuery, you first need to include its dependencies in your app's project. Please refer to the [SDK Setup](#setup-livequery) section for more instructions.
+
+### Demo
+
+A demo is worth a thousand words. We developed a WeChat mini-program and a web application with the same functionalities, aiming to demonstrate how data gets updated on both ends in real-time. 
+
+{# 2017-06-09 this video is over-sized, put it on qiniu instead of hosting it locally for better performance #}
+<div style="border:2px solid #ccc; margin-bottom:1em;">
+  <video src="https://lc-lhzo7z96.cn-n1.lcfile.com/1496988080458" controls autoplay muted preload="auto" width="100%" height="100%" >
+HTML5 Video is required for this demo, which your browser doesn't support.
+  </video>
+</div>
+
+Please follow the steps in the exact order listed below. *Otherwise you may not be able to log in to the web version of LeanTodo for testing*.
+
+1. Open WeChat, scan the QR code below to install the "LeanTodo" mini-program.<br/>
+  <img src="images/leantodo-weapp-qr.png" width="150" height="150"> 
+1. Open LeanTodo mini-program, click on **Settings** > **Account Settings** on the bottom left corner of the screen, then update your username and password and remember it.
+1. In your web browser, go to <https://leancloud.github.io/leantodo-vue/> and sign in with the account you just set in the previous step.
+1. Enter some data and observe how changes get reflected in the mini-program.
+
+> You may also be interested in watching the LeanCloud Open Course video - *[LiveQuery (Chinese)](http://www.bilibili.com/video/av11291992/)* to make yourself familiar with the basics of the tool.
+
+### Creating a Subscription
+
+To make a query *live*, you just create a normal `AV.Query` object, put conditions on it if there are, and then subscribe to it.
+
+```js
+var query = new AV.Query('Employee');
+query.subscribe().then(function(liveQuery){
+  // query has got a subscription and now becomes live
+});
+```
+
+After that, you can use it to receive the updates of the related `AV.Object`. For example, if someone creates an `Employee` object whose `first_name` field is *Kelly*, then you can get the new `Employee` object like this:
+
+```js
+var query = new AV.Query('Employee');
+query.subscribe().then(function(liveQuery){
+  liveQuery.on('create', function(newEmployee){
+    console.log(newEmployee.get('first_name')); // This should output Kelly
+  });
+});
+```
+
+If someone updates this `Employee` object like changing its `team` to *Finance*, then you can get the `Employee` object like this:
+
+```js
+liveQuery.on('update', function(updatedEmployee, updatedKeys){
+  console.log(updatedEmployee.get('team')); // This should output Finance
+});
+```
+
+### Event Handling
+
+We define several types of events you'll get through a live query object:
+
+- `create`
+- `update`
+- `enter`
+- `leave`
+- `delete`
+- `login`
+
+#### `create` Event
+
+```js
+liveQuery.on('create', function(obj){
+  console.log('object created');
+});
+```
+
+When a new `AV.Object` is created and it fulfills the `AV.Query` you subscribe, you'll get this event. The obj is the `AV.Object` which was created.
+
+#### `update` Event
+
+```js
+liveQuery.on('create', function(obj, updatedKeys){
+  console.log('object updated');
+});
+```
+When an existing `AV.Object` which fulfills the `AV.Query` you subscribe is updated (The `AV.Object` fulfills the `AV.Query` before and after changes), you'll get this event. The obj is the `AV.Object` which was updated. Its content is the latest value of the `AV.Object`.
+
+#### `enter` Event
+
+```js
+liveQuery.on('enter', function(obj, updatedKeys){
+  console.log('object entered');
+});
+```
+
+When an existing AV.Object's old value does not fulfill the `AV.Query` but its new value fulfills the `AV.Query`, you'll get this event. The obj is the `AV.Object` which enters the `AV.Query`. Its content is the latest value of the `AV.Object`.
+
+{{ docs.note("There is a clear distinction between a `create` event and an `enter` event. If the object already exists and now matches the query's conditions, the system emits an `enter` event. If not, it's a `create` event.") }}
+
+#### `leave` Event
+
+```js
+liveQuery.on('leave', function(obj, updatedKeys){
+  console.log('object left');
+});
+```
+
+When an existing AV.Object's old value fulfills the `AV.Query` but its new value doesn't fulfill the `AV.Query`, you'll get this event. The obj is the `AV.Object` which leaves the `AV.Query`. Its content is the latest value of the `AV.Object`.
+
+#### `delete` Event
+
+```js
+liveQuery.on('delete', function(obj, updatedKeys){
+  console.log('object deleted');
+});
+```
+
+When an existing `AV.Object` which fulfills the `AV.Query` is deleted, you'll get this event. The obj is the `AV.Object` which is deleted.
+
+#### `login` Event
+
+```js
+liveQuery.on('login', function(obj){
+  console.log('user logged in');
+});
+```
+
+When an `AV.User` successfully logs in to your app, you'll get this event. The obj is the `AV.User` which is logged in.
+
+
+### Unsubscribe
+
+If you would like to stop receiving events from a `AV.Query`, you can just unsubscribe the subscription. After that, you won't get any events from the subscription object.
+
+```js
+liveQuery.unsubscribe();
+```
+
+### Caveats
+
+Given the real-time feature of LiveQuery, developers may find it tempting to use it for instant messaging. As LiveQuery is neither designed nor optimized for completing such tasks, we discourage such use of this tool, let alone there will be additional cost for saving message history and rising challenges of code maintenance. We recommend using [our real-time messaging solution](https://leancloud.cn/rtm/) for this scenario.
 
 ## Files
 
@@ -1220,10 +1378,10 @@ file.save().then(function(file) {
   // The file either could not be read, or could not be saved to LeanCloud.
 });
 ```
-{% call docs.noteWrap() %}
-When a file is successfully saved to the cloud, it can be found in the `_File` class, but cannot be modified thereafter by any means. If something about it must be changed, you need to upload the file again with correct data, and use the new id and the new URL returned to reference it.
-{% endcall %}
 
+{% call docs.noteWrap() %}
+When a file is successfully saved to the cloud, it can be found in the `_File` class, but cannot be modified thereafter by any means. If something about it must be changed, you need to upload the file again with correct data, and use the new id and the new URL returned from the cloud.
+{% endcall %}
 
 Finally, after the save completes, you can associate an `AV.File` with an `AV.Object` just like any other piece of data:
 
@@ -1354,15 +1512,15 @@ file.destroy().then(function (success) {
 
 ### Enabling HTTPS 
 
-If you demand that the files saved to the cloud should be accessed over HTTPS, there is a switch named "Enable HTTPS domain" that serves the purpose in [your LeanCloud Dashboard storage settings page](/dashboard/storage.html?appid={{appid}}#/storage/conf). 
+If you demand that the files saved to the cloud should be accessed over HTTPS, there is a setting option named "Enable HTTPS domain" in [your LeanCloud Dashboard storage settings page](/dashboard/storage.html?appid={{appid}}#/storage/conf) that can, once enabled, instruct LeanCloud APIs to return HTTPS URLs where applicable. Subsequently, the cloud will automatically convert all the URLs in your app's `_File` Class to use HTTPS pattern.
 
-However, **there is no free quota for HTTPS traffic.** When the option is being checked, you will be prompted by the confirmation window stating how much it costs per GB downloaded.
+As use of HTTPS is not free, you will be prompted by the confirmation window stating how much it costs per GB downloaded upon checking this option.
 
-When this option is switched on, the URLs of existing files in the `_File` Class will be automatically converted to use HTTPS. But when it is switched off, existing HTTPS URLs will NOT be converted back to their HTTP equivalents.
+{% macro alertWrap() %}
+However, when you turn off the "Enable HTTPS domain" option, the cloud will NOT attempt to convert HTTPS URLs in the `_File` Class back to their HTTP equivalents. Your files can be accessed over both HTTP and HTTPS. So please be aware that you may still be charged for any HTTPS traffic incurred between your app and LeanCloud thereafter.
+{% endmacro %}
 
-{{ docs.alert("Please keep in mind that **Enable HTTPS domain** only determines whether the URL returned by the LeanCloud APIs starts with HTTPS or not. Nonetheless you still can be charged for any HTTPS requests your app sends to LeanCloud even when this option is left unchecked.") }}
-
-<a href="rtm-http-policy"></a>LeanCloud RTM (Real-time Messaging) Service also leverages AVFiles to store images and audio files that come with chatting. The URLs referencing those files are kept in the chat history, and will NOT be automatically converted to HTTPS ones after you enable HTTPS domain. Only files in the new chats will take HTTPS.
+<a href="rtm-http-policy"></a>LeanCloud RTM (Real-time Messaging) Service also leverages AV.Files to store images and audio files that are sent through messages. The URLs referencing those files are kept in the message history, and will NOT be automatically converted to HTTPS ones after HTTPS domain is enabled. Only files in the new messages will take HTTPS.
 
 {# #### HTTP Support for iOS 9 and Up
 
@@ -1396,7 +1554,9 @@ Or go to your project's **Target** panel, open the **Info** tab and modify setti
 
 ### Setting Up Custom Domain
 
-By default AV.Files use a public domain for all the apps on LeanCloud so that files can be conveniently accessed by everyone. Yet under the regulation of the country's Cybersecurity Law we cannot promise that the public domain can be accessible anytime. Therefore, we strongly advise you set up your own domain for accessing your own files so that your app's experience will not be compromised when the public domain becomes unstable somehow. The domain configuration is located in [your LeanCloud Dashboard storage settings page](/dashboard/storage.html?appid={{appid}}#/storage/conf).
+By default AV.Files use a public domain for all the apps on LeanCloud so that files can be conveniently accessed by everyone.
+
+Yet under the regulation of the country's Cybersecurity Law we cannot guarantee that the public domain can be at your service all the time without interruption. To minimize the risk and impact such service interruption may cause, we strongly advise you transition to using your own domain for file accessing as soon as possible. The domain configuration can be found in your app's [LeanCloud Dashboard > Storage > Settings](/dashboard/storage.html?appid={{appid}}#/storage/conf) page.
 
 ### CDN Support
 
@@ -2067,7 +2227,7 @@ By default, `authData` won't be included in the response body, nor will it be re
 
 To ensure that an `AV.User` is linked with one service account only once, a unique index needs to be created for the `authData.<SERVICE_NAME>.uid` key in the `_User` class.
 
-> Please note that out of performance concerns,  you are not permitted to create any new indexes in the Data Browser for a class with more than 10,000 records. However, existing indexes will continue to take effect on records beyond 10K. If your app is on a Business service plan, please [open a support ticket](https://leanticket.cn) with us to have the new index(es) created for you. If you are using a Developer plan, please upgrade to a Business plan first.
+> Please note that out of performance concerns,  you are not permitted to create any new indexes in the Data Browser for a class with more than 10,000 records. However, existing indexes will continue to take effect on records beyond 10K. If your app is on a Business service plan, please [open a support ticket](https://leanticket.cn) with us to have the new index(es) created for you. If using a Developer plan, you must upgrade to a Business plan first.
 
 #### Authentication Data
 

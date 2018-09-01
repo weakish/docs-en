@@ -226,6 +226,19 @@ body {
     }
   }
 
+  ul, ol {
+    padding-left: 0;
+  }
+
+  li {
+    margin-left: 24px;
+    padding-left: 8px;
+
+    > pre {
+    margin-top: 18px;
+    }
+  }
+
   pre {
     margin-bottom: 18px;
     // fix inline comment indicator not showing in overflowed container
@@ -501,7 +514,6 @@ body {
     line-height: 1.4;
     padding-top: 24px;
     margin-top: 20px;
-    text-transform: capitalize;
 
     a {
       .header-link;
