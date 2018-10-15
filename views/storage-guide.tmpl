@@ -1138,7 +1138,7 @@ query.find().then(function(results){
 
 ## Live Queries
 
-As the name suggests, a live query derives from a normal [`AV.Query`](#queries) but with enhanced capability. It allows you to automatically synchronize data changes from one client to other clients without writing complex code, making it suitable for apps that need real-time support.
+As the name suggests, a live query is derived from a normal [`AV.Query`](#queries) but with enhanced capability. It allows you to automatically synchronize data changes from one client to other clients without writing complex code, making it suitable for apps that need real-time support.
 
 Suppose you are building an app that allows multiple users to edit the same file at the same time. `AV.Query` would not be an ideal tool since it is based on a pull model and you can not know when to query from the cloud to get the updates.
 
@@ -1146,9 +1146,9 @@ To solve this problem, we introduce LiveQuery. This tool allows you to subscribe
 
 Behind the scene, we use WebSocket connections to communicate with the cloud and maintain the subscription status of clients. We think in most cases it isn't necessary to deal with the WebSocket connection directly. Thus, we developed a simple API to let you focus on your own business logic.
 
-Starting from Android SDK v4.2.0, JavaScript SDK v3.0.0 and iOS SDK v5.0.0, live queries is supported with [additional setup](#setup-livequery).
+Starting from Android SDK v4.2.0, JavaScript SDK v3.0.0 and iOS SDK v5.0.0, LiveQuery is supported through [additional SDK setup](#setup-livequery).
 
-LiveQuery has both free and paid plans. Check out [the pricing page](https://blog.leancloud.cn/6295/) to learn about your free quota and options.
+LiveQuery has both free and paid plans. Check out [the pricing page](https://leancloud.cn/pricing/) to learn about your free quota and options.
 
 ### Initializing LiveQuery
 
