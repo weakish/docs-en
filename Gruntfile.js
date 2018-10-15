@@ -558,7 +558,7 @@ grunt.registerMultiTask('docmeta', '增加 Title、文档修改日期、设置�
 
   grunt.registerTask("build", "Main build", function() {
     grunt.task.run([
-      "clean", "ensureSDKVersion", "nunjucks", "copy:md", "markdown", "assemble", "docmeta"
+      "clean", "nunjucks", "copy:md", "markdown", "assemble", "docmeta"
     ]);
     if (!grunt.option("no-comments")) {
       grunt.task.run(["comment"]);
