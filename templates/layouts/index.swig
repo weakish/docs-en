@@ -15,6 +15,7 @@
 .doc-content {
   margin-bottom: 56px;
 }
+
 .course-about {
   font-size: 13px;
   color: #aaa; 
@@ -83,6 +84,7 @@
 }
 .tags>li {
   display: inline-block;
+  margin-bottom: 1em;
 }
 .tags>li>a {
   min-width: 90px;
@@ -141,6 +143,29 @@
 .doc-home-title .active .doc-quick-start-btn {
     color: #3090e4;
     border-color: #3090e4;
+}
+.section-content li {
+  padding: 0;
+  margin: 0
+}
+.section-content li {
+  line-height: 2.25;
+}
+.section-content li > a {
+  font-weight: 400;
+}
+.section-content .suffix::before {
+  content: "·";
+  color: #ccc;
+  padding: 0 8px;
+  text-decoration: none;
+}
+.section-content .suffix::before:hover{
+text-decoration: none;
+}
+.section-content .suffix a {
+  opacity: 0.7;
+  font-weight: 200;
 }
 </style>
 </head>
