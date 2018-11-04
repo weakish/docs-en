@@ -1,20 +1,31 @@
-{% set var_app_domain = '{应用的域名}' %}
+
+(Translation in progress)
+
+
+{% set var_app_domain = '{Used Domain}' %}
 {% import "views/_helper.njk" as docs %}
 
 {% raw %}<script>$(window).load(function() {$('.do-expand-all').click();})</script>{% endraw %}
-# 网站托管开发指南 &middot; {{platformName}}
+# Web Hosting Development Guide &middot; {{platformName}}
 
-网站托管是云引擎的一个子模块，允许你用 {{platformName}} 开发一个 Web 程序，提供云函数和 Hook，还可以提供静态文件的托管和自定义的路由、绑定你自己的域名。你可以用它为你的移动应用提供一个介绍和下载页、开发一个管理员控制台或完整的网站，或者运行一些必须在服务器端运行的自定义逻辑。
 
-如果你还不知道如何创建云引擎项目，本地调试并部署到云端，可以先阅读一下 [云引擎快速入门](leanengine_quickstart.html)。其他相关文档包括：
+Web hosting is a sub-module of the cloud engine; it allows you to develop a web application with {{platformName}}. 
+It provides cloud functions and Hook, hosting for static files and customized routing, and it can also bind your own domain name to the application. 
+You can use it to create an introduction and download page for your mobile applications, developing an administrator console or a complete website, or running some custom logic that are mandatory to run on the server side.
 
- - [云引擎服务概览](leanengine_overview.html)（全部功能的概述）
- - [命令行工具使用指南](leanengine_cli.html)
- - [LeanCache 使用指南](leancache_guide.html)（使用内存缓存服务来提升性能）
- - [云引擎项目示例](leanengine_examples.html)
- - [云引擎常见问题和解答](leanengine_faq.html)
 
-这篇文档以 {{platformName}} 为例，但云引擎还支持其他多种语言，你可以选择自己熟悉的技术栈进行开发：
+
+If you don't know how to create a cloud engine project, debug it locally and deploy it to the cloud, you can firstly read [Cloud Engine Quick Start] (leanengine_quickstart.html). Other related documents include:
+ 
+ - [Cloud Engine Service Overview] (leanengine_overview.html) (Overview of all features)
+ - [Command Line Tool Usage Guide] (leanengine_cli.html)
+ - [LeanCache Usage Guide] (leancache_guide.html) (using the in-memory cache service to improve performance)
+ - [Cloud Engine Project Example] (leanengine_examples.html)
+ - [Cloud Engine FAQs] (leanengine_faq.html)
+
+This document uses {{platformName}} as an example, but the cloud engine supports many other languages. 
+You can choose the technology stack you are familiar with for development:
+
 
 - [Node.js](leanengine_webhosting_guide-node.html)
 - [Python](leanengine_webhosting_guide-python.html)
@@ -23,40 +34,47 @@
 - [.NET](leanengine_webhosting_guide-dotnet.html)
 
 
-## 从示例项目开始
+## Starting with the example project
 
 {% block getting_started %}{% endblock %}
 
 ### 本地运行和调试
 
 在确保所有的依赖都正确安装之后，在项目根目录，用我们的命令行工具来启动本地调试了：
+After ensuring that all dependencies are properly installed, in the project root directory, you can use our command line tool to start debugging locally:
+
 
 ```sh
 lean up
 ```
 
 更多有关命令行工具和本地调试的内容请看 [命令行工具使用指南](leanengine_cli.html)。
+More content about the command line tool and local debugging, please refer to the [Command Line Tool Usage Guide](leanengine_cli.html).
 
-### 部署到云端
+### Deploy to the cloud
 
-在你的项目根目录运行：
+
+Run in your project root directory:
 
 ```sh
 lean deploy
 ```
 
-### 设置域名
+###  Setting up the domain name
 
 你可以在 [云引擎 > 设置](/cloud.html?appid={{appid}}#/conf) 的「Web 主机域名」部分，填写一个自定义的二级域名，例如你设置了 `myapp`，那么你就可以通过我们的二级域名来访问你的网站了：
 
-- `http://myapp.leanapp.cn`（中国区）
-- `http://myapp.avosapps.us`（美国区）
+ In the "Web Hosting Domain Name" section of [Cloud Engine > Settings] (/cloud.html?appid={{appid}}#/conf), you can fill in a custom second-level domain name. For example, you set `myapp` , then you can access your website through our second-level domain name:
+- `http://myapp.leanapp.cn`（Chinese Area）
+- `http://myapp.avosapps.us`（US Area）
 
-<div class="callout callout-info">DNS 可能需要等待几个小时后才能生效。</div>
+<div class="callout callout-info">DNS You may need to wait a few hours till it takes into effect</div>
 
-我们的二级域名是默认有 HTTPS 支持的。
 
-如果你的应用在 30 天内无访问且没有购买标准实例，二级域名有可能会被回收。
+Our second-level domain is by default supported by HTTPS.
+
+
+If your app has no visit within 30 days and does not purchase a standard instance, the second-level domain may be recycled.
 
 {% block runtime_description %}{% endblock %}
 
@@ -70,15 +88,17 @@ lean deploy
 
 {% block use_leanstorage %}{% endblock %}
 
-## 健康监测	
+## Health monitoring
 
-你的应用在启动时，云引擎的管理程序会每秒去检查你的应用是否启动成功，如果 **30 秒** 仍未启动成功，即认为启动失败；在之后应用正常运行的过程中，也会有定期的「健康监测」，以确保你的应用正常运行，如果健康监测失败，云引擎管理程序会自动重启你的应用。
+When your application is starting, the cloud engine's hypervisor will check if your application is started successfully every second. If it is still not started successfully after **30 seconds**, it means that the startup fails. After the application starts running normally, there will also be regular “health monitoring” to ensure your app is running properly.  And if health monitoring fails, the cloud engine hypervisor will automatically restart your app.
 
-健康检查的 URL 包括你的应用首页（`/`）和 {{platformName}} SDK 负责处理的 `/__engine/1/ping`，只要 **两者之一** 返回了 HTTP 200 的响应，就视作成功。因此请确保你的程序使用了 {{platformName}} SDK，或你的应用 **首页能够正常地返回 HTTP 200** 响应。	
-除此之外，为了支持云引擎的云函数和 Hook 功能，管理程序会使用 `/1.1/functions/_ops/metadatas` 这个 URL 和 {{platformName}} SDK 交互，请确保将这个 URL 交给 {{platformName}} SDK 处理，或 **返回一个 HTTP 404 表示不使用云函数** 和 Hook 相关的功能。	
+
+The URL for the health monitoring includes homepage of your application(`/`) and {{platformName}}SDK  which is responsible for `/__engine/1/ping` . As long as  **one of the two** returns a response of HTTP 200, you can considered it as a success. So make sure your program uses the {{platformName}} SDK, or your app ** home page will return an HTTP 200** response normally.
+In addition, in order to support the cloud function and Hook function of the cloud engine, the hypervisor will use the URL of `/1.1/functions/_ops/metadatas` to interact with the {{platformName}} SDK. Please ensure that this URL is given to {{ The platformName}} SDK to handle, or ** returns an HTTP 404 indicating that the function will not use the cloud function** or Hook related functions.
 
 {% block ping %}	
 关于如何加载 {{platformName}} SDK，见前一小节 [使用数据存储服务](#使用数据存储服务)
+About how to load {{platformName}} SDK, please refer to the previous section
 {% endblock %}
 
 {% block generalFeature %}
