@@ -98,29 +98,37 @@ In addition, in order to support the cloud function and Hook function of the clo
 
 {% block ping %}	
 关于如何加载 {{platformName}} SDK，见前一小节 [使用数据存储服务](#使用数据存储服务)
-About how to load {{platformName}} SDK, please refer to the previous section
+About how to load {{platformName}} SDK, please refer to the previous section [Using Data Storage Service] (#Using Data Storage Service)
+
 {% endblock %}
 
 {% block generalFeature %}
 
-## 用户状态管理
+## 用户状态管理 User Status management
+
+
 
 {% block cookie_session %}{% endblock %}
 
-## 实现常见的网站功能
+## 实现常见的网站功能 Website common function realisation
 
-### 发送 HTTP 请求
+### 发送 HTTP 请求 Sending HTTP request
 
 {% block http_client %}{% endblock %}
 
-### 获取客户端 IP
+### 获取客户端 IP Obtain Client-end IP
 
 如果你想获取客户端的 IP，可以直接从用户请求的 HTTP 头的 `x-real-ip` 字段获取，示例代码如下：
+If you want to get the client's IP, you can get it directly from the `x-real-ip` field of the HTTP header requested by the user. 
+The sample code is as follows:
 
 {% block code_get_client_ip_address %}{% endblock %}
 
-### 文件上传
+### 文件上传 Upload Files
 托管在 {{productName}} 的网站项目可以直接使用内置的 LeanCloud {{sdk_name}} SDK 的 API 文件相关的接口直接处理文件的上传。
+
+>>>>>>>Site projects hosted on {{productName}} can directly handle file uploads directly using the API file-related interfaces of the built-in LeanCloud {{sdk_name}} SDK. 129
+
 
 假设前端 HTML 代码如下：
 
