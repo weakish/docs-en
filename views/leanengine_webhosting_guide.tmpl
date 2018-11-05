@@ -126,11 +126,11 @@ The sample code is as follows:
 
 ### 文件上传 Upload Files
 托管在 {{productName}} 的网站项目可以直接使用内置的 LeanCloud {{sdk_name}} SDK 的 API 文件相关的接口直接处理文件的上传。
-
->>>>>>>Site projects hosted on {{productName}} can directly handle file uploads directly using the API file-related interfaces of the built-in LeanCloud {{sdk_name}} SDK. 129
+Website projects that are hosted on {{productName}} can directly handle file uploads directly using the API file-related interfaces of the built-in LeanCloud {{sdk_name}} SDK. 
 
 
 假设前端 HTML 代码如下：
+Assume the front-end HTML code written like this:
 
 ```html
 <form enctype="multipart/form-data" method="post" action="/upload">
@@ -142,18 +142,22 @@ The sample code is as follows:
 {% block upload_file_special_middleware %}{% endblock %}
 
 接下来定义文件上传的处理函数，构建一个 Form 对象，并将 req 作为参数进行解析，会将请求中的文件保存到临时文件目录，并构造 files 对象：
+Next, define the handler function for the file uploading, build a Form object, parse req as a parameter, it will save the requested files to the temporary file directory, and construct the files object:
 
 {% block code_upload_file_sdk_function %}{% endblock %}
 
 ### Session
 {% block custom_session %}
-{{platformName}} 暂不支持。
+{{platformName}} 暂不支持。Not supported yet
 {% endblock %}
 
 ### CSRF Token
 如果你的云引擎应用使用 Cookie 作为鉴权方式的话（例如使用 SDK 的 CookieSession 中间件），那就有受到 [CSRF](https://github.com/pillarjs/understanding-csrf) 攻击的风险，将会允许其他站点伪造带有正确 Cookie 的恶意请求。
+If your cloud engine application uses cookies as an authentication method (for example, using the SDK's CookieSession middleware); then there is a risk of being attacked by [CSRF](https://github.com/pillarjs/understanding-csrf). It will allow other sites to forge malicious requests with the correct cookies.
+
 
 业界通常使用 CSRF Token 来防御 CSRF 统计，你需要传递给客户端一个随机字符串（即 CSRF Token，可通过 Cookie 传递），客户端在每个有副作用的请求中都要将 CSRF 包含在请求正文或 Header 中，服务器端需要校验这个 CSRF Token 是否正确。
+The industry usually uses CSRF Token to defend against CSRF statistics. You need to pass a random string (that is, CSRF Token, which can be passed through the cookie) to the client-end. The client-end must include CSRF in the request body or in the header. The server needs to verify that the CSRF Token is correct. 
 
 {% block csrf_token %}{% endblock %}
 
@@ -164,24 +168,32 @@ The sample code is as follows:
 {% block leancache %}{% endblock %}
 
 关于 LeanCache 的更多使用方法请看 [LeanCache 使用指南](leancache_guide.html)。
+For more instruction on how to use LeanCache, see the [LeanCache Usage Guide] (leancache_guide.html).
 
-### 重定向到 HTTPS
+### 重定向到 HTTPS Redirect to HTTP
+
 
 为了安全性，我们可能会为网站加上 HTTPS 加密传输。我们的 {{productName}} 支持网站托管，同样会有这样的需求。
+For security consideration, we may add HTTPS encrypted transmissions to the websites. Our {{productName}} supports web hosting and it also has such a requirement.
 
 因此我们在 {{productName}} 中提供了一个新的 middleware 来强制让你的 `{{var_app_domain}}.leanapp.cn` 的网站通过 https 访问，你只要这样：
+For this reason,  we provide a new middleware in {{productName}} to force your website `{{var_app_domain}}.leanapp.cn` to be accessed via https, you just have to do this:
 
 {% block https_redirect %}{% endblock %}
 
 部署并发布到生产环境之后，访问你的 {{productName}} 网站二级域名都会强制通过 HTTPS 访问。
 
+After deploying and publishing to the production environment, accessing your {{productName}} site's second-level domain will be forced to access via HTTPS.
+
+
 {% block extra_examples %}{% endblock %}
 
-## 部署与发布
+## 部署与发布 Deploy and publish
 
-### 命令行部署
 
-在你的项目根目录运行：
+### 命令行部署 Command line deploy
+
+在你的项目根目录运行： Run in you project root directory:
 
 ```sh
 lean deploy
@@ -189,24 +201,29 @@ lean deploy
 
 使用命令行工具可以非常方便地部署、发布应用，查看应用状态，查看日志，甚至支持多应用部署。具体使用请参考 [命令行工具指南](leanengine_cli.html)。
 
-### 依赖缓存
+Using command line tools makes it easy to deploy, publish, view application status, view logs, and even support multiple application deployments. Please refer to the [Command Line Tool Guide] (leanengine_cli.html) for specific usage.
+### 依赖缓存 Dependent cache
 
 
 云引擎实现了一个缓存机制来加快构建的速度，所谓构建就是指你的应用在云引擎上安装依赖的过程，在每次构建时，如果依赖没有新增或者删减，那么就直接使用上次安装的依赖，只将新的应用代码替换上去。
 
+The cloud engine implements a caching mechanism to speed up the construction process. The so-called construction means the process of installing dependencies on your cloud engine. Each time you construct, if the dependencies are not being added or deleted, then you can use the last dependencies. You only need to replace the new application code.
 {% block depentencyCache %}{% endblock %}
 
 如果你遇到了与依赖安装有关的问题，可以在控制台部署时勾选「下载最新依赖」，或通过命令行工具部署时添加 `--no-cache` 选项；依赖缓存也会因为很多原因失效，因此也不保证每次构建都可以利用上缓存。
 
+If you are encountering problems with installing dependencies, you can checkmark the "Download latest dependencies" option during console deployment, or add the `--no-cache` option when deploying via command line tools; dependency caching will also fail for a number of reasons. Therefore, there is no guarantee that the cache can be utilized for each construction.
 ```sh
 lean deploy --no-cache
 ```
 
-### Git 部署
+### Git 部署 Deploy 
 
 除此之外，还可以使用 git 仓库部署。你需要将项目提交到一个 git 仓库，我们并不提供源码的版本管理功能，而是借助于 git 这个优秀的分布式版本管理工具。我们推荐你使用 [GitHub](https://github.com/)、[Coding](https://coding.net/) 或者 [码云](https://gitee.com/) 这样第三方的源码托管网站，也可以使用你自己搭建的 git 仓库（比如 [Gitlab](http://gitlab.org/)）。
+In addition to this, you can also use git repository deployment. You need to submit the project to a git repository. We don't provide the source version management function, but instead, we use git- an excellent distributed version management tool. We recommend that you use  third parties source code hosting website like [GitHub] (https://github.com/), [Coding](https://coding.net/) or [code cloud] (https://gitee.com/). Or you can also use your own git repository (such as [Gitlab] (http://gitlab.org/))
 
 你需要先在这些平台上创建一个项目（如果已有代码，请不需要选择「Initialize this repository with a README」），在网站的个人设置中填写本地机器的 SSH 公钥（以 GitHub 为例，在 Settings => SSH and GPG keys 中点击 New SSH key），然后在项目目录执行：
+You need to create a project on these platforms first (if you already have the code, please do not select "Initialize this repository with a README"), fill in the local machine's SSH public key in the personal settings of the website (take GitHub as an example, Settings => SSH and GPG keys click New SSH key), then execute in the project directory:
 
 ```sh
 git remote add origin git@github.com:<username>/<repoName>.git
@@ -214,29 +231,42 @@ git push -u origin master
 ```
 
 然后到云引擎的设置界面填写你的 Git 仓库地址，如果是公开仓库建议填写 https 地址，例如 `https://github.com/<username>/<repoName>.git`。
+Then fill in the Git repository address in the cloud engine settings interface. If it is a public repository, it is recommended to fill in the https address, such as `https://github.com/<username>/<repoName>.git`. 
 
 如果是私有仓库需要填写 ssh 地址 `git@github.com:<username>/<repoName>.git`，还需要你将云引擎分配给你的公钥填写到第三方托管平台的 Deploy keys 中，以 GitHub 为例，在项目的 Settings => Deploy keys 中点击 Add deploy key。
+If it is a private repository, you need to fill in the ssh address `git@github.com:<username>/<repoName>.git`, you also need to public key which was assigned to your cloud engine to the Deploy keys of the third-party hosting platform. Take GitHub for example, click Add deploy key in the project's Settings => Deploy keys.
 
 设置好之后，今后需要部署代码时就可以在云引擎的部署界面直接点击「部署」了，默认会部署 master 分支的代码，你也可以在部署时填写分支、标签或具体的 Commit。
+After the set up, if you need the deloy code in the future, you can directly click “Deploy” in the deployment interface of the cloud engine. 
+By default, it will deploy the code of the master branch. You can also fill in the branch ,label or specific Commit during deployment.
 
-### 预备环境和生产环境
+### 预备环境和生产环境 Preparatory environment and production environment
 默认情况，云引擎只有一个「生产环境」，对应的域名是 `{{var_app_domain}}.leanapp.cn`。在生产环境中有一个「体验实例」来运行应用。
+By default, the cloud engine only has one "production environment" and the corresponding domain name is `{{var_app_domain}}.leanapp.cn`. There is an "experience example" in the production environment to run the application.
+
 
 当生产环境的体验实例升级到「标准实例」后会有一个额外的「预备环境」，对应域名 `stg-{{var_app_domain}}.leanapp.cn`，两个环境所访问的都是同样的数据，你可以用预备环境测试你的云引擎代码，每次修改先部署到预备环境，测试通过后再发布到生产环境；如果你希望有一个独立数据源的测试环境，建议单独创建一个应用。
+When the experience example of the production environment is upgraded to "Standard example", there will be an additional "preparation environment" with corresponding domain name `stg-{{var_app_domain}}.leanapp.cn`, both environments access the same data. You can test your cloud engine code with the prepared environment. Each time you modify it, you can deploy it to the prepared environment first. After the test is passed, you can publish it to the production environment. If you want to have a test environment with an independent data source, it is recommended to create an application separately.
+
 
 <div class="callout callout-info">如果访问云引擎遇到「Application not Found」的错误，通常是因为对应的环境还没有部署代码。例如应用可能没有预备环境，或应用尚未发布代码到生产环境。</div>
+<div class="callout callout-info"> If you encounter an "Application not Found" error when access the cloud engine, it is usually because the corresponding environment has not yet being deployed the code. For example, an application may not have a preparation environment, or the application has not yet released code to the production environment. </div>
+
 
 有些时候你可能需要知道当前云引擎运行在什么环境（开发环境、预备环境或生产环境），从而做不同的处理：
+Sometimes you may need to know what environment the current cloud engine is running in (development, pre- or production) and then do different operations:
 
 {% block get_env %}{% endblock %}
 
 客户端 SDK 都有类似于 `setProduction` 的方法，比如 [JavaScript SDK API 的 AV.setProduction(production)](leanengine_cloudfunction_guide-node.html#hash1210911107)，其中 `production` 设置为 `0` 则该 SDK 将请求预备环境；设置为 `1` 将请求生产环境，默认为 `1`。
- 
-## 云端环境
+Client-end sdk has methods similiar to `setProduction` , for example [AV.setProduction(production) of JavaScript SDK API](leanengine_cloudfunction_guide-node.html#hash1210911107). If the `production` here is set to `0` ,then the SDK will request a preparation environment; if set to `1` , it will request the production environment. The default setting is `1`.
 
-### 系统级依赖 
+## 云端环境 Cloud environment
+
+### 系统级依赖 System level dependency
 
 系统级依赖指的是运行时操作系统上的一些常见的功能模块，例如 [ffmpeg](https://www.ffmpeg.org/), 当前项目如果需要使用的话，只要通过添加 `leanengine.yaml` 文件的 systemDependencies 部分中可以指定需要的系统依赖，类似：
+System-level dependencies refer to some common functional modules on the operating system during an operating process, such as [ffmpeg](https://www.ffmpeg.org/). If you need to use the current project, just add The system dependencies section  in the `leanengine.yaml` file, you can specify the required system dependencies, similar to:
 
 ```yaml
 systemDependencies:
@@ -244,26 +274,30 @@ systemDependencies:
 ```
 
 目前支持的选项包括：
+Currently supported options include:
 
-- `ffmpeg` 一个音视频处理工具库
-- `imagemagick` 一个图片处理工具库
-- `fonts-wqy` 文泉驿点阵宋体、文泉驿微米黑，通常和 phantomjs 配合来显示中文。
-- `phantomjs` 一个无 UI 的 WebKit 浏览器
+- `ffmpeg` 一个音视频处理工具库 An audio and video processing tool library
+- `imagemagick` 一个图片处理工具库 An image processing tool library
+- `fonts-wqy` 文泉驿点阵宋体、文泉驿微米黑，通常和 phantomjs 配合来显示中文。 Wenquanyi Bitmap song, Wenquanyi Micro black, usually cooperate with phantomjs to display Chinese character.
+- `phantomjs` 一个无 UI 的 WebKit 浏览器 A Webkit Browser without UI.
 
 注意**系统级依赖的功能模块不会默认添加**，添加系统依赖将会拖慢部署速度，因此请不要添加未用到的依赖。
+Note ** System-level dependent Function modules will not add by default**, adding system dependencies will slow down the deployment, so please don't add unused dependencies.
 
-### 环境变量
+
+### 环境变量 Environmental variable
 
 云引擎平台默认提供下列环境变量供应用使用：
+The cloud engine platform provides the following environment variables by default:
 
-变量名|说明
+变量名|说明 Variable name|explanation
 ---|---
-`LEANCLOUD_APP_ID`|当前应用的 App Id
-`LEANCLOUD_APP_KEY`|当前应用的 App Key
-`LEANCLOUD_APP_MASTER_KEY`|当前应用的 Master Key
-`LEANCLOUD_APP_ENV`|当前的应用环境：<ul><li>开发环境没有该环境变量，或值为 `development`（一般指本地开发）</li><li>预备环境值为 `stage`</li><li>生产环境值为 `production`</li></ul>
-`LEANCLOUD_APP_PORT`|当前应用开放给外网的端口，只有监听此端口，用户才可以访问到你的服务。
-`LEANCLOUD_API_SERVER`|访问存储服务时使用的地址（类似于 `https://api.leancloud.cn`）。该值会因为所在数据中心等原因导致不一样，所以使用 REST API 请求存储服务或 LeanCloud 其他服务时请使用此环境变量的值。在云引擎中**不要**直接使用 `https://api.leancloud.cn`。
+`LEANCLOUD_APP_ID`|当前应用的 App Id Current used APP ID
+`LEANCLOUD_APP_KEY`|当前应用的 App Key Current used APP key
+`LEANCLOUD_APP_MASTER_KEY`|当前应用的 Master Key Current used Master Key
+`LEANCLOUD_APP_ENV`| Current application environemnt <ul><li>The development environment does not have this environment variable, or the value of `development` (generally referred to as local development)</li> </li><li>Preparation environment value is `stage`</li><li>Production environment value is `production`</li></ul>
+`LEANCLOUD_APP_PORT`|The port that the current application is open to the external network, only by listening this port can the user access you service.
+`LEANCLOUD_API_SERVER`| The address used to access the storage service (similar to `https://api.leancloud.cn`). This value can vary depending on reasons like your data center, etc.. So use this value of this environment variable when requesting storage services or LeanCloud other services using the REST API. In the cloud engine ** Do not use `https://api.leancloud.cn` directly
 `LEANCLOUD_AVAILABLE_CPUS`|云引擎实例可用 CPU 的数量，高规格实例（如：2CPU 1024MB 内存）时该值大于 1。应用可以根据该值启动对应数量的线程或者进程。在云引擎中**不要**直接使用操作系统 CPU 核数，否则可能启动过多的进程导致超出实例规格而异常退出。
 `LEANCLOUD_APP_GROUP`|云引擎实例所在的组。当使用云引擎 [组管理](leanengine_plan.html#组管理) 功能时，该值为组的名称。
 `LEANCLOUD_REGION`|云引擎服务所在区域，{% if node != 'qcloud' %}值为 `CN` 或 `US`，分别表示国内节点和美国节点。{% else %}目前仅支持 `CN` 即中国节点。{% endif %}
