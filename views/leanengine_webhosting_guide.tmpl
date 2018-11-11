@@ -173,11 +173,11 @@ Using command line tools makes it easy to deploy, publish, view application stat
 
 ### Dependent cache
 
-The LeanEngine implements a caching mechanism to speed up the construction process. The so-called construction means the process of installing dependencies on your LeanEngine. Each time you construct, if the dependencies are not being added or deleted, then you can use the last dependencies. You only need to replace the new application code.
+The LeanEngine implements a caching mechanism to speed up the build up process. The so-called build up means the process of installing dependencies on your LeanEngine. Each time you construct, if the dependencies are not being added or deleted, then you can use the last dependencies. You only need to replace the new application code.
 
 {% block depentencyCache %}{% endblock %}
 
-If you are encountering problems with installing dependencies, you can checkmark the "Download latest dependencies" option during console deployment, or add the `--no-cache` option when deploying via command line tools; dependency caching will also fail for a number of reasons. Therefore, there is no guarantee that the cache can be utilized for each construction.
+If you are encountering problems with installing dependencies, you can checkmark the "Download latest dependencies" option during console deployment, or add the `--no-cache` option when deploying via command line tools; dependency caching will also fail for a number of reasons. Therefore, there is no guarantee that the cache can be utilized for each build up.
 
 ```sh
 lean deploy --no-cache
