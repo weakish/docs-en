@@ -1,17 +1,21 @@
 
 {# Specify inheritance template #}  {% extends "./leanengine_webhosting_guide.tmpl" %} {% set productName = 'LeanEngine' %} {% set platformName = 'Node.js' %} {% set fullName = productName + ' ' + platformName %} {% set sdk_name = 'JavaScript' %} {% set leanengine_middleware = 'LeanEngine Node.js SDK' %}
 
-
 {% block getting_started %}
 
-将示例代码 node-js-getting-started 
 Clone the sample code node-js-getting-started to local:
 
-
+```sh
 git clone https://github.com/leancloud/node-js-getting-started.git
+```
+
 Execute the following command in the root directory to install dependencies:
 
-npm install 
+
+```sh
+npm install
+```
+
 {% endblock %}
 
 {% block custom_runtime %} {% endblock %}
@@ -20,13 +24,16 @@ npm install
 
 
 Project skeleton
-Take the example project as an example. In the root directory we see a package.json file. Note: All Node.js projects must contain package.json in order to be correctly recognized by the LeanEngine as a Node.js project.
+Take the example project as an example, in the root directory we see a `package.json` file. Note: **All Node.js projects must contain `package.json` in order to be correctly recognized by the LeanEngine as a Node.js project.
 
 Because of some historical issues, please make sure that there is ** no ** file named `cloud/main.js` in your project.
-package.json
-Node.js 的 package.json 
-There are many options that can be specified in the package.json of Node.js , which usually looks like this:
 
+#### package.json
+
+There are [many options] (https://docs.npmjs.com/files/package.json)that can be specified in the `package.json`of Node.js , which usually looks like this:
+
+
+```json
 {
     "name": "node-js-getting-started",
     "scripts": {
@@ -41,63 +48,54 @@ There are many options that can be specified in the package.json of Node.js , wh
         "leancloud-storage": "^3.3.1"
     }
 }
+```
 
 Options that the LeanEngine will respect include:
-。
-Scripts.start The command to start the project; the default is node server.js, which can be modified if you want to attach startup options to the node (such as --es_staging) or use other files as entry points.
+* `scripts.start` The command to start the project; the default is `node server.js`, which can be modified if you want to attach startup options to the node (such as `--es_staging`) or use other files as entry points.
+* `scripts.prepublish`will be run once at the end of the project build up; you can write the build commands such as `gulp build`can be written here.
+* `engines.node` specifies the required version of Node.js; for compatibility reasons, the default version is still the older 0.12, so it is recommended that you specify a higher version yourself. It is recommended to use the 8.x version for development, you can also set a `*`  which means you are always using the latest version of Node.js.
+* `dependencies`  for the dependencies project ; the LeanEngine will use `npm install --production` during deployment to list all the dependencies here for you. If a dependency has peerDependencies, please make sure they are also listed in `dependencies` (not `devDependencies`).
+
+* `devDependencies` The package that devDependencies depends on when developing the project; currently, the LeanEngine does **not** install the dependencies here.
+
+We suggest you write your own `package.json` with reference to our [project template] (https://github.com/leancloud/node-js-getting-started/blob/master/package.json).
+
+We also provide support for `package-lock.json` and `yarn.lock` :
 
 
-Scripts.prepublish will be run once at the end of the project build up; you can write the build commands such as gulp build can be written here.
-
-
-engines.node specifies the required version of Node.js; for compatibility reasons, the default version is still the older 0.12, so it is recommended that you specify a higher version yourself. It is recommended to use the 8.x version for development, you can also set a * which means always using the latest version of Node.js.
-
-
-
-dependency package for the dependencies project ; the LeanEngine will use npm install during deployment--production will list all the dependencies here for you. If a dependency has peerDependencies, please make sure they are also listed in dependencies (not devDependencies).
-
-
-The package that devDependencies depends on when developing the project; the LeanEngine does not currently install the dependencies here.
-
-
-I suggest you write your own package.json with reference to our project template.
-
-We also provide support for package-lock.json and yarn.lock:
+- If your application directory contains `package-lock.json`, it will be installed as described in lock (requires Node.js 8.0 or higher).
+- If your application directory contains`yarn.lock`, then `yarn install` will be used instead of `npm install` to install dependencies (requires Node.js 4.8 and above).
 
 
 
-If your application directory contains package-lock.json, it will be installed as described in lock (requires Node.js 8.0 or higher).
-
-
-If your application directory contains yarn.lock, then yarn install will be used instead of npm install to install dependencies (requires Node.js 4.8 and above).
-
-
-{% endblock %}
-Note that `package-lock.json` and `yarn.lock` contain the URLs for download dependencies, so if you use the source of npmjs.org when generating the lock file, then the deployment on the Chinese node may be slower; On the contrary,  if you use the source of cnpmjs.org is during the build up, the deployment on the US nodes may be slower. If you don't want to use `package-lock.json` and `yarn.lock`, add them to `.gitignore` (Git deployment) or `.leanengineignore` (when the command line tool is deployed).
+<div class="callout callout-info"> Note that `package-lock.json` and `yarn.lock` contain the URLs for download dependencies, so if you use the source of npmjs.org when generating the lock file, then the deployment on the Chinese node may be slower; On the contrary,  if you use the source of cnpmjs.org is during the build up, the deployment on the US nodes may be slower. If you don't want to use `package-lock.json` and `yarn.lock`, add them to `.gitignore` (Git deployment) or `.leanengineignore` (when the command line tool is deployed).
 {% endblock %}
 
 {% block supported_frameworks %}
 
 
-At this point, you have deployed a site that can be accessed from the external network to the LeanEngine. Next, we will introduce more features and technical points to help you develop a website that meets your needs.
+At this point, you have deployed a site that can be accessed from the external network to the LeanEngine. Next, we will introduce more features and technical points to help you develop a website that meets your needs.
 
 
-Access to the web framework
+## Access to the web framework
 
+If you are careful enough, you will find we have used a popular Node Web framework [express](http://expressjs.com/) in the `package.json` in the sample project.
 
-If you are careful enough, you will find we have used a popular Node Web framework in the package.json in the sample project.
-
-The Node SDK provides integrated support for express and koa.
-
+The Node SDK provides integrated support for[express](http://expressjs.com/) and [koa](http://koajs.com/). 
 
 If you already have a ready-made project using these two frameworks, simply load the middleware provided by the Node SDK into the current project by:
 
+
+```sh
 npm install --save leanengine leancloud-storage
+```
 
 The code for the reference and configuration is as follows:
 
 
-Express
+#### Express
+
+```js
 var express = require('express');
 var AV = require('leanengine');
 
@@ -110,9 +108,10 @@ AV.init({
 var app = express();
 app.use(AV.express());
 app.listen(process.env.LEANCLOUD_APP_PORT);
-
+```
 You can use the definition feature of the router to define a custom HTTP API:
 
+```js
 app.get('/', function(req, res) {
   res.render('index', {title: 'Hello world'});
 });
@@ -133,9 +132,12 @@ app.get('/todos', function(req, res) {
   });
 });
 
-For more best practices, please refer to our project template and LeanEngine project examples.
+```
+For more best practices, please refer to our [Project template](https://github.com/leancloud/node-js-getting-started) and [LeanEngine project examples](leanengine_examples.html).
 
-Koa
+#### Koa
+
+```js
 var koa = require('koa');
 var AV = require('leanengine');
 
@@ -148,10 +150,12 @@ AV.init({
 var app = koa();
 app.use(AV.koa());
 app.listen(process.env.LEANCLOUD_APP_PORT);
+```
 
 You can use koa to render the page and provide a custom HTTP API:
 
 
+```js
 app.use(function *(next) {
   if (this.url === '/todos') {
     return new AV.Query('Todo').find().then(todos => {
@@ -162,14 +166,16 @@ app.use(function *(next) {
   }
 });
 
-When using Koa, it is recommended to set the version of Node.js to 4.x or higher according to the previous package.json section. 
+```
+
+When using Koa, it is recommended to set the version of Node.js to 4.x or higher according to the previous [package.json](#package_json) section. 
 
 
-Other web framework
+#### Other web framework
 
+You can also use other web frameworks for development, but you need to implement the logic mentioned in the [Health Monitor](#Health Monitor)yourself. Here's a simple example of using the built-in [http](https://nodejs.org/api/http.html)  implementation of Node.js for reference:
 
-You can also use other web frameworks for development, but you need to implement the logic mentioned in the health monitoring yourself. Here's a simple example of using the built-in http implementation of Node.js for reference:
-
+```js
 require('http').createServer(function(req, res) {
   if (req.url == '/') {
     res.statusCode = 200;
@@ -179,32 +185,40 @@ require('http').createServer(function(req, res) {
     res.end();
   }
 }).listen(process.env.LEANCLOUD_APP_PORT);
-You need to listen to the web service on 0.0.0.0 (the default behavior of Node.js and of express) instead of 127.0.0.1.
+```
 
+You need to listen to the web service on `0.0.0.0`(the default behavior of Node.js and of express) instead of `127.0.0.1`.
 
-Routing timeout setting
+#### Routing timeout setting
+
 Because the asynchronous call of Node.js is easy to be interrupted due to runtime errors or coding inadvertently, in order to reduce the memory usage of the server in this case, and also for the client to receive the error prompt earlier, you need to add this setting once When a timeout occurs, the server will return an HTTP error code to the client.
 
 
-When using a custom route implemented by the framework, the default timeout for the request is 15 seconds, which can be adjusted in app.js:
+When using a custom route implemented by the framework, the default timeout for the request is 15 seconds, which can be adjusted in `app.js`:
 
-
+```js
 // Set default timeout
 app.use(timeout('15s'));
+```
 {% endblock %}
 
 {% block use_leanstorage %}
 
+## Use data storage service
 
-The data storage service is a structured data storage service provided by LeanCloud. When you need to store some persistent data in web development, you can use the storage service to save data, such as the user's mailbox, avatar, and so on.
+The [data storage service](storage_overview.html) is a structured data storage service provided by LeanCloud. When you need to store some persistent data in web development, you can use the storage service to store data, such as the user's mailbox, profile photo and so on.
 
 
 The Node SDK (leanengine) in the LeanEngine provides the cloud functions that the server requires and related support for the Hook . It also needs the JavaScript SDK (leancloud-storage) to be installed together with the peerDependency. Please also upgrade the JavaScript SDK when upgrading the Node SDK:
 
 
+```bash
 npm install --save leanengine leancloud-storage
-The API documentation and update logs for the Node SDK are on GitHub.
+```
 
+The[API documentation](https://github.com/leancloud/leanengine-node-sdk/blob/master/API.md) and [Update logs](https://github.com/leancloud/leanengine-node-sdk/releases)of the Node SDK are on GitHub.
+
+```js
 // leanengine 和 leancloud-storage 
 // Leanengine and leancloud-storage export the same object
 var AV = require('leanengine');
@@ -214,6 +228,7 @@ AV.init({
   appKey: process.env.LEANCLOUD_APP_KEY || '{{appkey}}',
   masterKey: process.env.LEANCLOUD_APP_MASTER_KEY || '{{masterkey}}'
 });
+
 
 // You can use the useMasterKey to turn on the masterKey permission in the LeanEngine, which will skip ACLs and other permission restrictions.
 
@@ -225,26 +240,27 @@ new AV.Query('Todo').find().then(function(todos) {
 }).catch(function(err) {
   console.log(err)
 });
-{{ docs.note("If you need to turn off global masterKey permissions separately in some operations, please refer to LeanEngine Functions and Permissions Description.") }}
+
+```
+{{ docs.note("If you need to turn off global masterKey permissions separately in some operations, please refer to [LeanEngine Functions·Permission Description](leanengine_cloudfunction_guide-node.html#Master_Key_and super permission)。") }}
 
 
 The historical version of the Node SDK:
 
+* `0.x` The original version is not compatible with Node.js 4.x and above. It is recommended that users upgrade to the cloud engine Node.js SDK 1.0 to update
+* `1.x`：The global currentUser is completely abandones, and the dependent JavaScript is also upgraded to the 1.x branch, supporting Koa and Node.js 4.x and above.
+* `2.x`： Provides support for Promise-style cloud functions, Hook writing, removes some enabled features (AV.Cloud.httpRequest), and no longer supports Backbone-style callback functions.
+* `3.x`：**Recommended version**, specify the JavaScript SDK as peerDependency (allowing custom JS SDK), upgrade the JS SDK to 3.x
 
-0.x: The original version is not compatible with Node.js 4.x and above. It is recommended that users upgrade to the cloud engine Node.js SDK 1.0 to update
-1.x: The global currentUser is completely abandones, and the dependent JavaScript is also upgraded to the 1.x branch, supporting Koa and Node.js 4.x and above.
-2.x: Provides support for Promise-style cloud functions, Hook writing, removes some enabled features (AV.Cloud.httpRequest), and no longer supports Backbone-style callback functions.
-3.x: Recommended version, specify the JavaScript SDK as peerDependency (allowing custom JS SDK), upgrade the JS SDK to 3.x
+You can see the following code in `routes/todo.js` in the sample project:
 
-You can see the following code in routes/todo.js in the sample project:
-
-
+```js
 var router = require('express').Router();
 var AV = require('leanengine');
 
 ···
 
-// Add a Todo project
+// Add a new Todo project
 router.post('/', function(req, res, next) {
   var content = req.body.content;
   var todo = new Todo();
@@ -253,12 +269,14 @@ router.post('/', function(req, res, next) {
     res.redirect('/todos');
   }).catch(next);
 });
-The demonstration here is to store a Todo object to the data storage service. For more usage, please refer to: Data Storage Development Guide · JavaScript
+```
+The demonstration here is to store a Todo object to the data storage service. For more usage, please refer to:[Data Storage Development Guide · JavaScript](leanstorage_guide-js.html)
 
 {% endblock %}
 
 {% block get_env %}
 
+```js
 var NODE_ENV = process.env.NODE_ENV || 'development';
 if (NODE_ENV === 'development') { 
   // The current environment is the "development environment", which is started by the command line tool.
@@ -270,44 +288,44 @@ if (NODE_ENV === 'development') {
   // The current environment is the "prepared environment"
 
 }
-{{ docs.alert("NODE_ENV is a reserved system variable, such as the value of production in the production environment and value of the staging in the standby environment. Developers cannot override their values through custom environment variables.") }} {% endblock %}
+```
+{{ docs.alert("`NODE_ENV` is a reserved system variable, such as the value of production in the production environment and value of the staging in the standby environment. Developers cannot override their values through custom environment variables.") }} 
+{% endblock %}
 
 {% block cookie_session %}
 
-If your page is primarily rendered by the server (for example, using ejs, pug), and the front end does not need to use the JavaScript SDK for data manipulation, then it is recommended that you use a CookieSession middleware we provide to maintain user state in the cookie:
+### Managing on the server-end
 
+If your page is primarily rendered by the server (for example, using ejs, pug), and the front end does not need to use the JavaScript SDK for data manipulation, then it is recommended that you use a `CookieSession` middleware we provide to maintain user state in the cookie:
+
+```js
 app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
-Koa needs to add a framework: 'koa' parameters:
+```
 
+Koa needs to add a  `framework: 'koa'`parameters:
 
+```js
 app.use(AV.Cloud.CookieSession({ framework: 'koa', secret: 'my secret', maxAge: 3600000, fetchUser: true }));
-{{ docs.alert("while you are using a CookieSession, you need a CSRF Token to protect against CSRF attacks.") }}
+```
+{{ docs.alert("while you are using a CookieSession, you need a [CSRF Token](leanengine_webhosting_guide-node.html#CSRF_Token) to protect against CSRF attacks.") }}
 
-You need to pass in a secret for signing the cookie (must be provided). This middleware will record the login status information of AV.User into the cookie. The user will automatically check if the user has logged in the next login. If you have already logged in, you can obtain the current login user via req.currentUser.
+You need to pass in a secret for signing the cookie (must be provided). This middleware will record the login status information of  `AV.User` into the cookie. The user will automatically check if the user has logged in the next login. If you have already logged in, you can obtain the current login user via  `req.currentUser`.
 
-AV.Cloud.CookieSession 
-The options supported by AV.Cloud.CookieSession include:
+The options supported by `AV.Cloud.CookieSession` include:
 
-fetchUser: Whether or not automatically fetch the currently logged in AV.User object. The default is false. If it is set to true, every HTTP request will initiate a LeanCloud API call to fetch the user object. If it is set to false, by default you can only access the id of the req.currentUser (the ObjectId of the _User table record) and the sessionToken attribute, and you can manually fetch the entire user when needed.
+* **fetchUser** : **Whether or not automatically fetch the currently logged in AV.User object. The default is false.** If it is set to true, every HTTP request will initiate a LeanCloud API call to fetch the user object. If it is set to false, by default you can only access the `id` of the req.currentUser (the ObjectId recorded by `_User` table) and the `sessionToken` attribute, and you can manually fetch the entire user when needed.
+* **name**： The name of the cookie. The default is `avos.sess`.
+* **maxAge**： Set the expiration time of the cookie. In milliseconds.
 
+After Node SDK 1.x we are no longer allowed to get the login user's information via `AV.User.current()` (detail see [upgrade to Leanengine Node.js SDK 1.0](leanengine-node-sdk-upgrade-1.html#abandon_currentUser)），instead, you need：
 
-
-name: The name of the cookie. The default is avos.sess.
-
-maxAge: Set the expiration time of the cookie. In milliseconds.
-
-After Node SDK 1.x we are no longer allowed to get the login user's information via AV.User.current() (see upgrade to Cloud Engine Node.js SDK 1.0 for detail), but you need:
-
-
-In the LeanEngine method,use request.currentUser to obtain user information.
-In web hosting, use request.currentUser to obtain user information
-
-
->>>>>>>>在后续的方法调用显示传递 user 对象。In the subsequent method call display delivery of the user object.
+* In the LeanEngine method,you use `request.currentUser` to obtain user information.
+* In web hosting, you use `request.currentUser` to obtain user information
+* Pass the user object explicitly in subsequent calls.
 
 You can easily implement a site with login capabilities like this:
 
-
+```js
 // Handling login requests (may come from forms in the login interface)
 app.post('/login', function(req, res) {
   AV.User.logIn(req.body.username, req.body.password).then(function(user) {
@@ -337,20 +355,27 @@ app.get('/logout', function(req, res) {
   res.clearCurrentUser(); // 从 Cookie 中删除用户 Remove users from cookies
   res.redirect('/profile');
 });
-Maintained on the browser side
-If your page is mainly rendered by the browser (for example, using Vue, React, Angular), and mainly using JavaScript SDK for data operations on the front end, it is recommended to use AV.User.login login on the front end, which is subject to the login status of the front end.
+```
 
-When the backend needs to do some work using the current status of the login user, the frontend gets the sessionToken through user.getSessionToken(), and then sends the sessionToken to the backend via HTTP Header.
+#### Maintained on the browser side
 
-For example at the front end:
+If your page is mainly rendered by the browser (for example, using Vue, React, Angular), and mainly using JavaScript SDK for data operations on the frontend, it is recommended to use `AV.User.login` to login on the frontend, use the login status of the frontend as the standard.
 
+When the backend needs to do some work using the current status of the login user, the frontend gets the `user.getSessionToken()`  through user.getSessionToken(), and then sends the sessionToken to the backend via HTTP Header.
+
+For example on the frontend:
+
+```javascript
 AV.User.login(user, pass).then( user => {
   return fetch('/profile', headers: {
     'X-LC-Session': user.getSessionToken()
   });
 });
-Also at the back end:
+```
 
+Also on the backend:
+
+```javascript
 app.get('/profile', function(req, res) {
   //  Query current user based on sessionToken
   AV.User.become(req.headers['x-lc-session']).then( user => {
@@ -369,17 +394,22 @@ app.post('/todos', function(req, res) {
     res.send({error: err.message});
   });
 });
+
+```
 {% endblock %}
 
 {% block http_client %}
 
-It is recommended to use the request third-party module to complete the HTTP request.
+It is recommended to use the [request](https://www.npmjs.com/package/request), a third-party module to complete the HTTP request.
 
 Install request:
 
+```sh
 npm install request --save
+```
 Code example:
 
+```js
 var request = require('request');
 
 request({
@@ -396,24 +426,30 @@ request({
     console.log(body);
   }
 });
+```
 {% endblock %}
 
 {% block code_get_client_ip_address %}
-
+```js
 app.get('/', function(req, res) {
   var ipAddress = req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   console.log(ipAddress);
   res.send(ipAddress);
 });
+```
 {% endblock %}
 
-{% block upload_file_special_middleware %} Then configure the app to use multiparty middleware: 
+{% block upload_file_special_middleware %} 
+Then configure the app to use [multiparty](https://www.npmjs.com/package/multiparty) middleware: 
 
+```nodejs
 var multiparty = require('multiparty');
+```
 {% endblock %}
 
 {% block code_upload_file_sdk_function %}
 
+```nodejs
 var fs = require('fs');
 app.post('/upload', function(req, res){
   var form = new multiparty.Form();
@@ -434,49 +470,61 @@ app.post('/upload', function(req, res){
     }
   });
 });
+```
 {% endblock %}
 
-{% block custom_session %} Sometimes you need to save some of the properties you need in the session. You can add the generic cookie-session component. For details, see express.js · cookie-session. This component and the AV.Cloud.CookieSession component can coexist.
+{% block custom_session %} Sometimes you need to save some of the properties you need in the session. You can add the generic  `cookie-session` component. For details, see [express.js &middot; cookie-session](https://github.com/expressjs/cookie-session). This component and the `AV.Cloud.CookieSession` component can coexist.
 
-
-The express framework's `express.session.MemoryStore` can not working in the LeanEngine. Because the LeanEngine is multi-host and multi-process running so that the memory session cannot be shared. It is recommended to use [express.js · cookie-session Middleware] (https://github.com/expressjs/cookie-session)
+ `express.session.MemoryStore ` in <div class="callout callout-info">express framework can not working normally in the LeanEngine. Because the LeanEngine works in the way of multi-host and multi-process running so that the memory session cannot be shared. It is recommended to use [express.js &middot; cookie-session middleware](https://github.com/expressjs/cookie-session).</div>
 {% endblock %}
-{% block csrf_token %} You can realise CSRF Token by using Csurf library in Express {% endblock %}
+
+{% block csrf_token %}In express, you can realise CSRF Token by using the library of [csurf](https://github.com/expressjs/csurf).
+{% endblock %}
 
 
+{% block leancache %} 
+First add the relevant dependencies into`package.json`  :
 
-{% block leancache %} First add the relevant dependencies into package.json :
-
+```json
 "dependencies": {
   ...
   "redis": "2.2.x",
   ...
 }
+```
 
 Then you can get the Redis connection using the following code:
 
+```js
 var client = require('redis').createClient(process.env['REDIS_URL_<Example Name>']);
 // It is recommended to increase the client's on error event processing. Otherwise, the application process may be quit due to network fluctuations or redis server master-slave switching.
 client.on('error', function(err) {
   return console.error('redis err: %s', err);
 });
+```
 {% endblock %}
 
 {% block https_redirect %} Express:
 
+```js
 app.enable('trust proxy');
 app.use(AV.Cloud.HttpsRedirect());
+```
 Koa:
 
+```js
 app.proxy = true;
 app.use(AV.Cloud.HttpsRedirect({framework: 'koa'}));
+```
 {% endblock %}
 
 {% block extra_examples %}
 
+### Multi-process operation
 
-Because of the single-threaded model of Node.js itself, you can't make full use of multiple CPU cores, so if you use an instance of 2CPU or above, you need to configure the multi-process run by using Node.js's cluster to create a server-cluster.js:
+Because of the single-threaded model of Node.js itself, you can't make full use of multiple CPU cores, so if you use an instance of 2CPU or above, you need to configure the multi-process operation by using [cluster](https://nodejs.org/api/cluster.html) of Node.js's to create a `server-cluster.js`:
 
+```js
 var cluster = require('cluster');
 
 var workers = process.env.LEANCLOUD_AVAILABLE_CPUS || 1;
@@ -493,57 +541,74 @@ if (cluster.isMaster) {
 } else {
   require('./server.js')
 }
-Then change scripts.start to node server-cluster.js in package.json :
+```
+Then in `package.json`, change `scripts.start` to`node server-cluster.js` :
 
+```json
 "scripts": {
   "start": "node server-cluster.js"
 }
-Multi-process operation requires that your program does not maintain global state (such as locks) in memory. It is recommended to perform sufficient tests when switching to multi-process or multi-instance for the first time.
+```
+
+<div class="callout callout-info"> Multi-process operation requires that your program does not maintain global state (such as locks) in memory. It is recommended to perform sufficient tests when switching to multi-process or multi-instance for the first time.</div>
 
 {% endblock %}
 
-{% block depentencyCache %} For example, if the node project is deployed twice in a row and package.json is not modified, then the cached dependencies are used directly. {% endblock %}
+{% block depentencyCache %} For example, if the node project is deployed twice in a row and `package.json` is not modified, then the cached dependencies are used directly. 
+{% endblock %}
 
 
 {% block code_calling_custom_variables %}
 
+```nodejs
 // Use custom environment variables in the cloud engine Node.js environment
 var MY_CUSTOM_VARIABLE = process.env.MY_CUSTOM_VARIABLE;
 console.log(MY_CUSTOM_VARIABLE);
+```
 {% endblock %}
 
 {% block loggerExample %}
 
+```nodejs
 console.log('hello');
 console.error('some error!');
+```
 {% endblock %}
 
-{% block loggerExtraDescription %} You can print a web request sent by the LeanCloud SDK by setting an environment variable of DEBUG=leancloud:request. You can start the program with such a command when debugging locally:
+{% block loggerExtraDescription %} 
+You can print a web request sent by the LeanCloud SDK by setting an environment variable of `DEBUG=leancloud:request`. You can start the program with such a command when debugging locally:
 
+```sh
 env DEBUG=leancloud:request lean up
+```
 When there is a call to LeanCloud, you can see a log like this:
 
+```
 leancloud:request request(0) +0ms GET https://{{host}}/1.1/classes/Todo?&where=%7B%7D&order=-createdAt { where: '{}', order: '-createdAt' }
 leancloud:request response(0) +220ms 200 {"results":[{"content":"1","createdAt":"2016-08-09T06:18:13.028Z","updatedAt":"2016-08-09T06:18:13.028Z","objectId":"57a975a55bbb5000643fb690"}]}
+```
+
 We do not recommend opening this log on the production environment online, otherwise a large number of logs will be printed.
 
 {% endblock %}
 
-{% block section_timezone %} You need to pay attention to the different methods of the Date type in JavaScript. Some will return UTC time and some will return to local time (Beijing time in China):
-
+{% block section_timezone %} 
+You need to pay attention to the different methods of the Date type in JavaScript. Some will return UTC time and some will return to local time (Beijing time in China):
 
 Function timezone result
+--------|--------|-------
 
-toISOString	UTC time	2015-04-09T03:35:09.678Z
-toJSON（JSON Serialization）	UTC time	2015-04-09T03:35:09.678Z
-toUTCString	UTC time	Thu, 09 Apr 2015 03:35:09 GMT
-getHours	UTC time	3
-toString（console.log Printing time）	Local time	Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
-toLocaleString	Local time	Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+`toISOString`|UTC time| 2015-04-09T03:35:09.678Z
+`toJSON`（JSON Serialization）|UTC time|2015-04-09T03:35:09.678Z
+`toUTCString`|UTC time|Thu, 09 Apr 2015 03:35:09 GMT
+`getHours`|UTC time|3
+`toString`（`console.log` printing time）|local time|Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+`toLocaleString`|local time|Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
 
-Also note that when constructing a Date object, you should also pass to Date a object with a time zone object (either UTC or local time zone, for example, 2011-10-10T14:48:00.000Z instead of 2011-10-10T14:48:00) Otherwise, Date will not know how to understand this time.
+Also note that when constructing a Date object, you should also pass to Date a object with a time zone object (either UTC or local time zone, for example, 2011-10-10T14:48:00.000Z instead of 2011-10-10T14:48:00) Otherwise, Date will [not know how to understand this time](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse).
 
-Reminding to everyone that you need to pay attention to the distinction between constructing and displaying time objects, the phenomenon of "deviation of eight hours" will occur. {% endblock %}
+Reminding to everyone that you need to pay attention to the distinction between constructing and displaying time objects, the phenomenon of 「deviation of eight hours」 will occur. 
+{% endblock %}
 
 
 
