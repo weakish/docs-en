@@ -82,7 +82,7 @@ When your application is starting, the LeanEngine's hypervisor will check if you
 
 
 The URL for the health monitoring includes homepage of your application(`/`) and {{platformName}}SDK  which is responsible for `/__engine/1/ping` . As long as  **one of the two** returns a response of HTTP 200, you can considered it as a success. So make sure your program uses the {{platformName}} SDK, or your app ** home page will return an HTTP 200** response normally.
-In addition, in order to support the cloud function and Hook function of the LeanEngine, the hypervisor will use the URL of `/1.1/functions/_ops/metadatas` to interact with the {{platformName}} SDK. Please ensure that this URL is given to {{ The platformName}} SDK to handle, or ** returns an HTTP 404 indicating that the function will not use the cloud function** or Hook related functions.
+In addition, in order to support the cloud function and Hook function of the LeanEngine, the hypervisor will use the URL of `/1.1/functions/_ops/metadatas` to interact with the {{platformName}} SDK. Please ensure that this URL is given to the {{ platformName}} SDK to handle, or **returns an HTTP 404 indicating that the function will not use the cloud function** or Hook related functions.
 
 {% block ping %}	
 About how to load {{platformName}} SDK, please refer to the previous section [Using Data Storage Service] (#Using Data Storage Service)
