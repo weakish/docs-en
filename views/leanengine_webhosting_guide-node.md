@@ -204,7 +204,7 @@ app.use(timeout('15s'));
 
 {% block use_leanstorage %}
 
-## Use data storage service
+## Using data storage service
 
 The [data storage service](storage_overview.html) is a structured data storage service provided by LeanCloud. When you need to store some persistent data in web development, you can use the storage service to store data, such as the user's mailbox, profile photo and so on.
 
@@ -216,7 +216,7 @@ The Node SDK (leanengine) in LeanEngine provides the cloud functions that the se
 npm install --save leanengine leancloud-storage
 ```
 
-The[API documentation](https://github.com/leancloud/leanengine-node-sdk/blob/master/API.md) and [Update logs](https://github.com/leancloud/leanengine-node-sdk/releases)of the Node SDK are on GitHub.
+The [API documentation](https://github.com/leancloud/leanengine-node-sdk/blob/master/API.md) and [Update logs](https://github.com/leancloud/leanengine-node-sdk/releases) of the Node SDK are on GitHub.
 
 ```js
 // leanengine 和 leancloud-storage 
