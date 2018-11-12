@@ -24,13 +24,13 @@ npm install
 
 
 Project skeleton
-Take the example project as an example, in the root directory we see a `package.json` file. Note: **All Node.js projects must contain `package.json` in order to be correctly recognized by the LeanEngine as a Node.js project.
+Take the example project as an example, in the root directory we see a `package.json` file. Note: **All Node.js projects must contain `package.json` in order to be correctly recognized by LeanEngine as a Node.js project.
 
 Because of some historical issues, please make sure that there is ** no ** file named `cloud/main.js` in your project.
 
 #### package.json
 
-There are [many options] (https://docs.npmjs.com/files/package.json)that can be specified in the `package.json`of Node.js , which usually looks like this:
+There are [many options](https://docs.npmjs.com/files/package.json)that can be specified in the `package.json`of Node.js , which usually looks like this:
 
 
 ```json
@@ -50,15 +50,15 @@ There are [many options] (https://docs.npmjs.com/files/package.json)that can be 
 }
 ```
 
-Options that the LeanEngine will respect include:
+Options that LeanEngine will respect include:
 * `scripts.start` The command to start the project; the default is `node server.js`, which can be modified if you want to attach startup options to the node (such as `--es_staging`) or use other files as entry points.
 * `scripts.prepublish`will be run once at the end of the project build up; you can write the build commands such as `gulp build`can be written here.
 * `engines.node` specifies the required version of Node.js; for compatibility reasons, the default version is still the older 0.12, so it is recommended that you specify a higher version yourself. It is recommended to use the 8.x version for development, you can also set a `*`  which means you are always using the latest version of Node.js.
-* `dependencies`  for the dependencies project ; the LeanEngine will use `npm install --production` during deployment to list all the dependencies here for you. If a dependency has peerDependencies, please make sure they are also listed in `dependencies` (not `devDependencies`).
+* `dependencies`  for the dependencies project ; LeanEngine will use `npm install --production` during deployment to list all the dependencies here for you. If a dependency has peerDependencies, please make sure they are also listed in `dependencies` (not `devDependencies`).
 
-* `devDependencies` The package that devDependencies depends on when developing the project; currently, the LeanEngine does **not** install the dependencies here.
+* `devDependencies` The package that devDependencies depends on when developing the project; currently, LeanEngine does **not** install the dependencies here.
 
-We suggest you write your own `package.json` with reference to our [project template] (https://github.com/leancloud/node-js-getting-started/blob/master/package.json).
+We suggest you write your own `package.json` with reference to our [project template](https://github.com/leancloud/node-js-getting-started/blob/master/package.json).
 
 We also provide support for `package-lock.json` and `yarn.lock` :
 
@@ -68,13 +68,13 @@ We also provide support for `package-lock.json` and `yarn.lock` :
 
 
 
-<div class="callout callout-info"> Note that `package-lock.json` and `yarn.lock` contain the URLs for download dependencies, so if you use the source of npmjs.org when generating the lock file, then the deployment on the Chinese node may be slower; On the contrary,  if you use the source of cnpmjs.org is during the build up, the deployment on the US nodes may be slower. If you don't want to use `package-lock.json` and `yarn.lock`, add them to `.gitignore` (Git deployment) or `.leanengineignore` (when the command line tool is deployed).
+<div class="callout callout-info"> Note that `package-lock.json` and `yarn.lock` contain the URLs for download dependencies, so if you use the source of npmjs.org when generating the lock file, then the deployment on the Chinese node may be slower; On the contrary,  if you use the source of cnpmjs.org is during the build up, the deployment on the US nodes may be slower. If you don't want to use `package-lock.json` and `yarn.lock`, add them to `.gitignore` (Git deployment) or `.leanengineignore` (when the command line tool is deployed).</div>
 {% endblock %}
 
 {% block supported_frameworks %}
 
 
-At this point, you have deployed a site that can be accessed from the external network to the LeanEngine. Next, we will introduce more features and technical points to help you develop a website that meets your needs.
+At this point, you have deployed a site that can be accessed from the external network to LeanEngine. Next, we will introduce more features and technical points to help you develop a website that meets your needs.
 
 
 ## Access to the web framework
@@ -173,7 +173,7 @@ When using Koa, it is recommended to set the version of Node.js to 4.x or higher
 
 #### Other web framework
 
-You can also use other web frameworks for development, but you need to implement the logic mentioned in the [Health Monitor](#Health Monitor)yourself. Here's a simple example of using the built-in [http](https://nodejs.org/api/http.html)  implementation of Node.js for reference:
+You can also use other web frameworks for development, but you need to implement the logic mentioned in [the health monitoring section](#Health monitoring) yourself. Here's a simple example of using the built-in [http](https://nodejs.org/api/http.html)  implementation of Node.js for reference:
 
 ```js
 require('http').createServer(function(req, res) {
@@ -187,7 +187,7 @@ require('http').createServer(function(req, res) {
 }).listen(process.env.LEANCLOUD_APP_PORT);
 ```
 
-You need to listen to the web service on `0.0.0.0`(the default behavior of Node.js and of express) instead of `127.0.0.1`.
+You need to listen on `0.0.0.0`(the default behavior of Node.js and of express) instead of `127.0.0.1`.
 
 #### Routing timeout setting
 
@@ -209,7 +209,7 @@ app.use(timeout('15s'));
 The [data storage service](storage_overview.html) is a structured data storage service provided by LeanCloud. When you need to store some persistent data in web development, you can use the storage service to store data, such as the user's mailbox, profile photo and so on.
 
 
-The Node SDK (leanengine) in the LeanEngine provides the cloud functions that the server requires and related support for the Hook . It also needs the JavaScript SDK (leancloud-storage) to be installed together with the peerDependency. Please also upgrade the JavaScript SDK when upgrading the Node SDK:
+The Node SDK (leanengine) in LeanEngine provides the cloud functions that the server requires and related support for the Hook . It also needs the JavaScript SDK (leancloud-storage) to be installed together with the peerDependency. Please also upgrade the JavaScript SDK when upgrading the Node SDK:
 
 
 ```bash
@@ -230,7 +230,7 @@ AV.init({
 });
 
 
-// You can use the useMasterKey to turn on the masterKey permission in the LeanEngine, which will skip ACLs and other permission restrictions.
+// You can use the useMasterKey to turn on the masterKey permission in LeanEngine, which will skip ACLs and other permission restrictions.
 
 AV.Cloud.useMasterKey();
 
@@ -247,8 +247,8 @@ new AV.Query('Todo').find().then(function(todos) {
 
 The historical version of the Node SDK:
 
-* `0.x` The original version is not compatible with Node.js 4.x and above. It is recommended that users upgrade to the cloud engine Node.js SDK 1.0 to update
-* `1.x`：The global currentUser is completely abandones, and the dependent JavaScript is also upgraded to the 1.x branch, supporting Koa and Node.js 4.x and above.
+* `0.x` The original version is not compatible with Node.js 4.x and above. It is recommended that users upgrade to LeanEngine Node.js SDK 1.0 to update
+* `1.x`：The global `currentUser` is completely abandoned, and the dependent JavaScript is also upgraded to the 1.x branch, supporting Koa and Node.js 4.x and above.
 * `2.x`： Provides support for Promise-style cloud functions, Hook writing, removes some enabled features (AV.Cloud.httpRequest), and no longer supports Backbone-style callback functions.
 * `3.x`：**Recommended version**, specify the JavaScript SDK as peerDependency (allowing custom JS SDK), upgrade the JS SDK to 3.x
 
@@ -319,7 +319,7 @@ The options supported by `AV.Cloud.CookieSession` include:
 
 After Node SDK 1.x we are no longer allowed to get the login user's information via `AV.User.current()` (detail see [upgrade to Leanengine Node.js SDK 1.0](leanengine-node-sdk-upgrade-1.html#abandon_currentUser)），instead, you need：
 
-* In the LeanEngine method,you use `request.currentUser` to obtain user information.
+* In LeanEngine method,you use `request.currentUser` to obtain user information.
 * In web hosting, you use `request.currentUser` to obtain user information
 * Pass the user object explicitly in subsequent calls.
 
@@ -473,9 +473,9 @@ app.post('/upload', function(req, res){
 ```
 {% endblock %}
 
-{% block custom_session %} Sometimes you need to save some of the properties you need in the session. You can add the generic  `cookie-session` component. For details, see [express.js &middot; cookie-session](https://github.com/expressjs/cookie-session). This component and the `AV.Cloud.CookieSession` component can coexist.
+{% block custom_session %} If you need to save some properties in the session. You can add the generic  `cookie-session` component. For details, see [express.js &middot; cookie-session](https://github.com/expressjs/cookie-session). This component and the `AV.Cloud.CookieSession` component can coexist.
 
- `express.session.MemoryStore ` in <div class="callout callout-info">express framework can not working normally in the LeanEngine. Because the LeanEngine works in the way of multi-host and multi-process running so that the memory session cannot be shared. It is recommended to use [express.js &middot; cookie-session middleware](https://github.com/expressjs/cookie-session).</div>
+ `express.session.MemoryStore ` in <div class="callout callout-info">express framework can not working normally in LeanEngine. Because LeanEngine runs in multiple processes and hosts, in-memory sessions cannot be shared. It is recommended to use [express.js &middot; cookie-session middleware](https://github.com/expressjs/cookie-session).</div>
 {% endblock %}
 
 {% block csrf_token %}In express, you can realise CSRF Token by using the library of [csurf](https://github.com/expressjs/csurf).
@@ -561,7 +561,7 @@ Then in `package.json`, change `scripts.start` to`node server-cluster.js` :
 {% block code_calling_custom_variables %}
 
 ```nodejs
-// Use custom environment variables in the cloud engine Node.js environment
+// Use custom environment variables in LeanEngine Node.js environment
 var MY_CUSTOM_VARIABLE = process.env.MY_CUSTOM_VARIABLE;
 console.log(MY_CUSTOM_VARIABLE);
 ```

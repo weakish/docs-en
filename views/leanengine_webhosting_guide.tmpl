@@ -10,13 +10,13 @@ Web hosting is a sub-module of the LeanEngine; it allows you to develop a web ap
 It provides cloud functions and Hook, hosting for static files and customized routing, and it can also bind your own domain name to the application. 
 You can use it to create an introduction and download page for your mobile applications, developing an administrator console or a complete website, or running some custom logic that are mandatory to run on the server side.
 
-If you don't know how to create a LeanEngine project, debug it locally and deploy it to the cloud, you can firstly read [LeanEngine Quick Start] (leanengine_quickstart.html). Other related documents include:
+If you don't know how to create a LeanEngine project, debug it locally and deploy it to the cloud, you can firstly read [LeanEngine Quick Start](leanengine_quickstart.html). Other related documents include:
  
- - [LeanEngine Service Overview] (leanengine_overview.html) (Overview of all features)
- - [Command Line Tool Usage Guide] (leanengine_cli.html)
- - [LeanCache Usage Guide] (leancache_guide.html) (using the in-memory cache service to improve performance)
- - [LeanEngine Project Example] (leanengine_examples.html)
- - [LeanEngine FAQs] (leanengine_faq.html)
+ - [LeanEngine Service Overview](leanengine_overview.html) (Overview of all features)
+ - [Command Line Tool Usage Guide](leanengine_cli.html)
+ - [LeanCache Usage Guide](leancache_guide.html) (using the in-memory cache service to improve performance)
+ - [LeanEngine Project Example](leanengine_examples.html)
+ - [LeanEngine FAQs](leanengine_faq.html)
 
 This document uses {{platformName}} as an example, but the LeanEngine supports many other languages. You can choose the technology stack you are familiar with for development:
 
@@ -53,16 +53,16 @@ lean deploy
 
 ###  Setting up the domain name
 
-In the "Web Hosting Domain Name" section of [LeanEngine > Settings] (/cloud.html?appid={{appid}}#/conf), you can fill in a custom second-level domain name. For example, you set `myapp` , then you can access your website through our second-level domain name:
+In the "Web Hosting Domain Name" section of [LeanEngine > Settings](/cloud.html?appid={{appid}}#/conf), you can fill in a custom second-level domain name. For example, you set `myapp` , then you can access your website through our second-level domain name:
 
 - `http://myapp.leanapp.cn`（Chinese Area）
 - `http://myapp.avosapps.us`（US Area）
 
-<div class="callout callout-info">DNS You may need to wait a few hours till it takes into effect</div>
+<div class="callout callout-info">You may need to wait a few hours till DNS settings are effective</div>
 
 Our second-level domain is by default supported by HTTPS.
 
-If your app has no visit within 30 days and does not purchase a standard instance, the second-level domain may be recycled.
+If your app has no requests in 30 days and you haven't purchased a standard instance, the second-level domain may be recycled.
 
 {% block runtime_description %}{% endblock %}
 
@@ -78,14 +78,14 @@ If your app has no visit within 30 days and does not purchase a standard instanc
 
 ## Health monitoring
 
-When your application is starting, the LeanEngine's hypervisor will check if your application is started successfully every second. If it is still not started successfully after **30 seconds**, it means that the startup fails. After the application starts running normally, there will also be regular “health monitoring” to ensure your app is running properly.  And if health monitoring fails, the LeanEngine hypervisor will automatically restart your app.
+When your application is starting, LeanEngine's hypervisor will check if your application is started successfully every second. If it is still not started successfully after **30 seconds**, it means that the startup fails. After the application starts running normally, there will also be regular “health monitoring” to ensure your app is running properly.  And if health monitoring fails, the LeanEngine hypervisor will automatically restart your app.
 
 
 The URL for the health monitoring includes homepage of your application(`/`) and {{platformName}}SDK  which is responsible for `/__engine/1/ping` . As long as  **one of the two** returns a response of HTTP 200, you can considered it as a success. So make sure your program uses the {{platformName}} SDK, or your app ** home page will return an HTTP 200** response normally.
 In addition, in order to support the cloud function and Hook function of the LeanEngine, the hypervisor will use the URL of `/1.1/functions/_ops/metadatas` to interact with the {{platformName}} SDK. Please ensure that this URL is given to the {{ platformName}} SDK to handle, or **returns an HTTP 404 indicating that the function will not use the cloud function** or Hook related functions.
 
 {% block ping %}	
-About how to load {{platformName}} SDK, please refer to the previous section [Using Data Storage Service] (#Using Data Storage Service)
+About how to load {{platformName}} SDK, please refer to the previous section [Using Data Storage Service](#Using Data Storage Service)
 {% endblock %}
 
 {% block generalFeature %}
@@ -142,7 +142,7 @@ The industry usually uses CSRF Token to defend against CSRF statistics. You need
 
 {% block leancache %}{% endblock %}
 
-For more instruction on how to use LeanCache, see the [LeanCache Usage Guide] (leancache_guide.html).
+For more instruction on how to use LeanCache, see the [LeanCache Usage Guide](leancache_guide.html).
 
 ### HTTPS Redirect to HTTP
 
@@ -169,7 +169,7 @@ Run in you project root directory:
 lean deploy
 ```
 
-Using command line tools makes it easy to deploy, publish, view application status, view logs, and even support multiple application deployments. Please refer to the [Command Line Tool Guide] (leanengine_cli.html) for specific usage.
+Using command line tools makes it easy to deploy, publish, view application status, view logs, and even support multiple application deployments. Please refer to the [Command Line Tool Guide](leanengine_cli.html) for specific usage.
 
 ### Dependent cache
 
@@ -185,7 +185,7 @@ lean deploy --no-cache
 
 ### Git Deploy 
 
-In addition to this, you can also use git repository deployment. You need to submit the project to a git repository. We don't provide the source version management function, but instead, we use git- an excellent distributed version management tool. We recommend that you use  third parties source code hosting website like [GitHub] (https://github.com/), [Coding](https://coding.net/) or [code cloud] (https://gitee.com/). Or you can also use your own git repository (such as [Gitlab] (http://gitlab.org/))
+In addition to this, you can also use git repository deployment. You need to submit the project to a git repository. We don't provide the source version management function, but instead, we use git- an excellent distributed version management tool. We recommend that you use  third parties source code hosting website like [GitHub](https://github.com/), [Coding](https://coding.net/) or [code cloud](https://gitee.com/). Or you can also use your own git repository (such as [Gitlab](http://gitlab.org/))
 
 You need to create a project on these platforms first (if you already have the code, please do not select "Initialize this repository with a README"), fill in the local machine's SSH public key in the personal settings of the website (take GitHub as an example, Settings => SSH and GPG keys click New SSH key), then execute in the project directory:
 
@@ -248,11 +248,11 @@ Variable name|explanation
 `LEANCLOUD_APP_PORT`|The port that the current application is open to the external network, only by listening this port can the user access you service.
 `LEANCLOUD_API_SERVER`| The address used to access the storage service (similar to `https://api.leancloud.cn`). This value can vary depending on reasons like your data center, etc.. So use this value of this environment variable when requesting storage services or LeanCloud other services using the REST API. In the LeanEngine ** Do not use `https://api.leancloud.cn` directly
 `LEANCLOUD_AVAILABLE_CPUS`|The number of CPUs available for the LeanEngine instance, this value is greater than 1 for high-spec instances (e.g. 2CPU 1024MB memory). The application can start a corresponding number of threads or processes based on this value. In the LeanEngine ** Do not ** directly use the operating system CPU core, otherwise it may start too many processes and cause the exception to exit because it exceeds the instance specification.
-`LEANCLOUD_APP_GROUP`|The group in which the LeanEngine instance is located. When using the LeanEngine [Group Management] (leanengine_plan.html#Group Management) feature, this value is the name of the group.
+`LEANCLOUD_APP_GROUP`|The group in which the LeanEngine instance is located. When using the LeanEngine [Group Management](leanengine_plan.html#Group Management) feature, this value is the name of the group.
 `LEANCLOUD_REGION`|The area where the LeanEngine service is located, the value of {% if node != 'qcloud' %} is `CN` or `US`, which represents domestic node and the US node respectively. {% else %} currently only supports `CN` or Chinese nodes. {% endif %} 
 
 <div class="callout callout-info">Environment variables (such as `LC_APP_ID`) that are used by older LeanEngines starting with `LC_` have been abandoned. To ensure code compatibility, the `LC_` variable is still valid for a period of time but may fail completely in the future. To avoid errors, it is recommended to use the `LEANCLOUD_` variable instead. </div> 
-You can also add custom environment variables to the [LeanEngine > Settings > Custom Environment Variables] (/dashboard/cloud.html?appid={{appid}}#/conf) page. The names of the varaibles must be a letter, a number, an underscore, and begin with a letter. The value must be a string. The environment variable will be modified and will take effect the next time it is deployed. 
+You can also add custom environment variables to the [LeanEngine > Settings > Custom Environment Variables](/dashboard/cloud.html?appid={{appid}}#/conf) page. The names of the varaibles must be a letter, a number, an underscore, and begin with a letter. The value must be a string. The environment variable will be modified and will take effect the next time it is deployed. 
 
 According to general practice, some configuration items can be stored in environment variables. In this way, the environment variables can be modified and redeployed to change the behavior of the program without modifying the code, or you can store some Secret Key provided by third-party services in the environment variables so that these secret keys won't appear directly in the code. 
 
@@ -279,9 +279,9 @@ If the files you write in are large, it is recommended to delete them automatica
 
 ### Log
 
-In the [LeanEngine/Logs] (/cloud.html?appid={{appid}}#/log) of the console, you can view the LeanEngine's deployment and running logs , and you can also filter them by the log levels. 
+In the [LeanEngine/Logs](/cloud.html?appid={{appid}}#/log) of the console, you can view the LeanEngine's deployment and running logs , and you can also filter them by the log levels. 
 
-You can also [export via command line tool] (leanengine_cli.html#View Log) to save the last seven days of logs to local files for further analysis and statistics. 
+You can also [export via command line tool](leanengine_cli.html#View Log) to save the last seven days of logs to local files for further analysis and statistics. 
 
 The application log can be directly output to "standard output" or "standard error". The information will correspond to the level of`info` and `error` of the log. For example, the following code will record the parameter information at the info level:
 {% block loggerExample %}{% endblock %}
@@ -290,7 +290,7 @@ The application log can be directly output to "standard output" or "standard err
 
 {% block loggerExtraDescription %}{% endblock %}
 
-The LeanEngine's access log (Access Log) can be exported from [App Console > LeanEngine > Access Log] (/cloud.html?appid={{appid}}#/accesslog), you can download the packaged logs via the console. 
+The LeanEngine's access log (Access Log) can be exported from [App Console > LeanEngine > Access Log](/cloud.html?appid={{appid}}#/accesslog), you can download the packaged logs via the console. 
 
 ### Time zone
 
@@ -300,19 +300,19 @@ In the Chinese area system of the LeanEngine's, Beijing time (`Asia/Shanghai`) i
 
 ### Gateway IP address
 
-If the developer wants to configure the IP whitelist on a third-party service platform (such as WeChat Open Platform) and needs to obtain the LeanEngine portal or egress IP address, go to [Control Panel > LeanEngine > Settings > Portal IP] (/dashboard/ Cloud.html?appid={{appid}}#/conf) to self-check. 
+If the developer wants to configure the IP whitelist on a third-party service platform (such as WeChat Open Platform) and needs to obtain the LeanEngine portal or egress IP address, go to [Control Panel > LeanEngine > Settings > Portal IP](/dashboard/ Cloud.html?appid={{appid}}#/conf) to self-check. 
 
 We will minimize the frequency of changes in the IP of the gateway as much as possible, but the possibility of a sudden IP change still exists. Therefore, in the case of problems related to the IP of the portal, we recommend entering the console to check if the IP list has changed. 
 
 ## Filing and custom domain names
 
-The [Setting Domain Name] (#Setting Domain Name) mentioned earlier refers to setting a second-level domain name. Strictly speaking, ** is not recommended for direct use in the production environment**, for security reasons and laws and regulations, before you are ready to go into business with your website, you should bind your own registered and already filed domain name. 
+The [Setting Domain Name](#Setting Domain Name) mentioned earlier refers to setting a second-level domain name. Strictly speaking, ** is not recommended for direct use in the production environment**, for security reasons and laws and regulations, before you are ready to go into business with your website, you should bind your own registered and already filed domain name. 
 
-If you need to bind your own domain name, go to [App Console > Account Settings > Domain Binding] (/settings.html#/setting/domainbind) and follow the steps to fill in the information.
+If you need to bind your own domain name, go to [App Console > Account Settings > Domain Binding](/settings.html#/setting/domainbind) and follow the steps to fill in the information.
 
 The binding of independent domain names to domestic nodes requires ICP filing, whilst US nodes do not. 
 
-If you have no ICP filing, please go to [App Console > Account Settings > Domain Recording] (/settings.html#/setting/domainrecord) and follow the steps to fill in the information for filing. In the case that the primary domain name has been filed with LeanCloud, the subdomain does not require additional filing; if the primary domain is filed with other cloud providers, if you need to use the subdomain in LeanCloud, you need to file it again in LeanCloud. 
+If you have no ICP filing, please go to [App Console > Account Settings > Domain Recording](/settings.html#/setting/domainrecord) and follow the steps to fill in the information for filing. In the case that the primary domain name has been filed with LeanCloud, the subdomain does not require additional filing; if the primary domain is filed with other cloud providers, if you need to use the subdomain in LeanCloud, you need to file it again in LeanCloud. 
 
 <div class="callout callout-info">Before filing, the LeanEngine must be, and the content of the website is consistent with the content of the filing application. Enterprise users who only use the LeanEngine to host static files and do not use other LeanCloud services need to complete their own domain name filing. 
 
