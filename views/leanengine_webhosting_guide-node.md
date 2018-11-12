@@ -565,6 +565,7 @@ Then in `package.json`, change `scripts.start` to`node server-cluster.js` :
 var MY_CUSTOM_VARIABLE = process.env.MY_CUSTOM_VARIABLE;
 console.log(MY_CUSTOM_VARIABLE);
 ```
+
 {% endblock %}
 
 {% block loggerExample %}
@@ -595,15 +596,14 @@ We do not recommend opening this log on the production environment online, other
 {% block section_timezone %} 
 You need to pay attention to the different methods of the Date type in JavaScript. Some will return UTC time and some will return to local time (Beijing time in China):
 
-Function timezone result
---------|--------|-------
-
-`toISOString`|UTC time| 2015-04-09T03:35:09.678Z
-`toJSON`（JSON Serialization）|UTC time|2015-04-09T03:35:09.678Z
-`toUTCString`|UTC time|Thu, 09 Apr 2015 03:35:09 GMT
-`getHours`|UTC time|3
-`toString`（`console.log` printing time）|local time|Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
-`toLocaleString`|local time|Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+Function | Timezone | result
+---------|----------|--------
+`toISOString` | UTC time | 2015-04-09T03:35:09.678Z
+`toJSON`（JSON Serialization）| UTC time | 2015-04-09T03:35:09.678Z
+`toUTCString` | UTC time | Thu, 09 Apr 2015 03:35:09 GMT
+`getHours` | UTC time | 3
+`toString`（`console.log` printing time）| local time | Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+`toLocaleString` | local time | Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
 
 Also note that when constructing a Date object, you should also pass to Date a object with a time zone object (either UTC or local time zone, for example, 2011-10-10T14:48:00.000Z instead of 2011-10-10T14:48:00) Otherwise, Date will [not know how to understand this time](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse).
 
