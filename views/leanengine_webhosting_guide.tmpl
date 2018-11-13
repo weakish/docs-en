@@ -7,15 +7,15 @@
 
 Web hosting is a sub-module of LeanEngine; it allows you to develop a web application with {{platformName}}.
 
-It provides cloud functions and Hook, hosting for static files and customized routing, and it can also bind your own domain name to the application.
-You can use it to create an introduction and download page for your mobile applications, developing an administrator console or a complete website, or running some custom logic that are mandatory to run on the server side.
+It provides cloud functions and hooks, hosting for static files and custom routing. You can also bind your own domain names to the service.
+You can use it to create landing/download pages for your mobile applications, develop an admin console or a complete website, or run custom logic that has to be on the server side.
 
-If you don't know how to create a LeanEngine project, debug it locally and deploy it to the cloud, you can firstly read [LeanEngine Quick Start](leanengine_quickstart.html). Other related documents include:
+If you don't know how to create a LeanEngine project, debug it locally and deploy it to the cloud, please first read [LeanEngine Quick Start](leanengine_quickstart.html). Other related documents include:
 
  - [LeanEngine Service Overview](leanengine_overview.html) (Overview of all features)
  - [Command Line Tool Usage Guide](leanengine_cli.html)
  - [LeanCache Usage Guide](leancache_guide.html) (using the in-memory cache service to improve performance)
- - [LeanEngine Project Example](leanengine_examples.html)
+ - [LeanEngine Project Examples](leanengine_examples.html)
  - [LeanEngine FAQs](leanengine_faq.html)
 
 This document uses {{platformName}} as an example, but LeanEngine supports many other languages. You can choose the technology stack you are familiar with for development:
@@ -24,7 +24,7 @@ This document uses {{platformName}} as an example, but LeanEngine supports many 
 - [Python](leanengine_webhosting_guide-python.html)
 - [PHP](leanengine_webhosting_guide-php.html)
 - [Java](leanengine_webhosting_guide-java.html)
-- [.NET](leanengine_webhosting_guide-dotnet.html)
+- [C#](leanengine_webhosting_guide-dotnet.html)
 
 
 ## Starting with the example project
@@ -33,16 +33,16 @@ This document uses {{platformName}} as an example, but LeanEngine supports many 
 
 ### Local operation and debugging
 
-After ensuring that all dependencies are properly installed, in the project root directory, you can use our command line tool to start debugging locally:
+After all dependencies are installed, you can use our command-line tool in the project root directory to start a development server:
 
 
 ```sh
 lean up
 ```
 
-More content about the command line tool and local debugging, please refer to the [Command Line Tool Usage Guide](leanengine_cli.html).
+Please refer to the [Command Line Tool Usage Guide](leanengine_cli.html) for more on the command-line tool and local debugging.
 
-### Deploy to the cloud
+### Deploying to the cloud
 
 
 Run in your project root directory:
@@ -53,14 +53,15 @@ lean deploy
 
 ###  Setting up the domain name
 
-In the "Web Hosting Domain Name" section of [LeanEngine > Settings](/cloud.html?appid={{appid}}#/conf), you can fill in a custom second-level domain name. For example, you set `myapp` , then you can access your website through our second-level domain name:
+In the "Web Hosting Domain Name" section of [LeanEngine > Settings](/cloud.html?appid={{appid}}#/conf), you can fill in a custom second-level domain name. For example, if you set `myapp`, you can access your website through our second-level domain name:
 
-- `http://myapp.leanapp.cn`（Chinese Area）
-- `http://myapp.avosapps.us`（US Area）
+- `http://myapp.avosapps.us` (Global)
+- `http://myapp.leanapp.cn` (China Region)
+
 
 <div class="callout callout-info">You may need to wait a few hours till DNS settings are effective</div>
 
-Our second-level domain is by default supported by HTTPS.
+Our second-level domains support by HTTPS by default.
 
 If your app has no requests in 30 days and you haven't purchased a standard instance, the second-level domain may be recycled.
 

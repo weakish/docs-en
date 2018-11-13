@@ -9,7 +9,7 @@ Clone the sample code node-js-getting-started to local:
 git clone https://github.com/leancloud/node-js-getting-started.git
 ```
 
-Execute the following command in the root directory to install dependencies:
+Execute the following command in the project root directory to install dependencies:
 
 
 ```sh
@@ -23,14 +23,14 @@ npm install
 {% block project_constraint %}
 
 
-Project skeleton
-Take the example project as an example, in the root directory we see a `package.json` file. Note: **All Node.js projects must contain `package.json` in order to be correctly recognized by LeanEngine as a Node.js project.
+### Project skeleton
+Take the example project as an example, in the project root directory we see a `package.json` file. Note: All Node.js projects must contain `package.json` in order to be correctly recognized by LeanEngine.
 
-Because of some historical issues, please make sure that there is ** no ** file named `cloud/main.js` in your project.
+For historical reasons, please make sure that there is no file named `cloud/main.js` in your project.
 
 #### package.json
 
-There are [many options](https://docs.npmjs.com/files/package.json)that can be specified in the `package.json`of Node.js , which usually looks like this:
+There are [many options](https://docs.npmjs.com/files/package.json) that can be specified in `package.json`. It usually looks like this:
 
 
 ```json
@@ -51,47 +51,42 @@ There are [many options](https://docs.npmjs.com/files/package.json)that can be s
 ```
 
 Options that LeanEngine will respect include:
-* `scripts.start` The command to start the project; the default is `node server.js`, which can be modified if you want to attach startup options to the node (such as `--es_staging`) or use other files as entry points.
-* `scripts.prepublish`will be run once at the end of the project build up; you can write the build commands such as `gulp build`can be written here.
-* `engines.node` specifies the required version of Node.js; for compatibility reasons, the default version is still the older 0.12, so it is recommended that you specify a higher version yourself. It is recommended to use the 8.x version for development, you can also set a `*`  which means you are always using the latest version of Node.js.
-* `dependencies`  for the dependencies project ; LeanEngine will use `npm install --production` during deployment to list all the dependencies here for you. If a dependency has peerDependencies, please make sure they are also listed in `dependencies` (not `devDependencies`).
+* `scripts.start` The command to start the project; the default is `node server.js`, which can be modified if you want to attach startup options to Node (such as `--es_staging`) or use other files as entry point.
+* `scripts.prepublish` will run once after the project is built; you can write build commands such as `gulp build` here.
+* `engines.node` specifies the required version of Node.js; For compatibility, the default version is still 0.12, so it is recommended that you specify a higher version. 8.x or above is recommended. You can also use `*`  to always use the latest version.
+* `dependencies`  for the project dependencies; LeanEngine will use `npm install --production` during deployment to install all the dependencies listed here. If a dependency has peerDependencies, please make sure they are also listed in `dependencies` (not `devDependencies`).
+* `devDependencies` The dependencies for development; currently, LeanEngine does **not** install modules in `devDependencies`.
 
-* `devDependencies` The package that devDependencies depends on when developing the project; currently, LeanEngine does **not** install the dependencies here.
+We suggest that you create your own `package.json` using our [project template](https://github.com/leancloud/node-js-getting-started/blob/master/package.json) as reference.
 
-We suggest you write your own `package.json` with reference to our [project template](https://github.com/leancloud/node-js-getting-started/blob/master/package.json).
+We also support `package-lock.json` and `yarn.lock` :
 
-We also provide support for `package-lock.json` and `yarn.lock` :
+- If your application directory contains `package-lock.json`, dependencies will be installed according to versions in the file (requires Node.js 8.0 or higher).
+- If your application directory contains `yarn.lock`, then `yarn install` will be used instead of `npm install` to install dependencies (requires Node.js 4.8 and above).
 
-
-- If your application directory contains `package-lock.json`, it will be installed as described in lock (requires Node.js 8.0 or higher).
-- If your application directory contains`yarn.lock`, then `yarn install` will be used instead of `npm install` to install dependencies (requires Node.js 4.8 and above).
-
-
-
-<div class="callout callout-info"> Note that `package-lock.json` and `yarn.lock` contain the URLs for download dependencies, so if you use the source of npmjs.org when generating the lock file, then the deployment on the Chinese node may be slower; On the contrary,  if you use the source of cnpmjs.org is during the build up, the deployment on the US nodes may be slower. If you don't want to use `package-lock.json` and `yarn.lock`, add them to `.gitignore` (Git deployment) or `.leanengineignore` (when the command line tool is deployed).</div>
+<div class="callout callout-info"> Note that `package-lock.json` and `yarn.lock` contain the URLs for downloading dependencies, so if you use npmjs.org as the source when generating the lock file, then deploying in China may be slower; On the other hand, if you use cnpmjs.org as source, the deploying outside China may be slower. If you don't want to use `package-lock.json` and `yarn.lock`, add them to `.gitignore` (Git deployment) or `.leanengineignore` (when using the command line tool to deploy).</div>
 {% endblock %}
 
 {% block supported_frameworks %}
 
 
-At this point, you have deployed a site that can be accessed from the external network to LeanEngine. Next, we will introduce more features and technical points to help you develop a website that meets your needs.
+At this point, you know how to deploy a site to LeanEngine that can be accessed on the Internet. Next, we will delve into the details of implementing specific features.
 
 
-## Access to the web framework
+## Integration with web frameworks
 
-If you are careful enough, you will find we have used a popular Node Web framework [express](http://expressjs.com/) in the `package.json` in the sample project.
+You might have noticed that we use the popular Node web framework [Express](http://expressjs.com/) in `package.json` in the sample project.
 
-The Node SDK provides integrated support for[express](http://expressjs.com/) and [koa](http://koajs.com/). 
+The Node SDK provides integration for [Express](http://expressjs.com/) and [Koa](http://koajs.com/). 
 
-If you already have a ready-made project using these two frameworks, simply load the middleware provided by the Node SDK into the current project by:
+To use one of those frameworks, first add the LeanEngine Node SDK to the project:
 
 
 ```sh
 npm install --save leanengine leancloud-storage
 ```
 
-The code for the reference and configuration is as follows:
-
+And configure it in your code:
 
 #### Express
 
@@ -109,7 +104,7 @@ var app = express();
 app.use(AV.express());
 app.listen(process.env.LEANCLOUD_APP_PORT);
 ```
-You can use the definition feature of the router to define a custom HTTP API:
+You can define custom HTTP APIs:
 
 ```js
 app.get('/', function(req, res) {
@@ -133,7 +128,7 @@ app.get('/todos', function(req, res) {
 });
 
 ```
-For more best practices, please refer to our [Project template](https://github.com/leancloud/node-js-getting-started) and [LeanEngine project examples](leanengine_examples.html).
+For best practices, please refer to our [Project template](https://github.com/leancloud/node-js-getting-started) and [LeanEngine project examples](leanengine_examples.html).
 
 #### Koa
 
@@ -148,11 +143,11 @@ AV.init({
 });
 
 var app = koa();
-app.use(AV.koa());
+app.use(AV.koa2());  // use AV.koa() if you're using version 1.
 app.listen(process.env.LEANCLOUD_APP_PORT);
 ```
 
-You can use koa to render the page and provide a custom HTTP API:
+You can use koa to provide a custom HTTP API:
 
 
 ```js
@@ -171,9 +166,9 @@ app.use(function *(next) {
 When using Koa, it is recommended to set the version of Node.js to 4.x or higher according to the previous [package.json](#package_json) section. 
 
 
-#### Other web framework
+#### Other web frameworks
 
-You can also use other web frameworks for development, but you need to implement the logic mentioned in [the health monitoring section](#Health monitoring) yourself. Here's a simple example of using the built-in [http](https://nodejs.org/api/http.html)  implementation of Node.js for reference:
+You can also use other web frameworks for development, but you need to implement the logic mentioned in [the health monitoring section](#Health monitoring) yourself. Here's a simple example of using the built-in [http](https://nodejs.org/api/http.html) module of:
 
 ```js
 require('http').createServer(function(req, res) {
@@ -187,14 +182,13 @@ require('http').createServer(function(req, res) {
 }).listen(process.env.LEANCLOUD_APP_PORT);
 ```
 
-You need to listen on `0.0.0.0`(the default behavior of Node.js and of express) instead of `127.0.0.1`.
+You need to listen on `0.0.0.0`(the default behavior of Node.js and of the `http` module) instead of `127.0.0.1`.
 
-#### Routing timeout setting
+#### Route timeout
 
-Because the asynchronous call of Node.js is easy to be interrupted due to runtime errors or coding inadvertently, in order to reduce the memory usage of the server in this case, and also for the client to receive the error prompt earlier, you need to add this setting once When a timeout occurs, the server will return an HTTP error code to the client.
+Because the asynchronous calls in Node can be interrupted by runtime errors or bugs, in order to reduce the memory usage of the server, and let the client receive errors earlier, you should set a timeout, so that when a request takes too long to process, the server returns an HTTP error.
 
-
-When using a custom route implemented by the framework, the default timeout for the request is 15 seconds, which can be adjusted in `app.js`:
+The default timeout is 15 seconds, which can be adjusted:
 
 ```js
 // Set default timeout
@@ -206,20 +200,19 @@ app.use(timeout('15s'));
 
 ## Using data storage service
 
-The [data storage service](storage_overview.html) is a structured data storage service provided by LeanCloud. When you need to store some persistent data in web development, you can use the storage service to store data, such as the user's mailbox, profile photo and so on.
+[LeanCloud data storage](storage_overview.html) is a structured data storage service. You can persist data such as users' mailboxes, profiles, comments, and posts.
 
 
-The Node SDK (leanengine) in LeanEngine provides the cloud functions that the server requires and related support for the Hook . It also needs the JavaScript SDK (leancloud-storage) to be installed together with the peerDependency. Please also upgrade the JavaScript SDK when upgrading the Node SDK:
+The Node SDK (the `leanengine` module) provides support for cloud functions and hooks required on the server-side. It also needs the JavaScript SDK (the `leancloud-storage` module) to be installed together as peer dependency. Please also upgrade the JavaScript SDK when upgrading the Node SDK:
 
 
 ```bash
 npm install --save leanengine leancloud-storage
 ```
 
-The [API documentation](https://github.com/leancloud/leanengine-node-sdk/blob/master/API.md) and [Update logs](https://github.com/leancloud/leanengine-node-sdk/releases) of the Node SDK are on GitHub.
+The [API documentation](https://github.com/leancloud/leanengine-node-sdk/blob/master/API.md) and [change log](https://github.com/leancloud/leanengine-node-sdk/releases) of the Node SDK are on GitHub.
 
 ```js
-// leanengine 和 leancloud-storage 
 // Leanengine and leancloud-storage export the same object
 var AV = require('leanengine');
 
@@ -230,11 +223,11 @@ AV.init({
 });
 
 
-// You can use the useMasterKey to turn on the masterKey permission in LeanEngine, which will skip ACLs and other permission restrictions.
+// You can use the useMasterKey to turn on the masterKey permission in LeanEngine, which will skip ACLs and other permission checks.
 
 AV.Cloud.useMasterKey();
 
-// Use JavaScript's API to query data in cloud storage.
+// Use the JavaScript SDK to query data in cloud storage.
 new AV.Query('Todo').find().then(function(todos) {
   console.log(todos);
 }).catch(function(err) {
@@ -242,15 +235,7 @@ new AV.Query('Todo').find().then(function(todos) {
 });
 
 ```
-{{ docs.note("If you need to turn off global masterKey permissions separately in some operations, please refer to [LeanEngine Functions·Permission Description](leanengine_cloudfunction_guide-node.html#Master_Key_and super permission)。") }}
-
-
-The historical version of the Node SDK:
-
-* `0.x` The original version is not compatible with Node.js 4.x and above. It is recommended that users upgrade to LeanEngine Node.js SDK 1.0 to update
-* `1.x`：The global `currentUser` is completely abandoned, and the dependent JavaScript is also upgraded to the 1.x branch, supporting Koa and Node.js 4.x and above.
-* `2.x`： Provides support for Promise-style cloud functions, Hook writing, removes some enabled features (AV.Cloud.httpRequest), and no longer supports Backbone-style callback functions.
-* `3.x`：**Recommended version**, specify the JavaScript SDK as peerDependency (allowing custom JS SDK), upgrade the JS SDK to 3.x
+{{ docs.note("If you need to turn off global masterKey permissions separately in some operations, please refer to [Cloud Functions · Permissions](leanengine_cloudfunction_guide-node.html#Master_Key_and super permission)。") }}
 
 You can see the following code in `routes/todo.js` in the sample project:
 
@@ -258,7 +243,7 @@ You can see the following code in `routes/todo.js` in the sample project:
 var router = require('express').Router();
 var AV = require('leanengine');
 
-···
+// ···
 
 // Add a new Todo project
 router.post('/', function(req, res, next) {
@@ -270,7 +255,7 @@ router.post('/', function(req, res, next) {
   }).catch(next);
 });
 ```
-The demonstration here is to store a Todo object to the data storage service. For more usage, please refer to:[Data Storage Development Guide · JavaScript](leanstorage_guide-js.html)
+The snippet shows how to store a Todo object to the data storage service. For more, please refer to:[Data Storage Development Guide · JavaScript](leanstorage_guide-js.html)
 
 {% endblock %}
 
