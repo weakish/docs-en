@@ -79,11 +79,10 @@ If your app has no requests in 30 days and you haven't purchased a standard inst
 
 ## Health monitoring
 
-When your application is starting, LeanEngine's hypervisor will check if your application is started successfully every second. If it is still not started successfully after **30 seconds**, it means that the startup fails. After the application starts running normally, there will also be regular “health monitoring” to ensure your app is running properly.  And if health monitoring fails, the LeanEngine hypervisor will automatically restart your app.
+When your application is deployed, LeanEngine's hypervisor will check if it is started successfully every second. The deployment is considered a failure if the check still fails after 30 seconds. After the application starts running normally, regular health monitoring ensures that your app is healthy. And if health monitoring fails, the LeanEngine hypervisor will automatically restart your app.
 
-
-The URL for the health monitoring includes homepage of your application(`/`) and {{platformName}}SDK  which is responsible for `/__engine/1/ping` . As long as  **one of the two** returns a response of HTTP 200, you can considered it as a success. So make sure your program uses the {{platformName}} SDK, or your app ** home page will return an HTTP 200** response normally.
-In addition, in order to support cloud functions and hooks in LeanEngine, the hypervisor will use the URL of `/1.1/functions/_ops/metadatas` to interact with the {{platformName}} SDK. Please ensure that this URL is given to the {{ platformName}} SDK to handle, or **returns an HTTP 404 indicating that the function will not use the cloud function** or Hook related functions.
+The URL for health monitoring includes the root path of your application(`/`) and `/__engine/1/ping` which is normally handled by the {{platformName}}. As long as  **one of the two** returns a HTTP response code of 200, the application is considered healthy. So make sure your program uses the {{platformName}} SDK, or your app root path returns 200 as the HTTP status code.
+In addition, in order to support cloud functions and hooks in LeanEngine, the hypervisor will use the URL `/1.1/functions/_ops/metadatas` to communicate with the {{platformName}} SDK. Please the {{platformName}} SDK handle this path, or return 404 as the HTTP response code to indicate that cloud functions and hooks are not used.
 
 {% block ping %}
 Please refer to the previous section [Using data storage service](#Using data storage service) for how to install and use the {{platformName}} SDK,
