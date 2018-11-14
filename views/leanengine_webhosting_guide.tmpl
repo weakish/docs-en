@@ -191,12 +191,13 @@ You can also deploy from your Git repository. You need to push the project to a 
 
 After you push your code to a repository accessible from the Internet, please fill in the repo URL in LeanEngine settings in the developer console. If it is a public repository and has an HTTPS URL, it is preferred: `https://github.com/<username>/<repoName>.git`.
 
-If the repo is not accessible through HTTPS, you need to fill in the ssh address `git&commat;github.com:&lt;USERNAME&gt;/&lt;REPO-NAME&gt;.git`. If it is a private repo, you also need to add the deploy key to your repo (shown in LeanEngine settings in the developer console) and give it read access. For example, on GitHub you can add deploy keys in the project's Settings => Deploy keys.
+If the repo is not accessible through HTTPS, you need to fill in the ssh address <code>git&commat;github.com:&lt;USERNAME&gt;/&lt;REPO-NAME&gt;.git</code>. If it is a private repo, you also need to add the deploy key to your repo (shown in LeanEngine settings in the developer console) and give it read access. For example, on GitHub you can add deploy keys in the project's Settings => Deploy keys.
 
 After the setup, you can deploy from the web in the developer console.
 By default, it will deploy the code of the master branch. You can also fill in another branch name,a label or a specific commit hash.
 
-### Preparatory environment and production environment
+### Staging environment and production environment
+
 By default, LeanEngine only has one "production environment" and the corresponding domain name is `{{var_app_domain}}.leanapp.cn`. There is a "trial instance" in the production environment to run the application.
 
 When the experience example of the production environment is upgraded to "Standard example", there will be an additional "preparation environment" with corresponding domain name `stg-{{var_app_domain}}.leanapp.cn`, both environments access the same data. You can test your LeanEngine code with the prepared environment. Each time you modify it, you can deploy it to the prepared environment first. After the test is passed, you can publish it to the production environment. If you want to have a test environment with an independent data source, it is recommended to create an application separately.
