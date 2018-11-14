@@ -264,17 +264,14 @@ The snippet shows how to store a Todo object to the data storage service. For mo
 ```js
 var NODE_ENV = process.env.NODE_ENV || 'development';
 if (NODE_ENV === 'development') { 
-  // The current environment is the "development environment", which is started by the command line tool.
-
+  // The development environment, which is started by the command line tool.
 } else if(NODE_ENV == 'production') {
-  // The current environment is the "production environment" and is the official online environment.
-
+  // The production environment.
 } else { 
-  // The current environment is the "prepared environment"
-
+  // The staging environment.
 }
 ```
-{{ docs.alert("`NODE_ENV` is a reserved system variable, such as the value of production in the production environment and value of the staging in the standby environment. Developers cannot override their values through custom environment variables.") }} 
+{{ docs.alert("`NODE_ENV` is a reserved system variable. Developers should not attempt to override it.") }} 
 {% endblock %}
 
 {% block cookie_session %}
@@ -556,24 +553,25 @@ console.error('some error!');
 {% endblock %}
 
 {% block loggerExtraDescription %} 
-You can print a web request sent by the LeanCloud SDK by setting an environment variable of `DEBUG=leancloud:request`. You can start the program with such a command when debugging locally:
+You can print requests sent by the LeanCloud SDK by setting the environment variable `DEBUG=leancloud:request`. For local development you can use:
 
 ```sh
 env DEBUG=leancloud:request lean up
 ```
-When there is a call to LeanCloud, you can see a log like this:
+
+When there is a request to LeanCloud, you will see a log like this:
 
 ```
 leancloud:request request(0) +0ms GET https://{{host}}/1.1/classes/Todo?&where=%7B%7D&order=-createdAt { where: '{}', order: '-createdAt' }
 leancloud:request response(0) +220ms 200 {"results":[{"content":"1","createdAt":"2016-08-09T06:18:13.028Z","updatedAt":"2016-08-09T06:18:13.028Z","objectId":"57a975a55bbb5000643fb690"}]}
 ```
 
-We do not recommend opening this log on the production environment online, otherwise a large number of logs will be printed.
+We do not recommend enabling it in the production environment, otherwise a huge number of logs may be printed.
 
 {% endblock %}
 
 {% block section_timezone %} 
-You need to pay attention to the different methods of the Date type in JavaScript. Some will return UTC time and some will return to local time (Beijing time in China):
+You need to pay attention to the different methods of the Date type in JavaScript. Some will return UTC time and some will return local time (China standard time in China):
 
 Function | Timezone | result
 ---------|----------|--------
@@ -581,12 +579,11 @@ Function | Timezone | result
 `toJSON`（JSON Serialization）| UTC time | 2015-04-09T03:35:09.678Z
 `toUTCString` | UTC time | Thu, 09 Apr 2015 03:35:09 GMT
 `getHours` | UTC time | 3
-`toString`（`console.log` printing time）| local time | Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+`toString` (used by `console.log()`) | local time | Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
 `toLocaleString` | local time | Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
 
-Also note that when constructing a Date object, you should also pass to Date a object with a time zone object (either UTC or local time zone, for example, 2011-10-10T14:48:00.000Z instead of 2011-10-10T14:48:00) Otherwise, Date will [not know how to understand this time](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse).
+When constructing a `Date` object, you should pass an object with time zone (for example, 2011-10-10T14:48:00.000Z instead of 2011-10-10T14:48:00) Otherwise, `Date` [will not know how to interpret it](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse).
 
-Reminding to everyone that you need to pay attention to the distinction between constructing and displaying time objects, the phenomenon of 「deviation of eight hours」 will occur. 
 {% endblock %}
 
 
