@@ -279,42 +279,38 @@ if (NODE_ENV === 'development') {
 
 {% block cookie_session %}
 
-### Managing on the server-end
+### Managing session on the server-end
 
-If your page is primarily rendered by the server (for example, using ejs, pug), and the front end does not need to use the JavaScript SDK for data manipulation, then it is recommended that you use a `CookieSession` middleware we provide to maintain user state in the cookie:
+If your page is primarily rendered by the server (for example, using ejs, pug), and the frontend does not need to use the JavaScript SDK for data manipulation, it is recommended that you use the `CookieSession` middleware to maintain session state in the cookie:
 
 ```js
 app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
 ```
 
-Koa needs to add a  `framework: 'koa'`parameters:
+Koa requires a  `framework: 'koa'` parameter:
 
 ```js
 app.use(AV.Cloud.CookieSession({ framework: 'koa', secret: 'my secret', maxAge: 3600000, fetchUser: true }));
 ```
 {{ docs.alert("while you are using a CookieSession, you need a [CSRF Token](leanengine_webhosting_guide-node.html#CSRF_Token) to protect against CSRF attacks.") }}
 
-You need to pass in a secret for signing the cookie (must be provided). This middleware will record the login status information of  `AV.User` into the cookie. The user will automatically check if the user has logged in the next login. If you have already logged in, you can obtain the current login user via  `req.currentUser`.
+You need to pass in a secret for signing the cookie (mandatory). This middleware will record the login status of  `AV.User` in the cookie. If the user is logged in, you can obtain the current user via  `req.currentUser`.
 
 The options supported by `AV.Cloud.CookieSession` include:
 
-* **fetchUser** : **Whether or not automatically fetch the currently logged in AV.User object. The default is false.** If it is set to true, every HTTP request will initiate a LeanCloud API call to fetch the user object. If it is set to false, by default you can only access the `id` of the req.currentUser (the ObjectId recorded by `_User` table) and the `sessionToken` attribute, and you can manually fetch the entire user when needed.
-* **name**： The name of the cookie. The default is `avos.sess`.
-* **maxAge**： Set the expiration time of the cookie. In milliseconds.
+* **fetchUser** : Whether or not to automatically fetch the currently logged in AV.User object. The default is false. If it is set to true, every HTTP request will initiate an API call to fetch the user object. If it is set to false, by default you can only access the `id` of the req.currentUser (the ObjectId recorded by `_User` table) and the `sessionToken` attribute, and you can manually fetch the entire user when needed.
+* **name**: The name of the cookie. The default is `avos.sess`.
+* **maxAge**: Set the expiration time of the cookie. In milliseconds.
 
-After Node SDK 1.x we are no longer allowed to get the login user's information via `AV.User.current()` (detail see [upgrade to Leanengine Node.js SDK 1.0](leanengine-node-sdk-upgrade-1.html#abandon_currentUser)），instead, you need：
+Node SDK no longer supports getting the user information via `AV.User.current()` after version 1.0 (see [upgrade to Leanengine Node.js SDK 1.0](leanengine-node-sdk-upgrade-1.html#abandon_currentUser)），instead, you need to use `request.currentUser`, and pass the user object explicitly in subsequent steps when needed.
 
-* In LeanEngine method,you use `request.currentUser` to obtain user information.
-* In web hosting, you use `request.currentUser` to obtain user information
-* Pass the user object explicitly in subsequent calls.
-
-You can easily implement a site with login capabilities like this:
+You can easily implement a site with login like this:
 
 ```js
 // Handling login requests (may come from forms in the login interface)
 app.post('/login', function(req, res) {
   AV.User.logIn(req.body.username, req.body.password).then(function(user) {
-    res.saveCurrentUser(user); // Cookie Save current user to cookie
+    res.saveCurrentUser(user); // Save current user to the session
     res.redirect('/profile'); // Jump to the profile page
   }, function(error) {
     // Login failed, jump to login page
@@ -337,16 +333,16 @@ app.get('/profile', function(req, res) {
 // Log out
 app.get('/logout', function(req, res) {
   req.currentUser.logOut();
-  res.clearCurrentUser(); // 从 Cookie 中删除用户 Remove users from cookies
+  res.clearCurrentUser(); // Remove users from the cookie session
   res.redirect('/profile');
 });
 ```
 
-#### Maintained on the browser side
+#### Managing session on the browser side
 
-If your page is mainly rendered by the browser (for example, using Vue, React, Angular), and mainly using JavaScript SDK for data operations on the frontend, it is recommended to use `AV.User.login` to login on the frontend, use the login status of the frontend as the standard.
+If your page is mainly rendered by the browser (for example, using Vue, React, Angular) and uses JavaScript SDK for data operations on the frontend, it is recommended to use `AV.User.login` to login on the frontend.
 
-When the backend needs to do some work using the current status of the login user, the frontend gets the `user.getSessionToken()`  through user.getSessionToken(), and then sends the sessionToken to the backend via HTTP Header.
+When the backend needs to do some work depending the current status of the login user, the frontend obtains a token through `user.getSessionToken()`, and then sends it to the backend via HTTP Header.
 
 For example on the frontend:
 
@@ -358,7 +354,7 @@ AV.User.login(user, pass).then( user => {
 });
 ```
 
-Also on the backend:
+And on the backend:
 
 ```javascript
 app.get('/profile', function(req, res) {
@@ -385,7 +381,7 @@ app.post('/todos', function(req, res) {
 
 {% block http_client %}
 
-It is recommended to use the [request](https://www.npmjs.com/package/request), a third-party module to complete the HTTP request.
+It is recommended to use [request](https://www.npmjs.com/package/request), a third-party module, to implement HTTP requests.
 
 Install request:
 
@@ -401,8 +397,8 @@ request({
   method: 'POST',
   url: 'http://www.example.com/create_post',
   json: {
-    title: 'Vote for Pedro',
-    body: 'If you vote for Pedro, your wildest dreams will come true'
+    title: 'Post title',
+    body: 'Post body'
   }
 }, function(err, res, body) {
   if (err) {
@@ -425,7 +421,7 @@ app.get('/', function(req, res) {
 {% endblock %}
 
 {% block upload_file_special_middleware %} 
-Then configure the app to use [multiparty](https://www.npmjs.com/package/multiparty) middleware: 
+Configure the app to use the [multiparty](https://www.npmjs.com/package/multiparty) module: 
 
 ```nodejs
 var multiparty = require('multiparty');
@@ -458,30 +454,26 @@ app.post('/upload', function(req, res){
 ```
 {% endblock %}
 
-{% block custom_session %} If you need to save some properties in the session. You can add the generic  `cookie-session` component. For details, see [express.js &middot; cookie-session](https://github.com/expressjs/cookie-session). This component and the `AV.Cloud.CookieSession` component can coexist.
+{% block custom_session %} If you need to save properties in the session. You can add the generic  `cookie-session` component. For details, see [express.js &middot; cookie-session](https://github.com/expressjs/cookie-session). This component and the `AV.Cloud.CookieSession` component can coexist.
 
- `express.session.MemoryStore ` in <div class="callout callout-info">express framework can not working normally in LeanEngine. Because LeanEngine runs in multiple processes and hosts, in-memory sessions cannot be shared. It is recommended to use [express.js &middot; cookie-session middleware](https://github.com/expressjs/cookie-session).</div>
+ <div class="callout callout-info">`express.session.MemoryStore ` in Express can not work properly in LeanEngine. Because LeanEngine runs in multiple processes and hosts, in-memory sessions cannot be shared. It is recommended to use [express.js &middot; cookie-session middleware](https://github.com/expressjs/cookie-session).</div>
 {% endblock %}
 
-{% block csrf_token %}In express, you can realise CSRF Token by using the library of [csurf](https://github.com/expressjs/csurf).
+{% block csrf_token %}In express, you can implement CSRF Token by using the library of [csurf](https://github.com/expressjs/csurf).
 {% endblock %}
 
 
 {% block leancache %} 
-First add the relevant dependencies into`package.json`  :
+First add `redis` as a dependency:
 
-```json
-"dependencies": {
-  ...
-  "redis": "2.2.x",
-  ...
-}
+```bash
+npm install --save redis
 ```
 
-Then you can get the Redis connection using the following code:
+Then you can create a Redis connection using the following code:
 
 ```js
-var client = require('redis').createClient(process.env['REDIS_URL_<Example Name>']);
+var client = require('redis').createClient(process.env['REDIS_URL_<Instance Name>']);
 // It is recommended to increase the client's on error event processing. Otherwise, the application process may be quit due to network fluctuations or redis server master-slave switching.
 client.on('error', function(err) {
   return console.error('redis err: %s', err);
@@ -507,7 +499,9 @@ app.use(AV.Cloud.HttpsRedirect({framework: 'koa'}));
 
 ### Multi-process operation
 
-Because of the single-threaded model of Node.js itself, you can't make full use of multiple CPU cores, so if you use an instance of 2CPU or above, you need to configure the multi-process operation by using [cluster](https://nodejs.org/api/cluster.html) of Node.js's to create a `server-cluster.js`:
+Node.js itself is single-threaded, so if you have 2-CPU (or above) LeanEngine instances, you need to configure multi-process using [cluster](https://nodejs.org/api/cluster.html).
+
+Create `server-cluster.js`:
 
 ```js
 var cluster = require('cluster');
@@ -535,7 +529,7 @@ Then in `package.json`, change `scripts.start` to`node server-cluster.js` :
 }
 ```
 
-<div class="callout callout-info"> Multi-process operation requires that your program does not maintain global state (such as locks) in memory. It is recommended to perform sufficient tests when switching to multi-process or multi-instance for the first time.</div>
+<div class="callout callout-info"> Multi-process requires that your program does not maintain global state (such as locks) in memory. It is recommended to perform sufficient tests when switching to multi-process or multi-instance for the first time.</div>
 
 {% endblock %}
 

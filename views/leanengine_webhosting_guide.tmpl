@@ -90,26 +90,26 @@ Please refer to the previous section [Using data storage service](#Using data st
 
 {% block generalFeature %}
 
-## User Status management
+## Session management
 
 {% block cookie_session %}{% endblock %}
 
-## Website common function realisation
+## Implementing common features
 
 ### Sending HTTP request
 
 {% block http_client %}{% endblock %}
 
-### Obtain Client-end IP
+### Obtaining client IP
 
-If you want to get the client's IP, you can get it directly from the `x-real-ip` field of the HTTP header requested by the user. The sample code is as follows:
+If you want to get the client's IP, you can get it directly from the `x-real-ip` HTTP header.
 
 {% block code_get_client_ip_address %}{% endblock %}
 
-### Upload Files
-Website projects that are hosted on {{productName}} can directly handle file uploads directly using the API file-related interfaces of the built-in LeanCloud {{sdk_name}} SDK.
+### Uploading files
+Websites hosted on {{productName}} can handle file uploads using the file-related API in the {{sdk_name}} SDK.
 
-Assume the front-end HTML code written like this:
+Assuming the front-end HTML code is like:
 
 ```html
 <form enctype="multipart/form-data" method="post" action="/upload">
@@ -120,7 +120,7 @@ Assume the front-end HTML code written like this:
 
 {% block upload_file_special_middleware %}{% endblock %}
 
-Next, define the handler function for the file uploading, build a Form object, parse req as a parameter, it will save the requested files to the temporary file directory, and construct the files object:
+Next, define the handler function, build a Form object, and parse req as a parameter, it will save the uploaded file to the temporary directory, and construct the file object:
 
 {% block code_upload_file_sdk_function %}{% endblock %}
 
@@ -130,9 +130,9 @@ Next, define the handler function for the file uploading, build a Form object, p
 {% endblock %}
 
 ### CSRF Token
-If your LeanEngine application uses cookies as an authentication method (for example, using the SDK's CookieSession middleware); then there is a risk of being attacked by [CSRF](https://github.com/pillarjs/understanding-csrf). It will allow other sites to forge malicious requests with the correct cookies.
+If your LeanEngine application uses cookies as an authentication method (for example, using the SDK's CookieSession middleware); then there is a risk of [CSRF](https://github.com/pillarjs/understanding-csrf) attack. It will allow other sites to forge malicious requests with valid cookies.
 
-The industry usually uses CSRF Token to defend against CSRF statistics. You need to pass a random string (that is, CSRF Token, which can be passed through the cookie) to the client-end. The client-end must include CSRF in the request body or in the header. The server needs to verify that the CSRF Token is correct.
+CSRF tokens are usually used to defend against CSRF attacks. You need to pass a random string (the CSRF token, which can be passed in the cookie) to the client. The client must include the CSRF token in the request body or in the header. The server verifies that the CSRF Token is correct.
 
 {% block csrf_token %}{% endblock %}
 
@@ -140,25 +140,26 @@ The industry usually uses CSRF Token to defend against CSRF statistics. You need
 
 ### LeanCache
 
+[LeanCache](http://localhost:9000/leancache_guide.html) is a cache service provided by LeanCloud for high-traffic sites.
+
 {% block leancache %}{% endblock %}
 
 For more instruction on how to use LeanCache, see the [LeanCache Usage Guide](leancache_guide.html).
 
-### HTTPS Redirect to HTTP
+### Redirecting to HTTPS
 
 
-For security consideration, we may add HTTPS encrypted transmissions to the websites. Our {{productName}} supports web hosting and it also has such a requirement.
+For security consideration, it is recommended that all sites use HTTPS by default. We provide full support for HTTPS.
 
-For this reason,  we provide a new middleware in {{productName}} to force your website `{{var_app_domain}}.leanapp.cn` to be accessed via https, you just have to do this:
+There is a middleware in {{productName}} to force your website `{{var_app_domain}}.leanapp.cn` to be accessed via https. All you have to do is to add it:
 
 {% block https_redirect %}{% endblock %}
 
-After deploying and publishing to the production environment, accessing your {{productName}} site's second-level domain will be forced to access via HTTPS.
-
+When a user accesses your site with HTTP, she will be redirected to the HTTPS URL.
 
 {% block extra_examples %}{% endblock %}
 
-## Deploy and publish
+## Deploying and publishing
 
 
 ### Command line deploy
