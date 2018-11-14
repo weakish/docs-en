@@ -161,8 +161,7 @@ When a user accesses your site with HTTP, she will be redirected to the HTTPS UR
 
 ## Deploying and publishing
 
-
-### Command line deploy
+### Deploying with the commandline tool
 
 Run in you project root directory:
 
@@ -170,37 +169,32 @@ Run in you project root directory:
 lean deploy
 ```
 
-Using command line tools makes it easy to deploy, publish, view application status, view logs, and even support multiple application deployments. Please refer to the [Command Line Tool Guide](leanengine_cli.html) for specific usage.
+The command line tool makes it easy to deploy, publish, view application status, view logs, and even support multiple application deployments. Please refer to the [Command Line Tool Guide](leanengine_cli.html) for specific usage.
 
-### Dependent cache
+### Dependency cache
 
-LeanEngine implements a caching mechanism to speed up the build up process. The so-called build up means the process of installing dependencies on your LeanEngine. Each time you construct, if the dependencies are not being added or deleted, then you can use the last dependencies. You only need to replace the new application code.
+LeanEngine implements a caching mechanism to speed up the build process. The build process the installs dependencies for your project. For each new build, if the dependencies are not changed, the dependencies installed last time are used. Only the application code is replaced.
 
 {% block depentencyCache %}{% endblock %}
 
-If you are encountering problems with installing dependencies, you can checkmark the "Download latest dependencies" option during console deployment, or add the `--no-cache` option when deploying via command line tools; dependency caching will also fail for a number of reasons. Therefore, there is no guarantee that the cache can be utilized for each build up.
+If you are encountering problems with installing dependencies, you can enable the "Download latest dependencies" option when deploying from the web console, or add the `--no-cache` option when deploying with the command line tool.
 
 ```sh
 lean deploy --no-cache
 ```
 
-### Git Deploy
+Dependency caching might fail for a number of reasons. Therefore, it is not guaranteed that the cache is utilized for each eligible build.
 
-In addition to this, you can also use git repository deployment. You need to submit the project to a git repository. We don't provide the source version management function, but instead, we use git- an excellent distributed version management tool. We recommend that you use  third parties source code hosting website like [GitHub](https://github.com/), [Coding](https://coding.net/) or [code cloud](https://gitee.com/). Or you can also use your own git repository (such as [Gitlab](http://gitlab.org/))
+### Deploying from Git repo
 
-You need to create a project on these platforms first (if you already have the code, please do not select "Initialize this repository with a README"), fill in the local machine's SSH public key in the personal settings of the website (take GitHub as an example, Settings => SSH and GPG keys click New SSH key), then execute in the project directory:
+You can also deploy from your Git repository. You need to push the project to a git repository. Good third-party services that provide Git hosting include [GitHub](https://github.com/), [BitBucket](https://bitbucket.com/), and [Gitlab](http://gitlab.org/).
 
-```sh
-git remote add origin git@github.com:<username>/<repoName>.git
-git push -u origin master
-```
+After you push your code to a repository accessible from the Internet, please fill in the repo URL in LeanEngine settings in the developer console. If it is a public repository and has an HTTPS URL, it is preferred: `https://github.com/<username>/<repoName>.git`.
 
-Then fill in the Git repository address in the LeanEngine settings interface. If it is a public repository, it is recommended to fill in the https address, such as `https://github.com/<username>/<repoName>.git`.
+If the repo is not accessible through HTTPS, you need to fill in the ssh address `git&commat;github.com:&lt;USERNAME&gt;/&lt;REPO-NAME&gt;.git`. If it is a private repo, you also need to add the deploy key to your repo (shown in LeanEngine settings in the developer console) and give it read access. For example, on GitHub you can add deploy keys in the project's Settings => Deploy keys.
 
-If it is a private repository, you need to fill in the ssh address `git@github.com:<username>/<repoName>.git`, you also need to public key which was assigned to your LeanEngine to the Deploy keys of the third-party hosting platform. Take GitHub for example, click Add deploy key in the project's Settings => Deploy keys.
-
-After the set up, if you need the deloy code in the future, you can directly click “Deploy” in the deployment interface of LeanEngine.
-By default, it will deploy the code of the master branch. You can also fill in the branch ,label or specific Commit during deployment.
+After the setup, you can deploy from the web in the developer console.
+By default, it will deploy the code of the master branch. You can also fill in another branch name,a label or a specific commit hash.
 
 ### Preparatory environment and production environment
 By default, LeanEngine only has one "production environment" and the corresponding domain name is `{{var_app_domain}}.leanapp.cn`. There is a "trial instance" in the production environment to run the application.
