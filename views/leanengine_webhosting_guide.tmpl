@@ -189,11 +189,11 @@ Dependency caching might fail for a number of reasons. Therefore, it is not guar
 
 You can also deploy from your Git repository. You need to push the project to a git repository. Good third-party services that provide Git hosting include [GitHub](https://github.com/), [BitBucket](https://bitbucket.com/), and [Gitlab](http://gitlab.org/).
 
-After you push your code to a repository accessible from the Internet, please fill in the repo URL in LeanEngine settings in the developer console. If it is a public repository and has an HTTPS URL, it is preferred: `https://github.com/<username>/<repoName>.git`.
+After you push your code to a repository accessible from the Internet, please fill in the repo URL in LeanEngine settings in the web console. If it is a public repository and has an HTTPS URL, it is preferred: `https://github.com/<username>/<repoName>.git`.
 
-If the repo is not accessible through HTTPS, you need to fill in the ssh address <code>git&commat;github.com:&lt;USERNAME&gt;/&lt;REPO-NAME&gt;.git</code>. If it is a private repo, you also need to add the deploy key to your repo (shown in LeanEngine settings in the developer console) and give it read access. For example, on GitHub you can add deploy keys in the project's Settings => Deploy keys.
+If the repo is not accessible through HTTPS, you need to fill in the ssh address <code>git&commat;github.com:&lt;USERNAME&gt;/&lt;REPO-NAME&gt;.git</code>. If it is a private repo, you also need to add the deploy key to your repo (shown in LeanEngine settings in the web console) and give it read access. For example, on GitHub you can add deploy keys in the project's Settings => Deploy keys.
 
-After the setup, you can deploy from the web in the developer console.
+After the setup, you can deploy from the web in the web console.
 By default, it will deploy the code of the master branch. You can also fill in another branch name,a label or a specific commit hash.
 
 ### Staging environment and production environment
@@ -247,7 +247,7 @@ Variable name|explanation
 `LEANCLOUD_APP_GROUP`|The group to which this instance belongs. When using the LeanEngine [Group Management](leanengine_plan.html#Group Management) feature, this is the name of the group.
 `LEANCLOUD_REGION` | Country code of where the instance is located.
 
-You can also add custom environment variables at [LeanEngine > Settings > Custom Environment Variables](/dashboard/cloud.html?appid={{appid}}#/conf) on the developer console. Variable names should only include letters, numbers, and underscores, and it must begin with a letter. The value is a string. New environment variables will take effect after the next deployment.
+You can also add custom environment variables at [LeanEngine > Settings > Custom Environment Variables](/dashboard/cloud.html?appid={{appid}}#/conf) on the web console. Variable names should only include letters, numbers, and underscores, and it must begin with a letter. The value is a string. New environment variables will take effect after the next deployment.
 
 A common practice is to store configuration in environment variables, so that they can be changed without touch the code. You can also store secrets such as API keys of third-party services in environment variables so that they are not exposed in code, especially if it's open-source.
 
@@ -274,7 +274,7 @@ If the files are large, your code should delete them as soon as possible. If mor
 
 ### Log
 
-In the [LeanEngine/Logs](/cloud.html?appid={{appid}}#/log) page of the developer console, you can view LeanEngine's deployment and runtime logs and filter logs by levels.
+In the [LeanEngine/Logs](/cloud.html?appid={{appid}}#/log) page of the web console, you can view LeanEngine's deployment and runtime logs and filter logs by levels.
 
 [The command line tool](leanengine_cli.html#View Log) can export logs of the last seven days to local files.
 
