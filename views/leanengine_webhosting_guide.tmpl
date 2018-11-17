@@ -85,7 +85,7 @@ The URL for health monitoring includes the root path of your application(`/`) an
 In addition, in order to support cloud functions and hooks in LeanEngine, the hypervisor will use the URL `/1.1/functions/_ops/metadatas` to communicate with the {{platformName}} SDK. Please the {{platformName}} SDK handle this path, or return 404 as the HTTP response code to indicate that cloud functions and hooks are not used.
 
 {% block ping %}
-Please refer to the previous section [Using data storage service](#Using data storage service) for how to install and use the {{platformName}} SDK,
+Please refer to the previous section [Using LeanStorage](#Using LeanStorage) for how to install and use the {{platformName}} SDK,
 {% endblock %}
 
 {% block generalFeature %}
@@ -242,7 +242,7 @@ Variable name|explanation
 `LEANCLOUD_APP_MASTER_KEY`|Current master key
 `LEANCLOUD_APP_ENV` | Current application environemnt <ul><li>Depending on how you start the local development instance, this variable may not exist or may be set to `development`</li> </li><li>Staging environment: `stage`</li><li>Production environment: `production`</li></ul>
 `LEANCLOUD_APP_PORT` | Port the application should listen on. Other ports are not accessible externally.
-`LEANCLOUD_API_SERVER` | The URL used to access the data storage service. This value is different for each application and may change overtime. So use this variable when calling our REST API in LeanEngine. Do not hard-code the URL.
+`LEANCLOUD_API_SERVER` | The URL used to access LeanStorage. This value is different for each application and may change overtime. So use this variable when calling our REST API in LeanEngine. Do not hard-code the URL.
 `LEANCLOUD_AVAILABLE_CPUS` | The number of CPUs available to the LeanEngine instance. Its value depends on the instance type you choose. The application can start a corresponding number of threads or processes based on this value. **Do not** rely on other means to obtain the number of CPU cores, otherwise you may start too many processes and make your application less efficient.
 `LEANCLOUD_APP_GROUP`|The group to which this instance belongs. When using the LeanEngine [Group Management](leanengine_plan.html#Group Management) feature, this is the name of the group.
 `LEANCLOUD_REGION` | Country code of where the instance is located.

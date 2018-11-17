@@ -198,9 +198,9 @@ app.use(timeout('15s'));
 
 {% block use_leanstorage %}
 
-## Using data storage service
+## Using LeanStorage
 
-[LeanCloud data storage](storage_overview.html) is a structured data storage service. You can persist data such as users' mailboxes, profiles, comments, and posts.
+[LeanStorage](storage_overview.html) is a service provided by LeanCloud for storing structured data. You can persist data such as users' mailboxes, profiles, comments, and posts.
 
 
 The Node SDK (the `leanengine` module) provides support for cloud functions and hooks required on the server-side. It also needs the JavaScript SDK (the `leancloud-storage` module) to be installed together as peer dependency. Please also upgrade the JavaScript SDK when upgrading the Node SDK:
@@ -255,7 +255,7 @@ router.post('/', function(req, res, next) {
   }).catch(next);
 });
 ```
-The snippet shows how to store a Todo object to the data storage service. For more, please refer to:[Data Storage Development Guide · JavaScript](leanstorage_guide-js.html)
+The snippet shows how to store a Todo object to LeanStorage. For more, please refer to:[Data Storage Development Guide · JavaScript](leanstorage_guide-js.html)
 
 {% endblock %}
 
