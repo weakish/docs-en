@@ -167,6 +167,7 @@ LeanEngine PHP environment supports the built-in curl module, however, we recomm
 
 
 安装 guzzle:
+Install guzzle:
 
 ```sh
 composer require guzzlehttp/guzzle:~6.0
@@ -217,6 +218,7 @@ Client::setStorage(new CookieStorage(60 * 60 * 24, "/"));
 ```
 
 CookieStorage 支持传入秒作为过期时间, 以及路径作为 cookie 的作用域。默认过期时间为 7 天。然后我们可以通过 `User::getCurrentUser()` 来获取当前登录用户。
+
 
 你可以这样简单地实现一个具有登录功能的站点：
 
