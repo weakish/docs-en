@@ -3,17 +3,19 @@
 {% import "views/_sms.njk" as sms %}
 {% import "views/_parts.html" as include %}
 {% set middot = '·' %}
-{% set link_to_blog_password_reset = '关于自定义邮件模板和验证链接，请参考《[自定义应用内用户重设密码和邮箱验证页面](https://blog.leancloud.cn/607/)》。' %}
 {% set app_permission_link = "[Dashboard > Data > Settings > User Account](/dashboard/storage.html?appid={{appid}}#/storage/conf)" %}
 {% set query_result_limit = "A query returns 100 records by default. You can change the number of  results by setting limit. See [Limiting Query Results](#limiting-query-results) for more info." %}
 
-{# <base target="_blank" href="https://leancloud.cn/"> #}
+# LeanStorage JavaScript Guide
 
-# Cloud Storage Guide
+The LeanStorage JavaScript SDK can be used to persist and query data in
+LeanCloud.
 
-Our JavaScript SDK can be used to storing data to and retrieve data from LeanCloud.
-
-If you come from a background of relational database development, you'll find that coding with our SDK is a lot different from writing SQL scripts. For example, a SQL statement that adds a new record to the database looks like this (assuming database schema had already been created):
+You might already be familiar with relational databases such as MySQL and
+Postgres. Programming with the LeanStorage SDK is quite different from writing
+SQL statements. For example, a SQL statement that adds a new record to the
+database looks like: (assuming the database and the table have already been
+created with the proper schema):
 
 ```sql
 INSERT INTO Todo (title, content) 
@@ -23,12 +25,12 @@ VALUES ('R&D Weekly Meeting', 'All team members, Tues 2pm')
 Using our JavaScript SDK, you would write something like this:
 
 ```js
-// reference a cloud class (or table)
+// Import a LeanStorage class
 var Todo = AV.Object.extend('Todo');
-// create a new instance 
+// Create a new object
 var todo = new Todo();
 
-// set values
+// Set properties
 todo.set('title',   'R&D Weekly Meeting');
 todo.set('content', 'All team members, Tue 2pm');
 
@@ -41,24 +43,26 @@ todo.save().then(function (todo) {
 });
 ```
 
-As you can see, with only a few lines of code, you've  started reading and writing data to the cloud without needing to create database schema beforehand. This is pretty cool, eh?
-
-So let's dive right in and have some more fun.
+The JavaScript code might seem a lot more verbose, but it is much more
+conformant to the convention of the application language and free of many
+SQL-specific vulnerabilities. Many developers who do use relational databases
+usually use ORM (object-relational mapping) frameworks instead of embedding
+SQL directly in their code. If you've used one of those ORM tools, the above
+JavaScript code seem familiar.
 
 ## Getting Started
 
-Our JavaScript SDK supports Chrome 45+, Firefox latest, IE 10+, Edge latest, iOS 9.3+ and Android 4.4+ via WebView, WeApp DevTools latest, as well as Node.js 4.0+, React Native 0.26+ and Electron latest.
+The JavaScript SDK supports Chrome 45+, recent versions of Firefox, IE 10+, Edge, iOS 9.3+ and Android 4.4+, WeApp DevTools, as well as Node.js 4.0+, React Native 0.26+ and Electron.
 
 ### Using JavaScript SDK on Different Platforms
 
-The easiest way to integrate our JavaScript SDK into your web project is through the npm module.
+The easiest way to integrate our JavaScript SDK into your project is through npm.
 
 ```bash
-# push notification is packed inside the leancloud-storage
 $ npm install leancloud-storage --save
 ```
 
-To use the npm modules for a browser based application or in a Node.js environment, include it as you normally would:
+To use npm for a browser based application or in a Node.js environment, include it as you normally would:
 
 ```js
 var AV = require('leancloud-storage');
