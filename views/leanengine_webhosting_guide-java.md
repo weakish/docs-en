@@ -219,41 +219,47 @@ Client::setStorage(new CookieStorage(60 * 60 * 24, "/"));
 
 CookieStorage 支持传入秒作为过期时间, 以及路径作为 cookie 的作用域。默认过期时间为 7 天。然后我们可以通过 `User::getCurrentUser()` 来获取当前登录用户。
 
+CookieStorage supports the scope of using the unit of seconds for the expiration period and using cookie as the path. The default expiration period is seven days. Then we can obtain the current user via `User::getCurrentUser()` .
+
+CookieStorage supports
+
 
 你可以这样简单地实现一个具有登录功能的站点：
+You can implement a site with login function simply like this :
+
 
 ```php
 $app->get('/login', function($req, $res) {
-  // 渲染登录页面
+  // 渲染登录页面 Render login page
 });
 
-// 处理登录请求（可能来自登录界面中的表单）
+// 处理登录请求（可能来自登录界面中的表单）Handling login requests (they may come from the forms in the login interface)
 $app->post('/login', function($req, $res) {
     $params = $req->getQueryParams();
     try {
         User::logIn($params["username"], $params["password"]);
-        // 跳转到个人资料页面
+        // 跳转到个人资料页面 Jump to the profile page
         return $res->withRedirect('/profile');
     } catch (Exception $ex) {
-        //登录失败，跳转到登录页面
+        //登录失败，跳转到登录页面 Login failed, jump to login page
         return $res->withRedirect('/login');
     }
 });
 
-// 查看个人资料
+// 查看个人资料 View profile
 $app->get('/profile', function($req, $res) {
-    // 判断用户是否已经登录
+    // 判断用户是否已经登录 Determine if the user has logged in
     $user = User::getCurrentUser();
     if ($user) {
-        // 如果已经登录，发送当前登录用户信息。
+        // 如果已经登录，发送当前登录用户信息。If the user has logged in, send the current login user information.
         return $res->getBody()->write($user->getUsername());
     } else {
-        // 没有登录，跳转到登录页面。
+        // 没有登录，跳转到登录页面。 If the user has not login in yet, jump to the login page.
         return $res->withRedirect('/login');
     }
 });
 
-// 登出账号
+// 登出账号 Log out account
 $app->get('/logout', function($req, $res) {
     User::logOut();
     return $res->redirect("/");
@@ -261,6 +267,7 @@ $app->get('/logout', function($req, $res) {
 ```
 
 一个简单的登录页面可以是这样：
+A simple login page can be written like this:
 
 ```html
 <html>
@@ -271,7 +278,7 @@ $app->get('/logout', function($req, $res) {
         <input name="username"></input>
         <label>Password</label>
         <input name="password" type="password"></input>
-        <input class="button" type="submit" value="登录">
+        <input class="button" type="submit" value="Login">
       </form>
     </body>
   </html>
@@ -281,12 +288,13 @@ $app->get('/logout', function($req, $res) {
 
 {% block custom_session %}
 如果你需要将一些属性保存在 session 中，可以增加通用的 CookieStorage 来保存：
+If you need to store some properties in the session, you can store them by adding up a common CookieStorage.
 
 ```php
-// 在项目启动时启用 CookieStorage
+// 在项目启动时启用 CookieStorage Enable CookieStorage when the project starts
 Client::setStorage(new CookieStorage());
 
-// 在项目中可以使用 CookieStorage 存储属性
+// 在项目中可以使用 CookieStorage 存储属性 You can use CookieStorage to store properties in projects.
 $cookieStorage = Client::getStorage();
 $cookieStorage->set("key", "val");
 ```
@@ -294,6 +302,9 @@ $cookieStorage->set("key", "val");
 注意：PHP 默认的 `$_SESSION` 在我们云引擎中是无法正常工作的，因为我们
 的云引擎是多主机、多进程运行，因此内存型 session 是无法共享的。建议用
 `CookieStorage` 来存储会话信息。
+
+Attention:The default `$_SESSION` in php cannot operate in our LeanEngine because LeanEngine runs in multiple processes and hosts which makes the in-memory session cannot be shared.
+We recommend to use `CookieStorage` to store session information
 
 {% endblock %}
 
@@ -307,6 +318,7 @@ $app->add(new SlimEngine());
 
 {% block custom_runtime %}
 云引擎默认提供 PHP 5.6 的运行环境，如需指定 PHP 版本，请在 `composer.json` 中添加：
+LeanEngine provides the operating environment of PHP 5.6 by default. If you need a specified version of PHP, please add it in `composer.json`.
 
 ```json
 "require": {
@@ -315,6 +327,7 @@ $app->add(new SlimEngine());
 ```
 
 目前云引擎支持 `5.6`、`7.0`、`7.1` 这几个版本，后续如果有新版本发布，也会添加支持。
+Currently, LeanEngine supports the version of `5.6`、`7.0`、`7.1` . We will also support any new versions released in the future.
 
 {% endblock %}
 
@@ -322,11 +335,11 @@ $app->add(new SlimEngine());
 ```php
 $env = getenv("LEANCLOUD_APP_ENV");
 if ($env === "development") {
-    // 当前环境为「开发环境」，是由命令行工具启动的
+    // 当前环境为「开发环境」，是由命令行工具启动的 The current environment is the "development environment", which is started by the command line tool.
 } else if ($env === "production") {
-    // 当前环境为「生产环境」，是线上正式运行的环境
+    // 当前环境为「生产环境」，是线上正式运行的环境 The current environment is the "production environment" and is the official online environment.
 } else {
-    // 当前环境为「预备环境」
+    // 当前环境为「预备环境」The current environment is "prepared environment".
 }
 ```
 {% endblock %}
