@@ -1,5 +1,11 @@
 
-{# Specify inheritance template #}  {% extends "./leanengine_webhosting_guide.tmpl" %} {% set productName = 'LeanEngine' %} {% set platformName = 'Node.js' %} {% set fullName = productName + ' ' + platformName %} {% set sdk_name = 'JavaScript' %} {% set leanengine_middleware = 'LeanEngine Node.js SDK' %}
+{# Specify inherited template #}
+{% extends "./leanengine_webhosting_guide.tmpl" %}
+{% set productName = 'LeanEngine' %}
+{% set platformName = 'Node.js' %}
+{% set fullName = productName + ' ' + platformName %}
+{% set sdk_name = 'JavaScript' %}
+{% set leanengine_middleware = '[LeanEngine Node.js SDK](https://github.com/leancloud/leanengine-node-sdk)' %}
 
 {% block getting_started %}
 
