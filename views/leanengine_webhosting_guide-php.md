@@ -8,14 +8,12 @@
 {% set leanengine_middleware = '[LeanCloud PHP SDK](https://github.com/leancloud/php-sdk)' %}
 
 {% block custom_api_random_string %}
-{{productName}} Allowing you to custom API based on HTTP（HTTPS).
-For example, if you want to implement an API that can obtain the server time, you can write the following code:
-
-
-
-Add the following code into the file `./app.php`:
+{{productName}} allows you to define HTTP/HTTPS-based custom APIs.
+For example, you can use the following code to implement an API that returns the
+server time:
 
 ```php
+// in app.php
 $app->get('/time', function($req, $res) {
     // PSR-7 response is immutable
     $response = $res->withHeader("Content-Type", "application/json");
@@ -31,8 +29,9 @@ Then open the browser, visit <http://localhost:3000/time>, the browser should re
 {"currentTime":"2016-02-01T09:43:26.223Z"}
 ```
 
-
-After you deploy to the cloud, you can access the API via `http://{{var_app_domain}}.leanapp.cn/time`. If you have an iOS or Android program, you should be able to construct a HTTP to request the server time.Of course, we still recommend you use the built-in API in SDK to obtain the server time, the example here is just a tutorial.
+After deploying to LeanEngine, you can access the API at `http://{{var_app_domain}}.leanapp.cn/time`. If you have an iOS or Android program, you can use HTTP 
+requests to access it. SDKs provide built-in methods to obtain server time,
+the example here is just a tutorial.
 {% endblock %}
 
 {% block getting_started %}
@@ -43,7 +42,7 @@ Clone the example code [slim-getting-started](https://github.com/leancloud/slim-
 git clone https://github.com/leancloud/slim-getting-started.git
 ```
 
-Using composer to install the third-party dependency:
+Using composer to install third-party dependencies:
 
 ```sh
 composer install
@@ -54,22 +53,22 @@ composer install
 
 ## Project skeleton
 
-Your project can only be recognized by LeanEngine and operate normally by following a certain format.
+Your project has to follow the following structure to be recognized by LeanEngine and operate properly.
 
-{{fullName}} project must contain `$PROJECT_DIR/public/index.php`, this file is the startup file for the whole project.
+The {{fullName}} project must contain `$PROJECT_DIR/public/index.php`, this file is the startup file for the whole project.
 {% endblock %}
 
 
 
 {% block ping %}
-{{leanengine_middleware}} has the builtin processing for this URL, you only need to add the middleware to the requested processing link.
+{{leanengine_middleware}} will automatically handle this URL, you only need to add the middleware to the request processing chain.
 
 ```
 $engine = new SlimEngine();
 $app->add($engine);
 ```
 
-If you didn't use {{leanengine_middleware}}, you need to implement the processing of the URL by yourself like this:
+If you didn't use {{leanengine_middleware}}, you need to handle the URL yourself:
 ```
 // Router health monitoring
 $app->get('/__engine/1/ping', function($req, $res) {
@@ -82,7 +81,7 @@ $app->get('/__engine/1/ping', function($req, $res) {
     return $response;
 });
 
-// Cloud functions list
+// List of cloud functions
 app.get('/1.1/_ops/functions/metadatas', function(req, res) {
     $response = $res->withHeader("Content-Type", "application/json");
     $response->getBody()->write(json_encode(array(
@@ -95,16 +94,15 @@ app.get('/1.1/_ops/functions/metadatas', function(req, res) {
 
 {% block supported_frameworks %}
 
-{{fullName}} does not depend on any third-party frameworks, you can develop it by using the framework you are familiar with, or:
-not using any framworks, but please make sure you can start your project by executing `public/index.php`
+{{fullName}} does not depend on any third-party frameworks, you use any framework or library you are familiar with, but please make sure you can start your project by executing `public/index.php`
 
-For PHP project, by default, we assign a PHP-FPM Worker for every 64M RAM. If you want to custom the amount of Worker, you can add an environment variable named PHP_WORKERS to the 「custom environment variable」on the setup page of the LeanEngine, the value of this environment variable is a number. If you set the value too low, you will not have available Worker when you receive a new request; if you set the value too high, you will not have enough RAM to have a successful request. Hence, please adjust the value cautiously. 
+We assign a PHP-FPM worker for every 64M RAM for PHP projects by default. If you want to custom the number of Workers, you can add a `PHP_WORKERS` environment variable on the LeanEngine settings page. The value must be a number. If you set it too low, you may not have available workers when you receive a new request; if you set the value too high, you may not have enough RAM to run them. Hence, please adjust the value cautiously. 
 {% endblock %}
 
 {% block code_get_client_ip_address %}
 ```php
 $app->get('/', function($req, $res) {
-  error_log($_SERVER['HTTP_X_REAL_IP]); // 打印用户 IP 地址 Print user IP address
+  error_log($_SERVER['HTTP_X_REAL_IP]); // Print user IP address
   return $res;
 });
 ```
@@ -112,18 +110,18 @@ $app->get('/', function($req, $res) {
 
 {% block use_leanstorage %}
 
-## Using Data stroage service
+## Using LeanStorage
 
 
-LeanEngine uses  {{leanengine_middleware}}, which contains the storage SDK; you can use the relevant port to store your data. Please refer to [PHP Storage file](leanstorage_guide-php.html).
+LeanEngine uses  {{leanengine_middleware}}, which contains the LeanStorage SDK; you can use the relevant API to persist your data. Please refer to [the LeanStorage guide](leanstorage_guide-php.html).
 
-If you use the project framework to do basic development, {{leanengine_middleware}} provides the middleware that supports the [Slim framework]. You can use it directly according to the example program.
+If you use the example project as the basis, {{leanengine_middleware}} provides the middleware that supports the [Slim framework]. You can use it as shown in the example project.
 
- If you develope a custom project, you need to configure as follows:
+To start from scratch, you need to configure it as follows:
 
 * First install [composer](https://getcomposer.org)
 
-* Configure dependency: Execute the following command under the project root directory to increase the dependency of the {{leanengine_middleware}}:
+* Configure dependency: Execute the following command under the project root directory to add the dependency of the {{leanengine_middleware}}:
 
 ```
 composer require leancloud/leancloud-sdk
@@ -135,21 +133,19 @@ composer require leancloud/leancloud-sdk
 use \LeanCloud\Client;
 
 Client::initialize(
-    getenv("LC_APP_ID"),          // Obtain the value of the app id from this environment variable LC_APP_ID.
-    getenv("LC_APP_KEY"),         // Obtain the value of the app key from this environment variable LC_APP_KEY.
-
-    getenv("LC_APP_MASTER_KEY")   // Obtain the value of the master key from this environment variable LC_APP_MASTER_KEY.
+    getenv("LC_APP_ID"),          // Obtain the app id from the environment variable LC_APP_ID.
+    getenv("LC_APP_KEY"),         // Obtain the app key from the environment variable LC_APP_KEY.
+    getenv("LC_APP_MASTER_KEY")   // Obtain the master key from the environment variable LC_APP_MASTER_KEY.
 );
 
-// If you don't want to use the permission of the masterkey, you can delete the following line.
-
+// If you don't need to use the master key, you can delete the following line.
 Client::useMasterKey(true);
 ```
 {% endblock %}
 
 {% block http_client %}
 
-LeanEngine PHP environment supports the built-in curl module, however, we recommend to use a third party library like guzzle to process the HTTP request.
+LeanEngine PHP environment supports the built-in curl module, however, we recommend using a third party library like guzzle to send HTTP requests.
 
 
 Install guzzle:
@@ -164,8 +160,8 @@ Example code:
 $client = new GuzzleHttp\Client();
 $resp = $client->post("http://www.example.com/create_post", array(
     "json" => array(
-        "title" => "Vote for Pedro",
-        "body"  => "If you vote for Pedro, your wildest dreams will come true"
+        "title" => "Some amazing title",
+        "body"  => "Some awesome content."
     )
 ));
 ```
@@ -194,28 +190,23 @@ $app->post("/upload", function($req, $res) {
 {% endblock %}
 
 {% block cookie_session %}
-LeanEngine provides a module `LeanCloud\Storage\CookieStorage` that uses Cookie to manage the login of the （`User`）. You can use it by adding the following code to `app.php`.
+LeanEngine provides a module `LeanCloud\Storage\CookieStorage` that uses Cookie to manage sessions. You can use it by adding the following code to `app.php`.
 ```php
 use \LeanCloud\Storage\CookieStorage;
-// 将会话状态存储到 cookie 中 store the conversation status to cookie
+// store the session states to a cookie
 Client::setStorage(new CookieStorage(60 * 60 * 24, "/"));
 ```
 
+CookieStorage supports specifying the number of seconds before expiration and an effective path. The default expiration period is seven days. 
 
-CookieStorage supports the scope of using the unit of seconds for the expiration period and using cookie as the path. The default expiration period is seven days. Then we can obtain the current user via `User::getCurrentUser()` .
-
-CookieStorage supports
-
-
-You can implement a site with login function simply like this :
-
+The current user can be obtained by `User::getCurrentUser()`. You can implement a site with login like the following:
 
 ```php
 $app->get('/login', function($req, $res) {
   // Render login page
 });
 
-// Handling login requests (they may come from the forms in the login interface)
+// Handle login requests (they may come from the form on the login page)
 $app->post('/login', function($req, $res) {
     $params = $req->getQueryParams();
     try {
@@ -228,7 +219,6 @@ $app->post('/login', function($req, $res) {
     }
 });
 
-// View profile
 $app->get('/profile', function($req, $res) {
     // Determine if the user has logged in
     $user = User::getCurrentUser();
@@ -241,7 +231,6 @@ $app->get('/profile', function($req, $res) {
     }
 });
 
-// Log out account
 $app->get('/logout', function($req, $res) {
     User::logOut();
     return $res->redirect("/");
@@ -268,7 +257,7 @@ A simple login page can be written like this:
 {% endblock %}
 
 {% block custom_session %}
-If you need to store some properties in the session, you can store them by adding up a common CookieStorage.
+You can use `CookieStorage` to store properties in the session.
 
 ```php
 // Enable CookieStorage when the project starts
@@ -279,9 +268,7 @@ $cookieStorage = Client::getStorage();
 $cookieStorage->set("key", "val");
 ```
 
-
-Attention:The default `$_SESSION` in php cannot operate in our LeanEngine because LeanEngine runs in multiple processes and hosts which makes the in-memory session cannot be shared.
-We recommend to use `CookieStorage` to store session information
+Please note that the in-memory `$_SESSION` does not work on LeanEngine because each app may run in multiple processes and hosts. `CookieStorage` is the recommended way to store session states.
 
 {% endblock %}
 
@@ -294,7 +281,7 @@ $app->add(new SlimEngine());
 
 
 {% block custom_runtime %}
-LeanEngine provides the operating environment of PHP 5.6 by default. If you need a specified version of PHP, please add it in `composer.json`.
+LeanEngine provides PHP 5.6 by default. If you need a specified version of PHP, please add it in `composer.json`.
 
 ```json
 "require": {
@@ -302,7 +289,7 @@ LeanEngine provides the operating environment of PHP 5.6 by default. If you need
 }
 ```
 
-Currently, LeanEngine supports the version of `5.6`、`7.0`、`7.1` . We will also support any new versions released in the future.
+Supported versions are `5.6`、`7.0`、`7.1` . We will also support new versions released in future.
 
 {% endblock %}
 
