@@ -1,7 +1,7 @@
-{# 指定继承模板 #}
+{# Specify extended template #} 
 {% extends "./leanengine_webhosting_guide.tmpl" %}
 
-{% set productName = "云引擎" %}
+{% set productName = "LeanEngine" %}
 {% set platformName = "Java" %}
 {% set fullName = productName + ' ' + platformName %}
 {% set sdk_name = "Java" %}
@@ -10,7 +10,8 @@
 
 {% block getting_started %}
 
-将示例代码 [java-war-getting-started](https://github.com/leancloud/java-war-getting-started) 克隆到本地：
+Clone the example code [java-war-getting-started](https://github.com/leancloud/java-war-getting-started) to local:
+
 
 ```sh
 git clone https://github.com/leancloud/java-war-getting-started.git
@@ -20,25 +21,33 @@ git clone https://github.com/leancloud/java-war-getting-started.git
 
 {% block project_constraint %}
 
-## 项目骨架
+## Project Skeleton
 
 参照示例项目，你的项目需要遵循一定格式才会被云引擎识别并运行。
+Your project has to follow the following structure to be recognized by LeanEngine and operate properly, hereby we provide you a sample project.
 
-云引擎 Java 运行环境使用 Maven 进行构建，所以 {{fullName}} 项目必须有 `$PROJECT_DIR/pom.xml` 文件，该文件为整个项目的配置文件。构建完成后云引擎会尝试到 `$PROJECT_DIR/target` 目录下寻找可以使用的包：
 
-* WAR：如果项目打包成 WAR 文件，则云引擎会将其放入 Servlet 容器（当前是 Jetty 9.x）来运行。
-* JAR：如果项目打包成 JAR 文件，则云引擎会通过 `java -jar <packageName>.jar` 来运行。
 
-我们建议使用示例项目做为起步，因为一些细节的开发环境的配置会让开发调试方便很多：
+LeanEngine Java operating environment is constructed by Maven. For this reason, the {{fullName}} project must contain `$PROJECT_DIR/pom.xml`, this file is the startup file for the whole project. After construction, LeanEngine will search for a available package under the directory of `$PROJECT_DIR/target`.
 
-* [java-war-getting-started](https://github.com/leancloud/java-war-getting-started): 使用 Servlet，集成 LeanEngine Java SDK 的一个简单项目，打包成 WAR 文件。
-* [spring-boot-getting-started](https://github.com/leancloud/spring-boot-getting-started): 使用 [Spring boot](https://projects.spring.io/spring-boot/) 做为项目框架，集成 LeanEngine Java SDK 的一个简单的项目，打包成 JAR 文件。
+* WAR：If your project is zipped into a WAR file, LeanEngine will put it into Servlet container (currently Jetty 9.x) to operate.
+
+* JAR：If your project is a zipped into a JAR file, LeanEngine will operate via `java -jar <packageName>.jar`.
+
+Using the example project as a starting point will make the development and debugging much easier because in this way you configure some details of the operating environment setup.
+
+
+* [java-war-getting-started](https://github.com/leancloud/java-war-getting-started): Using Servlet to integrate a simple project of LeanEngine Java SDK and zipped it into a WAR file.
+
+* [spring-boot-getting-started](https://github.com/leancloud/spring-boot-getting-started): Using [Spring boot] (https://projects.spring.io/spring-boot/) as the project framework to integrate a simple project of LeanEngine Java SDK and zipped it into a JAR file.
+
 {% endblock %}
 
 {% block runtime_description %}
 Java 运行环境对内存的使用较多，所以建议：
+Java operating environment occupies more memory, we recommed:
 
-* 以 [示例项目](https://github.com/leancloud/java-war-getting-started) 起步的应用，建议使用 512 MB 或以上规格的实例。
+* 以 [示例项目](https://github.com/leancloud/java-war-getting-started) 起步的应用，建议使用 512 MB 或以上规格的实例。Application based on [Example project](https://github.com/leancloud/java-war-getting-started) , please use instancinstanc
 * 使用 [Spring Boot](https://projects.spring.io/spring-boot/) 的应用，建议使用 1 GB 或以上规格的实例。
 * 本地启动并模拟完成主要业务流程操作，待应用充分初始化后，根据 Java 进程内存占用量选择相应的实例规格，需要注意保留一定的余量用以应对请求高峰。
 
