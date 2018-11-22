@@ -291,13 +291,17 @@ public class TimeServlet extends HttpServlet {
 ```
 
 然后打开浏览器，访问 <http://localhost:3000/time>，浏览器应该会返回如下类似的内容：
-Then open your borwser, visit <http://localhost:3000/time>, the browser will return the similiar information like this:
+Then open your borwser, visit <http://localhost:3000/time>, the browser will return information like this:
 
 ```json
 {"currentTime":"2016-02-01T09:43:26.223Z"}
 ```
 
 部署到云端后，你可以通过 `http://{{var_app_domain}}.leanapp.cn/time` 来访问该 API。你的 iOS 或者 Android 的程序就可以构建一个 HTTP 请求获取服务端时间了。当然还是建议使用各 SDK 内置的获取服务器时间的 API，这里的例子只是演示。
+After deploying to LeanEngine, you can access the API at `http://{{var_app_domain}}.leanapp.cn/time`. If you have an iOS or Android program, you can use HTTP 
+requests to access it. SDKs provide built-in methods to obtain server time,
+the example here is just a tutorial.
+
 {% endblock %}
 
 {% block code_get_client_ip_address %}
@@ -312,11 +316,11 @@ EngineRequestContext.getRemoteAddress();
 ```java
 String env = System.getenv("LEANCLOUD_APP_ENV");
 if (env.equals("development")) {
-    // 当前环境为「开发环境」，是由命令行工具启动的
+    // 当前环境为「开发环境」，是由命令行工具启动的 The current environment is 「Development environment」, launch by coomand line tool
 } else if (env.equals("production")) {
-    // 当前环境为「生产环境」，是线上正式运行的环境
+    // 当前环境为「生产环境」，是线上正式运行的环境 The current environment is 「Production environment」, ------> online run environment
 } else {
-    // 当前环境为「预备环境」
+    // 当前环境为「预备环境」The current environment is 「Prepared environment」.
 }
 ```
 {% endblock %}
