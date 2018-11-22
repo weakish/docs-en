@@ -23,10 +23,7 @@ git clone https://github.com/leancloud/java-war-getting-started.git
 
 ## Project Skeleton
 
-参照示例项目，你的项目需要遵循一定格式才会被云引擎识别并运行。
-Your project has to follow the following structure to be recognized by LeanEngine and operate properly, hereby we provide you a sample project.
-
-
+Your project has to follow the following structure to be recognized by LeanEngine and operate properly.
 
 LeanEngine Java operating environment is constructed by Maven. For this reason, the {{fullName}} project must contain `$PROJECT_DIR/pom.xml`, this file is the startup file for the whole project. After construction, LeanEngine will search for a available package under the directory of `$PROJECT_DIR/target`.
 
@@ -45,52 +42,67 @@ Using the example project as a starting point will make the development and debu
 
 {% block runtime_description %}
 Java 运行环境对内存的使用较多，所以建议：
-Java operating environment occupies more memory, we recommed:
+Java operating environment occupies more memory, we recommend:
 
-* 以 [示例项目](https://github.com/leancloud/java-war-getting-started) 起步的应用，建议使用 512 MB 或以上规格的实例。Application based on [Example project](https://github.com/leancloud/java-war-getting-started) , please use instancinstanc
-* 使用 [Spring Boot](https://projects.spring.io/spring-boot/) 的应用，建议使用 1 GB 或以上规格的实例。
+* 以 [示例项目](https://github.com/leancloud/java-war-getting-started) 起步的应用，建议使用 512 MB 或以上规格的实例。Application based on [Example project](https://github.com/leancloud/java-war-getting-started), please use the instance of 512 MB or above.
+* 使用 [Spring Boot](https://projects.spring.io/spring-boot/) 的应用，建议使用 1 GB 或以上规格的实例。Application based on [Spring Boot](https://projects.spring.io/spring-boot/), please use the instance of 1 GB or above.
 * 本地启动并模拟完成主要业务流程操作，待应用充分初始化后，根据 Java 进程内存占用量选择相应的实例规格，需要注意保留一定的余量用以应对请求高峰。
+Start and simulate main processing operations locally. After the complete initialization, select the suitable instance based the memory needed for the Java processing. Pay attention to reserve a certain margin of memory to cope with the request peak.
+
 
 <div class="callout callout-danger">如果云引擎 [实例规格](leanengine_plan.html#选择实例规格) **选择不当**，可能造成应用启动时因为内存溢出（OOM）导致部署失败，或运行期内存溢出导致应用频繁重启。</div>
+If the LeanEngine [Instance specification](leanengine_plan.html# select instance specification) **Improper Selection** it may lead to application deployment to fail during launching process due to memory leak (OOM), or application will reboot frequently due to memory leak in the operating process.
+
 {% endblock %}
 
 {% block project_start %}
-### 打包成 WAR 文件的项目
+### 打包成 WAR 文件的项目 Project that Zipped into WAR file 
 
 首先确认项目 `pom.xml` 中配置了 [jetty plugin](https://www.eclipse.org/jetty/documentation/9.4.x/jetty-maven-plugin.html)，并且 web server 的端口通过环境变量 `LEANCLOUD_APP_PORT` 获取，具体配置可以参考我们的 [示例代码](https://github.com/leancloud/java-war-getting-started/blob/master/pom.xml)。
 
-然后使用 Maven 安装依赖并打包：
+First, confirm the project  `pom.xml` has configured [jetty plugin](https://www.eclipse.org/jetty/documentation/9.4.x/jetty-maven-plugin.html)，and obtain the port of the webserver via the environment variable `LEANCLOUD_APP_PORT`. Detail configuration please refer to our [example code](https://github.com/leancloud/java-war-getting-started/blob/master/pom.xml).
+
+
+然后使用 Maven 安装依赖并打包：Then use Maven to install dependencies and zip:
 
 ```sh
 mvn package
 ```
 
 以下有几种方式可以本地启动：
+There are several methods to locally launching the application:
 
-#### 命令行工具启动应用
+#### 命令行工具启动应用 Using command line tool to launch the application:
 
 ```sh
 lean up
 ```
 
 更多有关命令行工具和本地调试的内容请参考 [命令行工具使用指南](leanengine_cli.html)。
+------- >Please refer to [Command line tool user guide](leanengine_cli.html) for more detail on command line tool and locally *debugging.
 
-**提示**：相对于其他启动方式，命令行工具有 [多应用管理](leanengine_cli.html#多应用管理) 功能，可以方便的切换不同应用环境。
+**提示 Tip**：相对于其他启动方式，命令行工具有 [多应用管理](leanengine_cli.html#多应用管理) 功能，可以方便的切换不同应用环境。
+Comparing with other launching methods, command line tool supports [多应用管理 Multi-functions management](leanengine_cli.html#Multi-functions management)to switch between different application environment.
 
-#### 命令行设置环境变量启动
+
+#### 命令行设置环境变量启动 Using Command line tool to set the environment variable to launch the application
 
 通过以下命令将云引擎运行需要的环境变量设置到当前命令行环境中，并使用 jetty 插件启动应用：
+Use the following code to set the environment variable for LeanEngine into the current command line environment, and launch the application by using the jetty plugin:
+
 
 ```
 eval "$(lean env)"
 mvn jetty:run
 ```
 
-**提示**：命令 `lean env` 可以输出当前应用所需环境变量的设置语句，外层的 `eval` 是直接执行这些语句。
+**提示 Tip**：命令 `lean env` 可以输出当前应用所需环境变量的设置语句，外层的 `eval` 是直接执行这些语句。
+Command `lean env` can output the setting statement of the environment variable required by the current application,the outer `eval`  can directly execute the statement.
 
-#### 使用 Eclipse 启动应用
+#### 使用 Eclipse 启动应用 Using Eclipse to launch the application 
 
 首先确保 Eclipse 已经安装 Maven 插件，并将项目以 **Maven Project** 方式导入 Eclipse 中，在 **Package Explorer** 视图右键点击项目，选择 **Run As** > **Maven build...**，将 **Main** 标签页的 **Goals** 设置为 `jetty:run`，将 **Environment** 标签页增加以下环境变量和相应的值：
+First, confirm Eclipse has installed Maven plugin and import the project into Eclipse via **Maven Project**. Right click the project in **Package Explorer** window, select **Run As** > **Maven build...**. Then on the bookmark page **Main** , set **Goals** into `jetty:run`. Add the following environment variables and related values on the bookmark page **Environment** .
 
 - LEANCLOUD_APP_ENV = `development`
 - LEANCLOUD_APP_ID = `{{appid}}`
@@ -99,31 +111,39 @@ mvn jetty:run
 - LEANCLOUD_APP_PORT = `3000`
 
 然后点击 run 按钮启动应用。
+Hit run to launch the application.
 
-### 打包成 JAR 文件的项目
+### 打包成 JAR 文件的项目 Project that Zipped into Jar file 
 
 使用 Maven 正常的安装依赖并打包：
+Using Maven to install dependencies and zip:
 
 ```sh
 mvn package
 ```
 
 以下有几种方式可以本地启动：
+There are several methods to locally launching the application:
 
-#### 命令行设置环境变量启动
+#### 命令行设置环境变量启动 Using Command line tool to set the environment variable to launch the application
 
 通过以下命令将云引擎运行需要的环境变量设置到当前命令行环境中，并启动应用：
+Use the following code to set the environment variable for LeanEngine into the current command line environment, and launch the application by using the jetty plugin:
 
 ```
 eval "$(lean env)"
 java -jar target/{打包好的 jar 文件}
 ```
 
-**提示**：命令 `lean env` 可以输出当前应用所需环境变量的设置语句，外层的 `eval` 是直接执行这些语句。
+**提示 Tip**：命令 `lean env` 可以输出当前应用所需环境变量的设置语句，外层的 `eval` 是直接执行这些语句。
+Command `lean env` can output the setting statement of the environment variable required by the current application,the outer `eval`  can directly execute the statement.
 
-#### 使用 Eclipse 启动应用
+
+#### 使用 Eclipse 启动应用 Using Eclipse to launch the application 
 
 首先确保 Eclipse 已经安装 Maven 插件，并将项目以 **Maven Project** 方式导入 Eclipse 中，在 **Package Explorer** 视图右键点击项目，选择 **Run As** > **Run Configurations...**，选择 `Application`，设置 `Main class:` （示例项目为 `cn.leancloud.demo.todo.Application`），将 **Environment** 标签页增加以下环境变量和相应的值：
+
+First, confirm Eclipse has installed Maven plugin and import the project into Eclipse via **Maven Project**. Right click the project in **Package Explorer** window, select **Run As** > **Run Configurations...**.Then select  `Application`, set `Main class:`(`cn.leancloud.demo.todo.Application`in the example code). Add the following environment variables and related values on the bookmark page **Environment** .
 
 - LEANCLOUD_APP_ENV = `development`
 - LEANCLOUD_APP_ID = `{{appid}}`
@@ -132,19 +152,24 @@ java -jar target/{打包好的 jar 文件}
 - LEANCLOUD_APP_PORT = `3000`
 
 然后点击 run 按钮启动应用。
+Hit run to launch the application.
 
-#### 命令行工具启动应用
+
+#### 命令行工具启动应用 Using Command line tool to launch the application
 
 很抱歉，命令行工具暂不支持 JAR 项目的启动。
+Command line tool does not support JAR project launch currently.
 
 {% endblock %}
 
 {% block ping %}
 
 如果未使用 {{leanengine_middleware}}，则需要自己实现该 URL 的处理，比如这样：
+If you didn't use {{leanengine_middleware}}, you need to handle the URL yourself:
+
 
 ```
-//健康监测 router
+//Health monitor router 
 @WebServlet(name = "LeanEngineHealthServlet", urlPatterns = {"/__engine/1/ping"})
 public class LeanEngineHealthCheckServlet extends HttpServlet {
 
@@ -159,10 +184,10 @@ public class LeanEngineHealthCheckServlet extends HttpServlet {
   }
 }
 ```
-和
+and
 
 ```
-// 云函数列表
+// LeanEngine list
 @WebServlet(name = "LeanEngineMetadataServlet", urlPatterns = {"/1.1/functions/_ops/metadatas"})
 public class LeanEngineMetadataServlet extends HttpServlet {
 
@@ -180,18 +205,22 @@ public class LeanEngineMetadataServlet extends HttpServlet {
 {% block supported_frameworks %}
 
 {{fullName}} 依赖 Servlet 3.1.0 ，你可以使用任何基于 Servlet 3.1.0 的 Web 框架。
+{{fullName}} depend on Servlet 3.1.0, you can use any Web frameworks based on Servlet 3.1.0.
 {% endblock %}
 
 {% block custom_runtime %}
 
 Java 云引擎只支持 1.8 运行环境和 war 包运行
+Jave LeanEngine only supports 1.8 operating environment and war package launch.
+
 {% endblock %}
 
 {% block use_leanstorage %}
 
-## 使用数据存储服务
+## 使用数据存储服务  Using LeanStorage
 
 云引擎使用 {{leanengine_middleware}} 来代替 [Java 存储 SDK](https://github.com/leancloud/java-sdk) 。前者依赖了后者，并增加了云函数和 Hook 函数的支持，因此开发者可以直接使用 [LeanCloud 的存储服务](leanstorage_guide-java.html) 来存储自己的数据。
+
 
 如果使用项目框架作为基础开发，{{leanengine_middleware}} 默认是配置好的，可以根据示例程序的方式直接使用。
 
