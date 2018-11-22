@@ -221,12 +221,16 @@ Jave LeanEngine only supports 1.8 operating environment and war package launch.
 
 云引擎使用 {{leanengine_middleware}} 来代替 [Java 存储 SDK](https://github.com/leancloud/java-sdk) 。前者依赖了后者，并增加了云函数和 Hook 函数的支持，因此开发者可以直接使用 [LeanCloud 的存储服务](leanstorage_guide-java.html) 来存储自己的数据。
 
+LeanEngine uses {{leanengine_middleware}} to replace [Java storage SDK](https://github.com/leancloud/java-sdk). The former depend on the latter, and it further supports LeanEngine functions and Hook funtions. You can use [LeanCloud Storage](leanstorage_guide-java.html)to store your data.
 
 如果使用项目框架作为基础开发，{{leanengine_middleware}} 默认是配置好的，可以根据示例程序的方式直接使用。
+If you use the example project as the basis，{{leanengine_middleware}} has already setup by default. You can use it directly based on the example code.
 
 如果是自定义项目，则需要自己配置：
+To start from scratch, you need to configure it as follows:
 
-* 配置依赖：在 pom.xml 中增加依赖配置来增加 {{leanengine_middleware}} 的依赖：
+* 配置依赖：在 pom.xml 中增加依赖配置来增加 {{leanengine_middleware}} 的依赖：Configure dependency: Execute the following command under the project root directory to add the dependency of the {{leanengine_middleware}}:
+
 
 ```xml
 	<dependencies>
@@ -238,33 +242,37 @@ Jave LeanEngine only supports 1.8 operating environment and war package launch.
 	</dependencies>
 ```
 
-* 初始化：在正式使用数据存储之前，你需要使用自己的应用 key 进行初始化中间件：
+* 初始化：在正式使用数据存储之前，你需要使用自己的应用 key 进行初始化中间件：Initialization: Before you store your date officially, you need to initialize the middleware by using your application key
 
 ```java
 import com.avos.avoscloud.internal.impl.JavaRequestSignImplementation;
 import cn.leancloud.LeanEngine;
 
-// 从 LEANCLOUD_APP_ID 这个环境变量中获取应用 app id 的值
+// 从 LEANCLOUD_APP_ID 这个环境变量中获取应用 app id 的值 
+   Obtain the app id from the environment variable LEANCLOUD_APP_ID.
 String appId = System.getenv("LEANCLOUD_APP_ID");
 
-// 从 LEANCLOUD_APP_KEY 这个环境变量中获取应用 app key 的值                
+// 从 LEANCLOUD_APP_KEY 这个环境变量中获取应用 app key 的值 
+   Obtain the app key from the environment variable LEANCLOUD_APP_KEY.               
 String appKey = System.getenv("LEANCLOUD_APP_KEY");
 
-// 从 LEANCLOUD_APP_MASTER_KEY 这个环境变量中获取应用 master key 的值        
+// 从 LEANCLOUD_APP_MASTER_KEY 这个环境变量中获取应用 master key 的值 
+   Obtain the master key from the environment variable LEANCLOUD_APP_MASTER_KEY.       
 String appMasterKey = System.getenv("LEANCLOUD_APP_MASTER_KEY");   
 
 LeanEngine.initialize(appId, appKey, appMasterKey);
 
-// 如果不希望使用 masterKey 权限，可以将下面一行删除
+// 如果不希望使用 masterKey 权限，可以将下面一行删除 If you don't need to use the master key, you can delete the following line.
 JavaRequestSignImplementation.instance().setUseMasterKey(true);
 ```
 {% endblock %}
 
 {% block custom_api_random_string %}
-{{productName}} 允许开发者自定义基于 HTTP（HTTPS） 的 API。
-例如，开发者如果想实现一个获取服务端时间的 API，可以在代码中如下做：
+{{productName}} allows you to define HTTP/HTTPS-based custom APIs.
+For example, you can use the following code to implement an API that returns the
+server time:
 
-新建一个类 TimeServlet 继承 HttpServlet :
+新建一个类 TimeServlet 继承 HttpServlet : Create a new class TimeServlet to extend HttpServlet:
 
 ```java
 @WebServlet(name = "TimeServlet", urlPatterns = {"/time"})
@@ -283,6 +291,7 @@ public class TimeServlet extends HttpServlet {
 ```
 
 然后打开浏览器，访问 <http://localhost:3000/time>，浏览器应该会返回如下类似的内容：
+Then open your borwser, visit <http://localhost:3000/time>, the browser will return the similiar information like this:
 
 ```json
 {"currentTime":"2016-02-01T09:43:26.223Z"}
