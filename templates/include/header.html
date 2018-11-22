@@ -7,15 +7,10 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a href="/" class="navbar-brand nav-logo font-logo" title="LeanCloud Official Website">LeanCloud</a>
+      <a href="https://leancloud.app" class="navbar-brand nav-logo font-logo" title="LeanCloud Official Website">LeanCloud</a>
     </div>
 
     <div class="collapse navbar-collapse" id="app-options">
-      <!-- <ul class="nav navbar-nav navbar-app-select">
-        <li>
-          <a href="/dashboard/applist.html" class="nav-logo font-logo" title="LeanCloud 控制台">LeanCloud</a>
-        </li>
-      </ul> -->
       <div class="navbar-app-actions-wrap">
         <ul class="nav navbar-nav navbar-app-actions">
           {% if basename != "index" %}
@@ -26,52 +21,6 @@
             </a>
           </li>
           {% endif %}
-          <li class="dropdown dropdown-toggle-app-name">
-            <a href="sdk_down.html" title="LeanCloud SDKs">
-              <!-- <i class="icon icon-dashbd-icon icon-package"></i> -->
-              <div class="name"><span class="mobile-hide"> </span>SDKs</div>
-            </a>
-          </li>
-          <li class="dropdown dropdown-toggle-app-name">
-            <a href="demo.html" title="Demos">
-              <!-- <i class="icon icon-dashbd-icon icon-magic"></i> -->
-              <div class="name">Demos</div>
-            </a>
-          </li>
-          <li class="dropdown dropdown-toggle-app-name">
-            <a class="nav-key-6 dropdown-toggle" title="API Reference" data-toggle="dropdown">
-              <!-- <i class="icon icon-dashbd-icon icon-log"></i> -->
-              <div class="name">API Reference</div>
-            </a>
-            <ul class="dropdown-menu">
-            {% include '_apidocs.html' %}
-            </ul>
-          </li>
-          {# {% if basename != "index" && basename != "opencourse" %}
-          <li class="dropdown dropdown-toggle-app-name">
-            <a href="opencourse.html">
-              <!-- <i class="icon icon-dashbd-icon icon-play"></i> -->
-              <div class="name">Open Course</div>
-            </a>
-          </li>
-          {% endif %} #}
-          <li class="dropdown dropdown-toggle-app-name">
-            <a class="nav-key-6 dropdown-toggle" title="Help" data-toggle="dropdown">
-              <!-- <i class="icon icon-dashbd-icon icon-question"></i> -->
-              <div class="name">More</div>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="https://leanticket.cn/t/leancloud">Support</a></li>
-              <li><a href="http://forum.leancloud.cn">Community</a></li>
-              <li><a href="http://blog.leancloud.cn/">Blog</a></li>
-              <li role="presentation" class="divider"></li>
-              <li><a href="/dashboard/apionline/index.html">API Online Tester</a></li>
-              <!-- <li role="presentation" class="divider"></li> -->
-              <!-- <li><a href="/apps.html">LeanCloud App</a></li> -->
-              <!-- <li><a href="/pricing">Pricing</a></li> -->
-              <!-- <li><a href="#" data-toggle="modal" data-target="#modal-shortcuts">快捷键</a></li> -->
-            </ul>
-          </li>
         </ul>
         <!-- hide search input on the home page -->
         {# {% if basename != "index" %}
