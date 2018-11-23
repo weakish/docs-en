@@ -328,6 +328,7 @@ if (env.equals("development")) {
 {% block http_client %}
 
 云引擎 Java 环境可以使用 URL 或者是 HttpClient 等基础类 ，不过我们推荐使用 okhttp 等第三方库来处理 HTTP 请求。
+LeanEngine Jave environment can use basic class like URL or HttpClient, it is recommend to use third party-library such as okhttp to handle HTTP request.
 
 ``` java
     Request.Builder builder = new Request.Builder();
@@ -362,26 +363,31 @@ public class UploadServlet extends HttpServlet {
 
 {% block cookie_session %}
 云引擎提供了一个 `EngineSessionCookie` 组件，用 Cookie 来维护用户（`AVUser`）的登录状态，要使用这个组件可以在初始化时添加下列代码：
+LeanEngine provides a component `EngineSessionCookie`that uses Cookie to maintain login state of the user (`AVUser`). Add the following code if you need to use this component in initialization.
 
 ```java
-// 加载 cookieSession 以支持 AV.User 的会话状态
+// 加载 cookieSession 以支持 AV.User 的会话状态 Load cookieSession to support session status of AV.User
 LeanEngine.addSessionCookie(new EngineSessionCookie("my secret", 3600, true));
 ```
 
-`EngineSessionCookie` 的构造函数参数包括：
+`EngineSessionCookie` 的构造函数参数包括：`EngineSessionCookie` Constructor arguments of `EngineSessionCookie`include:
 
 * **secret**：一个只保存在服务端的字符串，可以设置为任意值。但每次修改之后，所有已有的 cookie 都会失效，也就是所有用户的登录 session 都将过期。
-* **maxAge**：设置 Cookie 的过期时间。单位秒。
-* **fetchUser**：**是否自动 fetch 当前登录的 AV.User 对象。默认为 false。**
+A character string that is only stored on the server and it can be any value. Everytime you modified it, all existing cookie will be invalid, which means all the login sessions of users will be expired.
+* **maxAge**：设置 Cookie 的过期时间。单位秒。Set the expired period of Cookie, unit in second.
+* **fetchUser**：**是否自动 fetch 当前登录的 AV.User 对象。默认为 false。** Whether or not automatically fetch the current login in object AV.User. false by default.
   如果设置为 true，每个 HTTP 请求都将发起一次 LeanCloud API 调用来 fetch 用户对象。如果设置为 false，默认只可以访问 `AVUser.getCurrentUser()` 的 `id`（`_User` 表记录的 ObjectId）和 `sessionToken` 属性，你可以在需要时再手动 fetch 整个用户。
+If it is set to true, every HTTP request will call LeanCloud API to fetch the user object. If it is set to false, you can only access the `id`(ObjectId recorded in `_User` ) and property `sessionToken` in `AVUser.getCurrentUser()`; you can manually fetch the complete user object when needed.
 
-* 在云引擎方法中，通过 `AVUser.getCurrentUser()` 获取用户信息。
-* 在网站托管中，通过 `AVUser.getCurrentUser()` 获取用户信息。
-* 在后续的方法调用显式传递 user 对象。
+* 在云引擎方法中，通过 `AVUser.getCurrentUser()` 获取用户信息。In LeanEngine method, obtain user information via `AVUser.getCurrentUser()`.
+* 在网站托管中，通过 `AVUser.getCurrentUser()` 获取用户信息。In Website hosting method, obtain user information via `AVUser.getCurrentUser()`.
+* 在后续的方法调用显式传递 user 对象。Pass the user object explicitly in subsequent calls.
 
 你可以这样简单地实现一个具有登录功能的站点：
+You can easily implement a site with login capabilities like this:
 
-#### 登录
+
+#### 登录 Login
 ```java
 @WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
@@ -410,7 +416,7 @@ public class LoginServlet extends HttpServlet {
 
 }
 ```
-#### 登出
+#### 登出 Logout
 ``` java
 @WebServlet(name = "LogoutServlet", urlPatterns = {"/logout"})
 public class LogoutServlet extends HttpServlet {
@@ -432,7 +438,7 @@ public class LogoutServlet extends HttpServlet {
 }
 ```
 
-#### Profile页面
+#### Profile Page
 
 ```java
 @WebServlet(name = "ProfileServlet", urlPatterns = {"/profile"})
@@ -451,7 +457,7 @@ public class ProfileServlet extends HttpServlet {
 }
 ```
 
-一个简单的登录页面（`login.jsp`）可以是这样：
+一个简单的登录页面（`login.jsp`）可以是这样：A simple login page looks like this:
 
 ```html
 <html>
