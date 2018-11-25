@@ -283,7 +283,7 @@ EngineRequestContext.getRemoteAddress();
 ```java
 String env = System.getenv("LEANCLOUD_APP_ENV");
 if (env.equals("development")) {
-    // The current environment is 「Development environment」, launch by command line tool
+    // The current environment is 「Development environment」, launch by command line tool.
 } else if (env.equals("production")) {
     // The current environment is 「Production environment」, it is the official online environment.
 } else {
