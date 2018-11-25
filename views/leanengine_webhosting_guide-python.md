@@ -111,51 +111,61 @@ Here are two example projects that use framework Flask and Django , you can use 
 - [Django](https://github.com/leancloud/django-getting-started)
 {% endblock %}
 
-### 锁定第三方依赖版本
+### 锁定第三方依赖版本 Lock third-party dependency version
 
 Python 云引擎每次在重新构建时，都会去执行 `pip install -r requirements.txt`，因此如果没有明确指定第三方依赖的版本的话，可能会导致完全相同的代码因第三方依赖的改动而产生不一致的行为。
+Python LeanEngine will execute  `pip install -r requirements.txt` on every reconstruct. Thus, if the third-party dependency version is not specified, the same code might output different results due to the modification of the third-party dependency. 
 
 为了避免这种情况的发生，建议在 `requirements.txt` 中明确指定全部第三方依赖的版本。使用 `pip freeze` 命令，可以查看当前 `pip` 安装的第三方模块的版本。如果使用 `virtualenv` 来进行开发，并且当前 `virtualenv` 只包含当前项目的依赖的话，可以考虑将 `pip freeze` 的所有内容都写到 `requirements.txt` 中。
 
+To avoid this issue, it is recommended to specify versions of all third-party dependencies in `requirements.txt`. Using command `pip freeze` to view the version of the current installing third-party module by `pip`. If you use `virtualenv` to develop, and the current  `virtualenv` only contains the dependencies of the current project, you can write all the content of `pip freeze` into `requirements.txt`.
+
 {% block use_leanstorage %}
 
-## 使用数据存储服务
+## 使用数据存储服务 Use LeanStorage
 
 在云引擎中你可以使用 LeanCloud 提供的 [数据存储](storage_overview.html) 作为应用的后端数据库，以及使用其他 LeanCloud 提供的功能。 LeanCloud Python SDK 可以让你更加方便地使用这些功能。
+In LeanEngine, you can use [LeanStorage](storage_overview.html) provided by LeanCloud as the application backend database, as well as using other features provided by LeanCloud. LeanCloud Python SDK makes it easier to use these features.
 
-### 安装
+### 安装 Installation
 
 将 `leancloud` 添加到 `requirements.txt` 中，部署到线上即可自动安装此依赖。在本地运行和调试项目的时候，可以在项目目录下使用如下命令进行依赖安装：
-
+Add `leancloud` into `requirements.txt` to automatically install this dependency when deploying to the online environment. When running and debugging locally, use the following command to install dependency under project directory:
 ```sh
 pip install -r requirements.txt
 ```
 
-### 升级到 leancloud SDK 2.x
+### Update to leancloud SDK 2.x 
 
 LeanCloud Python SDK 目前最新版本已经升级到了 2.0.0，与之前的 1.x 版本相比有了一些不兼容的改动，主要是移除了一些已经废弃的方法，详情参考 [SDK 发布页面](https://github.com/leancloud/python-sdk/releases/tag/v2.0.0)。
 
-不过目前云引擎上有一部分使用者，没有在 requirements.txt 中指定依赖的 Python SDK 版本，因此我们暂时没有将 2.x 分支的代码发布到 pypi 的 [leancloud-sdk](https://pypi.python.org/pypi/leancloud-sdk/) 这个包下，防止对这部分使用者正在运行的代码造成影响。因此目前如果需要使用 2.x 版本的 SDK 的话，请使用 [leancloud](https://pypi.python.org/pypi/leancloud/) 这个包名。
+LeanCloud Python SDK  has the latest version 2.0.0 with some modification on compatibility issue comparing to the 1.x versions by removing some useless methods. Refer to [SDK Release page](https://github.com/leancloud/python-sdk/releases/tag/v2.0.0) for more detail.
 
-### 初始化
+不过目前云引擎上有一部分使用者，没有在 requirements.txt 中指定依赖的 Python SDK 版本，因此我们暂时没有将 2.x 分支的代码发布到 pypi 的 [leancloud-sdk](https://pypi.python.org/pypi/leancloud-sdk/) 这个包下，防止对这部分使用者正在运行的代码造成影响。因此目前如果需要使用 2.x 版本的 SDK 的话，请使用 [leancloud](https://pypi.python.org/pypi/leancloud/) 这个包名。
+However, there are some users on LeanEngine didn't specify Python SDK version in the requirements.txt; for this reason, we haven't released the code of version2.x to package of [leancloud-sdk](https://pypi.python.org/pypi/leancloud-sdk/) under pypi to ensure the code of these users can still run properly. Thus, if you need to use SDK version2.x, please use the package name of [leancloud](https://pypi.python.org/pypi/leancloud/).
+
+### 初始化 Initialization
 
 因为 `wsgi.py` 是项目最先被执行的文件，推荐在此文件进行 LeanCloud Python SDK 的初始化工作：
+Because `wsgi.py`is the first file being executed, it is recommended to initialize the LeanCloud Python SDK in this file. 
+
 
 ```python
 import os
 
 import leancloud
 
-APP_ID = os.environ['LEANCLOUD_APP_ID']                # 从 LEANCLOUD_APP_ID 这个环境变量中获取应用 app id 的值
-APP_KEY = os.environ['LEANCLOUD_APP_KEY']              # 从 LEANCLOUD_APP_KEY 这个环境变量中获取应用 app key 的值
-MASTER_KEY = os.environ['LEANCLOUD_APP_MASTER_KEY']    # 从 LEANCLOUD_APP_MASTER_KEY 这个环境变量中获取应用 master key 的值
+APP_ID = os.environ['LEANCLOUD_APP_ID']                # Obtain the app id from the environment variable LEANCLOUD_APP_ID.
+APP_KEY = os.environ['LEANCLOUD_APP_KEY']              # Obtain the app key from the environment variable LEANCLOUD_APP_KEY.
+MASTER_KEY = os.environ['LEANCLOUD_APP_MASTER_KEY']    # Obtain the master key from the environment variable LEANCLOUD_APP_MASTER_KEY .
 
 leancloud.init(APP_ID, app_key=APP_KEY, master_key=MASTER_KEY)
-# 如果需要使用 master key 权限访问 LeanCLoud 服务，请将这里设置为 True
+# If you need to use the master key to access LeanCLoud service, set value ture here.
 leancloud.use_master_key(False)
 ```
 
 接下来就可以在项目的其他部分中使用 LeanCloud Python SDK 提供的功能了。更多用法请参考 [LeanCloud Python SDK 数据存储开发指南](leanstorage_guide-python.html)。
+Then you can use other LeanCloud Python SDK features in your project, for more usage please refer to [LeanCloud Python SDK Data storage developement guide](leanstorage_guide-python.html).
 {% endblock %}
 
 {% block get_env %}
@@ -164,47 +174,56 @@ import os
 
 env = os.environ.get('LEANCLOUD_APP_ENV')
 if env == 'development':
-  # 当前环境为「开发环境」，是由命令行工具启动的
+  # The current environment is 「Development environment」, launch by command line tool.
   do_some_thing()
 elif env == 'production':
-  # 当前环境为「生产环境」，是线上正式运行的环境
+  # The current environment is 「Production environment」, it is the official online environment.
   do_some_thing()
 elif env == 'staging':
-  # 当前环境为「预备环境」
+  # The current environment is 「Prepared environment」.
   do_some_thing()
 ```
 {% endblock %}
 
 {% block cookie_session %}
 Python SDK 提供了一个 `leancloud.engine.CookieSessionMiddleware` 的 WSGI 中间件，使用 Cookie 来维护用户（`leancloud.User`）的登录状态。要使用这个中间件，可以在 `wsgi.py` 中将：
+Python SDK provides a WSGI middleware `leancloud.engine.CookieSessionMiddleware` that uses Cookie to maintain the login status of the user ( `leancloud.User`). Modify the code like following in `wsgi.py` to use this middleware:
+
+replace 
 
 ```python
 application = engine
 ```
 
-替换为:
+into:
 
 ```python
 application = leancloud.engine.CookieSessionMiddleware(engine, secret=YOUR_APP_SECRET)
 ```
 
 你需要传入一个 secret 的参数，用户签名 Cookie（必须提供），这个中间件会将 `AV.User` 的登录状态信息记录到 Cookie 中，用户下次访问时自动检查用户是否已经登录，如果已经登录，可以通过 `leancloud.User.get_current()` 获取当前登录用户。
+You need to pass in a secret parameter, the Cookie signed by the client(mandatory), this middleware will record the login status of `AV.User` in the Cookie and check if the user has logged in the next visit. You can obtain the current login user via `leancloud.User.get_current()`.
 
 `leancloud.engine.CookieSessionMiddleware` 初始化时支持的非必须选项包括：
+Optional options supported by `leancloud.engine.CookieSessionMiddleware` in initiliaztion include:
 
-* **name**: 在 cookie 中保存的 session token 的 key 的名称，默认为 "leancloud:session"。
-* **excluded_paths**: 指定哪些 URL path 不处理 session token，比如在处理静态文件的 URL path 上不进行处理，防止无谓的性能浪费。接受参数类型 `list`。
+* **name**: 在 cookie 中保存的 session token 的 key 的名称，默认为 "leancloud:session"。Name of the key of session token in cookie - "leancloud:session" by default.
+* **excluded_paths**: 指定哪些 URL path 不处理 session token，比如在处理静态文件的 URL path 上不进行处理，防止无谓的性能浪费。接受参数类型 `list`。Indicate which URL path will not process the session token. For example, there is no processing for the URL path that handles the static files to reduce resource waste. Accept parameter type
 * **fetch_user**: 处理请求时是否要从存储服务获取用户数据，如果为 False 的话，`leancloud.User.get_current()` 获取到的用户数据上除了 `session_token` 之外没有任何其他数据，需要自己调用 `fetch()` 来获取。为 `True` 的话，会自动在用户对象上调用 `fetch()`，这样将会产生一次数据存储的 API 调用。默认为 False。
-* **expires**: 设置 cookie 的失效日期（参考 [Werkzeug Document](http://werkzeug.pocoo.org/docs/0.12/http/#werkzeug.http.dump_cookie)）。
-* **max_age**: 设置 cookie 在多少秒后失效（参考 [Werkzeug Document](http://werkzeug.pocoo.org/docs/0.12/http/#werkzeug.http.dump_cookie)）。
+Whether or not to obtain the user data from storage service when processing the requirement. If it is false, the user data obtained by `leancloud.User.get_current()` will not contain any data other than `session_token`; you need to obtain them by calling  `fetch()`. If it is true, it will automatically call `fetch()` on the user object to generate an API calling for data storage.  False by default.
+
+* **expires**: Set expired date for cookie（refer to [Werkzeug Document](http://werkzeug.pocoo.org/docs/0.12/http/#werkzeug.http.dump_cookie)）。 
+* **max_age**: 设置 cookie 在多少秒后失效 Set how many seconds for cookie to expire（refer [Werkzeug Document](http://werkzeug.pocoo.org/docs/0.12/http/#werkzeug.http.dump_cookie)）。
 
 {% endblock %}
 
 
 {% block http_client %}
 你可以使用任意 Python 的模块来发送 HTTP 请求，比如内置的 urllib。不过我们推荐 [requests](http://www.python-requests.org/) 这个第三方模块。
+You can use any Python module to send HTTP request like the built-in urllib. It is recommended to use the third-party module [requests](http://www.python-requests.org/).
 
 在 `requirements.txt` 中新增一行 `requests>=2.11.0`，然后在此目录重新执行 `pip install -r requirements.txt` 就可以安装这个模块。
+Add a new line  `requests>=2.11.0` in `requirements.txt`, then execute `pip install -r requirements.txt` again under this directory to install this module.
 
 ```python
 import requests
@@ -237,6 +256,7 @@ def index():
 Django:
 
 根据 [Django 的官方文档](https://docs.djangoproject.com/el/1.10/ref/request-response/#django.http.HttpRequest.META)，第三方定义的 HTTP Header 会加上 `HTTP_` 的前缀，并且 `-` 会被替换成 `_`，所以要通过 `HTTP_X_REAL_IP` 来访问。
+Based on [Django Official document](https://docs.djangoproject.com/el/1.10/ref/request-response/#django.http.HttpRequest.META), the third-party HTTP Header will add prefix of `HTTP_`;  `-` will be replaced into `_`. Thus use `HTTP_X_REAL_IP` to visit. 
 
 ```python
 def index(request):
@@ -244,7 +264,8 @@ def index(request):
     return render(request, 'index.html', {})
 ```
 
-其他框架请参考对应文档。
+其他框架请参考对应文档。Other frameworks please refer to corresponding files.
+
 {% endblock %}
 
 {% block https_redirect %}
@@ -253,7 +274,7 @@ import leancloud
 
 application = get_your_wsgi_func()
 
-# 使用 `leancloud.HttpsRedirectMiddleware` 这个 WSGI 中间件包装一下原始的提供给 LeanEngine 的 WSGI 函数
+# use this WSGI middleware `leancloud.HttpsRedirectMiddleware` to pack the original WSGI function provided to LeanEngine.
 application = leancloud.HttpsRedirectMiddleware(application)
 ```
 {% endblock %}
@@ -281,7 +302,7 @@ print('some err', file=sys.stderr)  # error
 
 {% block code_calling_custom_variables %}
 ```python
-# 在云引擎 Python 环境中使用自定义的环境变量
+# 在云引擎 Python 环境中使用自定义的环境变量 Use custom environment variables in LeanEngine Python Environment
 import os
 
 MY_CUSTOM_VARIABLE = os.environ.get('MY_CUSTOM_VARIABLE')
@@ -303,12 +324,13 @@ def upload():
     return 'upload file ok!'
 ```
 
-其他 Web 框架，请参考对应文档。
+其他 Web 框架，请参考对应文档。 Other Web frameworks please refer to corresponding files.
 
 {% endblock %}
 
 {% block leancache %}
 首先添加相关依赖到云引擎应用的 `requirements.txt` 中：
+First add the related dependencies into  `requirements.txt`  of LeanEngine application:
 
 ``` python
 Flask>=0.10.1,<1.0.0
@@ -318,6 +340,7 @@ redis>=2.10.5,<3.0.0
 ```
 
 然后可以使用下列代码获取 Redis 连接：
+Then obtain the Redis connection:
 
 ``` python
 import os
@@ -328,5 +351,5 @@ r = redis.from_url(os.environ.get("REDIS_URL_<实例名称>"))
 {% endblock %}
 
 {% block custom_session %}
-推荐使用 Web 框架自带的 session 组件。
+推荐使用 Web 框架自带的 session 组件。It is recommended to use the built-in session component of Web Framework.
 {% endblock %}
