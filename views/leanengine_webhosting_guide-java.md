@@ -71,7 +71,6 @@ There are several methods to locally launching the application:
 lean up
 ```
 
-更多有关命令行工具和本地调试的内容请参考 [命令行工具使用指南](leanengine_cli.html)。
 Please refer to [Command line tool usage guide](leanengine_cli.html) for more detail on command line tool and locally debugging.
 
 **Tip**：Comparing with other launching methods, command line tool supports [Multi-functions management](leanengine_cli.html#Multi-functions management)to switch between different application environment.
@@ -79,7 +78,6 @@ Please refer to [Command line tool usage guide](leanengine_cli.html) for more de
 
 #### Using Command line tool to set the environment variable to launch the application
 
-通过以下命令将云引擎运行需要的环境变量设置到当前命令行环境中，并使用 jetty 插件启动应用：
 Use the following code to set the environment variable for LeanEngine in the current command line environment, and launch the application by using the jetty plugin:
 
 
@@ -88,8 +86,7 @@ eval "$(lean env)"
 mvn jetty:run
 ```
 
-**Tip**：命令 `lean env` 可以输出当前应用所需环境变量的设置语句，外层的 `eval` 是直接执行这些语句。
-Command `lean env` can output the setting statement of the required environment variable for the current application,the outer `eval`  can directly execute the statement.
+**Tip**：Command `lean env` can output the setting statement of the required environment variable for the current application,the outer `eval`  can directly execute the statement.
 
 #### Using Eclipse to launch the application 
 
@@ -119,7 +116,7 @@ Use the following code to set the required environment variable for LeanEngine i
 
 ```
 eval "$(lean env)"
-java -jar target/{打包好的 jar 文件}
+java -jar target/{zipped jar file}
 ```
 
 **Tip**：
