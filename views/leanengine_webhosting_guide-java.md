@@ -25,7 +25,7 @@ git clone https://github.com/leancloud/java-war-getting-started.git
 
 Your project has to follow the following structure to be recognized by LeanEngine and operate properly.
 
-LeanEngine Java operating environment is constructed by Maven. For this reason, the {{fullName}} project must contain `$PROJECT_DIR/pom.xml`, this file is the startup file for the whole project. After construction, LeanEngine will search for an available package under the directory of `$PROJECT_DIR/target`.
+LeanEngine Java environment is constructed by Maven. For this reason, the {{fullName}} project must contain `$PROJECT_DIR/pom.xml`, this file is the startup file for the whole project. After construction, LeanEngine will search for an available package under the directory of `$PROJECT_DIR/target`.
 
 * WAR：If your project is zipped into a WAR file, LeanEngine will put it into Servlet container (currently Jetty 9.x) to operate.
 
