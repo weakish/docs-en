@@ -2,13 +2,9 @@
 {% extends "./leanengine_webhosting_guide.tmpl" %}
 
 {% set productName = "LeanEngine" %} 
-
 {% set platformName = "Java" %} 
-
 {% set fullName = productName + ' ' + platformName %} 
-
 {% set sdk_name = "Java" %} 
-
 {% set leanengine_middleware = "[LeanEngine Java SDK](https://github.com/leancloud/leanengine-java-sdk)" %}
 {% set leanengine_java_sdk_latest_version = '0.1.11' %} 
 
