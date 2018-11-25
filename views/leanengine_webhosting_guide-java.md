@@ -1,4 +1,4 @@
-{# Specify extended template #} 
+{# Specify inherited template #} 
 {% extends "./leanengine_webhosting_guide.tmpl" %}
 
 {% set productName = "LeanEngine" %}
