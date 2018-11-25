@@ -1,7 +1,7 @@
-{# 指定继承模板 #}
+{# Specify inherited template #}
 {% extends "./leanengine_webhosting_guide.tmpl" %}
 
-{% set productName = '云引擎' %}
+{% set productName = 'LeanEngine' %}
 {% set platformName = 'Python' %}
 {% set fullName = productName + ' ' + platformName %}
 {% set sdk_name = 'Python' %}
@@ -11,77 +11,101 @@
 {% block getting_started %}
 
 将示例代码 [leancloud/python-getting-started](https://github.com/leancloud/python-getting-started) 克隆到本地：
+Clone the example code [leancloud/python-getting-started](https://github.com/leancloud/python-getting-started) to local:
 
 ```sh
 git clone https://github.com/leancloud/python-getting-started.git
 ```
 
 在本地运行 LeanEngine Python 应用，首先需要这几个依赖：
+First you need these dependencies to launch LeanEngine Python Application locally:
 
 - **python**：请确保本地安装的 Python 版本与线上使用的相同，以免不同版本之间的兼容性导致问题。推荐使用 [pyenv](https://github.com/pyenv/pyenv) 来管理本地 Python 版本。
-- **pip**：用来安装第三方依赖。
+Please make sure the local python version is identical with the online python version to avoid compatibility issues. It is recommended to use [pyenv](https://github.com/pyenv/pyenv)  to locally manage your Python versions.
+- **pip**：用来安装第三方依赖。Used to install third-party dependencies
 - **virtualenv**：可选，建议使用 virtualenv 或者类似的工具来创建一个独立的 Python 环境，以免项目使用到的依赖与系统／其他项目的版本产生冲突。
-
+Optional, it is recommended to use virtualenv or similar tool to create an independent Python environment to avoid conflict between dependencies used by the project and used by the system/other projects.
 请确保以上依赖都已经在本机上安装就绪，然后在项目目录下执行如下命令，来安装项目用到的第三方依赖：
+Please make sure the above dependencies are installed locally properly, then execute the following command under the project directory to install the third-party dependencies for the project.
 
 ```sh
 pip install -r requirements.txt
 ```
 
 更多有关命令行工具和本地调试的内容请参考 [命令行工具使用指南](leanengine_cli.html)。
+Please refer to [Command line tool usage guide](leanengine_cli.html) for more detail on command line tool and locally debugging.
+
 
 {% endblock %}
 
 {% block project_constraint %}
 
-## 项目骨架
+## 项目骨架 Project skeleton
 
 参照示例项目，你的项目需要遵循一定格式才会被云引擎识别并运行。
+Your project has to follow the following structure to be recognized by LeanEngine and operate properly.
 
 {{fullName}} 使用 WSGI 规范来运行项目，项目根目录下必须有 `wsgi.py` 与 `requirements.txt` 文件，可选文件 `.python-version`、`runtime.txt`。云引擎运行时会首先加载 `wsgi.py` 这个模块，并将此模块的全局变量 `application` 做为 WSGI 函数进行调用。因此请保证 `wsgi.py` 文件中包含一个 `application` 的全局变量／函数／类，并且符合 WSGI 规范。
 
-更多关于 **WSGI 函数** 的内容，请参考 [WSGI 接口](http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001432012393132788f71e0edad4676a3f76ac7776f3a16000) 或者 [PEP333](https://www.python.org/dev/peps/pep-0333/)。
+{{fullName}} uses WSGI specification to run the project. There must be mandatory files `wsgi.py` and `requirements.txt` and optional file `.python-version`and`runtime.txt` in the project root directory. LeanEngine will start to load module `wsgi.py` first, and call the WSGI function which uses the global variable of this module. Hence please make sure the `wsgi.py` file contains a global  `application` variables/function/class that is in accordance with the WSGI specification.
+
+
+
+More information about **WSGI 函数**,please refer to [WSGI port](http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001432012393132788f71e0edad4676a3f76ac7776f3a16000) or [PEP333](https://www.python.org/dev/peps/pep-0333/)。
+
 
 {% endblock %}
 {% block custom_runtime %}
-### 添加第三方依赖模块
+### 添加第三方依赖模块 Add third-party dependency module
 
-`requirements.txt` 中填写项目依赖的第三方模块，每行一个，如：
+`requirements.txt` 中填写项目依赖的第三方模块，每行一个，如：fill in the third-party modules for the project dependency, one module per line,like this:
 
 ```
-# 井号至行尾为注释
+# 井号至行尾为注释 From # sign to the end of the line are comments
 leancloud>=2.0.0,<3.0.0
-Flask>=0.10.1,<1.0.0                               # 可以指定版本号／范围
-git+https://github.com/foo/bar.git@master#egg=bar  # 可以使用 Git/SVN 等版本管理工具的远程地址
+Flask>=0.10.1,<1.0.0                               # 可以指定版本号／范围  specify version number/range of versions
+git+https://github.com/foo/bar.git@master#egg=bar  # 可以使用 Git/SVN 等版本管理工具的远程地址 Use the remote addresses of version management tool such as Git/SVN
 ```
 
-详细格式请参考 [pip 文档 &middot; Requirements Files](https://pip.pypa.io/en/stable/user_guide/#requirements-files)。
+Detail format please refer to [pip Document &middot; Requirements Files](https://pip.pypa.io/en/stable/user_guide/#requirements-files)。
+
 
 应用部署到云引擎之后，会自动按照 `requirements.txt` 中的内容进行依赖安装。在本地运行和调试项目的时候，可以在项目目录下使用如下命令安装依赖：
+After deploying to LeanEngine, LeanEngine will automatically install dependencies based on `requirements.txt`. You can use the following command to install dependencies when running and debugging locally:
+
 
 ```sh
 pip install -r requirements.txt
 ```
 
 另外当你部署应用的时候，建议将依赖的包的版本都按照 `foo==1.0.0` 这种格式来明确指定版本号（或版本的范围），防止因为依赖的模块升级且不再兼容老的 API 时，当再次部署时会导致应用运行失败。
+Also when deploying the application, it is suggested to use the version format of `foo==1.0.0` for dependency packages to specify version number(or range of versions) to avoid the redeploy failure when the updated dependency module is no longer compatible with the old API.
 
-### 指定 Python 版本
+
+### 指定 Python 版本 Sepecify Python version
 
 你可以选择运行代码的 Python 版本，选择方法与 [pyenv](https://github.com/pyenv/pyenv) 相同，即在项目根目录的 `.python-version` 中写入需要的 Python 版本即可，比如 `3.6.1`。这样将代码部署到云引擎之后，系统会自动选择对应的 Python 版本。
+You can select the Python version to run the code, the selection method is the same as [pyenv](https://github.com/pyenv/pyenv). As in you write the required Python version in `.python-version` under the project root directory, for example: `3.6.1`. The system will select the corresponding Python version after the code being deployed to LeanEngine.
+
 
 如果在本地开发时已使用了 pyenv，pyenv 也会根据此文件来自动使用对应的 Python 运行项目。我们建议本地开发使用 pyenv，以保证本地环境与线上相同。pyenv 的安装方法请参考 [pyenv 官方网站](https://github.com/pyenv/pyenv)。
+If pyenv has already be used in local development, pyenv will also use the corresponding Python project based on this file. It is recommended to use pyenv in local development to ensure the local and online environment are identical. Installation for pyenv please refer to [pyenv Official site](https://github.com/pyenv/pyenv)。
 
 目前仅支持 CPython 版本，暂时不支持 pypy、jython、iron python 等其他 Python 实现。另外建议尽量使用 3.5 或以上版本的 Python 进行开发，如果仍然在使用 Python2 ，请使用 Python2.7 进行开发。
+Currently, only CPython is supported, pypy、jython、iron python and other Python implementation are not supported. It is recommended to use Python3.5 or above, if you are still using Python2, please use Python2.7.
 
 {{ docs.note("在之前版本的云引擎中，你可以在项目根目录的 `runtime.txt` 中填写 `python-3.5` 或者 `python-2.7` 来指定 Python 版本。如果当前项目仍然在使用此方法，建议使用上面介绍的方式来指定。") }}
+In previous LeanEngine version, you can fill in `python-3.5` or `python-2.7` in `runtime.txt` under project root directory. If the current project is still using this method, it is recommended to specify the verion with the method mentioned above.
 
 {% endblock %}
 
 
 {% block supported_frameworks %}
 如前所述，只要兼容 Python WSGI 规范的框架都可以在云引擎运行。目前比较流行的 Python Web 框架对此都有支持，比如 [Flask](http://flask.pocoo.org)、[Django](https://www.djangoproject.com)、[Tornado](http://www.tornadoweb.org)。
+As mentioned earlier, any framework that is compatible with the Python WSGI specification can run on the LeanEngine like current popular Python Web framework, say [Flask](http://flask.pocoo.org)、[Django](https://www.djangoproject.com)、[Tornado](http://www.tornadoweb.org)。
 
 我们提供了 Flask 和 Django 两个框架的示例项目作为参考，你也可以直接把它们当作一个应用项目的初始化模版：
+Here are two example projects that use framework Flask and Django , you can use them as initialization templates for the application:
 
 - [Flask](https://github.com/leancloud/python-getting-started)
 - [Django](https://github.com/leancloud/django-getting-started)
