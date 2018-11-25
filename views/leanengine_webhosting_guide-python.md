@@ -40,8 +40,7 @@ Please refer to [Command line tool usage guide](leanengine_cli.html) for more de
 
 Your project has to follow the following structure to be recognized by LeanEngine and operate properly.
 
-{{fullName}} uses WSGI specification to run the project. There must be mandatory files `wsgi.py` and `requirements.txt` and optional file `.python-version`and`runtime.txt` in the project root directory. LeanEngine will start by loading module `wsgi.py` first, and call the WSGI function which uses the global variable of this module. Hence please make sure the `wsgi.py` file contains a global  `application` variables/function/class that is in accordance with the WSGI specification.
-
+{{fullName}} uses WSGI specification to run the project. There must be mandatory files `wsgi.py` and `requirements.txt` and optional file `.python-version`and`runtime.txt` in the project root directory. LeanEngine will start by firstly loading module `wsgi.py`, and call the WSGI function which uses the global variable of this module. Hence please make sure the `wsgi.py` file contains a global  `application` variables/function/class that is in accordance with the WSGI specification.
 
 
 More information about **WSGI function**,please refer to [WSGI port](http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001432012393132788f71e0edad4676a3f76ac7776f3a16000) or [PEP333](https://www.python.org/dev/peps/pep-0333/)。
