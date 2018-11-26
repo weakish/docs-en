@@ -10,26 +10,34 @@
 
 {% block getting_started %}
 
-Clone the example code [leancloud/python-getting-started](https://github.com/leancloud/python-getting-started) to local:
+Clone the sample project [leancloud/python-getting-started](https://github.com/leancloud/python-getting-started):
 
 ```sh
 git clone https://github.com/leancloud/python-getting-started.git
 ```
 
-First you need the following dependencies to launch LeanEngine Python Application locally:
+First you need the following dependencies to launch a LeanEngine Python
+application locally:
 
-- **python**：Please make sure the local and online python version are identical to avoid compatibility issues. It is recommended to use [pyenv](https://github.com/pyenv/pyenv)  to locally manage your Python versions.
+- **python**：Please make sure the local and online python version are
+  identical to avoid compatibility issues. It is recommended to use
+  [pyenv](https://github.com/pyenv/pyenv)  to manage your local Python
+  versions.
 - **pip**：Used to install third-party dependencies.
-- **virtualenv**：Optional, it is recommended to use virtualenv or similar tools to create an independent Python environment to avoid conflict between dependencies used by the project and used by the system/other projects.
+- **virtualenv**：Optional, it is recommended to use virtualenv or similar
+  tools to create an independent Python environment for each project to avoid
+  conflicts.
 
-Please make sure the above dependencies are installed locally properly, then execute the following command under the project directory to install the third-party dependencies for the project.
+Please make sure the above dependencies are installed locally properly, then
+execute the following command under the project directory to install the
+third-party dependencies for the project.
 
 ```sh
 pip install -r requirements.txt
 ```
 
-
-Please refer to [Command line tool usage guide](leanengine_cli.html) for more detail on command line tool and locally debugging.
+Please refer to the [command-line tool usage guide](leanengine_cli.html) for more
+details on the command line tool and locally debugging.
 
 
 {% endblock %}
@@ -40,17 +48,22 @@ Please refer to [Command line tool usage guide](leanengine_cli.html) for more de
 
 Your project has to follow the following structure to be recognized by LeanEngine and operate properly.
 
-{{fullName}} uses WSGI specification to run the project. There must be mandatory files `wsgi.py` and `requirements.txt` and optional file `.python-version`and`runtime.txt` in the project root directory. LeanEngine will start by firstly loading module `wsgi.py`, and call the WSGI function which uses the global variable of this module. Hence please make sure the `wsgi.py` file contains a global  `application` variables/function/class that is in accordance with the WSGI specification.
+{{fullName}} uses WSGI to run the project.  `wsgi.py` and `requirements.txt`
+must exist in the project root directory.  `.python-version`
+is optional. Please see below for its usage. LeanEngine will start by
+firstly loading the module `wsgi.py`, and call the WSGI entry point.  Please
+make sure the `wsgi.py` file contains a global `application`
+variables/function/class that conforms to the WSGI specification.
 
-
-More information about **WSGI function**,please refer to [WSGI port](http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001432012393132788f71e0edad4676a3f76ac7776f3a16000) or [PEP333](https://www.python.org/dev/peps/pep-0333/)。
+For more information about **WSGI**,please refer to [PEP333](https://www.python.org/dev/peps/pep-0333/)。
 
 
 {% endblock %}
 {% block custom_runtime %}
-### Add third-party dependency module
+### Add third-party dependencies
 
-In`requirements.txt`, fill in the third-party modules for the project dependency, one module per line,like this:
+In`requirements.txt`, fill in the third-party dependencies of the project. One
+module per line:
 
 ```
 # From # sign to the end of the line are comments
@@ -59,90 +72,107 @@ Flask>=0.10.1,<1.0.0                               # Specify version number/rang
 git+https://github.com/foo/bar.git@master#egg=bar  # Use the remote addresses of version management tool such as Git/SVN
 ```
 
-Detail format please refer to [pip Document &middot; Requirements Files](https://pip.pypa.io/en/stable/user_guide/#requirements-files)。
+Please refer to [pip Document &middot; Requirements
+Files](https://pip.pypa.io/en/stable/user_guide/#requirements-files) for
+detailed information about the file.
 
 
-After deploying to LeanEngine, LeanEngine will automatically install dependencies based on `requirements.txt`. You can use the following command to install dependencies when running and debugging locally:
+After deployment, LeanEngine will automatically install dependencies in
+`requirements.txt`. You can use the following command to install dependencies
+when running and debugging locally:
 
 
 ```sh
 pip install -r requirements.txt
 ```
 
-Also when deploying the application, it is suggested to use the version format of `foo==1.0.0` for dependency packages to specify version number(or range of versions) to avoid the redeploy failure when the updated dependency module is no longer compatible with the old API.
+When deploying to production, it is advisable to specify the exact versions
+(`foo==1.0.0`) of dependencies to avoid compatibility surprises.
 
+### Sepecifying a Python version
 
-### Sepecify Python version
+You can select the Python version to run the code in a way similar to
+[pyenv](https://github.com/pyenv/pyenv), by putting the desired
+version in `.python-version` under the project root directory. For example:
+`3.6.1`.
 
-You can select the Python version to run the code. The selection method is the same as [pyenv](https://github.com/pyenv/pyenv), as in you write the required Python version in `.python-version` under the project root directory, for example: `3.6.1`. The system will select the corresponding Python version after the code being deployed to LeanEngine.
+If pyenv is used locally, it will also use the same Python version. It is
+recommended to use pyenv in local development to ensure the local and online
+environment are identical. Please refer to [pyenv
+Official site](https://github.com/pyenv/pyenv) for how to install and pyenv.
 
-
-If pyenv has already be used in local development, pyenv will also use the corresponding Python project based on this file. It is recommended to use pyenv in local development to ensure the local and online environment are identical. Installation for pyenv please refer to [pyenv Official site](https://github.com/pyenv/pyenv)。
-
-Currently, only CPython is supported, pypy、jython、iron python and other Python implementation are not supported. It is recommended to use Python3.5 or above, if you are still using Python2, please use Python2.7.
-
-{{ docs.note("In previous LeanEngine version, you can fill in `python-3.5` or `python-2.7` in `runtime.txt` under project root directory to specify a Python version. If the current project is still using this method, it is recommended to specify the verion with the method mentioned above.") }}
-
+Currently, only CPython is supported, pypy、jython、iron python and other
+Python implementation are not supported. It is recommended to use Python3.5 or
+above, if you are still using Python2, please use 2.7.
 
 {% endblock %}
 
 
 {% block supported_frameworks %}
 
-As mentioned earlier, any framework that is compatible with the Python WSGI specification can run on the LeanEngine like current popular Python Web framework, say [Flask](http://flask.pocoo.org)、[Django](https://www.djangoproject.com)、[Tornado](http://www.tornadoweb.org)。
+As mentioned earlier, any framework that is compatible with the Python WSGI
+specification can used. Popular choices include
+[Flask](http://flask.pocoo.org), [Django](https://www.djangoproject.com), and
+[Tornado](http://www.tornadoweb.org).
 
-Here are two example projects that use framework Flask and Django , you can use them as initialization templates for the application:
+Here are two example projects that use Flask and Django , you can use them as starting points:
 
 - [Flask](https://github.com/leancloud/python-getting-started)
 - [Django](https://github.com/leancloud/django-getting-started)
 {% endblock %}
 
-### Lock third-party dependency version
+### Lock third-party dependency versions
 
 
-Python LeanEngine will execute  `pip install -r requirements.txt` on every reconstruct. Thus, if the third-party dependency version is not specified, the same code might output different results due to the modification of the third-party dependency. 
+Python LeanEngine will execute  `pip install -r requirements.txt` on every
+deployment. Thus, if the exact version of each dependency is not specified, a
+different version than the one you're expecting maybe installed.
 
-To avoid this issue, it is recommended to specify versions of all third-party dependencies in `requirements.txt`. Using command `pip freeze` to view the version of the current installing third-party module by `pip`. If you use `virtualenv` to develop, and the current  `virtualenv` only contains the dependencies of the current project; you can write all the content of `pip freeze` into `requirements.txt`.
+To avoid this issue, it is recommended to specify exact versions of all third-party
+dependencies in `requirements.txt`. The command `pip freeze` can show you 
+the versions of the currently installed modules. If you use
+`virtualenv` to develop, and the current  `virtualenv` only contains the
+dependencies of the current project; you can write the output of `pip
+freeze` to `requirements.txt`.
 
 {% block use_leanstorage %}
 
-## Use LeanStorage
+## Using LeanStorage
 
-In LeanEngine, you can use [LeanStorage](storage_overview.html) provided by LeanCloud as the application backend database, as well as using other features provided by LeanCloud. LeanCloud Python SDK makes it easier to use these features.
+In LeanEngine, you can use [LeanStorage](storage_overview.html)
+as the backend database, as well as other features
+provided by LeanCloud. LeanCloud Python SDK makes it easier to use these
+features.
 
 ### Installation
 
-Add `leancloud` into `requirements.txt` to automatically install this dependency when deploying to the online environment. When running and debugging locally, use the following command to install dependency under project directory:
+Add `leancloud` into `requirements.txt`, and install the dependencies:
 ```sh
 pip install -r requirements.txt
 ```
 
-### Update to leancloud SDK 2.x 
-
-LeanCloud Python SDK  has the latest version 2.0.0 with some modification on compatibility issue by removing some useless methods comparing to the 1.x versions . Refer to [SDK Release page](https://github.com/leancloud/python-sdk/releases/tag/v2.0.0) for more detail.
-
-However, there are some users on LeanEngine didn't specify Python SDK version in the requirements.txt; for this reason, we haven't released the code of version2.x to package of [leancloud-sdk](https://pypi.python.org/pypi/leancloud-sdk/) under pypi to ensure the code of these users can still run properly. Thus, if you need to use SDK version2.x, please use the package name of [leancloud](https://pypi.python.org/pypi/leancloud/).
-
 ### Initialization
 
-Because `wsgi.py`is the first file being executed, it is recommended to initialize the LeanCloud Python SDK in this file. 
+Because `wsgi.py`is the first file to be executed, it is recommended to
+initialize the LeanCloud Python SDK in this file. 
 
 
 ```python
 import os
-
 import leancloud
 
-APP_ID = os.environ['LEANCLOUD_APP_ID']                # Obtain the app id from the environment variable LEANCLOUD_APP_ID.
-APP_KEY = os.environ['LEANCLOUD_APP_KEY']              # Obtain the app key from the environment variable LEANCLOUD_APP_KEY.
-MASTER_KEY = os.environ['LEANCLOUD_APP_MASTER_KEY']    # Obtain the master key from the environment variable LEANCLOUD_APP_MASTER_KEY .
+APP_ID = os.environ['LEANCLOUD_APP_ID']              # Obtain the app id from the environment variable LEANCLOUD_APP_ID.
+APP_KEY = os.environ['LEANCLOUD_APP_KEY']            # Obtain the app key from the environment variable LEANCLOUD_APP_KEY.
+MASTER_KEY = os.environ['LEANCLOUD_APP_MASTER_KEY']  # Obtain the master key from the environment variable LEANCLOUD_APP_MASTER_KEY .
 
 leancloud.init(APP_ID, app_key=APP_KEY, master_key=MASTER_KEY)
 # If you need to use the master key to access LeanCLoud service, set value ture here.
 leancloud.use_master_key(False)
 ```
 
-Then you can use other LeanCloud Python SDK features in your project, for more usage please refer to [LeanCloud Python SDK Data storage developement guide](leanstorage_guide-python.html).
+Then you can use all LeanCloud Python SDK features in your project, for more
+please refer to [LeanCloud Python SDK Data storage developement
+guide](leanstorage_guide-python.html).
 {% endblock %}
 
 {% block get_env %}
@@ -164,7 +194,9 @@ elif env == 'staging':
 
 {% block cookie_session %}
 
-Python SDK provides a WSGI middleware `leancloud.engine.CookieSessionMiddleware` that uses Cookie to maintain the login status of the user ( `leancloud.User`). Modify the code like following in `wsgi.py` to use this middleware:
+Python SDK provides a WSGI middleware
+`leancloud.engine.CookieSessionMiddleware` that use cookies to manage sessions
+Modify the code in `wsgi.py` to use this middleware:
 
 replace 
 
@@ -178,31 +210,41 @@ into:
 application = leancloud.engine.CookieSessionMiddleware(engine, secret=YOUR_APP_SECRET)
 ```
 
-You need to pass in a secret parameter, the Cookie signed by the client(mandatory), this middleware will record the login status of `AV.User` in the Cookie and check if the user has logged in the next visit. You can obtain the current login user via `leancloud.User.get_current()`.
+You need to pass in a secret which is used to sign the cookie. This middleware
+will save session information in the Cookie and check if the user
+has logged in. You can obtain the currently logged-in user via
+`leancloud.User.get_current()`.
 
-Optional options supported by `leancloud.engine.CookieSessionMiddleware` in initiliaztion include:
+Other options supported by `leancloud.engine.CookieSessionMiddleware` include:
 
-* **name**: Name of the key of session token in cookie - "leancloud:session" by default.
-* **excluded_paths**: Indicate which URL path will not process the session token. For example, there is no processing for the URL path that handles the static files to reduce resource waste. Accept parameter type `list`.
-* **fetch_user**: Whether or not to obtain the user data from storage service when processing the requirement. If it is false, the user data obtained by `leancloud.User.get_current()` will not contain any data other than `session_token`; you need to obtain them by calling  `fetch()`. If it is true, it will automatically call `fetch()` on the user object to generate an API calling for data storage.  False by default.
-
-* **expires**: Set expired date for cookie（refer to [Werkzeug Document](http://werkzeug.pocoo.org/docs/0.12/http/#werkzeug.http.dump_cookie)）。 
-* **max_age**: Set how many seconds for cookie to expire（refer [Werkzeug Document](http://werkzeug.pocoo.org/docs/0.12/http/#werkzeug.http.dump_cookie)）。
+* **name**: Name of session cookie - "leancloud:session" by default.
+* **excluded_paths**: Exclude the session cookie from certain paths. For example, it makes sense to add paths with only static files here. Accept parameter type `list`.
+* **fetch_user**: Whether or not to automatically fetch the AV.User object.
+  false by default. If `fetch_user` is true, when each HTTP request with a session
+  cookie is recieved a call to the LeanStorage service will be made to fetch
+  the user object. If it is set to false, you can only access the ID and the
+  `session_token` of the user object returned by `leancloud.User.get_current()`; you
+  can manually fetch the complete object when needed.
+* **expires**: Set expiration time for the cookie（refer to [Werkzeug Document](http://werkzeug.pocoo.org/docs/0.12/http/#werkzeug.http.dump_cookie)）。 
+* **max_age**: Set seconds to expiration for the cookie（refer [Werkzeug Document](http://werkzeug.pocoo.org/docs/0.12/http/#werkzeug.http.dump_cookie)）。
 
 {% endblock %}
 
 
 {% block http_client %}
-You can use any Python module to send HTTP request like the built-in urllib. It is recommended to use the third-party module [requests](http://www.python-requests.org/).
+You can use any Python module to send HTTP requests. The built-in urllib would
+work, but it is more convenient to use the third-party module
+[requests](http://www.python-requests.org/).
 
-Add a new line  `requests>=2.11.0` in `requirements.txt`, then execute `pip install -r requirements.txt` again under this directory to install this module.
+Add a new line  `requests>=2.11.0` in `requirements.txt`, then execute `pip
+install -r requirements.txt` again.
 
 ```python
 import requests
 
 response = requests.post('http://www.example.com/create_post', json={
-    'title': 'Vote for Pedro',
-    'body': 'If you vote for Pedro, your wildest dreams will come true',
+    'title': 'Some title',
+    'body': 'Some awesome content.',
 })
 
 print(response.json())
@@ -227,15 +269,16 @@ def index():
 
 Django:
 
-Based on [Django Official document](https://docs.djangoproject.com/el/1.10/ref/request-response/#django.http.HttpRequest.META), the third-party HTTP Header will add prefix of `HTTP_`;  `-` will be replaced into `_`. Thus use `HTTP_X_REAL_IP` to visit. 
+Based on [Django's Official
+document](https://docs.djangoproject.com/el/1.10/ref/request-response/#django.http.HttpRequest.META),
+the prefix `HTTP_` is added to third-party headers;  `_` will be replaced
+by `-`.
 
 ```python
 def index(request):
     print(request.META['HTTP_X_REAL_IP'])
     return render(request, 'index.html', {})
 ```
-
-Other frameworks please refer to corresponding files.
 
 {% endblock %}
 
@@ -245,7 +288,6 @@ import leancloud
 
 application = get_your_wsgi_func()
 
-# use this WSGI middleware `leancloud.HttpsRedirectMiddleware` to pack the original WSGI function provided to LeanEngine.
 application = leancloud.HttpsRedirectMiddleware(application)
 ```
 {% endblock %}
@@ -295,12 +337,10 @@ def upload():
     return 'upload file ok!'
 ```
 
-Other Web frameworks please refer to corresponding files.
-
 {% endblock %}
 
 {% block leancache %}
-First add the related dependencies into  `requirements.txt`  of LeanEngine application:
+First add the dependencies to `requirements.txt`:
 
 ``` python
 Flask>=0.10.1,<1.0.0
@@ -309,16 +349,16 @@ leancloud>=2.0.0,<3.0.0
 redis>=2.10.5,<3.0.0
 ```
 
-Then obtain the Redis connection:
+Then create the Redis connection:
 
 ``` python
 import os
 import redis
 
-r = redis.from_url(os.environ.get("REDIS_URL_<实例名称>"))
+r = redis.from_url(os.environ.get("REDIS_URL_<instance_name>"))
 ```
 {% endblock %}
 
 {% block custom_session %}
-It is recommended to use the built-in session component of Web Framework.
+It is recommended to use the built-in session component of the web framework.
 {% endblock %}
