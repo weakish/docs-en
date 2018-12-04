@@ -8,55 +8,47 @@
 
 # LeanStorage JavaScript Guide
 
-The LeanStorage JavaScript SDK can be used to persist and query data in
-LeanCloud.
+The LeanStorage JavaScript SDK can be used to persist and query data in LeanCloud.
 
-You might already be familiar with relational databases such as MySQL and
-Postgres. Programming with the LeanStorage SDK is quite different from writing
-SQL statements. For example, a SQL statement that adds a new record to the
-database looks like: (assuming the database and the table have already been
-created with the proper schema):
+If you already have experience with relational databases such as MySQL and Postgres, you will notice that programming with LeanStorage SDK is quite different from writing SQL statements. For example, a SQL statement that adds a new record to the database may look like this (assuming the database and the table have already been created with the proper schema):
 
 ```sql
 INSERT INTO Todo (title, content) 
 VALUES ('R&D Weekly Meeting', 'All team members, Tues 2pm')
 ```
 
-Using our JavaScript SDK, you would write something like this:
+With our JavaScript SDK, you would write something like this:
 
 ```js
-// Import a LeanStorage class
+// Declare Class
 var Todo = AV.Object.extend('Todo');
-// Create a new object
+
+// Create an object
 var todo = new Todo();
 
-// Set properties
+// Set values of fields
 todo.set('title',   'R&D Weekly Meeting');
 todo.set('content', 'All team members, Tue 2pm');
 
+// Save data to the cloud
 todo.save().then(function (todo) {
-  // data was successfully saved in the cloud 
-  console.log('object id is:' + todo.id);
+  // Execute any logic that should take place after the object is saved
+  console.log('New object created with objectId: ' + todo.id);
 }, function (error) {
-  // operation failed
-  console.error('error message: ' + error.message);
+  // Execute any logic that should take place if the save fails
+  console.error('Failed to create new object, with error message: ' + error.message);
 });
 ```
 
-The JavaScript code might seem a lot more verbose, but it is much more
-conformant to the convention of the application language and free of many
-SQL-specific vulnerabilities. Many developers who do use relational databases
-usually use ORM (object-relational mapping) frameworks instead of embedding
-SQL directly in their code. If you've used one of those ORM tools, the above
-JavaScript code seem familiar.
+The JavaScript code might seem a lot more verbose, but it is much more conforming to the language used to build applications and is free of many SQL-specific vulnerabilities. Many developers who use relational databases usually use ORM (object-relational mapping) frameworks instead of embedding SQL directly in their code. If you've used one of the ORM tools, the JavaScript code above may seem familiar to you.
 
 ## Getting Started
 
-The JavaScript SDK supports Chrome 45+, recent versions of Firefox, IE 10+, Edge, iOS 9.3+ and Android 4.4+, WeApp DevTools, as well as Node.js 4.0+, React Native 0.26+ and Electron.
+The JavaScript SDK supports Chrome 45+, recent versions of Firefox, IE 10+, Edge, iOS 9.3+, Android 4.4+, WeApp DevTools, Node.js 4.0+, React Native 0.26+, and Electron.
 
 ### Using JavaScript SDK on Different Platforms
 
-The easiest way to integrate our JavaScript SDK into your project is through npm.
+The easiest way to integrate our JavaScript SDK in your project is to use npm:
 
 ```bash
 $ npm install leancloud-storage --save
@@ -67,86 +59,88 @@ To use npm for a browser based application or in a Node.js environment, include 
 ```js
 var AV = require('leancloud-storage');
 
-// create references to the global AV
+// Create references to the global AV
 var { Query, User } = AV;
 
-// initialization code
+// Initialize SDK
 AV.init('APP_ID', 'APP_KEY');
 ```
 
-However, if you want to use a pre-compiled file, you can fetch it from here:
+You may also use a pre-compiled SDK file in your webpage with the following `<script>` tag:
 
 ```html
 <script src="//cdn.jsdelivr.net/npm/leancloud-storage@{{jssdkversion}}/dist/av-min.js"></script>
 ```
+
 And then create references to the SDK:
 
 ```js
+// Create references to the global AV
 var { Query, User } = AV;
 
-// initialization code
+// Initialize SDK
 AV.init('APP_ID', 'APP_KEY');
 ```
 
 Check out our Github repo https://github.com/leancloud/javascript-sdk/releases for more releases and file formats.
 
-If you are planning to use our JavaScript SDK inside Android WebView, please check out [WebView](#webview) section of this guide.
+If you plan to use our JavaScript SDK inside Android WebView, please check out [WebView](#webview) section of this guide.
 
 <a id="setup-livequery" name="setup-livequery"></a>If you rely on features of [Live Queries](#live-queries), include the following npm module instead: 
 
 ```js
-// no need to require 'leancloud-storage' package if the following line is present
+// No need to require 'leancloud-storage' if the following line is present
 var AV = require('leancloud-storage/live-query');
 ```
-Or loading it using `<script>` tag: 
+
+Or load it with the following `<script>` tag: 
 
 ```html
-<!-- no need to load av-min.js if the following script is present -->
+<!-- No need to load av-min.js if the following script is present -->
 <script src="//cdn.jsdelivr.net/npm/leancloud-storage@{{jssdkversion}}/dist/av-live-query-min.js"></script>
 ```
 
-In addition, you need to go to your app's [LeanCloud Dashboard > Storage > Settings page](/dashboard/storage.html?appid={{appid}}#/storage/conf), and check the **Enable LiveQuery** option under the **Misc** section before you can expect it to work.
+You also need to go to your app's [LeanCloud Dashboard > Storage > Settings page](/dashboard/storage.html?appid={{appid}}#/storage/conf) and check the **Enable LiveQuery** option under the **Misc** section before you can expect it to work.
 
 ### Initializing Your Application
 
-Go to your app's [LeanCloud Dashboard setting page](/dashboard/app.html?appid={{appid}}#/key), and look for your App ID and App Key, copy and paste them into your initialization code.
+Go to your app's [LeanCloud Dashboard setting page](/dashboard/app.html?appid={{appid}}#/key) and look for your App ID and App Key, then copy and paste them into your initialization code:
 
 ```js
 var APP_ID  = '{{appId}}';
 var APP_KEY = '{{appKey}}';
 
-// same as using AV.init('APP_ID', 'APP_KEY')
+// Same as using AV.init('APP_ID', 'APP_KEY')
 AV.init({
   appId:  APP_ID,
   appKey: APP_KEY,
-  // specify region=us if your app was created on the US site, 
-  region: 'us'
-  // otherwise leave it out, region would default to China.
+  region: 'us' // Defaults to China if not specified
 });
 ```
-The LeanCloud apps are region-specific. They neither talk nor share anything across regions. Therefore incorrect region setting will cause the initialization code to fail.
 
-Besides, each region serves their own REST APIs. Please consult documentation for the correct URL scheme of APIs to use. US docs is available at https://us.leancloud.cn/docs/rest_api.html, and China docs is at https://leancloud.cn/docs/rest_api.html. 
+Apps running on LeanCloud are region-specific. It means that no data will be communicated across regions. Therefore, incorrect region settings will lead to the failure of initialization.
+
+Each region serves their own REST APIs. Please consult documentation for the correct URL schemes of APIs to be used. Docs for US region can be found at https://us.leancloud.cn/docs/rest_api.html; docs for China region can be found at https://leancloud.cn/docs/rest_api.html. 
 
 ### Debugging
 
-Our SDK supports debug logging. You can turn it on during the development cycle of your application. Once enabled, details of every request made by our SDK along with errors will be output to the browser's console, or to the terminal window in a Node.js environment.
+Our SDK supports debug logging. You can turn it on during the development phase of your application. Once enabled, details of every request made by our SDK along with errors will be output to the browser's console, or to the terminal window in a Node.js environment.
 
 For browser based applications, open the browser's console and run the following command:
 
 ```js
 localStorage.setItem('debug', 'leancloud*,LC*');
 ```
-In Node.js, you need to set environment variable `DEBUG` to `leancloud*,LC*`.
 
+If your app runs in a Node.js environment, set the environment variable `DEBUG` to be `leancloud*,LC*`.
 
 ### Web Security
 
 If you are using our JavaScript SDK in your browser based application, you must configure **whitelist domains** in your app's [LeanCloud Dashboard settings page](/dashboard/app.html?appid={{appid}}#/security) before you deploy it to a production environment.
 
-Once it's been set up, our backend will only accept requests sending from the domains in that whitelist, which can prevent unauthorized usage or access to your cloud data on some level.
+Once set up, our backend will only accept requests sent from domains in the whitelist, which prevents unauthorized usage or access to your cloud data on a certain level.
 
-Yet it's not good enough to keep your data well away from web attackers and threats. It is the Internet. So we also provide a number of ways to help you safeguard your apps and data further. The security oriented articles listed below can give you necessary information you need to know.<a id="security-articles"></a>
+However, due to the fact that your app is exposed to the internet, simply setting up whitelist domains is not enough to guarantee the security of your app. LeanCloud offers a variety of ways to help you secure your apps as well as the data stored within them. The following articles give you necessary information you need regarding app security. <a id="security-articles"></a>
 
 - [Data and Security](data-security.html)
 - [ACL Guide](acl-guide.html)
@@ -170,18 +164,19 @@ tags:        ['work', 'sales']
 
 ### Data Types
 
-`AV.Object` supports a wide range of data types to be used for each field. There are common ones such as String, Number, Boolean, Object, Array, Date, JSON and null. You can nest JSON Objects and JSON Arrays to store more structured data within a single object.
+`AV.Object` supports a wide range of data types to be used for each field, including common ones like String, Number, Boolean, Object, Array, Date, JSON, and null. You can nest JSON Objects and JSON Arrays to store more structured data within a single object.
 
-There are special ones such as Pointer and File, which are used to store references to other AV.Objects and binary data respectively.
+Special data types supported by `AV.Object` include Pointer and File, which are used to store references to other AV.Objects and binary data respectively.
 
-`AV.Object` also supports GeoPoint, a special data type that you can use to store location-based data. Refer to the [GeoPoints](#geopoints) portion of this guide for more details.
+`AV.Object` also supports GeoPoint, a special data type you can use to store location-based data. Refer to the [GeoPoints](#geopoints) portion of this guide for more details.
 
 Some examples:
 
 ```js
-// declare the type
+// Declare Class
 var TestObject = AV.Object.extend('DataTypeTest');
 
+// Basic objects
 var number  = 2018;
 var string  = 'famous film name is ' + number;
 var date    = new Date();
@@ -190,10 +185,11 @@ var object  = {
   number: number, 
   string: string 
 };
-// another AV.Object
-var pointer = AV.Object.createWithoutData('Todo', '5745557f71cfe40068c6abe0')
 
-// create the object
+// An AV.Object with another Class
+var pointer = AV.Object.createWithoutData('Todo', '5745557f71cfe40068c6abe0');
+
+// Create an object
 var testObject = new TestObject();
 testObject.set('testNumber', number);
 testObject.set('testString', string);
@@ -203,76 +199,80 @@ testObject.set('testObject', object);
 testObject.set('testNull', null);
 testObject.set('testPointer', pointer);
 testObject.save().then(function(testObject) {
-  // success
+  // Success
 }, function(error) {
-  // failure
+  // Failure
 });
 ```
 
-We do not recommend storing large pieces of binary data like images or documents on `AV.Object`. AV.Objects should not exceed **128 kilobytes** in size. We recommend you use AV.Files to store images, documents, and other types of files. You can do so by instantiating an `AV.File` object and setting it on a field. See [Files](#files) for details.
+We do not recommend storing large pieces of binary data like images or documents with `AV.Object`. The size of each AV.Object should not exceed **128 kilobytes**. We recommend using AV.Files for storing images, documents, and other types of files. To do so, create an `AV.File` object and assign it to a field of an AV.Object. See [Files](#files) for details.
 
 {% call docs.noteWrap() %}
-Please keep in mind that our backend will store dates in UTC format and the SDK will convert them back to local time upon retrieval.
+Keep in mind that our backend stores dates in UTC format and the SDK will convert them to local times upon retrieval.
 
-The date values displayed in the Data Browser in [your LeanCloud Dashboard data page](/dashboard/data.html?appid={{appid}}#/) are also converted to match your operating system's timezone. The only exception is when you retrieve these Date values through our [REST API](rest-api.html), they will remain in UTC format. You can manually convert them using appropriate timezone when necessary.  
+The date values displayed in the Data Browser in your [LeanCloud Dashboard data page](/dashboard/data.html?appid={{appid}}#/) are also converted to match your operating system's timezone. The only exception is that when you retrieve these date values through our [REST API](rest-api.html), they will remain in UTC format. You can manually convert them using appropriate timezones when necessary.
 {% endcall %}
 
 {# For more information about how LeanCloud handles data and security, check out our documentation on [Data and Security](data-security.html). #}
 
 ### Creating Object
 
-To create a new instance of `AV.Object`, you can do this:
+The code below creates a new instance of `AV.Object`:
 
 ```js
-// create a new subclass of AV.Object
+// Create a new subclass of AV.Object
 var Todo = AV.Object.extend('Todo');
 
-// create a new instance of that class.
+// Create a new instance of that Class
 var todo = new Todo();
 ```
-`AV.Object.extend()` requires a ClassName to be passed in so that the cloud knows which class you are targeting. You can think of a Class in the cloud as a table in a database.
 
-A ClassName must start with a letter, and must contain only numbers, letters, and underscore.
+`AV.Object.extend()` takes ClassName as a parameter so that the cloud knows the Class you are using to create the object. A Class in LeanCloud is comparable to a table in a relational database.
+
+A ClassName starts with a letter and can only contain numbers, letters, and underscores.
 
 {% call docs.noteWrap() -%}
-If you keep seeing "**Maximum call stack size exceeded**" exception in your log, chances are `AV.Object.extend()` had been called using the same ClassName more than once inside a loop or a callback. Either move it out of the loop or the callback to make sure it won't be over-instantiated, or use JavaScript SDK 1.4 or higher to eliminate the worries.
+If you keep seeing "**Maximum call stack size exceeded**" exception in your log, chances are `AV.Object.extend()` had been called using the same ClassName more than once within a loop or a callback. To resolve such issue, either move it out of the loop or the callback to make sure it won't be over-instantiated, or switch to JavaScript SDK 1.4 or higher which handles the problem automatically.
 {%- endcall %}
 
-
-From version 1.4.0 onwards, the JavaScript SDK is compatible with ES6 classes. If you're using ES6 in your codebase, you can subclass `AV.Object` with the **extends** keyword. However, when using extends, the SDK is not automatically aware of your subclass, you will need to register the subclass with the SDK:
+From version 1.4.0 onwards, the JavaScript SDK is compatible with ES6 classes. If you're using ES6 in your codebase, you can subclass `AV.Object` with the **extends** keyword. However, when using extends, the SDK is not automatically aware of your subclasses. You will need to register the subclasses with the SDK:
 
 ```js
 class Todo extends `AV.Object` {
-  // more properties and methods
+  // More properties and methods
 }
-// register the subclass
+
+// Register the subclass
 AV.Object.register(Todo);
 ```
 
-Then you can add additional methods and properties to your subclasses of `AV.Object`.
-{# You can also use the `AV.Object` constructor directly. `new AV.Object(ClassName)` will create a single LeanCloud Object with that class name. #}
+After doing this, you will be able to add additional methods and properties to your subclasses of `AV.Object`.
+
+{# You can also use the `AV.Object` constructor directly. `new AV.Object(ClassName)` will create a single LeanCloud Object with that Class name. #}
 
 ### Saving Objects
 
-Now let's save a new Class named "**Todo**" to the cloud.
+The following code saves a new Class named "**Todo**" to the cloud:
 
 ```js
-  var Todo = AV.Object.extend('todo');
-  var todo = new Todo();
+var Todo = AV.Object.extend('Todo');
+var todo = new Todo();
 
-  // set fields' values
-  todo.set('title', 'Sign up for Marathon');
-  todo.set('priority', 2);
-  
-  todo.save().then(function (todo) {
-    // execute any logic that should take place after the object was saved.
-    console.log('objectId is ' + todo.id);
-  }, function (error) {
-    // execute any logic that should take place if the save failed.
-  });
+// Set values of fields
+todo.set('title', 'Sign up for Marathon');
+todo.set('priority', 2);
+
+// Save data to the cloud
+todo.save().then(function (todo) {
+  // Execute any logic that should take place after the object is saved
+  console.log('New object created with objectId: ' + todo.id);
+}, function (error) {
+  // Execute any logic that should take place if the save fails
+  console.error('Failed to create new object, with error message: ' + error.message);
+});
 ```
 
-After this code runs, you will probably be wondering if anything really happened. To make sure the data was saved, you can look at [Dashboard > Data > Todo](/data.html?appid={{appid}}#/) in your app on LeanCloud. You should see something like this:
+To make sure the data was actually saved, you can look at [Dashboard > Data > Todo](/data.html?appid={{appid}}#/) in your app. You should see something like this:
 
 ```json
 {
@@ -289,78 +289,79 @@ After this code runs, you will probably be wondering if anything really happened
   "updatedAt":  "2017-11-11T07:19:15.549Z"
 }
 ```
-There are two things to note here. You didn't have to configure or set up a new Class called "Todo" before running this code. Your LeanCloud app lazily creates this Class for you when it first encounters it.
 
-There are also a few fields you don't need to specify that are provided as a convenience:
+You don't have to create or set up a new Class called "Todo" before running this code. Your LeanCloud app automatically creates this Class for you when it first encounters it.
 
-Built-in Fields|Type|Description
----|---|---
-`objectId`| String |a unique identifier for each saved object.
-`ACL`| ACL |Access Control List, which holds a JSON-compatible data defining who can access this object with read or write permissions.
-`createdAt`| Date |the time that an object was created in the cloud (accurate to milliseconds)
-`updatedAt` | Date |the time that an object was last modified in the cloud (accurate to milliseconds)
+There are several built-in fields that are provided by default which you don't need to specify in your code:
 
-Each of these fields is filled in by LeanCloud, so they don't exist on an `AV.Object` until a save operation has completed.
+Built-in Fields | Type   | Description
+--------------- | ------ | -----------
+`objectId`      | String | A unique identifier for each saved object.
+`ACL`           | ACL    | Access Control List, which holds a JSON-compatible data defining who can access this object with read or write permissions.
+`createdAt`     | Date   | The time that an object was created in the cloud (accurate to milliseconds).
+`updatedAt`     | Date   | The time that an object was last modified in the cloud (accurate to milliseconds).
+
+Each of these fields is filled in by LeanCloud and doesn't exist on an `AV.Object` until a save operation has been completed.
 
 Field names, or **keys**, must be alphanumeric strings. A user-defined key can neither start with double underscores `__`, nor be identical to any system reserved words or built-in field names regardless of letter cases.
 
-Here are the words you should avoid using to name your keys: **{{ data.preservedWords(", ") }}**.
+Here are the words you should avoid using as names of your keys: **{{ data.preservedWords(", ") }}**.
 
-**Values** can be strings, numbers, booleans, or even arrays and dictionaries - anything that can be JSON-encoded. See [Data Types](#data-types) for more information.
+**Values** can be strings, numbers, booleans, or even arrays and dictionaries — anything that can be JSON-encoded. See [Data Types](#data-types) for more information.
 
-We recommend that you adopt CamelCase naming convention to NameYourClassesLikeThis and nameYourKeysLikeThis, just to keep your code looking pretty.
+We recommend that you adopt CamelCase naming convention to NameYourClassesLikeThis and nameYourKeysLikeThis, which keeps your code more readable.
 
-We have also created a SQL-flavored syntax called Cloud Query Language (CQL) for saving and querying data in the cloud. So the code above can be rewritten using CQL like so: 
+We have also created a SQL-flavored syntax called Cloud Query Language (CQL), which can be used for saving and querying data with the cloud. The code above can be rewritten using the following CQL:
 
 ```js
 // create a Todo object
-AV.Query.doCloudQuery("insert into Todo (title, priority) values ('Sign up for Marathon', 2)").then(function (data) {
-  // success, results are kept in data.results
+AV.Query.doCloudQuery('insert into Todo (title, priority) values ("Sign up for Marathon", 2)').then(function (data) {
+  // Results are kept in data.results
   var results = data.results;
 }, function (error) {
-  // operation failed
+  // Error handling
   console.error(error);
 });
 ```
 
-You can read [Cloud Query Language Guide](cql-guide.html) in detail if you are in favor of this approach to data manipulation.
+You can read [Cloud Query Language Guide](cql-guide.html) in detail if you prefer this approach for data manipulation.
 
 ### Retrieving Objects
 
-If the `AV.Object` has been successfully saved to the cloud, you can use the `objectId` to get it using an `AV.Query`:
+If an `AV.Object` is already in the cloud, you can retrieve it using its `objectId` with the following code:
 
 ```js
 var query = new AV.Query('Todo');
-
 query.get('57328ca079bc44005c2472d0').then(function (todo) {
-  //  todo is successfully retrieved
+  // todo is successfully retrieved
   var priority   = todo.get('priority');
   var location   = todo.get('location');
   var title      = todo.get('title');
   var content    = todo.get('content');
 
+  // Acquire special properties
   var objectId   = todo.id;
   var updatedAt  = todo.updatedAt;
   var createdAt  = todo.createdAt;
-
 }, function (error) {
-  // operation failed, logic to handle exception goes here
+  // Error handling
+  console.error(error);
 });
 ```
 
-To get the values out of the `AV.Object`, as you can observe from the code above, use the `get` method.
+After retrieving an object, use the `get` method to acqurie the data stored in its fields.
 
-Be aware that **objectId, updatedAt and createdAt**, these three special reserved values are provided as properties and cannot be retrieved using the `get` method nor modified with the `set` method. Each of these fields is filled in by the cloud only, so they don't exist on an `AV.Object` until a save operation has completed.
+Be aware that **objectId**, **updatedAt**, and **createdAt** are 3 special properties that cannot be retrieved using the `get` method or modified with the `set` method. Each of these fields is filled in by the cloud only, so they don't exist on an `AV.Object` until a save operation has been completed.
 
-If you are trying to access any fields or properties that don't exist, the SDK won't error out but return **null** instead.
+If you try to access a field or propertie that doesn't exist, the SDK will return a **null** instead of raising an error.
 
-Sometimes you may want to get all the fields back (as in a data binding scenario) but just aren't interested in using `get` explicitly on every field. If your SDK is 3.0.0+, you can leverage an instance method `toJSON` of `AV.Object` to get a plain JSON object containing all the fields.
+Sometimes you may want to get all the fields back at one time (which usually happens when performing data binding) without calling `get` on each field of the object. If your SDK version is 3.0.0+, you may call `toJSON` on an `AV.Object` to get a plain JSON object containing all the fields of the object.
 
 ```js
 var query = new AV.Query('Todo');
 query.get('558e20cbe4b060308e3eb36c').then(function (todo) {
-  console.log(todo.toJSON())
-  // ==== results in console ====
+  console.log(todo.toJSON());
+  // ==== Results in console ====
   
   // title:      "R&D Weekly Meeting"
   // content:    "All team members, Tues 2pm"
@@ -372,152 +373,146 @@ query.get('558e20cbe4b060308e3eb36c').then(function (todo) {
   // ...
 
 }).catch(function(error) {
+  // Error handling
   console.error(error);
 });
 ```
+
 #### Refreshing Objects
 
-If you need to refresh an object you already have with the latest data that is in the cloud, you can call the `fetch` method like so:
+If you need to refresh a local object with the latest version of it in the cloud, call the `fetch` method on it:
 
 ```js
-var todo = AV.Object.createWithoutData(
-  // ClassName
-  'Todo',
-  // objectId
-  '5745557f71cfe40068c6abe0'
-);
-
+var todo = AV.Object.createWithoutData('Todo', '5745557f71cfe40068c6abe0');
 todo.fetch().then(function (todo) {
-  // // The object was refreshed successfully
+  // todo is refreshed
 }, function (error) {
-  // an error occurred
+  // Error handling
+  console.error(error);
 });
 ```
 
-Remember, *any unsaved changes made to the object prior to using `fetch` will not survive*. If this is not what you want, you have the option to provide **a list of keys** to the `fetch` method so that only named fields are retrieved and refreshed (and also special built-in fields such as objectId, createdAt, and updatedAt), while changes made on other fields will remain intact.
+Keep in mind that *any unsaved changes made to the object prior to calling `fetch` will be discarded*. To avoid this, you have the option to provide **a list of keys** to the `fetch` method so that only the fields being specified are retrieved and refreshed (including special built-in fields such as objectId, createdAt, and updatedAt). Changes made to other fields will remain intact.
 
 ```js
 todo.fetch({
   keys: 'priority, location'
 }).then(function (todo) {
-  // only priority and location will be retrieved and refreshed
+  // Only priority and location will be retrieved and refreshed
 }, function (error) {
-
+  // Error handling
+  console.error(error);
 });
 ```
 
 {# After the object is refreshed successfully, its `updatedAt` value will be updated on the client. The cloud won't have this new value until the next save or fetch happens, thus some network bandwidth can be saved out of it. #}
 
-{# With that in mind, let's make it more fun.  Let's build a new `AV.Object` locally from scratch with an objectId, and retrieve more field values associated with this object from the cloud without using `AV.Query`.  #}
+{# With that in mind, let's make it more fun. Let's build a new `AV.Object` locally from scratch with an objectId, and retrieve more field values associated with this object from the cloud without using `AV.Query`. #}
 
 ### Updating Objects
 
-Updating an object is simple. Just set some new data on it and call the `save` method. For example:
+To update an existing object, assign the new data to each field and call the `save` method. For example:
 
 ```js
-// suppose objectId is known, then create an object out of it
-var todo = AV.Object.createWithoutData(
-  // ClassName
-  'Todo',
-  // objectId
-  '5745557f71cfe40068c6abe0');
-
+var todo = AV.Object.createWithoutData('Todo', '5745557f71cfe40068c6abe0');
 todo.set('content', 'Weekly meeting has been rescheduled to Wed 3pm for this week.');
 todo.save();
 ```
 
-LeanCloud automatically figures out which data has changed so only "dirty" fields will be sent to the cloud. You don't need to worry about squashing data that you didn't intend to update.
+LeanCloud automatically figures out which data has changed and only fields with changes will be sent to the cloud. The fields you didn't update will remain intact.
 
-If you prefer using [CQL](cql-guide.html) to update data, here's how it's done:
+You can also update objects with [CQL](cql-guide.html):
 
 ```js
-AV.Query.doCloudQuery('update Todo set content="Weekly meeting has been rescheduled to Wed 3pm for this week." where objectId="5745557f71cfe40068c6abe0"')
-.then(function (data) {
+AV.Query.doCloudQuery(
+  'update Todo set content="Weekly meeting has been rescheduled to Wed 3pm for this week." where objectId="5745557f71cfe40068c6abe0"'
+).then(function (data) {
   var results = data.results;
 }, function (error) {
+  // Error handling
   console.error(error);
 });
 ```
 
-#### Conditionally Updating Data
+#### Updating Data Conditionally
 
-By using `query` option of the `save` method, you can put conditions on the save operation so that the object can be updated atomically only when those conditions are met. Otherwise, the cloud will return error code **305** to indicate that there was no update taking place.
+By passing in a `query` option into the `save` method, you can specify conditions on the save operation so that the object can be updated atomically only when those conditions are met. Otherwise, the cloud will return error code **305** to indicate that there was no update taking place.
 
-<a id="saveoption-query-example" /></a>For example, in the Class "Account" there is a field called **balance**, and there are multiple incoming requests that will modify the balance. An account cannot have negative balance, so we can only allow a request to update the balance when the amount requested is lower than or equal to the balance.
+<a id="saveoption-query-example"></a>For example, in the Class "Account" there is a field called **balance**, and there are multiple incoming requests that will modify the balance. An account cannot have negative balance, so we can only allow a request to update the balance when the amount requested is lower than or equal to the balance.
 
 ```js
 var Account = AV.Object.extend('Account');
-// get the first record from Account,
-// just for demonstration convenience
 new AV.Query(Account).first().then(function(account) {
+  // Atomically decrease balance by 100
   var amount = -100;
-  // atomically decrease balance by 100
   account.increment('balance', amount);
   return account.save(null, {
-    // add the condition 
+    // Add the condition
     query: new AV.Query(Account).greaterThanOrEqualTo('balance', -amount),
-    fetchWhenSave: true,
+
+    // Return the latest data in the cloud upon completion.
+    // All the fields will be returned if the object is new,
+    // otherwise only fields with changes will be returned.
+    fetchWhenSave: true
   });
 }).then(function(account) {
-  // the object was updated successfully
-  // return current balance
+  // Object updated
   console.log('Balance: ', account.get('balance'));
 }).catch(function(error) {
   if (error.code === 305) {
-    console.log('Insufficient balance! Update failed.');
+    console.log('Insufficient balance. Operation failed!');
   }
 });
 ```
 
-*`query` option only works on existing objects.* In other words, it has no effect on objects that haven't been saved in the cloud yet.
+*`query` option only works for existing objects.* In other words, it has no effect on objects that haven't been saved to the cloud yet.
 
-Of course you may be wondering about the benefit of using `query` option whereas you can use `AV.Query` and `AV.Object` respectively to achieve the same goal. Sure, that would work to some extent but it's cumbersome and can lead to problems if you have multiple clients trying to update the same value. 
-
-The above example contains another option you can use with the `save` method: `fetchWhenSave`. When set to true, the save operation will automatically return the latest data that is in the cloud upon completion. All the fields will be returned if the object is new, or only "dirty" fields returned if it's not.
+The benefit of using `query` option instead of `AV.Query` and `AV.Object` shows up when you have multiple clients trying to update the same value at the same time. The latter way could be cumbersome and may lead to potential problems.
 
 #### Counters
 
-Let's take Twitter for example. We need to count how many likes and followers a tweet has got up to this minute. While a Like or Follow action can be triggered simultaneously by multiple clients, using the `save` approach can lead to inaccurate results. To help with storing counter-type data, LeanCloud provides methods that **atomically** increment (or decrement) any number field.
+Take Twitter as an example, we need to keep track of how many Likes and Retweets a tweet has gained so far. While a Like or Retweet action can be triggered simultaneously by multiple clients, using `save` can lead to inaccurate results. To make sure that the total number is stored correctly, LeanCloud allows you to **atomically** increase (or decrease) the value of a number field.
 
 ```js
 var post = AV.Object.createWithoutData('Post', '57328ca079bc44005c2472d0');
-post.set('views', 0);
+post.set('likes', 0);
 post.save().then(function (todo) {
-  post.increment('views');
+  post.increment('likes');
   post.fetchWhenSave(true);
   return post.save();
 }).then(function (post) {
-  // fetchWhenSave is enabled, so the latest value of 'views' will be returned 
+  // fetchWhenSave is enabled, so the latest value of 'likes' will be returned 
 }, function (error) {
-
+  // Error handling
+  console.error(error);
 });
 ```
 
-You can also increment by any amount by passing in a second argument to `increment`. When no amount is specified, 1 is used by default.
+You can also increase (or decrease) the value of a field by any amount by passing in a second argument to `increment`. When no amount is specified, 1 is used by default.
 
 #### Arrays
 
-To help with storing array data, there are three operations that can be used to atomically change an array associated with a given key:
+There are three operations that can be used to atomically update an array associated with a given key:
 
-- `add('arrayKey', value)` <br/>append the given object to the end of an array field.
-- `addUnique('arrayKey', value)` <br/>add the given object only if it isn't already contained in an array field. The position of the insert is not guaranteed.
-- `remove('arrayKey', value)`<br/> remove all instances of the given object from an array field.
+- `add('arrayKey', value)`<br/>appends the given object to the end of an array field.
+- `addUnique('arrayKey', value)`<br/>adds the given object into an array field only if it isn't already contained in an it. The position of the insert is not guaranteed.
+- `remove('arrayKey', value)`<br/>removes all instances of the given object from an array field.
 
-For example, Todo has a field called **alarms** for keeping track of times at which a user wants to be alerted. You can add items to the alarms field like so:
+For example, Todo has a field named **alarms** for keeping track of times at which a user wants to be alerted. The following code adds the times to the alarms field:
 
 ```js
 var alarm1 = new Date('2018-04-30T07:10:00');
 var alarm2 = new Date('2018-04-30T07:20:00');
 var alarm3 = new Date('2018-04-30T07:30:00');
+
 var alarms = [alarm1, alarm2, alarm3];
 
 var todo = new AV.Object('Todo');
-
 todo.addUnique('alarms', alarms);
-
 todo.save().then(function (todo) {
   console.log(todo.id);
 }, function (error) {
+  // Error handling
   console.error(error);
 });
 ```
@@ -526,69 +521,100 @@ todo.save().then(function (todo) {
 
 ### Destroying Objects
 
-To delete a Todo object from the cloud:
+The following code deletes a Todo object from the cloud:
 
 ```js
 var todo = AV.Object.createWithoutData('Todo', '57328ca079bc44005c2472d0');
 todo.destroy().then(function (success) {
-  // the object is successfully deleted
+  // The object is successfully deleted
 }, function (error) {
-  // error
+  // Error handling
+  console.error(error);
 });
 ```
 
-Or use [CQL](cql-guide.html): 
+You may also delete an object using [CQL](cql-guide.html):
 
 ```js
 AV.Query.doCloudQuery('delete from Todo where objectId="558e20cbe4b060308e3eb36c"').then(function () {
-  // the object is successfully deleted
+  // The object is successfully deleted
 }, function (error) {
-  // error
+  // Error handling
+  console.error(error);
 });
 ```
 
-You can delete a single field from an object with the `unset` method:
+You can delete a given field of an object with the `unset` method:
 
 ```js
 var todo = AV.Object.createWithoutData('Todo', '57328ca079bc44005c2472d0');
-// After this, the content field will be empty
-todo.unset('content');
-// Saves the field deletion to the Cloud.
-// If the object's field is an array, call save() after every unset() operation.
-todo.save();
 
+// The content field will be empty
+todo.unset('content');
+
+// Save the object to the cloud
+// If the object's field is an array, call save after every unset operation.
+todo.save();
 ```
 
 {# Please note that use of `object.set(null)` to remove a field from an object is not recommended and will result in unexpected functionality. #}
 
 {% call docs.alertWrap() %}
-Removing data from the cloud should always be dealt with great caution as it may lead to non-recoverable data loss. We strongly advise you read [security oriented articles](#security-articles) to fully understand the risks. You should also consider implementing  Class-level, Object-level and Field-level permissions for your Classes in the cloud to guard against unauthorized data operations.   
+Removing data from the cloud should always be dealt with great caution as it may lead to non-recoverable data loss. We strongly advise that you read [security oriented articles](#security-articles) to fully understand the risks. You should also consider implementing Class-level, Object-level, and Field-level permissions for your Classes in the cloud to guard against unauthorized data operations.
 {% endcall %}
 
 ### Batch Processing
 
-`AV.Object` provides some convenience methods you can use to synchronously create, save, fetch or delete a collection of objects all at once. They are `saveAll`, `fetchAll` and `destroyAll`.
+You can create, save, delete, or fetch multiple objects within a single request:
 
-Let's say you are marking a bunch of todos as  'complete':
+```js
+// Create an array for storing AV.Objects
+var objects = [];
+
+// Batch create/save
+AV.Object.saveAll(objects).then(function (objects) {
+  // Success
+}, function (error) {
+  // Error handling
+});
+
+// Batch delete
+AV.Object.destroyAll(objects).then(function () {
+  // Success
+}, function (error) {
+  // Error handling
+});
+
+// Batch fetch
+AV.Object.fetchAll(objects).then(function (objects) {
+  // Success
+}, function (error) {
+  // Error handling
+});
+
+```
+
+The following code sets `isComplete` of all the todos to be `true`:
 
 ```js
 var query = new AV.Query('Todo');
 query.find().then(function (todos) {
-  // get a collection of todos to work on
+  // Get a collection of todos to work on
   todos.forEach(function(todo) {
-    // update value
+    // Update value
     todo.set('isComplete', true);
   });
-  // save all at once
+  // Save all at once
   return AV.Object.saveAll(todos);
 }).then(function(todos) {
-  // 
+  // Success
 }, function (error) {
-  // 
+  // Error handling
+  console.error(error);
 });
 ```
 
-`saveAll` and `fetchAll` will send as many requests behind the scene as the number of objects in the collection, while `deleteAll` completes everything in just one network request. {# TODO: Please refer to the [Calculation of API Calls](faq.html#calculation-of-api-calls) for more details. #}
+`saveAll` and `fetchAll` send as many requests behind the scene as the number of objects in the collection, while `deleteAll` completes everything in a single network request. {# TODO: Please refer to the [Calculation of API Calls](faq.html#calculation-of-api-calls) for more details. #}
 
 ### Relational Data
 
@@ -598,30 +624,30 @@ Objects may have relationships with other objects. For example, in a blogging ap
 
 One-to-one and one-to-many relationships are modeled by saving an `AV.Object` as a value in the other object. For example, each Comment in a blogging app might correspond to one Post.
 
-To create a new Post with a single Comment, you could write:
+The following code creates a new Post with a single Comment:
 
 ```js
-// declare the types
+// Declare classes
 var Post    = AV.Object.extend('Post');
 var Comment = AV.Object.extend('Comment');
 
-// create the post
+// Create a post
 var post = new Post();
 post.set('title', 'I am starving!');
-post.set('content', 'hmmm, where should I go for lunch?');
+post.set('content', 'Hmmm, where should I go for lunch?');
 
-// create the comment
+// Create a comment
 var comment = new Comment();
-comment.set('content', 'KFC is the best');
+comment.set('content', 'KFC is the best!');
 
-// add the post as a value in the comment
+// Add the post as a value of the comment
 comment.set('parent', post);
 
-// this will save both post and comment
+// This will save both post and comment
 comment.save();
 ```
 
-Internally, the backend will store the referred-to object with the Pointer type in just one place, to maintain consistency. You can also link objects using just their objectIds like so:
+Internally, the backend will store the referred-to object with the Pointer type in just one place in order to maintain consistency. You can also link objects using their objectIds like this:
 
 ```js
 var post = new Post();
@@ -630,33 +656,29 @@ post.id = '5aedba542f301e437093bda5';
 comment.set('parent', post);
 ```
 
-By default, when fetching an object, related AV.Objects are not fetched. These objects' values cannot be retrieved until they have been fetched like so:
+When an object is fetched, the related AV.Objects of it will not be fetched unless they are explicitly specified:
 
 ```js
 var commentQuery = new AV.Query('Comment');
-commentQuery.first().then(function(comment){
+commentQuery.first().then(function(comment) {
   var parentPost = comment.get('parent');
   parentPost.fetch({
     success: function(post) {
       var title = post.get('title');
     }
   });
-})
+});
 ```
 
 More examples can be found in the [Query](#relational-queries) portion of this guide.
 
 #### Many-to-Many Relationships
 
-Many-to-many relationships are modeled by using Array or Join Table.
+The easiest way to model many-to-many relationships is to use Arrays. In most cases, using Arrays is the easiest way that allows you to reduce the number of queries you need to make and leads to a better performance. However, if additional properties need to be attached to the relationships between two Classes, using Join Tables would be a better choice. Keep in mind that the additional properties are used to describe the relationships between Classes rather than any single Class.
 
-Using Array works similar to storing an array of AV.Objects in a key, except that you don't need to fetch all of the related objects at once. With Join Table, you need to create a separate table to house both ends of the relationship.  
+It's always advisable to use Join Tables if the total amount of objects of any given Class exceeds 100.
 
-A simple rule of thumb for choosing between Array or Join Table is to look at whether either side of the many-to-many relationship could lead to an array with more than 100 or so objects.
-
-If there are less than 100 objects, go with Array. But if you want to attach any metadata to the relationship between two entities or apply some kind of sorting on either side, then, the Join Table will be your best bet.
-
-> Modeling relationships in data is a hard subject, in general. We have written a dedicated article to address [Data Modeling](data-modeling.html) in greater detail, which we recommend perusing.
+> Modeling relationships among data could be a tough work. We have written a dedicated article to address [Data Modeling](data-modeling.html) in greater detail, which we highly recommend you reading.
 
 ## Queries
 
