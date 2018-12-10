@@ -67,7 +67,7 @@ We will be using `realtime` to refer to a `Realtime` instance in this document  
 
 ### Installing Plugins
 
-If you want to send rich-content messages with our SDK, such as pictures, voices, videos, files and locations, other than just plain-text messages, you need to install the following plugins to enable the feature.
+If you want to send rich-content messages in addition to plain-text messages with our SDK, such as pictures, voices, videos, files and locations, you need to install the following plugins to enable the feature.
 
 - `leancloud-storage`
 - `leancloud-realtime-plugin-typed-messages`
@@ -943,9 +943,9 @@ Our SDK allows a user to block any Group Conversations (including Temporary Conv
 
 There are limits on how frequently an IMClient can perform certain tasks:
 
-- It can send max. 60 messages per minute.
-- It can issue max. 120 queries for messages per minute.
-- It can perform other operations max. 30 times per minute, such as joining a conversation, leaving a conversation, opening or closing the connection, etc.
+- It can send a maximum of 60 messages per minute.
+- It can issue a maximum of 120 queries for messages per minute.
+- It can perform other operations 30 times at most per minute, such as joining a conversation, leaving a conversation, opening or closing the connection, etc.
 
 Any request that was sent through our SDK but reached any of the above-mentioned limits will be turned down by the server with timeout errors. However, these limits don't apply to REST API requests.
 

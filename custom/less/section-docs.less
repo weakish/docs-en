@@ -2,7 +2,8 @@
 @table-border: 1px solid #ebebeb;
 @general-radius: 3px;
 @table-inner-radius: (@general-radius - 1);
-@bubble-color: #eee;
+@talk-bubble-color: #eee;
+@talk-bubble-color--highlighted: #47da7f;
 @base-font-color:#333;
 
 .header-link() {
@@ -117,6 +118,22 @@ body {
 #home .section {
   margin: 36px 0
 }
+
+.miniTag {
+  font-size: 10px;
+  color:#fff;
+  text-transform: uppercase;
+  background-color: grey;
+  // border: 1px solid rgba(0, 0, 0, 0.5);
+  padding: 4px 6px 2.5px 6px;
+  border-radius: 2px;
+  line-height: 1;
+  vertical-align: middle;
+  display: inline-block;
+  margin: 0 6px;
+  letter-spacing: 1px;
+}
+
 .footer {
   #home & {
     border-top: none;
@@ -311,35 +328,50 @@ body {
   samp {
     font-size: 96%;
     white-space: pre-wrap;
+    width: 62%;
 
     &.bubble {
       position: relative;
-      width: 50%;
-      padding: 1.25em 1.5em;
-      margin: 1em 0;
-      background: @brand-primary;
+      padding: 1em 2em;
+      margin: 1em 0 3em 0;
+      font-weight: normal;
+      font-family: inherit;
+      background: @talk-bubble-color;
       border-radius: 12px;
       display:block;
-      color: #fff;
+      color: #666;
       a, a:hover {
         color: inherit!important;
         text-decoration: none
       }
-
-      &:after {
-        content: '';
-        position: absolute;
-        border-style: solid;
-        border-width: 11px 11px 11px 0;
-        border-color: transparent @brand-primary;
-        display: block;
-        width: 0;
-        /* FF: DO NOT REMOVE HEIGHT */
-        height: 0;
-        z-index: 1;
-        left: -11px;
-        top: 31%;
+      mark {
+        border-radius: 24px;
+        padding: 2px 8px;
+        color: inherit;
+        background-color: rgba(0,0,0,.1);
       }
+      
+      &:after {
+        content: ' ';
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: 0px;
+        right: auto;
+        top: auto;
+        bottom: -20px;
+        border: 22px solid;
+        border-color: transparent transparent transparent @talk-bubble-color;
+      }
+      &.highlight {
+        background: @talk-bubble-color--highlighted;
+        color: #fff;
+        font-weight: 600;
+        &:after {
+          border-color: transparent transparent transparent @talk-bubble-color--highlighted;
+        }
+      }
+      
     }
   }
 

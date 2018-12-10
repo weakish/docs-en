@@ -1602,9 +1602,9 @@ LeanCloud JavaScript SDK can be used in WebView on different platforms including
 
 ### Android WebView
 
-There are a few options that must be enabled when the Android code creates your `WebView`.
+There are a few options that must be enabled when the Android code creates your WebView.
 
-1. As our JavaScript SDK relies on `window.localStorage`, you must enable localStorage for the `WebView` as follows:
+1. As our JavaScript SDK relies on `window.localStorage`, you must enable localStorage for the WebView as follows:
   
   ```java
   yourWebView.getSettings().setDomStorageEnabled(true);

@@ -1,4 +1,13 @@
 {# 2016-12-25 replace linebreak or more than one | to html <p> tag #}
+
+{% macro paramAttr(content = "", tag = "small") -%}
+  {{ htmlTag(tag, { class:"monospace text-muted"}, content) }}
+{%- endmacro %}
+
+{% macro miniTagRequired(content="required", tag = "span") -%}
+  {{ htmlTag(tag, { class:"miniTag monospace"}, content) }}
+{%- endmacro %}
+
 {% macro paragraph(content="") %}
   {% if content | trim != "" -%}
     <p>{{ content | replace(r/[\n\r]+|(\|{2,})/g,"</p><p>") | safe }}</p>
@@ -77,13 +86,17 @@
   {%- endif %}
 {%- endmacro %}
 
-{% macro bubbleWrap(fullWidth=false) -%}
+{% macro bubbleWrap(highlighted=true,fullWidth=false) -%}
   {# short message: <samp ng-non-bindable class="bubble"></samp> #}
   {% set styles = null %}
+  {% set classes = 'bubble' %}
   {% if fullWidth %}
     {% set styles = "width: 99%;" %}
   {% endif %}
-  {{ htmlTag("samp", {"ng-non-bindable": null,class: "bubble", style: styles }, caller()) }}
+  {% if highlighted %}
+    {% set classes = "bubble highlight" %}
+  {% endif %}
+  {{ htmlTag("samp", {"ng-non-bindable": null,class: classes, style: styles }, caller()) }}
 {%- endmacro %}
 
 {% macro bubble(content) -%}

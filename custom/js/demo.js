@@ -26,7 +26,7 @@ angular.module('app').controller('DemoCtrl', ['$http', '$scope', '$rootScope', '
       'web': 'Web',
       'node': 'Node.js',
       'php': 'PHP',
-      'weapp': '微信小程序',
+      'weapp': 'WeChat Mini Program',
       'reactnative': 'React Native'
     }
     $scope.demos = {

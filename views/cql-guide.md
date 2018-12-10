@@ -4,9 +4,9 @@
 {% set date_format = "YYYY-MM-DDTHH:MM:SS.MMMZ" %}
 {% import "views/_data.njk" as data %}
 
-# CQL 详细指南
+# Cloud Query Language (CQL) Guide
 
-CQL 全称为 Cloud Query Language，是 LeanCloud 为查询 API 定制的一套类似 SQL 查询语法的子集和变种，其目的是让开发者可以使用传统的 SQL 语法来查询 LeanCloud 云端数据，从而减少学习 LeanCloud 查询 API 的成本。
+CQL is an acronym of Cloud Query Language, 是 LeanCloud 为查询 API 定制的一套类似 SQL 查询语法的子集和变种，其目的是让开发者可以使用传统的 SQL 语法来查询 LeanCloud 云端数据，从而减少学习 LeanCloud 查询 API 的成本。
 
 ## 与 SQL 的主要差异
 
