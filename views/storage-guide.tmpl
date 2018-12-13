@@ -802,34 +802,6 @@ query.greaterThan('age', 18);
 query.greaterThanOrEqualTo('age', 18);
 ```
 
-If you want to retrieve objects matching any of the values in a list of values, you can use `containedIn`, providing an array of acceptable values. This is often useful to replace multiple queries with a single query. For example, if you want to retrieve todo items of priority 1 or 2:
-
-```js
-// single query
-query.containedIn('priority', [1, 2]);
-// mission completed :)
-
-// ----------------
-// vs. multiple queries
-// ----------------
-var priorityOne = new AV.Query('Todo');
-priorityOne.equalTo('priority', 1);
-
-var priorityTwo = new AV.Query('Todo');
-priorityTwo.equalTo('priority', 2);
-
-var priorityOneOrTwo = AV.Query.or(
-  priorityOne,
-  priorityTwo
-);
-priorityOneOrTwo.find().then(function(results){
-
-})
-// kind of verbose :(
-```
-
-Conversely, if you want to retrieve objects that do not match any of several values you can use `notContainedIn`, providing an array of acceptable values.
-
 If you want to retrieve objects that have a particular key set, you can use `exists`. Or use `doesNotExist` for the opposite.
 
 ```js
@@ -939,6 +911,37 @@ You can also find objects where the key's array value contains each of the eleme
 ```js
 query.containsAll('arrayKey', [2, 3, 4]);
 ```
+
+If you want to retrieve objects matching any of the values in a list of values, you can use `containedIn`, providing an
+array of acceptable values. This is often useful to replace multiple queries with a single query. For example, if you
+want to retrieve todo items of priority 1 or 2:
+
+```js
+// single query
+query.containedIn('priority', [1, 2]);
+// mission completed :)
+
+// ----------------
+// vs. multiple queries
+// ----------------
+var priorityOne = new AV.Query('Todo');
+priorityOne.equalTo('priority', 1);
+
+var priorityTwo = new AV.Query('Todo');
+priorityTwo.equalTo('priority', 2);
+
+var priorityOneOrTwo = AV.Query.or(
+priorityOne,
+priorityTwo
+);
+priorityOneOrTwo.find().then(function(results){
+
+})
+// kind of verbose :(
+```
+
+Conversely, if you want to retrieve objects that do not match any of several values you can use `notContainedIn`,
+providing an array of acceptable values.
 
 ### Relational Queries
 
@@ -1164,7 +1167,7 @@ query.find().then(function(results){
 
 ## Live Queries
 
-As the name suggests, a live query is derived from a normal [`AV.Query`](#queries) but with enhanced capability. It allows you to automatically synchronize data changes from one client to other clients without writing complex code, making it suitable for apps that need real-time support.
+A live query is, as its name implies, derived from a normal [`AV.Query`](#queries) but with enhanced capability. It allows you to automatically synchronize data changes from one client to other clients without writing complex code, making it suitable for apps that need real-time support.
 
 Suppose you are building an app that allows multiple users to edit the same file at the same time. `AV.Query` would not be an ideal tool since it is based on a pull model and you can not know when to query from the cloud to get the updates.
 
@@ -1286,6 +1289,10 @@ When an existing AV.Object's old value fulfills the `AV.Query` but its new value
 #### `delete` Event
 
 ```js
+// delete an object from another client
+// var todo = new AV.Object.createWithoutData('Todo','591d9b302f301e006be22c83');
+// todo.destroy();
+
 liveQuery.on('delete', function(obj, updatedKeys){
   console.log('object deleted');
 });
@@ -1542,9 +1549,9 @@ If you demand that the files saved to the cloud should be accessed over HTTPS, t
 
 As use of HTTPS is not free, you will be prompted by the confirmation window stating how much it costs per GB downloaded upon checking this option.
 
-{% macro alertWrap() %}
+{% call docs.alertWrap() %}
 However, when you turn off the "Enable HTTPS domain" option, the cloud will NOT attempt to convert HTTPS URLs in the `_File` Class back to their HTTP equivalents. Your files can be accessed over both HTTP and HTTPS. So please be aware that you may still be charged for any HTTPS traffic incurred between your app and LeanCloud thereafter.
-{% endmacro %}
+{% endcall %}
 
 <a href="rtm-http-policy"></a>LeanCloud RTM (Real-time Messaging) Service also leverages AV.Files to store images and audio files that are sent through messages. The URLs referencing those files are kept in the message history, and will NOT be automatically converted to HTTPS ones after HTTPS domain is enabled. Only files in the new messages will take HTTPS.
 
@@ -1582,7 +1589,7 @@ Or go to your project's **Target** panel, open the **Info** tab and modify setti
 
 By default AV.Files use a public domain for all the apps on LeanCloud so that files can be conveniently accessed by everyone.
 
-Yet under the regulation of the country's Cybersecurity Law we cannot guarantee that the public domain can be at your service all the time without interruption. To minimize the risk and impact such service interruption may cause, we strongly advise you transition to using your own domain for file accessing as soon as possible. The domain configuration can be found in your app's [LeanCloud Dashboard > Storage > Settings](/dashboard/storage.html?appid={{appid}}#/storage/conf) page.
+Yet under the regulation of the country's Cyber-security Law we cannot guarantee that the public domain can be at your service all the time without interruption. To minimize the risk and impact such service interruption may cause, we strongly advise you transition to using your own domain for file accessing as soon as possible. The domain configuration can be found in your app's [LeanCloud Dashboard > Storage > Settings](/dashboard/storage.html?appid={{appid}}#/storage/conf) page.
 
 ### CDN Support
 
@@ -2249,7 +2256,7 @@ If the user has never been linked with this account, you will instead receive a 
 }
 ```
 
-By default, `authData` won't be included in the response body, nor will it be returned to the client by using the `include` or `fetch` method on a query. If you need that data, you can go to your app's [Data page](/dashboard/data.html?appid={{appid}}#/_User), select the `_User` class and click on the arrow icon on the authData column header, check off the *"Hidden from client"* option in the resultant "Column Property" window.
+By default, `authData` cannot be returned to the client by using the `include` or `fetch` method on a query unless the record is owned by the current user. To change this behavior, you can go to your app's [Data page](/dashboard/data.html?appid={{appid}}#/_User), select the `_User` class and click on the arrow icon on the authData column header, check off the **Restrict read and write permission to the owning user** option in the resultant "Column Property" window so that anyone can have access to it.
 
 To ensure that an `AV.User` is linked with one service account only once, a unique index needs to be created for the `authData.<SERVICE_NAME>.uid` key in the `_User` class.
 

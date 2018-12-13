@@ -227,7 +227,7 @@ var codeBlockTabber = (function() {
       'lang-es7': 'ECMAScript7',
       'lang-html': 'HTML',
       'lang-cs': 'C#',
-      'lang-curl': 'curl',
+      'lang-curl': 'cURL',
       'lang-unity': 'Unity',
       'lang-nodejs': 'Node.js',
       'lang-node': 'Node.js'

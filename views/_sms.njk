@@ -1,5 +1,6 @@
 {% from "views/_helper.njk" import
-     alert
+     alert,
+     paramAttr
 %}
 
 {% macro usSMSNotReady() %}
@@ -7,13 +8,13 @@
 {% endmacro %}
 
 {% macro paramsRequestCaptcha(showExtra=false) %}
-| 参数名    | 参数类型   | 默认   | 说明                              |
-| ------ | ------ | ---- | ------------------------------- |
-| width  | number | 85   | 图形验证码展示区域的宽度，单位：像素，有效值范围：60-200 |
-| height | number | 30   | 图形验证码展示区域的高度，单位：像素，有效值范围：30-100 |
+| Parameter    | Default Value   | Description                              |
+| ------ | ------ | ------------------------------- |
+| `width`<br/>{{ paramAttr("number") }}  | 85   | the width of the CAPTCHA image in *px*, ranging from *60* to *200* |
+| `height`<br/>{{ paramAttr("number") }} | 30   | the height of the CAPTCHA image in *px*, ranging from *30* to *100* |
 {% if showExtra -%}
-| size | number | 4    | 验证码的字符长度，有效值范围：3-6（需要使用 masterKey） |
-| ttl  | number | 60   | 验证码有效期，单位：秒，有效值范围：10-180（需要使用 masterKey） |
+| `size`<br/>{{ paramAttr("number") }} | 4    | the length of the verification code, ranging from *3* to *6* (**REST API** only, masterKey required) |
+| `ttl`<br/>{{ paramAttr("number") }}  | 60  | how soon the verification code expires in *seconds*, ranging from *10* to *180* (**REST API** only, masterKey required)  |
 {%- endif %}
 {% endmacro %}
 
