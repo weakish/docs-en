@@ -179,7 +179,7 @@ Depending on the message content, LeanCloud classifies SMS messages into 3 categ
 
 ### Prerequisites
 
-You use LeanCloud SMS APIs to send SMS messages. Those APIs are part of LeanCloud Storage SDK. You can follow the [SDK Setup](storage-guide.html#installing-sdk) document to load LeanCloud Storage SDK into your app or project.
+You use LeanCloud SMS APIs to send SMS messages. Those APIs are part of LeanCloud Storage SDK. You can follow the [SDK Setup](storage-guide-js.html#installing-sdk) document to load LeanCloud Storage SDK into your app or project.
 
 After you install the dependencies, you must complete the following configuration steps:
 
@@ -755,4 +755,4 @@ So there really are a lot of factors that can affect the messaging deliverabilit
 
 ## AVUser Integration
 
-Please refer to [Cloud Storage Guide &middot; Users](storage-guide-js.html#signing-up-with-phones).
+Please refer to [LeanStorage Guide &middot; Users](storage-guide-js.html#signing-up-with-phones).
