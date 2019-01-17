@@ -1,0 +1,2230 @@
+{% import "views/_helper.njk" as docs %}
+
+# LeanMessage {{ platform_name }} Guide
+
+LeanMessage provides hosted infrastructure, APIs, SDKs, and UI toolkits that allow developers to easily integrate rich and engaging messaging experiences directly into native and web apps.
+
+Designed for asynchronous person-to-person and business-to-consumer messaging, LeanMessage {{ platform_name }} SDK provides you with:
+
+- Direct messaging, group conversations with up to 500 members, and temporary conversations with unlimited numbers of members.
+- Rich-content messages combining text, rich media content, and application data.
+- Message delivery and read receipts for each conversation participant.
+- [Mentioning people](#mentions) in group conversations, muting group conversations, [typing indicators](#typing-indicators), [message recall](#message-recall), and [message revision](#message-revision).
+- Integrated support for mobile push notifications via APNs and FCM.
+- Built-in user management.
+- A flexible querying interface for searching and retrieving data.
+- Blocking and suspension of users.
+- Robust connection management and offline support.
+- Rapid development of consumer-class user experiences via the UI toolkits ChatKit on [iOS](https://github.com/leancloud/ChatKit-OC) and [Android](https://github.com/leancloud/LeanCloudChatKit-Android).
+- APIs for bot integrations.
+
+## Getting Started
+
+<!-- There are a few core concepts you should understand:
+
+Conversations and Chat Rooms contain a set of members and an unlimited number of messages.
+
+Each message is sent by a specific user, and can contain textual and binary content which will be uploaded to LeanCloud, the URL of the uploaded file is sent instead. Our SDK automatically handle this; if you are using the REST APIs, you will have to handle this yourself. However, a common pattern is to send a URL in a message, and load the latest data available at the URL before displaying the rest of the message in your app.
+
+The MIME type tells your app how to display the contents of the message part. For example, if the message part contains a URL, a MIME type of text/plain might cause your app to display the URL as text, as if one user had sent a link to another. However, if the MIME type is image/jpeg, your app might display the image specified by the URL rather than the URL itself.
+
+> Messages can be edited even after they've been sent.
+
+Conversations and Temporary Conversations differ in some ways:
+
+- Conversations can have at most 500 members, whereas Temporary Conversation can have an unlimited number of members.
+- Conversation Messages track who has received and who has read each message, while Temporary Conversation Messages do not track any received or read state. -->
+
+### Installing SDK
+
+{% if platform_name === "JavaScript" %}
+The simplest way to load the LeanMessage JavaScript SDK is through npm:
+
+```bash
+$ npm install leancloud-realtime --save
+```
+
+You can also include it in your project with `<script>` tag:
+
+```html
+<script src="//cdn.jsdelivr.net/npm/leancloud-realtime@4.2.1/dist/realtime.browser.min.js"></script>
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+{# TODO #}
+{% endif %}
+{% if platform_name === "Android" %}
+{# TODO #}
+{% endif %}
+
+### Initializing
+
+{% if platform_name === "JavaScript" %}
+After importing the RTM SDK into your project, you can get a new instance of the `Realtime` class like this:
+
+```js
+var { Realtime } = require('leancloud-realtime');
+var realtime = new Realtime({
+  appId:  '{{appid}}',
+  appKey: '{{appkey}}',
+  region: 'cn' // 'us' for US region
+});
+```
+
+We will be using `realtime` to refer to a `Realtime` instance in this documentation unless otherwise stated.
+{% endif %}
+{% if platform_name === "Objective-C" %}
+{# TODO #}
+{% endif %}
+{% if platform_name === "Android" %}
+{# TODO #}
+{% endif %}
+
+<!-- To understand how regions are set up, please see the JavaScript SDK Setup document. -->
+
+{% if platform_name === "JavaScript" %}
+### Installing Plugins
+
+If you want to send rich-content messages in addition to plain-text messages with our SDK, such as pictures, voices, videos, files, and locations, you need to install the following plugins to enable the feature:
+
+- `leancloud-storage`
+- `leancloud-realtime-plugin-typed-messages`
+
+<!-- Multi-media files and binary files can take up much more storage space than text ones, they will be automatically upload to the cloud. -->
+
+Install via npm:
+
+```bash
+$ npm install --save leancloud-storage leancloud-realtime-plugin-typed-messages 
+```
+
+In a web project, the scripts should be loaded in the following order:
+
+```html
+<script src="./node_modules/leancloud-storage/dist/av.js"></script>
+<script src="./node_modules/leancloud-realtime/dist/realtime.browser.js"></script>
+<script src="./node_modules/leancloud-realtime-plugin-typed-messages/dist/typed-messages.js"></script>
+```
+
+When working with a web browser, you can initialize all the resources as follows:
+
+```js
+// Initialize LeanStorage SDK
+AV.init({
+  appId:  '{{appid}}',
+  appKey: '{{appkey}}'
+});
+
+// Initialize LeanMessage SDK
+var Realtime = AV.Realtime;
+var realtime = new Realtime({
+  appId:  '{{appid}}',
+  appKey: '{{appkey}}',
+  // Register the rich-content message plugin
+  plugins: [AV.TypedMessagesPlugin]
+});
+
+// You can access all the member functions exposed
+// by the plugin using the AV namespace
+var imageMessage = new AV.ImageMessage(file);
+```
+
+To use the plugin in a Node.js environment or any CommonJS-compliant environments, you will need to take the following initialization routine:
+
+```js
+var AV = require('leancloud-storage');
+var { Realtime } = require('leancloud-realtime');
+var { TypedMessagesPlugin, ImageMessage } = require('leancloud-realtime-plugin-typed-messages');
+
+// Initialize LeanStorage SDK
+AV.init({
+  appId:  '{{appid}}',
+  appKey: '{{appkey}}'
+});
+
+// Initialize LeanMessage SDK
+var realtime = new Realtime({
+  appId:  '{{appid}}',
+  appKey: '{{appkey}}',
+  // Register the rich-content message plugin
+  plugins: [TypedMessagesPlugin]
+});
+var imageMessage = new ImageMessage(file);
+```
+
+A complete list of member functions of the typed-message plugin can be found in its own [API documentation](https://leancloud.github.io/js-realtime-sdk/plugins/typed-messages/docs/module-leancloud-realtime-plugin-typed-messages.html) on Github.
+{% endif %}
+
+## Connecting
+
+A user has to connect to the LeanMessage Server before using any messaging functionality. The connection to the server can be established by passing in a `clientId`, **a string up to 64 characters long**, which is used by the server to identify the user.
+
+It's entirely up to you on how you generate the `clientId` string, but it should be **unique within your app** and is **case-sensitive**. The server sees `someClientId` and `someclientid` as different users.
+
+You can {% if platform_name === "JavaScript" %}call `createIMClient` on the `realtime` instance{% endif %}{% if platform_name === "Objective-C" %}create an `AVIMClient` instance and call `openWithCallback` on it{% endif %}{% if platform_name === "Android" %}create an `AVIMClient` instance by calling `AVIMClient.getInstance` and call `open` on it{% endif %} to set up the connection between the client and the server. The purpose of doing so is to let the SDK maintain a long connection with the server for handling messaging processes and responding to various events.
+
+{% if platform_name === "JavaScript" %}
+```js
+// We use a simple string 'Tom' as the clientId
+realtime.createIMClient('Tom').then(function (clientTom) {
+  // Connection established successfully
+  // clientTom is an instance of IMClient
+  console.log(clientTom);
+}).catch(console.error);
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+- (void)tomSendMessageToJerry {
+    // We use a simple string "Tom" as the clientId
+    self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+    [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+        // Connection established successfully
+    }];
+}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+public void sendMessageToJerryFromTom() {
+    // We use a simple string "Tom" as the clientId
+    AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+        @Override
+        public void done(AVIMClient clientTom, AVIMException e) {
+            if (e == null) {
+                // Connection established successfully
+                // clientTom is an instance of IMClient
+            }
+        }
+    });
+}
+```
+{% endif %}
+
+<!-- {{ docs.note("Note: JavaScript SDK and C# (Unity3D) SDK will establish the connection to the server with the creation of the IMClient, whereas both iOS SDK and Android SDK require an extra step to establish the connection.") }} -->
+
+Optionally, you can make use of LeanStorage's cloud-based user management feature (`{% if platform_name === "JavaScript" %}AV.User{% endif %}{% if platform_name === "Objective-C" %}AVUser{% endif %}{% if platform_name === "Android" %}AVUser{% endif %}`) and conveniently connect authenticated users to the LeanMessage server without `clientId`:
+
+{% if platform_name === "JavaScript" %}
+```js
+var AV = require('leancloud-storage');
+// First, log the user in with username and password
+AV.User.logIn('USERNAME', 'PASSWORD').then(function (user) {
+  // User successfully logged in
+  // Connect the current user to the server
+  return realtime.createIMClient(user);
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+// First, log the user in with username and password
+[AVUser logInWithUsernameInBackground:@"USERNAME" password:@"PASSWORD" block:^(AVUser * _Nullable user, NSError * _Nullable error) {
+    AVIMClient *client = [[AVIMClient alloc] initWithUser:user];
+    [client openWithCallback:^(BOOL succeeded, NSError * _Nullable error) {
+        // User successfully logged in
+        // Connect the current user to the server
+    }];
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+// First, log the user in with username and password
+AVUser.logInInBackground("USERNAME", "PASSWORD", new LogInCallback<AVUser>() {
+    @Override
+    public void done(AVUser user, AVException e) {
+        if (null != e) {
+            return;
+        }
+        AVIMClient client = AVIMClient.getInstance(user);
+        client.open(new AVIMClientCallback() {
+            @Override
+            public void done(final AVIMClient avimClient, AVIMException e) {
+                // User successfully logged in
+                // Connect the current user to the server
+            }
+        });
+    }
+});
+```
+{% endif %}
+
+Internally our SDK will use the `objectId` of the authenticated user as the `clientId`. You may also use the current user's `username` for the `clientId` to create the connection as it is also unique throughout an application:
+
+{% if platform_name === "JavaScript" %}
+```js
+realtime.createIMClient(
+  user.get('username')
+);
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+{# TODO #}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+{# TODO #}
+```
+{% endif %}
+
+{% if platform_name === "JavaScript" %}
+The approach using `AV.User` depends on LeanStorage SDK. See [Installing Plugins](#installing-plugins) for more instructions on setup process.
+{% endif %}
+
+Once connected to the server either way, there is no difference in using any functionalities described in the rest of this documentation.
+
+Please note that you only need to call `{% if platform_name === "JavaScript" %}createIMClient{% endif %}{% if platform_name === "Objective-C" %}openWithCallback{% endif %}{% if platform_name === "Android" %}open{% endif %}` **once** throughout your application and throughout the lifespan of your application.
+
+Internally our SDK will not create multiple `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}` instances for the same `clientId`, which means that if you call the `{% if platform_name === "JavaScript" %}createIMClient{% endif %}{% if platform_name === "Objective-C" %}openWithCallback{% endif %}{% if platform_name === "Android" %}open{% endif %}` method multiple times with the same `clientId`, you will always get the same `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}` instance. However, there can be scenarios where multiple `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}`s are needed in one place, such as allowing user to switch accounts within your app. In such case, try to create two `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}`s with **different** `clientId`s, which will make both of them functional.
+
+### Disconnecting
+
+To disconnect a user from the server, you can use the `{% if platform_name === "JavaScript" %}close{% endif %}{% if platform_name === "Objective-C" %}closeWithCallback{% endif %}{% if platform_name === "Android" %}close{% endif %}` method on the`{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}` instance: <!-- Closing the client also helps release database and network resources, ensuring that references drop out of memory when the IMClient is no longer needed.-->
+
+{% if platform_name === "JavaScript" %}
+```js
+clientTom.close().then(function () {
+  console.log('Tom has disconnected from the server.');
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+{# TODO #}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+{# TODO #}
+```
+{% endif %}
+
+<!-- ### Single Device Sign-on
+
+Normally our RTM Server allows simultaneous connections created using the same `clientId` from more than one device. But if you need to restrict a user to logging in only from one device at a time, a solution would be logging the current device when user logs in, for example, `{ "tag" : "deviceA" }`,
+如果使用场景中需要限制用户只在一处登录，可以在登录时明确设置当前设备的 tag， 当 LeanCloud 检测到同一个 tag 的设备出现冲突时，会自动踢出已存在设备上的登录状态。 -->
+
+### Network States
+
+After the client connects to the server, you don't have to concern about the network states because our SDK takes care of it for you. It will automatically reconnect when necessary to keep the client staying online. The [Client Events and Network States](#client-events) section has more information about how you can subscribe to those events which can be helpful for improving your user experience.
+
+<!-- 对于 Android 平台，我们使用常驻后台的服务保持在线状态；对于 iOS 和 Windows Phone 等平台，我们会在应用仍在前台时保持连接，当应用退到后台时，自动断开连接再激活平台原生的推送服务。 -->
+
+## Conversations
+
+Once connected to the server, users can send and receive messages with a specific `{{ conversationObjectName }}` object.
+
+### Creating a Conversation
+
+`{{ conversationObjectName }}` objects are created by calling the `{% if platform_name === "JavaScript" %}createConversation{% endif %}{% if platform_name === "Objective-C" %}createConversationWithName{% endif %}{% if platform_name === "Android" %}createConversation{% endif %}` method on the `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}` instance and passing in an array of `clientId`s to be included in the conversation{% if platform_name === "JavaScript" %} using the required `members` parameter{% endif %}{% if platform_name === "Objective-C" %} using the required `clientIds` parameter{% endif %}.
+
+The code below creates a `{{ conversationObjectName }}` between Tom and Jerry with the name of `Era of Peace`:
+
+{% if platform_name === "JavaScript" %}
+```js
+realtime.createIMClient('Tom').then(function (clientTom) {
+  return clientTom.createConversation({
+    members: ['Jerry'],
+    name:    'Era of Peace'
+  });
+}).then(function (conversation) {
+  var CONVERSATION_ID = conversation.id;
+});
+``` 
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+- (void)tomSendMessageToJerry {
+    self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+    [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+        [self.client createConversationWithName:@"Era of Peace" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
+            // {# TODO #}
+        }];
+    }];
+}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+public void sendMessageToJerryFromTom() {
+    AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+        @Override
+        public void done(AVIMClient client, AVIMException e) {
+            if (e == null) {
+                client.createConversation(Arrays.asList("Jerry"), "Era of Peace", null,
+                    new AVIMConversationCreatedCallback() {
+                        @Override
+                        public void done(AVIMConversation conversation, AVIMException e) {
+                        if (e == null) {
+                            // {# TODO #}
+                        }
+                    }
+                });
+            }
+        }
+    });
+}
+```
+{% endif %}
+
+You don't have to include the current user's `clientId` (`Tom` in this case) in the set of members. The current user is automatically added to all the conversations they create.
+
+{% if platform_name === "JavaScript" %}The `name` parameter{% endif %}{% if platform_name === "Objective-C" %}`createConversationWithName`{% endif %}{% if platform_name === "Android" %}The second parameter{% endif %} takes in the name of the `{{ conversationObjectName }}`. It is optional and defaults to `null` if omitted.
+
+The `{% if platform_name === "JavaScript" %}conversation.id{% endif %}{% if platform_name === "Objective-C" %}{# TODO #}{% endif %}{% if platform_name === "Android" %}{# TODO #}{% endif %}` is the unique identifier for each conversation, which can be used for retrieving details of a specific conversation. See [Querying Conversations](#querying-conversations) for more details.
+
+Let's create another `{{ conversationObjectName }}` with more people:
+
+{% if platform_name === "JavaScript" %}
+```js
+clientTom.createConversation({
+  members: ['Bob', 'Harry', 'William'],
+  name:    'Weekend Ice Skating'
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+{# TODO #}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+{# TODO #}
+```
+{% endif %}
+
+As you can see, there are no distinctions between a one-on-one conversation and a group conversation except that they have different numbers of members. We design out SDK in this way so that you can use the same method to create any kinds of conversations regardless of their types.
+
+The `{{ conversationObjectName }}` object will be saved to the [`_Conversation`](/dashboard/data.html?appid={{appid}}#/_Conversation) class on LeanCloud.
+
+<!-- Conversations are not synced with the server until the first message is sent. This means that other members will not see a newly created conversation until the first message is sent. You can force the empty conversation to be synced by calling conversation.send() on your Conversation instance. -->
+
+### Conversation Properties
+
+Most properties of a `{{ conversationObjectName }}` instance have corresponding fields in the `_Conversation` class:
+
+| Property | `_Conversation` Field | Description |
+| -------- | --------------------- | ----------- |
+| `{% if platform_name === "JavaScript" %}id{% endif %}{% if platform_name === "Objective-C" %}conversationId{% endif %}{% if platform_name === "Android" %}conversationId{% endif %}` | `objectId` | Unique identifier. |
+| `name` | `name` | Conversation name. |
+| `members` | `m` | `clientId`s of all participants of the conversation. |
+| `creator` | `c` | `clientId` of the user who created the conversation. |
+| `{% if platform_name === "JavaScript" %}transient{% endif %}{% if platform_name === "Objective-C" %}transient{% endif %}{% if platform_name === "Android" %}isTransient{% endif %}` | `tr` | Whether it is a chatroom. |
+| `system` | `sys` | Whether it is a system conversation. |
+| `{% if platform_name === "JavaScript" %}mutedMembers{% endif %}{% if platform_name === "Objective-C" %}{# TODO #}{% endif %}{% if platform_name === "Android" %}{# TODO #}{% endif %}` | `mu` | `clientId`s of members who muted the conversation. |
+| `muted` | N/A | Whether the current user muted the conversation. |
+| `createdAt` | `createdAt` | The timestamp when the conversation was created. |
+| `updatedAt` | `updatedAt` | The timestamp when the conversation was last updated. |
+| `lastMessageAt` | `lm` | The timestamp when the last message was sent. |
+| `lastMessage` | N/A | Content of the last message. |
+| `unreadMessagesCount` | N/A | Number of unread messages. |
+| `lastDeliveredAt` | N/A | The timestamp when the last message was delivered (**two-member conversation only**). |
+| `lastReadAt` | N/A | The timestamp when the last message was read (**two-member conversation only**). |
+
+The `name` property can be set at the creation of the `{{ conversationObjectName }}` or at a later time. It can be seen by every member of the `{{ conversationObjectName }}`.
+
+Suppose that Tom would like to change the name of the conversation with Jerry to `Cats Love Mice`:
+
+{% if platform_name === "JavaScript" %}
+```js
+clientTom.getConversation(CONVERSATION_ID).then(function (conversation) {
+  conversation.name = 'Cats Love Mice';
+  return conversation.save();
+}).then(function (conversation) {
+  console.log('name updated to: ' + conversation.name);
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMConversationQuery *query = [self.client conversationQuery];
+[query getConversationById:@"CONVERSATION_ID" callback:^(AVIMConversation *conversation, NSError *error) {
+    AVIMConversationUpdateBuilder *updateBuilder = [conversation newUpdateBuilder];
+    updateBuilder.name = @"Cats Love Mice";
+    [conversation update:[updateBuilder dictionary] callback:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            NSLog(@"Name updated.");
+        }
+    }];
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMConversation conv = client.getConversation("CONVERSATION_ID");
+conv.setName("Cats Love Mice");
+conv.updateInfoInBackground(new AVIMConversationCallback(){
+    @Override
+    public void done(AVIMException e){        
+        if(e == null){
+            // Name updated
+        }
+    }
+});
+```
+{% endif %}
+
+The `members` property should always be handled by SDK and REST API. Manually changing its value through data browser in your app's dashboard can lead to unexpected results, which is prohibited.
+
+<!-- The `creator` property holds the `clientId` of the user who created the conversation. 根据对话中成员的 `clientId` 是否与 `conversation.creator` 一致就可以判断出他是不是群的创建者。 -->
+
+### Adding Custom Properties
+
+You can add your own properties to a `{{ conversationObjectName }}` instance to facilitate your development.
+
+Let's say that we are adding two custom properties to the conversation, one is `type = 'private'` meaning this is a private conversation, and the other one is `pinned = true` meaning the conversation is pinned to the top of the conversation list in your app:
+
+{% if platform_name === "JavaScript" %}
+```js
+clientTom.createConversation({
+  members: ['Jerry'],
+  type:    'private',
+  pinned:  true,
+}).then(function (conversation) {
+  console.log('Success. id: ' + conversation.id);
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+[self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+    NSDictionary *attributes = @{ 
+        @"type": @"private",
+        @"pinned": @(YES) 
+    };
+    [self.client createConversationWithName:@"Cats Love Mice" clientIds:@[@"Jerry"] attributes:attributes options:AVIMConversationOptionNone callback:^(AVIMConversation *conversation, NSError *error) {
+        if (succeeded) {
+            NSLog(@"Success.");
+        }
+    }];
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+HashMap<String,Object> attr = new HashMap<String,Object>();
+attr.put("type", "private");
+attr.put("pinned", true);
+client.createConversation(Arrays.asList("Jerry"), "Cats Love Mice", attr,
+    new AVIMConversationCreatedCallback(){
+        @Override
+        public void done(AVIMConversation conv, AVIMException e){
+            if(e == null){
+                // Success
+            }
+        }
+    }
+);
+```
+{% endif %}
+
+Custom properties are visible and accessible to all conversation members. They can be easily retrieved through standard interface. See [Querying Conversations](#querying-conversations) for more information.
+
+### Unique Conversations
+
+When creating a `{{ conversationObjectName }}`, you have the option to make it unique by {% if platform_name === "JavaScript" %}adding the `unique` parameter and setting it to `true`{% endif %}{% if platform_name === "Objective-C" %}adding the `AVIMConversationOptionUnique` option to `options`{% endif %}{% if platform_name === "Android" %}adding the `isUnique` parameter and setting it to `true`{% endif %}. It means once a `{{ conversationObjectName }}` with certain users has been created, any further attempts by any of these users to create a new `{{ conversationObjectName }}` with the same members will lead them to the existing `{{ conversationObjectName }}`:
+
+{% if platform_name === "JavaScript" %}
+```js
+clientTom.createConversation({
+  members: ['Jerry', 'Spike', 'Butch'],
+  name:    'Party on Weekends',
+  unique:  true
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+{# TODO #}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+{# TODO #}
+```
+{% endif %}
+
+Conversations are **NOT** unique by default. So when {% if platform_name === "JavaScript" %}the `unique` parameter is omitted or set to be `false`{% endif %}{% if platform_name === "Objective-C" %}the `AVIMConversationOptionUnique` option is omitted{% endif %}{% if platform_name === "Android" %}the `isUnique` parameter is omitted or set to be `false`{% endif %}, multiple users can independently create multiple instances of `{{ conversationObjectName }}` with the same set of members.
+
+{% if platform_name === "JavaScript" %}
+```js
+var chat1 = clientTom.createConversation({
+  members: ['Jerry', 'Spike'],
+  unique:  true
+});
+var chat2 = clientTom.createConversation({
+  members: ['Jerry', 'Spike'],
+  unique:  true
+});
+var chat3 = clientTom.createConversation({
+  members: ['Jerry', 'Spike'],
+  unique:  false
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+{# TODO #}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+{# TODO #}
+```
+{% endif %}
+
+In the above example:
+
+- `chat1` and `chat2` return the same `{{ conversationObjectName }}`.
+- `chat1` and `chat3` are both newly created `{{ conversationObjectName }}`s.
+
+### Managing Members
+
+Members in a `{{ conversationObjectName }}` can be added or removed at any time. LeanMessage server can keep track of a `{{ conversationObjectName }}`'s admin (owner), and by default any participant in the `{{ conversationObjectName }}` can add or remove members from it. However, it is possible to prevent users from modifying members with your application's custom logic.
+
+<!-- custom metadata +  -->
+
+It is also advisable that you implement authentication flow to verify user's identity (signature) before letting them operate on a `{{ conversationObjectName }}`. See [Authentication](#authentication) for more technical details.
+
+{% if platform_name === "JavaScript" %}
+```js
+// Adds a participant to an existing conversation
+conversation.add(['Mary']);
+
+// Removes a participant from an existing conversation
+conversation.remove(['Harry']);
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+// Adds a participant to an existing conversation
+[conversation addMembersWithClientIds:@[@"Mary"] callback:^(BOOL succeeded, NSError *error) {
+    if (succeeded) {
+        NSLog(@"Success.");
+    }
+}];
+
+// Removes a participant from an existing conversation
+[conversation removeMembersWithClientIds:@[@"Harry"] callback:^(BOOL succeeded, NSError *error) {
+    if (succeeded) {
+        NSLog(@"Success.");
+    }
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+// Adds a participant to an existing conversation
+conv.addMembers(Arrays.asList("Mary"), new AVIMConversationCallback() {
+    @Override
+    public void done(AVIMException e) {
+        if (e == null) {
+            // Success
+        }
+    }
+});
+
+// Removes a participant from an existing conversation
+conv.kickMembers(Arrays.asList("Harry"),new AVIMConversationCallback(){
+    @Override
+    public void done(AVIMException e) {
+        if (e == null) {
+            // Success
+        }
+    }
+});
+```
+{% endif %}
+
+Adding or removing members from a unique conversation (see below) makes it non-unique. For example, if you have the following conversations:
+
+- Conversation 1 is unique and has users A and B.
+- Conversation 2 is unique and has users A, B, and C.
+
+Adding user C to conversation 1 will lead to the following result:
+
+- Conversation 1 is non-unique and has users A, B, and C.
+- Conversation 2 is unique and has users A, B, and C.
+
+<!-- > 由于暂态对话不支持创建唯一对话，所以将 transient 和 unique 同时设为 true 时并不会产生预期效果。
+### 主动加入对话 JOIN
+### 退出对话 QUIT -->
+
+<!-- ### Converation Types -->
+
+### Muting a Conversation
+
+If a user wants to stop receiving messages from a `{{ conversationObjectName }}` without leaving the conversation, you can use the `{% if platform_name === "JavaScript" %}mute{% endif %}{% if platform_name === "Objective-C" %}muteWithCallback{% endif %}{% if platform_name === "Android" %}mute{% endif %}` method to put the target `{{ conversationObjectName }}` into "Do-Not-Disturb" mode.
+
+For iOS and Windows Phone users, the server also stops sending push notifications for new messages in the muted `{{ conversationObjectName }}` when the user is offline.
+
+{% if platform_name === "JavaScript" %}
+```js
+client.getConversation(CONVERSATION_ID).then(function (conversation) {
+  return conversation.mute();
+}).then(function (conversation) {
+  console.log('Conversation is muted.');
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+[query getConversationById:@"CONVERSATION_ID" callback:^(AVIMConversation *conversation, NSError *error) {
+    [conversation muteWithCallback:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            NSLog(@"Conversation is muted.");
+        }
+    }];
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMConversation conv = client.getConversation("CONVERSATION_ID");
+conv.mute(new AVIMConversationCallback(){
+    @Override
+    public void done(AVIMException e){
+        if(e == null){
+            // Conversation is muted
+        }
+    }
+});
+```
+{% endif %}
+
+To unmute a `{{ conversationObjectName }}`, use the `{% if platform_name === "JavaScript" %}unmute{% endif %}{% if platform_name === "Objective-C" %}unmuteWithCallback{% endif %}{% if platform_name === "Android" %}unmute{% endif %}` method.
+
+The `mu` field (`{% if platform_name === "JavaScript" %}mutedMembers{% endif %}{% if platform_name === "Objective-C" %}{# TODO #}{% endif %}{% if platform_name === "Android" %}{# TODO #}{% endif %}`) in the `_Conversaton` class gets automatically updated along with the mute and unmute actions. Please do not manually update this field, or errors may occur.
+
+## Messages
+
+Messages are the basic building block of all conversations. Message objects represent individual messages. They belong to a conversation and can consist of text, image, audio, video, location, and file. Besides, our SDK allows you to cook up your own message type. For example, you may send a photo along with a title and a description, resembling the look and feel of a blog post.
+
+Each message keeps track of its delivery and read state for every participant in a **normal** `{{ conversationObjectName }}`.
+
+### Creating a Message
+
+Message objects are created by calling the class constructor of a specific message type with parameters. Let's start with creating a text message:
+
+{% if platform_name === "JavaScript" %}
+```js
+var { TextMessage } = require('leancloud-realtime');
+var message = new TextMessage('How\'s it going, Jerry?');
+```
+<!-- // use 'Tom' for the clientId
+realtime.createIMClient('Tom').then(function(tom) {
+  // create a conversation with Jerry
+  return tom.createConversation({
+    members: ['Jerry'],
+  })
+}).then(function(conversation) {
+  // send message
+  return conversation.send(new TextMessage('Where are you?'));
+}).then(function(message) {
+  console.log('success');
+}).catch(console.error); -->
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+[AVIMTextMessage messageWithText:@"How's it going, Jerry?" attributes:nil]
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMTextMessage msg = new AVIMTextMessage();
+msg.setText("How's it going, Jerry?");
+```
+{% endif %}
+
+### Rich Content Messages
+
+Creating messages with images, audios, videos, and files isn't as straightforward as with text, but they share the same pattern to build:
+
+- Get the file data you want to send from the local system or through dedicated API. A valid file URL is also acceptable.
+- Use LeanStorage SDK to save the file or the URL on LeanCloud.
+- Use the {% if platform_name === "JavaScript" %}[`AV.File`](storage-guide-js.html#files){% endif %}{% if platform_name === "Objective-C" %}[`AVFile`](storage-guide-objc.html#files){% endif %}{% if platform_name === "Android" %}[`AVFile`](storage-guide-android.html#files){% endif %} object created in the previous step as parameter to create the message object.
+
+{% if platform_name === "JavaScript" %}
+Please install [the supporting libraries](#installing-plugins) (typed message plugin and LeanStorage SDK) before continuing, or creation of a non-text message object would fail.
+{% endif %}
+
+Let's create a message object with an image from a file steam:
+
+{% if platform_name === "JavaScript" %}
+```js
+// HTML:
+// <input type="file" id="photoFileUpload">
+
+var AV = require('leancloud-storage');
+var { ImageMessage } = require('leancloud-realtime-plugin-typed-messages');
+
+var fileUploadControl = document.getElementById('photoFileUpload');
+var file = new AV.File(
+  'avatar.jpg',
+  fileUploadControl.files[0]
+);
+file.save().then(function () {
+  var message = new ImageMessage(file);
+  message.setText('My new avatar.');
+}).catch(console.error.bind(console));
+```
+<!-- message.setText('My new avatar.');
+message.setAttributes({ location: 'New York' }); -->
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+NSString *filePath = [self imagePath];
+AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"My new avatar." attachedFilePath:filePath attributes:attributes];
+[conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+    if (succeeded) {
+        NSLog(@"Sent.");
+    }
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMImageMessage picture = new AVIMImageMessage(filePath);
+picture.setText("My new avatar.");
+Map < String, Object > attributes = new HashMap < String, Object > ();
+picture.setAttribute(attributes);
+conv.sendMessage(picture, new AVIMConversationCallback() {
+    @Override
+    public void done(AVIMException e) {
+        if (e == null) {
+            // Sent
+        }
+    }
+});
+```
+{% endif %}
+
+The code above{% if platform_name === "JavaScript" %} accesses an HTML file input, gets its data from the Javascript file object (subclass of blob), and{% endif %} sticks the file onto `{% if platform_name === "JavaScript" %}AV.File{% endif %}{% if platform_name === "Objective-C" %}AVFile{% endif %}{% if platform_name === "Android" %}AVFile{% endif %}` which uploads the file data to the cloud and returns a new file object for the message to use.
+
+If the image is acquired from a URL instead, simply change the way `{% if platform_name === "JavaScript" %}AV.File{% endif %}{% if platform_name === "Objective-C" %}AVFile{% endif %}{% if platform_name === "Android" %}AVFile{% endif %}` is constructed:
+
+{% if platform_name === "JavaScript" %}
+```js
+var AV = require('leancloud-storage');
+var { ImageMessage } = require('leancloud-realtime-plugin-typed-messages');
+
+var file = new AV.File.withURL(
+  'avatar.jpg',
+  'http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.jpg'
+);
+file.save().then(function () {
+  var message = new ImageMessage(file);
+  message.setText('My new avatar.');
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVFile *file = [AVFile fileWithURL:[self imageURL]];
+AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"My new avatar." file:file attributes:nil];
+[conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+    if (succeeded) {
+        NSLog(@"Sent.");
+    }
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVFile file = new AVFile("avatar.jpg", "http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.jpg", null);
+AVIMImageMessage m = new AVIMImageMessage(file);
+m.setText("My new avatar.");
+conv.sendMessage(m, new AVIMConversationCallback() {
+    @Override
+    public void done(AVIMException e) {
+        if (e == null) {
+            // Sent
+        }
+    }
+});
+```
+{% endif %}
+
+Creating a message with location is different from doing that with a file. To create a message with location, {% if platform_name === "JavaScript" %}create an `AV.GeoPoint` object using LeanStorage SDK and pass it on to the `LocationMessage` constructor{% endif %}{% if platform_name === "Objective-C" %}directly embed the location data into an `AVIMLocationMessage` object{% endif %}{% if platform_name === "Android" %}create an `AVGeoPoint` object using LeanStorage SDK and call `setLocation` on an `AVIMLocationMessage` instance{% endif %}:
+
+{% if platform_name === "JavaScript" %}
+```js
+var AV = require('leancloud-storage');
+var { LocationMessage } = require('leancloud-realtime-plugin-typed-messages');
+
+var location = new AV.GeoPoint(31.3753285, 120.9664658);
+var message = new LocationMessage(location);
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+[AVIMLocationMessage messageWithText:nil latitude:31.3753285 longitude:120.9664658 attributes:nil];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMLocationMessage m = new AVIMLocationMessage();
+m.setLocation(new AVGeoPoint(31.3753285, 120.9664658));
+```
+{% endif %}
+
+### Sending a Message
+
+When your message is ready, call the `send` method on the `{{ conversationObjectName }}` instance to send it:
+
+{% if platform_name === "JavaScript" %}
+```js
+var message = new TextMessage('Hello.');
+conversation.send(message);
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMMessage *message = [AVIMTextMessage messageWithText:@"Hello." attributes:nil];
+[conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+    if (succeeded) {
+        NSLog(@"Sent.");
+    }
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMTextMessage msg = new AVIMTextMessage();
+msg.setText("Hello.");
+conversation.sendMessage(msg, new AVIMConversationCallback() {
+    @Override
+    public void done(AVIMException e) {
+        if (e == null) {
+            Log.d("Sent.");
+        }
+    }
+});
+```
+{% endif %}
+
+The `send` method takes optional parameters that either provide additional features or change the way it is sent:
+
+{% if platform_name === "JavaScript" %}
+```js
+conversation.send(message, {
+  transient: true
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+[conversation sendMessage:message options:AVIMMessageSendOptionTransient callback:^(BOOL succeeded, NSError *error) {
+    if (succeeded) {
+        NSLog(@"Sent.");
+    }
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMMessageOption messageOption = new AVIMMessageOption();
+messageOption.setTransient(true);
+conversation.sendMessage(msg, messageOption, new AVIMConversationCallback() {
+    @Override
+    public void done(AVIMException e) {
+        if (e == null) {
+            Log.d("Sent.");
+        }
+    }
+});
+```
+{% endif %}
+
+{% if platform_name === "JavaScript" %}
+Parameter | Type | Note
+--- | --- | ---
+`transient` | Boolean	| Whether this is a transient message or not. See [Transient Messages](#transient-messages).
+`receipt` | Boolean	| Whether to track recipient status or not (only applies to a normal `{{ conversationObjectName }}`). See [Confirming Delivery](#confirming-delivery).
+`will` | Boolean | Whether this is a last-will message or not. The message will not be sent until the current user goes offline. See [Last-Will Messages](#last-will-messages).
+`priority`| MessagePriority | By what priority the message should be delivered (only applies to chatroom and transient `{{ conversationObjectName }}`s). See [Message Priority](#message-priority).
+`pushData` | Object | When the message recipient is offline, push the content defined in the object to the receiving device (only applies to mobile clients using our iOS or Android SDK and only works for normal `{{ conversationObjectName }}`s). See [Push Notifications](#push-notifications).
+{% endif %}
+{% if platform_name === "Objective-C" %}
+{# TODO #}
+{% endif %}
+{% if platform_name === "Android" %}
+{# TODO #}
+{% endif %}
+
+### Receiving Messages
+
+Our SDK automatically receives incoming messages. You can take in message objects from event handlers and react accordingly. Typically your main interest in these received messages is to render them:
+
+{% if platform_name === "JavaScript" %}
+```js
+// Make sure you have loaded the typed messages plugin before you proceed
+// Initialization done, realtime instance ready
+var { Event, TextMessage } = require('leancloud-realtime');
+var { FileMessage, ImageMessage, AudioMessage, VideoMessage, LocationMessage } = require('leancloud-realtime-plugin-typed-messages');
+// Register event handler for MESSAGE
+client.on(Event.MESSAGE, function messageEventHandler(message, conversation) {
+  // Your rendering code goes here
+  var file;
+  switch (message.type) {
+    case TextMessage.TYPE:
+      console.log('Text message received.');
+      console.log('Text: ' + message.getText());
+      console.log('ID: ' + message.id);
+      break;
+    case FileMessage.TYPE:
+      file = message.getFile(); // file is an AV.File instance
+      console.log('File message received.');
+      console.log('URL: ' + file.url());
+      console.log('Size: ' + file.metaData('size'));
+      break;
+    case ImageMessage.TYPE:
+      file = message.getFile();
+      console.log('Image message received.');
+      console.log('URL: ' + file.url());
+      console.log('Width: ' + file.metaData('width'));
+      console.log('Height: ' + file.metaData('height'));
+      break;
+    case AudioMessage.TYPE:
+      file = message.getFile();
+      console.log('Audio message received.');
+      console.log('URL: ' + file.url());
+      console.log('Duration: ' + file.metaData('duration'));
+      break;
+    case VideoMessage.TYPE:
+      file = message.getFile();
+      console.log('Video message received.');
+      console.log('URL: ' + file.url());
+      console.log('Duration: ' + file.metaData('duration'));
+      break;
+    case LocationMessage.TYPE:
+      var location = message.getLocation();
+      console.log('Location message received.');
+      console.log('Latitude: ' + location.latitude);
+      console.log('Longitude: ' + location.longitude);
+      break;
+    default:
+      console.warn('Unknown message type.');
+  }
+});
+```
+
+You can also watch for the `MESSAGE` event on the `Conversation` that receives messages:
+
+```js
+var { Event } = require('leancloud-realtime');
+conversation.on(Event.MESSAGE, function messageEventHandler(message) {
+  // Custom logics here
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message;
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+class MsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
+    @Override
+    public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
+        switch(message.getMessageType()) {
+        case AVIMReservedMessageType.TextMessageType:
+            AVIMTextMessage textMsg = (AVIMTextMessage)message;
+            Logger.d("Text message received.");
+            Logger.d("Text: " + textMsg.getText());
+            Logger.d("ID: " + textMsg.getMessageId());
+            break;
+        case AVIMReservedMessageType.FileMessageType:
+            AVIMFileMessage fileMsg = (AVIMFileMessage)message; // file is an AVFile instance
+            Logger.d("File message received.");
+            Logger.d("URL: " + fileMsg.getFileUrl());
+            Logger.d("Size: " + fileMsg.getSize());
+            break;
+        case AVIMReservedMessageType.ImageMessageType:
+            AVIMImageMessage imageMsg = (AVIMImageMessage)message;
+            Logger.d("Image message received.");
+            Logger.d("URL: " + imageMsg.getFileUrl());
+            Logger.d("Width: " + imageMsg.getWidth());
+            Logger.d("Height: " + imageMsg.getHeight());
+            break;
+        case AVIMReservedMessageType.AudioMessageType:
+            AVIMAudioMessage audioMsg = (AVIMAudioMessage)message;
+            Logger.d("Audio message received.");
+            Logger.d("URL: " + audioMsg.getFileUrl());
+            Logger.d("Duration: " + audioMsg.getDuration());
+            break;
+        case AVIMReservedMessageType.VideoMessageType:
+            AVIMVideoMessage videoMsg = (AVIMAudioMessage)message;
+            Logger.d("Video message received.");
+            Logger.d("URL: " + videoMsg.getFileUrl());
+            Logger.d("Duration: " + videoMsg.getDuration());
+            break;
+        case AVIMReservedMessageType.LocationMessageType:
+            AVIMLocationMessage locMsg = (AVIMLocationMessage)message;
+            Logger.d("Location message received.");
+            Logger.d("Latitude: " + locMsg.getLocation().getLatitude());
+            Logger.d("Longitude: " + locMsg.getLocation().getLongitude());
+            break;
+        }
+    }
+    @Override
+    public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
+        // Custom logics here
+    }
+}
+MsgHandler msgHandler = new MsgHandler();
+AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
+```
+{% endif %}
+
+### Transient Messages
+
+If a message is transient, it cannot be saved on LeanCloud, nor can it be retrieved with query, be taken as the unread for offline users, or be included in a push notification. Its temporary nature makes it perfect for providing instant feedback, such as "someone is typing", or "someone changed the conversation name to something".
+
+The code below defines a [custom message type](#custom-message-types) `OperationMessage` particularly for sending and receiving all user-operation related messages:
+
+{% if platform_name === "JavaScript" %}
+```js
+// operation-message.js
+
+var { TypedMessage, messageType, messageField } = require('leancloud-realtime');
+
+// Written in TypeScript
+// Assign type value, can be other positive number
+@messageType(1)
+@messageField('op')
+class OperationMessage extends TypedMessage { }
+
+// app.js
+
+realtime.createIMClient('Tom').then(function (clientTom) {
+  return clientTom.createConversation({
+    members: ['Jerry']
+  });
+}).then(function (conversation) {
+  var message = new OperationMessage();
+  message.op = 'Typing...';
+  // Make it a transient message
+  return conversation.send(message, {
+    transient: true
+  });
+}).then(function () {
+  console.log('Message successfully sent.');
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+typedef NS_ENUM(NSInteger, YourCustomMessageType) {
+    // Assign type value, can be other positive number
+    YourCustomMessageTypeOperation = 1
+};
+
+@interface YourOperationMessage : AVIMTextMessage <AVIMTypedMessageSubclassing>
+
+@end
+
+@implementation YourOperationMessage
+
++ (AVIMMessageMediaType)classMediaType {
+    return YourCustomMessageTypeOperation;
+}
+
+@end
+
+@implementation ViewController
+
++ (void)load {
+    [YourOperationMessage registerSubclass];
+}
+
+- (void)tomOpenConversation {
+    self.tomClient = [[AVIMClient alloc] initWithClientId:@"Tom"];
+    [self.tomClient openWithCallback:^(BOOL succeeded, NSError *error) {
+        AVIMConversationQuery *query = [self.tomClient conversationQuery];
+        [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
+            self.tomConversation = conversation;
+        }];
+    }];
+}
+
+- (void)textFieldDidChange:(UITextField *)textField {
+    YourOperationMessage *message = [YourOperationMessage messageWithText:@"Typing..." attributes:nil];
+    // Make it a transient message
+    [self.tomConversation sendMessage:message options:AVIMMessageSendOptionTransient callback:nil];
+}
+
+@end
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+// AVIMOperationMessage.java
+
+// Assign type value, can be other positive number
+@AVIMMessageType(type = 1)
+public class AVIMOperationMessage extends AVIMTypedMessage {
+    @AVIMMessageField(name = "op")
+    String op;
+    public String getOp() {
+        return op;
+    }
+    public void setOp(String op) {
+        this.op = op;
+    }
+}
+
+// CustomApplication.java
+
+public CustomApplication extends Application {
+    AVIMMessageManager.registerAVIMMessageType(AVIMOperationMessage.class);
+}
+
+// SomeActivity.java
+
+AVIMClient tom = AVIMClient.getInstance("Tom");
+tom.open(new AVIMClientCallback() {
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+            AVIMConversation conv = client.getConversation("551260efe4b01608686c3e0f");
+            AVIMOperationMessage msg = new AVIMOperationMessage();
+            msg.setOp("Typing...");
+            AVIMMessageOption messageOption = new AVIMMessageOption();
+            // Make it a transient message
+            messageOption.setTransient(true);
+            conv.sendMessage(msg, messageOption, new AVIMConversationCallback() {
+                @Override
+                public void done(AVIMException e) {
+                    if (e == null) {
+                        // Sent
+                    }
+                }
+            });
+        }
+    }
+});
+```
+{% endif %}
+
+You should have the following code ready for other `{{ conversationObjectName }}` members in order for their clients to recognize the new `OperationMessage` type:
+
+{% if platform_name === "JavaScript" %}
+```js
+// operation-message.js is same as above
+
+// app.js
+
+var { Event } = require('leancloud-realtime');
+
+// First register the custom type message
+realtime.register(OperationMessage);
+realtime.createIMClient('Jerry').then(function (jerryClient) {
+  // Register MESSAGE event handler
+  jerryClient.on(Event.MESSAGE, function messageEventHandler(message, conversation) {
+    switch (message.type) {
+      case OperationMessage.TYPE:
+        console.log(message.from + ' is ' + message.op);
+        break;
+      // case ...
+      default:
+        console.warn('Unknown message type.');
+    }
+  });
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+- (void)jerryOnline {
+    self.jerryClient = [[AVIMClient alloc] initWithClientId:@"Jerry"];
+    [self.jerryClient openWithCallback:^(BOOL succeeded, NSError *error) {
+        NSLog("Jerry opened client.")
+    }];
+}
+
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    if (message.mediaType == YourCustomMessageTypeOperation) {
+        NSLog(@"Typing...");
+    }
+}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+// AVIMOperationMessage.java
+
+@AVIMMessageType(type = 1)
+public class AVIMOperationMessage extends AVIMTypedMessage {
+    @AVIMMessageField(name = "op")
+    String op;
+    public String getOp() {
+        return op;
+    }
+    public void setOp(String op) {
+        this.op = op;
+    }
+}
+
+// CustomApplication.java
+
+public CustomApplication extends Application {
+    AVIMMessageManager.registerAVIMMessageType(AVIMOperationMessage.class);
+}
+
+//SomeActivity.java
+
+final String USER_OPERATION = "% is %";
+AVIMMessageManager.registerMessageHandler(AVIMOperationMessage.class,
+    new AVIMTypedMessageHandler<AVIMOperationMessage>() {
+        @Override
+        public void onMessage(AVIMOperationMessage msg, AVIMConversation conv, AVIMClient client) {
+            if ("Jerry".equals(client.getClientId())
+                && "551260efe4b01608686c3e0f".equals(conv.getConversationId())) {
+              String opeartion = String.format(USER_OPERATION, msg.getFrom(), msg.getOp());
+              System.out.println(opeartion);
+            }
+        }
+    }
+);
+AVIMClient jerry = AVIMClient.getInstance("Jerry");
+jerry.open(new AVIMClientCallback() {
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+            // Logged in
+        }
+    }
+});
+```
+{% endif %}
+
+### Last-Will Messages
+
+The purpose of a last-will message is to notify other clients about an ungracefully disconnected client. Each client can specify its last-will message when it connects to the server. The last-will message is just a normal message. The server stores the message until it detects that the client has disconnected ungracefully. In response to the ungraceful disconnect, the server sends the last-will message to all clients of the conversation that the disconnected client was last in.
+
+<img src="images/lastwill-message.png" width="400" class="responsive">
+
+You can leverage it to implement various functions when the connection of a client drops (often to inform other clients about the offline status):
+
+{% if platform_name === "JavaScript" %}
+```js
+var message = new TextMessage('Oops, this is embarassing.');
+// Set the 'will' parameter to make it a last-will message
+conversation.send(message, { will: true }).then(function () {
+  // Message sent successfully
+}).catch(function (error) {
+  // Error handling
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMMessageOption *option = [[AVIMMessageOption alloc] init];
+option.will = YES;
+AVIMMessage *willMessage = [AVIMTextMessage messageWithText:@"Oops, this is embarassing." attributes:nil];
+[conversaiton sendMessage:willMessage option:option callback:^(BOOL succeeded, NSError * _Nullable error) {
+    if (succeeded) {
+        NSLog(@"Message sent successfully.");
+    }
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMTextMessage message = new AVIMTextMessage();
+message.setText("Oops, this is embarassing.");
+AVIMMessageOption option = new AVIMMessageOption();
+option.setWill(true);
+conversation.sendMessage(message, option, new AVIMConversationCallback() {
+    @Override
+    public void done(AVIMException e) {
+        if (e == null) {
+            // Message sent successfully
+        }
+    }
+});
+```
+{% endif %}
+
+If the client is disconnected normally (using the `{% if platform_name === "JavaScript" %}close{% endif %}{% if platform_name === "Objective-C" %}closeWithCallback{% endif %}{% if platform_name === "Android" %}close{% endif %}` method), the server discards the stored last-will message and nothing will be sent.
+
+<!-- 遗愿消息有**如下限制**： 同一时刻只对一个对话生效 -->
+
+### Message Priority
+
+When there are too many chatroom messages causing network congestion, our server will selectively discard some messages of low priority in order to guarantee the efficiency of message delivery.
+
+{% call docs.noteWrap() %}
+Our server won't discard messages in a normal `{{ conversationObjectName }}`. Therefore, priority setting would not have any effect on messages of a normal `{{ conversationObjectName }}`.
+{% endcall %}
+
+| Priority | Apply to |
+| --- | --- |
+| `{% if platform_name === "JavaScript" %}MessagePriority.HIGH{% endif %}{% if platform_name === "Objective-C" %}AVIMMessagePriorityHigh{% endif %}{% if platform_name === "Android" %}MessagePriority.High{% endif %}` | More time-sensitive messages, such as sending gifts and tipping. |
+| `{% if platform_name === "JavaScript" %}MessagePriority.NORMAL{% endif %}{% if platform_name === "Objective-C" %}AVIMMessagePriorityNormal{% endif %}{% if platform_name === "Android" %}MessagePriority.Normal{% endif %}` | Non-repetitive normal text. |
+| `{% if platform_name === "JavaScript" %}MessagePriority.LOW{% endif %}{% if platform_name === "Objective-C" %}AVIMMessagePriorityLow{% endif %}{% if platform_name === "Android" %}MessagePriority.Low{% endif %}` | Less time-sensitive messages, such as real-time comments. |
+
+Message priority can be set in the {% if platform_name === "JavaScript" %}`send` method{% endif %}{% if platform_name === "Objective-C" %}`option`{% endif %}{% if platform_name === "Android" %}`messageOption`{% endif %} of a `{{ conversationObjectName }}` instance:
+
+{% if platform_name === "JavaScript" %}
+```js
+var { Realtime, TextMessage, MessagePriority } = require('leancloud-realtime');
+var realtime = new Realtime({
+  appId:  '{{appId}}',
+  appKey: '{{appKey}}',
+  region: 'cn'
+});
+
+realtime.createIMClient('host').then(function (clientHost) {
+  return clientHost.createConversation({
+    members: ['broadcast'],
+    name:    'Tom & Toodle\'s Wedding',
+    transient: true
+  });
+}).then(function (conversation) {
+  return conversation.send(
+    new TextMessage('Tom is about to kiss Toodle!'),
+    { priority: MessagePriority.HIGH }
+  );
+}).then(function (message) {
+  console.log(message);
+}).catch(console.error);
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+self.client = [[AVIMClient alloc] initWithClientId:@"host"];
+[self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+    [self.client createConversationWithName:@"Tom & Toodle's Wedding" clientIds:@[@"broadcast"] callback:^(AVIMConversation *conversation, NSError *error) {
+        AVIMMessageOption *option = [[AVIMMessageOption alloc] init];
+        option.priority = AVIMMessagePriorityHigh;
+        [conversation sendMessage:[AVIMTextMessage messageWithText:@"Tom is about to kiss Toodle!" attributes:nil] option:option callback:^(BOOL succeeded, NSError * _Nullable error) {
+            // Error handling
+        }];
+    }];
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMClient tom = AVIMClient.getInstance("host");
+tom.open(new AVIMClientCallback() {
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+            client.createConversation(Arrays.asList("broadcast"), "Tom & Toodle's Wedding", null,
+            new AVIMConversationCreatedCallback() {
+                @Override
+                public void done(AVIMConversation conv, AVIMException e) {
+                    if (e == null) {
+                        AVIMTextMessage msg = new AVIMTextMessage();
+                        msg.setText("Tom is about to kiss Toodle!");
+                        AVIMMessageOption messageOption = new AVIMMessageOption();
+                        messageOption.setPriority(AVIMMessageOption.MessagePriority.High);
+                        conv.sendMessage(msg, messageOption, new AVIMConversationCallback() {
+                            @Override
+                            public void done(AVIMException e) {
+                                if (e == null) {
+                                    // Success
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
+});
+```
+{% endif %}
+
+### Mentions
+
+When participating in group conversations with a lot of active members, you may need to grab someone's attention in a group or give a hint to someone where to pay attention to when they come back after a long conversation.
+
+Mentioning other people in groups is handy since it sends them a notification about your message if they didn't mute the group. You also have the option to send them a notification anyway even though they muted the group. The option can be found in your app's [Messaging Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf).
+
+<!-- – even if they don't have a username. Just type the @ symbol and select whoever you would like to address.  -->
+
+When sending a message, you can use the `{% if platform_name === "JavaScript" %}setMentionList{% endif %}{% if platform_name === "Objective-C" %}mentionList{% endif %}{% if platform_name === "Android" %}{# TODO #}{% endif %}` method with a single `clientId` to mention a specific person or an array of `clientId`s to mention a group of people:
+
+{% if platform_name === "JavaScript" %}
+```js
+const message = new TextMessage(`@Tom`).setMentionList('Tom');
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMMessage *message = [AVIMTextMessage messageWithText:@"@Tom" attributes:nil];
+message.mentionList = @[@"Tom"];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+{# TODO #}
+```
+{% endif %}
+
+You can also mention everyone in the group:
+
+{% if platform_name === "JavaScript" %}
+```js
+const message = new TextMessage(`@all`).mentionAll();
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMMessage *message = [AVIMTextMessage messageWithText:@"@all" attributes:nil];
+message.mentionAll = YES;
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+{# TODO #}
+```
+{% endif %}
+
+When a message is received, you can get a list of `clientId`s that have been mentioned using the `{% if platform_name === "JavaScript" %}getMentionList{% endif %}{% if platform_name === "Objective-C" %}mentionList{% endif %}{% if platform_name === "Android" %}getMentionList{% endif %}` method on the message object:
+
+{% if platform_name === "JavaScript" %}
+```js
+client.on(Event.MESSAGE, function messageEventHandler(message, conversation) {
+  var mentionList = message.getMentionList();
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    NSArray *mentionList = message.mentionList;
+}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+@Override
+public void onMessage(AVIMAudioMessage msg, AVIMConversation conv, AVIMClient client) {
+    List<String> currentMsgMentionUserList = message.getMentionList();
+}
+```
+{% endif %}
+
+The message object has a flag `{% if platform_name === "JavaScript" %}mentionedAll{% endif %}{% if platform_name === "Objective-C" %}mentionAll{% endif %}{% if platform_name === "Android" %}isMentionAll{% endif %}` that determines if all members of the conversation have been mentioned:
+
+{% if platform_name === "JavaScript" %}
+```js
+client.on(Event.MESSAGE, function messageEventHandler(message, conversation) {
+  var mentionedAll = receivedMessage.mentionedAll;
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    BOOL mentionAll = message.mentionAll;
+}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+@Override
+public void onMessage(AVIMAudioMessage msg, AVIMConversation conv, AVIMClient client) {
+    boolean currentMsgMentionAllUsers = message.isMentionAll();
+}
+```
+{% endif %}
+
+With the `mentioned` flag, you can easily tell whether the current user has been mentioned:
+
+{% if platform_name === "JavaScript" %}
+```js
+client.on(Event.MESSAGE, function messageEventHandler(message, conversation) {
+  var mentioned = receivedMessage.mentioned;
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    BOOL mentioned = message.mentioned;
+}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+@Override
+public void onMessage(AVIMAudioMessage msg, AVIMConversation conv, AVIMClient client) {
+    boolean currentMsgMentionedMe = message.mentioned();
+}
+```
+{% endif %}
+
+### Custom Message Types
+
+## Push Notifications
+
+## Querying
+
+Our SDK provides a flexible and expressive interface to query through conversations and messages.
+
+### Querying Conversations
+
+If a `{{ conversationObjectName }}`'s `id` is known, you can use the `{% if platform_name === "JavaScript" %}getConversation{% endif %}{% if platform_name === "Objective-C" %}getConversationById{% endif %}{% if platform_name === "Android" %}getConversationsQuery{% endif %}` method on the `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}` instance to get details about the `{{ conversationObjectName }}`:
+
+{% if platform_name === "JavaScript" %}
+```js
+client.getConversation(CONVERSATION_ID).then(function (conversation) {
+  console.log(conversation.id);
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMConversationQuery *query = [self.client conversationQuery];
+[query getConversationById:@"CONVERSATION_ID" callback:^(AVIMConversation *conversation, NSError *error) {
+    if (succeeded) {
+        NSLog(@"Success.");
+    }
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMConversationsQuery query = client.getConversationsQuery();
+query.whereEqualTo("objectId", "CONVERSATION_ID");
+query.findInBackground(new AVIMConversationQueryCallback() {
+    @Override
+    public void done(List<AVIMConversation> convs, AVIMException e){
+        if (e == null) {
+            if (convs != null && !convs.isEmpty()) {
+                convs.get(0);
+            }
+        }
+    }
+});
+```
+{% endif %}
+
+When a client connects to the server, the first thing it will probably do is to get the most recent 10 `Conversations` including chatrooms:
+
+{% if platform_name === "JavaScript" %}
+```js
+client.getQuery().containsMembers(['Tom']).find().then(function (conversations) {
+  // Sorted by lastMessageAt
+  conversations.map(function (conversation) {
+    console.log(conversation.lastMessageAt.toString(), conversation.members);
+  });
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMConversationQuery *query = [self.client conversationQuery];
+[query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+    NSLog(@"%ld conversations found.", [objects count]);
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMConversationsQuery query = client.getConversationsQuery();
+query.findInBackground(new AVIMConversationQueryCallback() {
+    @Override
+    public void done(List<AVIMConversation> convs, AVIMException e) {
+        if (e == null) {
+            // convs is an array of conversations found
+            // Sorted by lastMessageAt
+        }
+    }
+}); 
+```
+{% endif %}
+
+By default a query returns 10 results at a time. You can specify the `limit` parameter to change the number of results to be returned:  
+
+{% if platform_name === "JavaScript" %}
+```js
+var query = tom.getQuery();
+query.limit(20).containsMembers(['Tom']).find().then(function (conversations) {
+  console.log(conversations.length);
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMConversationQuery *query = [self.client conversationQuery];
+query.limit = 20;
+[query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+    NSLog(@"Success.");
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMConversationsQuery query = client.getConversationsQuery();
+query.limit(20);
+query.findInBackground(new AVIMConversationQueryCallback() {
+    @Override
+    public void done(List<AVIMConversation> convs, AVIMException e) {
+        if (e == null) {
+            // convs is an array of conversations found
+            // Sorted by lastMessageAt
+        }
+    }
+});
+```
+{% endif %}
+
+You can put constrains on a `{{ conversationObjectName }}` to narrow down your search. All the [built-in properties](#conversation-properties) can be used as constrains:
+
+{% if platform_name === "JavaScript" %}
+```js
+// Conversation name is 'Tom & Jerry'
+query.equalTo('name', 'Tom & Jerry');
+
+// type is a custom property
+query.notEqualTo('type', 'private');
+
+// Conversation name contains 'Wedding'
+query.contains('name', 'Wedding');
+
+// Active conversations since yesterday (last message date > yesterday)
+var yesterday = new Date(Date.now() - 24 * 3600 * 1000);
+query.greaterThan('lm', yesterday);
+
+// age is a custom property
+query.greaterThan('age', 18);
+
+// Use regular expression to find
+// conversations with Chinese names
+query.matches('name', /[\\u4e00-\\u9fa5]/);
+
+// Find conversations with Bob and Jerry inside
+query.withMembers(['Bob', 'Jerry']);
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+// Conversation name is "Tom & Jerry"
+[query whereKey:@"name" equalTo:@"Tom & Jerry"];
+
+// type is a custom property
+[query whereKey:@"attr.type" notEqualTo:@"private"];
+
+// Conversation name contains "Wedding"
+[query whereKey:@"name" containsString:@"Wedding"];
+
+// Active conversations since yesterday (last message date > yesterday)
+NSDate *today = [NSDate date];
+NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
+[query whereKey:@"lm" greaterThan:yesterday];
+
+// age is a custom property
+[query whereKey:@"age" greaterThan:@(18)];
+
+// Use regular expression to find
+// conversations with Chinese names
+[query whereKey:AVIMAttr(@"name") matchesRegex:@"[\u4e00-\u9fa5]"];
+
+// Find conversations with Bob and Jerry inside
+[query whereKey:@"m" containAllObjectsInArray:@[@"Bob", @"Jerry"]];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+// Conversation name is "Tom & Jerry"
+conversationQuery.whereEqualTo("name", "Tom & Jerry");
+
+// type is a custom property
+conversationQuery.whereNotEqualTo("type", "private");
+
+// Conversation name contains "Wedding"
+conversationQuery.whereContains("name", "Wedding");
+
+// Active conversations since yesterday (last message date > yesterday)
+Calendar yesterday= Calendar.getInstance();
+yesterday.add(Calendar.DATE, -1);
+conversationQuery.whereGreaterThan("lm", yesterday);
+
+// age is a custom property
+conversationQuery.whereGreaterThan("attr.age", 18);
+
+// Use regular expression to find
+// conversations with Chinese names
+query.whereMatches("attr.name", "[\\u4e00-\\u9fa5]");
+
+// Find conversations with Bob and Jerry inside
+query.withMembers(Arrays.as("Bob", "Jerry"));
+```
+{% endif %}
+
+You can use multiple constrains on one query:
+
+{% if platform_name === "JavaScript" %}
+```js
+// name contains 'fun' and age is less than 18 
+query.contains('name', 'fun').lessThan('age', 18);
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+[query whereKey:AVIMAttr(@"name") containsString:@"fun"];
+[query whereKey:AVIMAttr(@"age") lessThan:@(18)];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+query.whereContains("attr.name", "fun");
+query.whereLessThan("attr.age", 18);
+```
+{% endif %}
+
+The code below gets all the conversations you are in, including system conversations:
+
+{% if platform_name === "JavaScript" %}
+```js
+Promise.all([
+  client.getQuery().containsMembers([client.id]).find(),
+  client.getServiceConversationQuery().find()
+]).then(function (participatedConversations, serviceConversations) {
+}).catch(function (error) {
+  // Error handling
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMConversationQuery *query1 = [[AVIMClient defaultClient] conversationQuery];
+[query1 whereKey:@"m" equalTo:@"clientId"];
+
+AVIMConversationQuery *query2 = [[AVIMClient defaultClient] conversationQuery];
+[query2 whereKey:@"sys" equalTo:@(YES)];
+
+AVIMConversationQuery *query = [AVIMConversationQuery orQueryWithSubqueries:@[ query1, query2 ]];
+
+[query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+    NSLog(@"%ld conversations found.", [objects count]);
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMConversationsQuery memberQuery = client.getConversationsQuery();
+memberQuery.whereContainsAll("m", Arrays.asList("clientId"));
+
+AVIMConversationsQuery sysQuery = client.getConversationsQuery();
+sysQuery.whereEqualTo("sys", true);
+
+AVIMConversationsQuery.or(Arrays.asList(memberQuery, sysQuery)).findInBackground(new AVIMConversationQueryCallback() {
+    @Override
+    public void done(List<AVIMConversation> conversations, AVIMException e) {
+        // conversations is a list of conversations containing "clientId"
+        // including system conversations
+    }
+});
+```
+{% endif %}
+
+Get conversations that were active from 2017-01-01 to 2017-02-01:
+
+{% if platform_name === "JavaScript" %}
+```js
+client.getQuery()
+  .greaterThanOrEqualTo('lm', new Date('2017-01-01 00:00:00'))
+  .lessThan('lm', new Date('2017-02-01 00:00:00'));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+[dateFormatter setDateFormat:@"yyyy-MM-dd"];
+
+AVIMConversationQuery *query1 = [[AVIMClient defaultClient] conversationQuery];
+[query1 whereKey:@"lm" greaterThan:[dateFormatter dateFromString:@"2017-01-01"]];
+
+AVIMConversationQuery *query2 = [[AVIMClient defaultClient] conversationQuery];
+[query1 whereKey:@"lm" lessThan:[dateFormatter dateFromString:@"2017-02-01"]];
+
+AVIMConversationQuery *query = [AVIMConversationQuery andQueryWithSubqueries:@[ query1, query2 ]];
+
+[query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+    NSLog(@"%ld conversations found.", [objects count]);
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMConversationsQuery query = client.getConversationsQuery();
+query.whereGreaterThan("lm", getDateWithDateString("2017-01-01"));
+query.whereLessThan("lm", getDateWithDateString("2017-02-01"));
+query.findInBackground(new AVIMConversationQueryCallback() {
+    @Override
+    public void done(List<AVIMConversation> conversations, AVIMException e) {
+        // conversations is a list of conversations active between 2017-01-01 and 2017-02-01
+    }
+});
+```
+{% endif %}
+
+Use the `doesNotExist` method to look for `null` values:
+
+{% if platform_name === "JavaScript" %}
+```js
+client.getQuery()
+  // lm does not exist
+  .doesNotExist('lm')
+  .find().then(function (conversations) {
+
+  });
+
+// lm exists
+client.getQuery()
+  .exists('lm');
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMConversationQuery *query = [client conversationQuery];
+// lm does not exist
+[query whereKeyDoesNotExist:@"lm"];
+[query findConversationsWithCallback:^(NSArray *conversations, NSError *error) {
+    NSLog(@"%ld conversations found.", [conversations count]);
+}];
+
+AVIMConversationQuery *query = [client conversationQuery];
+// lm exists
+[query whereKeyExists:@"lm"];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMConversationsQuery query = client.getConversationsQuery();
+// lm does not exist
+query.whereDoesNotExist("lm");
+query.findInBackground(new AVIMConversationQueryCallback() {
+    @Override
+    public void done(List<AVIMConversation> convs, AVIMException e) {
+        if (e == null) {
+            if (convs != null && !convs.isEmpty()) {
+                // convs is a list of conversations found
+            }
+        }
+    }
+});
+
+AVIMConversationsQuery query = client.getConversationsQuery();
+// lm exists
+query.whereExists("lm");
+```
+{% endif %}
+
+<!-- #### 缓存查询
+
+JavaScript SDK 会对按照对话 id 对对话进行内存字典缓存，但不会进行持久化的缓存。 -->
+
+### Querying Messages
+
+All messages of normal conversations are saved on LeanCloud. You can use the `{% if platform_name === "JavaScript" %}queryMessages{% endif %}{% if platform_name === "Objective-C" %}queryMessagesWithLimit{% endif %}{% if platform_name === "Android" %}queryMessages{% endif %}` method on a `{{ conversationObjectName }}` instance to get messages of a specific conversation. If you omit the parameter for limit, you get the last 20 messages. The limit can be set from `1` to `1000`:
+
+{% if platform_name === "JavaScript" %}
+```js
+conversation.queryMessages({
+  limit: 10, // Ranging from 1 to 1000, default to 20
+}).then(function (messages) {
+  // The last 10 message
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMConversationQuery *query = [self.client conversationQuery];
+[query getConversationById:@"objectId" callback:^(AVIMConversation *conversation, NSError *error) {
+    // queryMessagesWithLimit ranges from 1 to 1000, default to 20
+    [conversation queryMessagesWithLimit:10 callback:^(NSArray *objects, NSError *error) {
+        NSLog(@"Success.");
+    }];
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+AVIMConversation conv = client.getConversation("objectId");
+int limit = 10; // Ranging from 1 to 1000, default to 20
+conv.queryMessages(limit, new AVIMMessagesQueryCallback() {
+    @Override
+    public void done(List<AVIMMessage> messages, AVIMException e) {
+        if (e == null) {
+            // Success
+        }
+    }
+});
+```
+{% endif %}
+
+{% if platform_name === "JavaScript" %}
+The `createMessagesIterator` method on the `Conversation` instance allows you to iterate messages on the server and load them into the client section by section:
+{% endif %}
+{% if platform_name === "Objective-C" %}
+You can retrieve history messages right before a certain message:
+{% endif %}
+{% if platform_name === "Android" %}
+You can retrieve history messages right before a certain message:
+{% endif %}
+
+{% if platform_name === "JavaScript" %}
+```js
+// Create an iterator and fetch 10 messages each time
+var messageIterator = conversation.createMessagesIterator({ limit: 10 });
+// Call 'next' for the first time and 10 messages returned with more to come, so done is false
+messageIterator.next().then(function (result) {
+  // result: {
+  //   value: [message1, ..., message10],
+  //   done: false,
+  // }
+}).catch(console.error.bind(console));
+// Call 'next' for the second time and 10 messages returned with more to come, so done is false
+messageIterator.next().then(function (result) {
+  // result: {
+  //   value: [message11, ..., message20],
+  //   done: false,
+  // }
+}).catch(console.error.bind(console));
+// Call 'next' for the third time and 1 message returned with no more messages, so done is true 
+messageIterator.next().then(function (result) {
+  // No more messages
+  // result: { value: [message21], done: true }
+}).catch(console.error.bind(console));
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMConversationQuery *query = [self.client conversationQuery];
+[query getConversationById:@"conversationId" callback:^(AVIMConversation *conversation, NSError *error) {
+    [conversation queryMessagesBeforeId:@"grqEG2OqSL+i8FSX9j3l2g" timestamp:1436137606358 limit:10 callback:^(NSArray *objects, NSError *error) {
+        NSLog(@"Success.");
+    }];
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+final AVIMConversation conv = client.getConversation("conversationId");
+conv.queryMessages(new AVIMMessagesQueryCallback(){
+    @Override
+    public void done(List<AVIMMessage> messages, AVIMException e) {
+        if (e == null) {
+            if (messages != null && !messages.isEmpty()) {
+                Log.d("Tom & Jerry", "got " + messages.size() + " messages.");
+                AVIMMessage oldestMessage = messages.get(0);
+                conv.queryMessages(
+                    oldestMessage.getMessageId(),
+                    oldestMessage.getTimestamp(),
+                    20,
+                    new AVIMMessageQueryCallback(){
+                        @Override
+                        public void done(List<AVIMMessage> msgs, AVIMException e) {
+                            if (e == null) {
+                                Log.d("Tom & Jerry", "got " + msgs.size() + " messages.");
+                            }
+                        }
+                    }
+                );
+            }
+        }
+    }
+});
+```
+{% endif %}
+
+You can also find messages by type:
+
+{% if platform_name === "JavaScript" %}
+```js
+conversation.queryMessages({ type: ImageMessage.TYPE }).then(messages => {
+  console.log(messages);
+}).catch(console.error);
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+AVIMConversationQuery *query = [client conversationQuery];
+[query getConversationById:@"conversationId" callback:^(AVIMConversation *conversation, NSError *error) {
+    if (!error) {
+        [conversation queryMediaMessagesFromServerWithType:AVIMMessageMediaTypeImage limit:10 fromMessageId:nil fromTimestamp:0 callback:^(NSArray *messages, NSError *error) {
+            if (!error) {
+                NSLog(@"Success.");
+            }
+        }];
+    }
+}];
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+int msgType = .AVIMMessageType.TEXT_MESSAGE_TYPE;
+conversation.queryMessagesByType(msgType, limit, new AVIMMessagesQueryCallback() {
+    @Override
+    public void done(List<AVIMMessage> messages, AVIMException e){
+    }
+});
+```
+{% endif %}
+
+<!-- ## Client Message Caching
+
+JavaScript SDK 没有客户端聊天记录缓存机制。 -->
+
+### Client Online Status
+
+By providing a list of `clientId`s to the `{% if platform_name === "JavaScript" %}ping{% endif %}{% if platform_name === "Objective-C" %}{# TODO #}{% endif %}{% if platform_name === "Android" %}{# TODO #}{% endif %}` method on the `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}` instance, you can figure out which clients are online.
+
+{% if platform_name === "JavaScript" %}
+```js
+client.ping(['Jerry']);
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+{# TODO #}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+{# TODO #}
+```
+{% endif %}
+
+## Message Keyword Screening
+
+To abide by the national cyber-security law, our server proactively monitors all messages in group conversations (including temporary conversations and system conversations). It uses a pre-defined dictionary to conduct keyword scanning, which detects and blocks certain keywords or phrases by replacing them with two asterisk symbols (`**`).
+
+Our server supports user-defined dictionary so that you can use it to extend the scope of standard screening to fit your needs. All you need to do is to prepare the dictionary file and upload it to your app's [Messaging Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf).
+
+Your dictionary file must be in the following format:
+
+- Must be a plain-text file with UTF-8 encoding.
+- Each phrase or keyword should be on a separate line.
+- Keywords may contain spaces. If you have `damn it` taking a line, these two words will be screened and replaced altogether.
+
+New dictionary uploaded will overwrite the previous one. You also need to turn on the **Screen sensitive keywords in messages** option located just above the upload button in order for your dictionary to be used in conjunction with ours.
+
+If you want to implement more advanced features like message content censoring, you can tap into the `_messageReceived` hook provided by LeanEngine where you will have full control over everything about messages.
+
+## Authentication
+
+<!-- ## Synchronization  -->
+
+## Blacklist
+
+Blacklist is a list of blocked users that can be applied to a group conversation (including temporary conversation and system conversation).
+
+<!-- Blacklist is a list of blocked users or Conversations. Blacklisting is intended to hide messages from you that you're not interested in, for example spam messages, people who are harassing you that you want to ignore, etc. Blacklisted people don't receive anything when they send you a message, from their point of view they wouldn't even know that they're blacklisted. -->
+
+For example, if a user has been blocked in a `{{ conversationObjectName }}`, they will not be able to join that `{{ conversationObjectName }}` again or be added to it by other people anymore. They will be removed from that `{{ conversationObjectName }}` if they were a member of it. Each `{{ conversationObjectName }}` can have up to 500 blacklisted users.
+
+{% if platform_name === "JavaScript" %}
+```js
+// Block a single user with their clientId
+conversation.blockMembers('Tom');
+// Take multiple users off the blacklist
+conversation.unblockMembers(['Tom', 'Jerry']);
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+{# TODO #}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+{# TODO #}
+```
+{% endif %}
+
+When a user is being blacklisted in a `{{ conversationObjectName }}`, our SDK will send out `MEMBERS_BLOCKED` event to all members of the `{{ conversationObjectName }}` and `BLOCKED` event specifically to the blocked user. You can decide what to do with these events, like whether they should get notified or not:
+
+{% if platform_name === "JavaScript" %}
+```js
+client.on(Event.MEMBERS_BLOCKED, function () {
+  console.log('Ah oh, someone has been blocked...');
+});
+
+client.on(Event.BLOCKED, function () {
+  // The current user
+  console.log('OMG, I\'ve been blocked.');
+});
+```
+{% endif %}
+{% if platform_name === "Objective-C" %}
+```objc
+{# TODO #}
+```
+{% endif %}
+{% if platform_name === "Android" %}
+```java
+{# TODO #}
+```
+{% endif %}
+
+<!-- Our SDK allows a user to block any Group Conversations (including Temporary Conversation and System Conversation) they don't want to take part in and get messages from. It also prevents other people from adding a user to his or her blacklisted Conversations. -->
+
+{% call docs.noteWrap() %}
+Please note that currently we don't support a user to block other users or conversations.
+{% endcall %}
+
+{% call docs.noteWrap() %}
+Blacklisting is a paid feature on subscription. You can subscribe or unsubscribe to it anytime in your app's [Messaging Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf).
+{% endcall %}
+
+## Limitations
+
+There are limits on how frequently an `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}` can perform certain tasks:
+
+- It can send a maximum of 60 messages per minute.
+- It can issue a maximum of 120 queries for messages per minute.
+- It can perform other operations 30 times at most per minute, such as joining a conversation, leaving a conversation, opening or closing the connection, etc.
+
+Any request that was sent through our SDK but reached any of the above-mentioned limits will be turned down by the server with timeout errors. However, these limits don't apply to REST API requests.
+
+The total messages allowed to be sent within each app is limited to 10,000,000. If it doesn't suffice, please [contact support](mailto:support@leancloud.rocks).
+
+A single message sent through `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}` should not exceed 5 KB.
+
+A normal conversation can have up to 500 members. If you add more than 500 `id`s to the `m` field (members) in the `_Conversation` class with LeanStorage API, only the first 500 will be added.
+
+If the server detects that a `clientId` is used with more than 5 different IP addresses at the same time, it will log that `clientId` and count it with each IP address combination as a separate user going forward. We advise against using the same `clientId`s on a large volume of devices for messaging.
+
+Each `{{ conversationObjectName }}` can hold no more than 100 unreceived messages for offline users. The LeanMessage server follows a "first in, first out" policy by removing the oldest messages while saving the latest ones. Messages that have been removed can be obtained later using [queries](#querying-messages), but won't be included in push notifications or counted as unread messages.
+
+If a user has more than 50 `{{ conversationObjectName }}`s with unreceived messages, the server will randomly pick 50 `{{ conversationObjectName }}`s out of them and push messages and unread message counts of them to the client when the user reconnects. Messages being left out will not disappear but can be obtained later using [queries](#querying-messages).
+
+Each app is allowed to send at most 30 system broadcast messages per day.
+
+### Retention of Conversations
+
+A `{{ conversationObjectName }}` will be regarded as inactive and removed from the cloud database for good if any of the following circumstances occur:
+
+- The `{{ conversationObjectName }}` hasn't sent any new messages via SDK or REST API in the past 12 months.
+- No fields in the `_Conversation` class associated with the `{{ conversationObjectName }}` have been updated in the past 12 months.
+
+As `{{ conversationObjectName }}` queries don't update anything in the `_Conversation` class, `{{ conversationObjectName }}`s with only querying activities and without messaging activities will still be treated as inactive ones.
+
+When a `{{ conversationObjectName }}` is deleted by the cloud due to inactivity, all its messages will be deleted and cannot be recovered anymore. Any client that attempts to retrieve it later will receive `4401 INVALID_MESSAGING_TARGET` error in the response indicating that the `{{ conversationObjectName }}` does not exist. Active `{{ conversationObjectName }}`s will never be removed from the cloud.
+
+This policy applies to all types of conversations, including temporary conversations and system conversations.
+
+### Retention of Messages
+
+By default, a message is kept in the cloud for 6 months since its existence. In other words, a `{{ conversationObjectName }}` can pull messages created within the last 6 months.
+
+If longer message history matters to you, you can either [contact support](mailto:support@leancloud.rocks) and pay to extend this 6-month period to 3 years, or use our REST API to pull messages off and save them on your own server.
+
+## Error Codes
