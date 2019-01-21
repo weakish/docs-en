@@ -302,7 +302,7 @@ Storing data on LeanCloud is built around `{{ baseObjectName }}`. Each `{{ baseO
 For example, the `{{ baseObjectName }}` storing a simple todo item may contain the following data:
 
 ```json
-title:       "Email Linda to confirm appointment"
+title:       "Email Linda to confirm appointment",
 isComplete:  false,
 priority:    2,
 tags:        ["work", "sales"]
@@ -537,7 +537,7 @@ There are several built-in fields that are provided by default which you don't n
 Built-in Field | Type | Description
 --- | --- | ---
 `objectId` | {{ "`str`" if platform_name === "Python" else "`String`" }} | A unique identifier for each saved object.
-`ACL` | {{ "`leancloud.ACL`" if platform_name === "Python" else "`ACL`" }} | Access Control List, a JSON-compatible data defining the read and write permissions of other people.
+`ACL` | {{ "`leancloud.ACL`" if platform_name === "Python" else "`ACL`" }} | Access Control List, JSON-compatible data defining the read and write permissions of other people.
 `createdAt` | {% if platform_name === "JavaScript" %}`Date`{% endif %}{% if platform_name === "Swift" %}`NSDate`{% endif %}{% if platform_name === "Android" %}`Date`{% endif %} | The time the object was created.
 `updatedAt` | {% if platform_name === "JavaScript" %}`Date`{% endif %}{% if platform_name === "Swift" %}`NSDate`{% endif %}{% if platform_name === "Android" %}`Date`{% endif %} | The time the object was last modified.
 
