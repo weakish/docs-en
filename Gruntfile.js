@@ -1,7 +1,6 @@
 'use strict';
 var axios = require('axios');
 var serveStatic = require('serve-static');
-var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
 var proxySnippet = require("grunt-connect-proxy/lib/utils").proxyRequest;
 var mountFolder = function(connect, dir) {
     return serveStatic(require('path').resolve(dir));
