@@ -1025,7 +1025,7 @@ You can delete a given field of an object with the `{% if platform_name === "Jav
 ```js
 var todo = AV.Object.createWithoutData('Todo', '57328ca079bc44005c2472d0');
 
-// The content field will be empty
+// The content field will be removed
 todo.unset('content');
 
 // Save the object to the cloud
