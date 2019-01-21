@@ -543,7 +543,7 @@ Built-in Field | Type | Description
 
 Each of these fields is filled in by the cloud automatically and doesn't exist on the local `{{ baseObjectName }}` until a save operation has been completed.
 
-Field names, or **keys**, must be alphanumeric strings. A custom key can neither start with double underscores `__`, nor be identical to any system reserved words or built-in field names (`ACL`, `className`, `createdAt`, `objectId`, and `updatedAt`) regardless of letter cases.
+Field names, or **keys**, must be strings of alphanumeric and underscore. A custom key can neither start with double underscores `__`, nor be identical to any system reserved words or built-in field names (`ACL`, `className`, `createdAt`, `objectId`, and `updatedAt`) regardless of letter cases.
 
 **Values** can be strings, numbers, booleans, or even arrays and dictionaries — anything that can be JSON-encoded. See [Data Types](#data-types) for more information.
 
