@@ -10,7 +10,7 @@ Designed for asynchronous person-to-person and business-to-consumer messaging, L
 - Rich-content messages combining text, rich media content, and application data.
 - Message delivery and read receipts for each conversation participant.
 - [Mentioning people](#mentions) in group conversations, muting group conversations, [typing indicators](#typing-indicators), [message recall](#message-recall), and [message revision](#message-revision).
-- Integrated support for mobile push notifications via APNs and FCM.
+- Integrated support for mobile push notifications{% if platform_name === "Objective-C" %} via APNs{% endif %}{% if platform_name === "Android" %} via FCM{% endif %}.
 - Built-in user management.
 - A flexible querying interface for searching and retrieving data.
 - Blocking and suspension of users.
@@ -277,9 +277,23 @@ The approach using `AV.User` depends on LeanStorage SDK. See [Installing Plugins
 
 Once connected to the server either way, there is no difference in using any functionalities described in the rest of this documentation.
 
-Please note that you only need to call `{% if platform_name === "JavaScript" %}createIMClient{% endif %}{% if platform_name === "Objective-C" %}openWithCallback{% endif %}{% if platform_name === "Android" %}open{% endif %}` **once** throughout your application and throughout the lifespan of your application.
+{% if platform_name === "JavaScript" %}
+Please note that you only need to call `createIMClient` **once** throughout your application and throughout the lifespan of your application.
 
-Internally our SDK will not create multiple `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}` instances for the same `clientId`, which means that if you call the `{% if platform_name === "JavaScript" %}createIMClient{% endif %}{% if platform_name === "Objective-C" %}openWithCallback{% endif %}{% if platform_name === "Android" %}open{% endif %}` method multiple times with the same `clientId`, you will always get the same `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}` instance. However, there can be scenarios where multiple `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}`s are needed in one place, such as allowing user to switch accounts within your app. In such case, try to create two `{% if platform_name === "JavaScript" %}IMClient{% endif %}{% if platform_name === "Objective-C" %}AVIMClient{% endif %}{% if platform_name === "Android" %}AVIMClient{% endif %}`s with **different** `clientId`s, which will make both of them functional.
+Internally our SDK will not create multiple `IMClient` instances for the same `clientId`, which means that if you call the `createIMClient` method multiple times with the same `clientId`, you will always get the same `IMClient` instance. However, there can be scenarios where multiple `IMClient`s are needed in one place, such as allowing user to switch accounts within your app. In such case, try to create two `IMClient`s with **different** `clientId`s, which will make both of them functional.
+{% endif %}
+{% if platform_name === "Objective-C" %}
+<!-- Write something else here? Or remove this part? -->
+{# TODO #}
+{% endif %}
+{% if platform_name === "Android" %}
+<!-- Does this apply to Android? -->
+<!--
+Please note that you only need to call `open` **once** throughout your application and throughout the lifespan of your application.
+
+Internally our SDK will not create multiple `AVIMClient` instances for the same `clientId`, which means that if you call the `open` method multiple times with the same `clientId`, you will always get the same `AVIMClient` instance. However, there can be scenarios where multiple `AVIMClient`s are needed in one place, such as allowing user to switch accounts within your app. In such case, try to create two `AVIMClient`s with **different** `clientId`s, which will make both of them functional.
+-->
+{% endif %}
 
 ### Disconnecting
 
@@ -445,9 +459,8 @@ clientTom.getConversation(CONVERSATION_ID).then(function (conversation) {
 ```objc
 AVIMConversationQuery *query = [self.client conversationQuery];
 [query getConversationById:@"CONVERSATION_ID" callback:^(AVIMConversation *conversation, NSError *error) {
-    AVIMConversationUpdateBuilder *updateBuilder = [conversation newUpdateBuilder];
-    updateBuilder.name = @"Cats Love Mice";
-    [conversation update:[updateBuilder dictionary] callback:^(BOOL succeeded, NSError *error) {
+    conversation[@"name"] = @"Cats Love Mice";
+    [conversation updateWithCallback:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             NSLog(@"Name updated.");
         }
@@ -662,7 +675,7 @@ Adding user C to conversation 1 will lead to the following result:
 
 If a user wants to stop receiving messages from a `{{ conversationObjectName }}` without leaving the conversation, you can use the `{% if platform_name === "JavaScript" %}mute{% endif %}{% if platform_name === "Objective-C" %}muteWithCallback{% endif %}{% if platform_name === "Android" %}mute{% endif %}` method to put the target `{{ conversationObjectName }}` into "Do-Not-Disturb" mode.
 
-For iOS and Windows Phone users, the server also stops sending push notifications for new messages in the muted `{{ conversationObjectName }}` when the user is offline.
+For iOS users, the server also stops sending push notifications for new messages in the muted `{{ conversationObjectName }}` when the user is offline.
 
 {% if platform_name === "JavaScript" %}
 ```js
@@ -1403,7 +1416,7 @@ realtime.createIMClient('host').then(function (clientHost) {
 ```objc
 self.client = [[AVIMClient alloc] initWithClientId:@"host"];
 [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
-    [self.client createConversationWithName:@"Tom & Toodle's Wedding" clientIds:@[@"broadcast"] callback:^(AVIMConversation *conversation, NSError *error) {
+    [self.client createConversationWithName:@"Tom & Toodle's Wedding" clientIds:@[@"broadcast"] callback:^(AVIMChatRoom *conversation, NSError *error) {
         AVIMMessageOption *option = [[AVIMMessageOption alloc] init];
         option.priority = AVIMMessagePriorityHigh;
         [conversation sendMessage:[AVIMTextMessage messageWithText:@"Tom is about to kiss Toodle!" attributes:nil] option:option callback:^(BOOL succeeded, NSError * _Nullable error) {
