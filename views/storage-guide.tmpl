@@ -842,7 +842,7 @@ The benefit of using `query` option instead of the combination of `{{ baseQueryC
 
 #### Updating Counters
 
-Take Twitter as an example, we need to keep track of how many Likes and Retweets a tweet has gained so far. While a Like or Retweet action can be triggered simultaneously by multiple clients, using `{% if platform_name === "JavaScript" %}save{% endif %}{% if platform_name === "Swift" %}save{% endif %}{% if platform_name === "Android" %}saveInBackground{% endif %}` can lead to inaccurate results. To make sure that the total number is stored correctly, LeanCloud allows you to **atomically** increase (or decrease) the value of a number field:
+Take Twitter as an example, we need to keep track of how many Likes and Retweets a tweet has gained so far. Since a Like or Retweet action can be triggered simultaneously by multiple clients, using `{% if platform_name === "JavaScript" %}save{% endif %}{% if platform_name === "Swift" %}save{% endif %}{% if platform_name === "Android" %}saveInBackground{% endif %}` can lead to inaccurate results. To make sure that the total number is stored correctly, LeanCloud allows you to **atomically** increase (or decrease) the value of a number field:
 
 {% if platform_name === "JavaScript" %}
 ```js
