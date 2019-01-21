@@ -1153,7 +1153,9 @@ query.findInBackground(new FindCallback<AVObject>() {
 ```
 {% endif %}
 
-`saveAll` and `fetchAll` send as many requests behind the scene as the number of objects in the collection, while `deleteAll` completes everything in a single network request. {# TODO: Please refer to the [Calculation of API Calls](faq.html#calculation-of-api-calls) for more details. #}
+Although these batch APIs send multiply operations in one single network request,
+`saveAll` and `fetchAll` are billed as seperated API calls for each object in the collection,
+while `deleteAll` is billed as a single API call.
 
 ### Data Models
 
