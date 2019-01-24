@@ -324,7 +324,7 @@ Normally our RTM Server allows simultaneous connections created using the same `
 
 ### Network States
 
-After the client connects to the server, you don't have to concern about the network states because our SDK takes care of it for you. It will automatically reconnect when necessary to keep the client staying online. The [Client Events and Network States](#client-events) section has more information about how you can subscribe to those events which can be helpful for improving your user experience.
+After the client connects to the server, you don't have to concern about the network states because our SDK takes care of it for you. It will automatically reconnect when necessary to keep the client staying online.<!-- The [Client Events and Network States](#client-events) section has more information about how you can subscribe to those events which can be helpful for improving your user experience.-->
 
 <!-- 对于 Android 平台，我们使用常驻后台的服务保持在线状态；对于 iOS 和 Windows Phone 等平台，我们会在应用仍在前台时保持连接，当应用退到后台时，自动断开连接再激活平台原生的推送服务。 -->
 
@@ -959,7 +959,7 @@ conversation.sendMessage(msg, messageOption, new AVIMConversationCallback() {
 Parameter | Type | Note
 --- | --- | ---
 `transient` | Boolean	| Whether this is a transient message or not. See [Transient Messages](#transient-messages).
-`receipt` | Boolean	| Whether to track recipient status or not (only applies to a normal `{{ conversationObjectName }}`). See [Confirming Delivery](#confirming-delivery).
+`receipt` | Boolean	| Whether to track recipient status or not (only applies to a normal `{{ conversationObjectName }}`).<!-- See [Confirming Delivery](#confirming-delivery).-->
 `will` | Boolean | Whether this is a last-will message or not. The message will not be sent until the current user goes offline. See [Last-Will Messages](#last-will-messages).
 `priority`| MessagePriority | By what priority the message should be delivered (only applies to chatroom and transient `{{ conversationObjectName }}`s). See [Message Priority](#message-priority).
 `pushData` | Object | When the message recipient is offline, push the content defined in the object to the receiving device (only applies to mobile clients using our iOS or Android SDK and only works for normal `{{ conversationObjectName }}`s). See [Push Notifications](#push-notifications).
