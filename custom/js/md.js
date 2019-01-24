@@ -48,7 +48,7 @@ var doSideBar = function() {
   $('.sidebar-loading').removeClass('on');
   $('.sidebar-wrapper').affix({
     offset: {
-      top: 80,
+      top: $('.navbar').outerHeight() || 48,
       bottom: function () {
         return (this.bottom = $('.footer').outerHeight(true));
       }
