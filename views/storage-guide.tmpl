@@ -7,7 +7,7 @@ The LeanStorage {{platform_name}} SDK can be used to persist and query data in L
 
 {% if platform_name === "JavaScript" %}
 ```js
-// Declare class
+// Declare a class
 var Todo = AV.Object.extend('Todo');
 
 // Create an object
@@ -297,12 +297,12 @@ However, since your app is exposed to the internet, simply setting up whitelist 
 
 ### `{{ baseObjectName }}`
 
-Storing data on LeanCloud is built around `{{ baseObjectName }}`. Each `{{ baseObjectName }}` contains key-value pairs of JSON-compatible data. This data is schemaless, which means that you don't need to specify ahead of time what keys exist on each `{{ baseObjectName }}`. Simply set whatever key-value pairs you want, and our backend will store it.
+Storing data on LeanCloud is built around `{{ baseObjectName }}`. Each `{{ baseObjectName }}` contains key-value pairs of JSON-compatible data. This data is schema free, which means that you don't need to specify ahead of time what keys exist on each `{{ baseObjectName }}`. Simply set whatever key-value pairs you want, and our backend will store it.
 
 For example, the `{{ baseObjectName }}` storing a simple todo item may contain the following data:
 
 ```json
-title:       "Email Linda to confirm appointment"
+title:       "Email Linda to confirm appointment",
 isComplete:  false,
 priority:    2,
 tags:        ["work", "sales"]
@@ -322,7 +322,7 @@ Some examples:
 
 {% if platform_name === "JavaScript" %}
 ```js
-// Declare class
+// Declare a class
 var TestObject = AV.Object.extend('DataTypeTest');
 
 // Basic objects
@@ -529,7 +529,7 @@ To make sure the data is successfully saved, take a look at [Dashboard > Data > 
 ```
 
 {% call docs.noteWrap() %}
-You don't have to create or set up a new class called `Todo` before running the code above. The class will be automatically created in your app when it is first encountered.
+You don't have to create or set up a new class called `Todo` in Dashboard before running the code above. The class will be automatically created in your app.
 {% endcall %}
 
 There are several built-in fields that are provided by default which you don't need to specify in your code:
@@ -537,13 +537,13 @@ There are several built-in fields that are provided by default which you don't n
 Built-in Field | Type | Description
 --- | --- | ---
 `objectId` | {{ "`str`" if platform_name === "Python" else "`String`" }} | A unique identifier for each saved object.
-`ACL` | {{ "`leancloud.ACL`" if platform_name === "Python" else "`ACL`" }} | Access Control List, a JSON-compatible data defining the read and write permissions of other people.
+`ACL` | {{ "`leancloud.ACL`" if platform_name === "Python" else "`ACL`" }} | Access Control List, a special object defining the read and write permissions of other people.
 `createdAt` | {% if platform_name === "JavaScript" %}`Date`{% endif %}{% if platform_name === "Swift" %}`NSDate`{% endif %}{% if platform_name === "Android" %}`Date`{% endif %} | The time the object was created.
 `updatedAt` | {% if platform_name === "JavaScript" %}`Date`{% endif %}{% if platform_name === "Swift" %}`NSDate`{% endif %}{% if platform_name === "Android" %}`Date`{% endif %} | The time the object was last modified.
 
 Each of these fields is filled in by the cloud automatically and doesn't exist on the local `{{ baseObjectName }}` until a save operation has been completed.
 
-Field names, or **keys**, must be alphanumeric strings. A custom key can neither start with double underscores `__`, nor be identical to any system reserved words or built-in field names (`ACL`, `className`, `createdAt`, `objectId`, and `updatedAt`) regardless of letter cases.
+Field names, or **keys**, can only contain letters, numbers, and underscores. A custom key can neither start with double underscores `__`, nor be identical to any system reserved words or built-in field names (`ACL`, `className`, `createdAt`, `objectId`, and `updatedAt`) regardless of letter cases.
 
 **Values** can be strings, numbers, booleans, or even arrays and dictionaries — anything that can be JSON-encoded. See [Data Types](#data-types) for more information.
 
@@ -624,7 +624,8 @@ After retrieving an object, use the `get` method to acquire the data stored in i
 
 Be aware that `objectId`, `updatedAt`, and `createdAt` are 3 special properties that cannot be retrieved using the `get` method or modified with the `set` method. Each of these fields is filled in by the cloud only, so they don't exist on `{{ baseObjectName }}` until a save operation has been completed.
 
-If you try to access a field or property that doesn't exist, the SDK will return a `null` instead of raising an error.
+If you try to access a field or property that doesn't exist, the SDK will not raise an error.
+Instead, it will return {% if platform_name === "JavaScript" %}`undefined`{% elif platform_name === "Objective-C" or platform_name === "Swift" %}`nil`{% elif platform_name === "Python" %}`None`{% else %}`null`{% endif %}.
 
 {% if platform_name === "JavaScript" %}
 Sometimes you may want to get all the fields back at one time (which usually happens when performing data binding) without calling `get` on each field of the object. If your SDK version is 3.0.0+, you may call `toJSON` on `AV.Object` to get a plain JSON object containing all the fields of the object.
@@ -841,7 +842,7 @@ The benefit of using `query` option instead of the combination of `{{ baseQueryC
 
 #### Updating Counters
 
-Take Twitter as an example, we need to keep track of how many Likes and Retweets a tweet has gained so far. While a Like or Retweet action can be triggered simultaneously by multiple clients, using `{% if platform_name === "JavaScript" %}save{% endif %}{% if platform_name === "Swift" %}save{% endif %}{% if platform_name === "Android" %}saveInBackground{% endif %}` can lead to inaccurate results. To make sure that the total number is stored correctly, LeanCloud allows you to **atomically** increase (or decrease) the value of a number field:
+Take Twitter as an example, we need to keep track of how many Likes and Retweets a tweet has gained so far. Since a Like or Retweet action can be triggered simultaneously by multiple clients, using `{% if platform_name === "JavaScript" %}save{% endif %}{% if platform_name === "Swift" %}save{% endif %}{% if platform_name === "Android" %}saveInBackground{% endif %}` can lead to inaccurate results. To make sure that the total number is stored correctly, LeanCloud allows you to **atomically** increase (or decrease) the value of a number field:
 
 {% if platform_name === "JavaScript" %}
 ```js
@@ -1024,7 +1025,7 @@ You can delete a given field of an object with the `{% if platform_name === "Jav
 ```js
 var todo = AV.Object.createWithoutData('Todo', '57328ca079bc44005c2472d0');
 
-// The content field will be empty
+// The content field will be removed
 todo.unset('content');
 
 // Save the object to the cloud
@@ -1152,7 +1153,9 @@ query.findInBackground(new FindCallback<AVObject>() {
 ```
 {% endif %}
 
-`saveAll` and `fetchAll` send as many requests behind the scene as the number of objects in the collection, while `deleteAll` completes everything in a single network request. {# TODO: Please refer to the [Calculation of API Calls](faq.html#calculation-of-api-calls) for more details. #}
+Although these batch APIs send multiple operations in one single network request,
+`saveAll` and `fetchAll` are billed as seperated API calls for each object in the collection,
+while `deleteAll` is billed as a single API call.
 
 ### Data Models
 
