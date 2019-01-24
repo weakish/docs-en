@@ -9,7 +9,7 @@ Designed for asynchronous person-to-person and business-to-consumer messaging, L
 - Direct messaging, temporary conversations with up to 10 members, group conversations with up to 500 members, and transient conversations with unlimited numbers of members.
 - Rich-content messages combining text, rich media content, and application data.
 - Message delivery and read receipts for each conversation participant.
-- [Mentioning people](#mentions) in group conversations, muting group conversations, [typing indicators](#typing-indicators), [message recall](#message-recall), and [message revision](#message-revision).
+- [Mentioning people](#mentions) in group conversations, muting group conversations, [typing indicators](#custom-message-types), message recall, and message revision.
 - Integrated support for mobile push notifications{% if platform_name === "Objective-C" %} via APNs{% endif %}{% if platform_name === "Android" %} via FCM{% endif %}.
 - Built-in user management.
 - A flexible querying interface for searching and retrieving data.
@@ -1388,6 +1388,8 @@ Our server won't discard messages in a normal `{{ conversationObjectName }}`. Th
 Message priority can be set in the {% if platform_name === "JavaScript" %}`send` method{% endif %}{% if platform_name === "Objective-C" %}`option`{% endif %}{% if platform_name === "Android" %}`messageOption`{% endif %} of a `{{ conversationObjectName }}` instance:
 
 {% if platform_name === "JavaScript" %}
+{# TODO #}
+<!--
 ```js
 var { Realtime, TextMessage, MessagePriority } = require('leancloud-realtime');
 var realtime = new Realtime({
@@ -1411,8 +1413,11 @@ realtime.createIMClient('host').then(function (clientHost) {
   console.log(message);
 }).catch(console.error);
 ```
+-->
 {% endif %}
 {% if platform_name === "Objective-C" %}
+{# TODO #}
+<!--
 ```objc
 self.client = [[AVIMClient alloc] initWithClientId:@"host"];
 [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
@@ -1425,8 +1430,11 @@ self.client = [[AVIMClient alloc] initWithClientId:@"host"];
     }];
 }];
 ```
+-->
 {% endif %}
 {% if platform_name === "Android" %}
+{# TODO #}
+<!--
 ```java
 AVIMClient tom = AVIMClient.getInstance("host");
 tom.open(new AVIMClientCallback() {
@@ -1457,6 +1465,7 @@ tom.open(new AVIMClientCallback() {
     }
 });
 ```
+-->
 {% endif %}
 
 ### Mentions
@@ -1582,7 +1591,11 @@ public void onMessage(AVIMAudioMessage msg, AVIMConversation conv, AVIMClient cl
 
 ### Custom Message Types
 
+{# TODO #}
+
 ## Push Notifications
+
+{# TODO #}
 
 ## Querying
 
@@ -2133,6 +2146,8 @@ If you want to implement more advanced features like message content censoring, 
 
 ## Authentication
 
+{# TODO #}
+
 <!-- ## Synchronization  -->
 
 ## Blacklist
@@ -2241,3 +2256,5 @@ By default, a message is kept in the cloud for 6 months since its existence. In 
 If longer message history matters to you, you can either [contact support](mailto:support@leancloud.rocks) and pay to extend this 6-month period to 3 years, or use our REST API to pull messages off and save them on your own server.
 
 ## Error Codes
+
+{# TODO #}
