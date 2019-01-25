@@ -1,6 +1,4 @@
 {% import "views/_helper.njk" as docs %}
-{% import "views/_sms.njk" as sms %}
-{% import "views/_parts.html" as include %}
 
 <style>
 .space-before {
@@ -675,7 +673,12 @@ Below is the source code of the demo page for you to examine.
  
 When using `AV.Captcha.request` to create `AV.Captcha` instance, available parameters are:
 
-{{ sms.paramsRequestCaptcha(true) }}
+| Parameter | Type | Default Value | Description |
+| --- | --- | --- | --- |
+| `width` | `Number` | `85` | The width of the CAPTCHA image in **px**, ranging from `60` to `200`. |
+| `height` | `Number` | `30` | The height of the CAPTCHA image in **px**, ranging from `30` to `100`. |
+| `size` | `Number` | `4` | The length of the verification code, ranging from `3` to `6` (**REST API** only; `masterKey` required). |
+| `ttl` | `Number` | `60` | How soon the verification code expires in **seconds**, ranging from `10` to `180` (**REST API** only; `masterKey` required). |
 
 The `bind` method of an `AV.Captcha` instance can take the following parameters:
 

@@ -1,5 +1,7 @@
 {% import "views/_helper.njk" as docs %}
-{% import "views/_data.njk" as data %}
+{% macro regex(useSingleQuotes=false) -%}
+  ^((?!ticket).)*&dollar;{% if useSingleQuotes == true %}&apos;{% else %}&quot;{% endif %}
+{%- endmacro %}
 
 # LeanStorage {{platform_name}} Guide
 
@@ -1848,20 +1850,20 @@ If you are looking for string values that do not contain a particular string, us
 {% if platform_name === "JavaScript" %}
 <pre><code class="lang-js">var query = new AV.Query('Todo');
 // 'title' without 'ticket' (case-insensitive)
-var regExp = new RegExp('{{ data.regex(true) | safe }}, 'i');
+var regExp = new RegExp('{{ regex(true) | safe }}, 'i');
 query.matches('title', regExp);
 </code></pre>
 {% endif %}
 {% if platform_name === "Swift" %}
 <pre><code class="lang-swift">let query = LCQuery(className: "Todo")
 // 'title' without 'ticket' (case-insensitive)
-query.whereKey("title", .MatchedPattern("{{ data.regex() | safe }}, option: nil))
+query.whereKey("title", .MatchedPattern("{{ regex() | safe }}, option: nil))
 </code></pre>
 {% endif %}
 {% if platform_name === "Android" %}
 <pre><code class="lang-java">AVQuery<AVObject> query = new AVQuery<>("Todo");
 // 'title' without 'ticket' (case-insensitive)
-query.whereMatches("title","{{ data.regex() | safe }});
+query.whereMatches("title","{{ regex() | safe }});
 </code></pre>
 {% endif %}
 
