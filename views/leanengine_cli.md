@@ -29,7 +29,7 @@ Download the pre-compiled file `lean-linux-x64` from our [releases page](https:/
 
 You can install the CLI from this AUR: https://aur.archlinux.org/packages/lean-cli-git/.
 
-### Installing with Source Code
+### Installing from Source Code
 
 See [README](https://github.com/leancloud/lean-cli) of our GitHub repository.
 
