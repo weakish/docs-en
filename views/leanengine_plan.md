@@ -16,7 +16,7 @@ You can purchase standard instances for projects that demand high availability. 
 
 **Staging Environment**<br>A trial instance will be provided in the staging environment so you can test your project before having it published.
 
-**Increased Availability**<br>Using 2 or more instances not only increases the computing power of your application, but also enables <u>load balancing</u> and <u>disaster recovery</u> as different instances of an application will be running on different servers. If one of these instances runs into error or the server containing that instance encounters hardware failures, failover will be performed automatically so that further requests will be diverted to other instances.
+**Increased Availability**<br>Using 2 or more instances not only increases the computing power of your application, but also enables *load balancing* and *disaster recovery* as different instances of an application will be running on different servers. If one of these instances runs into error or the server containing that instance encounters hardware failures, failover will be performed automatically so that further requests will be diverted to other instances.
 
 {% call docs.noteWrap() %}
 If you have only one instance and the server containing that instance runs into error, we will still migrate your instance to another server within several minutes. However, your application will not be able to process requests while migration is in process. {{ docs.alertInline("If your application demands high availability, we recommend that you enable 2 or more instances for it.") }}
@@ -92,7 +92,7 @@ See [Usage Data](#usage-data) to learn about how you can view the usage of your 
 You can view the usage data of your application on your app's [Dashboard > LeanEngine > Statistics](/cloud.html?appid={{appid}}#/stat).
 
 - **CPU**<br>The graph shows the application's CPU usage within a period of time. If the CPU usage approaches the limit, the response time of the application may be increased.
-- **Memory**<br>The graph shows the application's memory usage within a period of time. If the memory usage approaches the limit, the thread of the application (like Node.js thread or Python thread) may be restarted due to OOM and the application will become unavailable in this period of time. If you see the line in the graph <u>frequently approaches the top and suddenly drops to the bottom</u>, it means that the thread has been restarted due to this reason.
+- **Memory**<br>The graph shows the application's memory usage within a period of time. If the memory usage approaches the limit, the thread of the application (like Node.js thread or Python thread) may be restarted due to OOM and the application will become unavailable in this period of time. If you see the line in the graph *frequently approaches the top and suddenly drops to the bottom*, it means that the thread has been restarted due to this reason.
 - **Response Time**<br>If the line approaches the top, it means that the CPU usage is approaching the limit.
 - **Summary** <span class="text-muted">(in dropdown menu)</span><br>The total usage of all instances.
 - **Details** <span class="text-muted">(in dropdown menu)</span><br>The usage of each instance.
@@ -117,7 +117,7 @@ You can create, delete, or change default groups by going to your app's [Dashboa
 
 After selecting a group, you will be able to change its settings like Git repository, second-level domain, and environment variables. When a group is first created, it has no instances in it and you can only create a standard instance in its production environment. A staging environment will be provided with a free trial instance if you have at least one instance under the production environment, and it will be deleted if you delete all other instances in the group. A group can be deleted only if it has no instances in it.
 
-If you are managing applications with multiple groups using command-line interface (CLI), make sure the version of it is `0.7.1` or above. You can check the version of your CLI installed by running `$ lean version`. See [Command-Line Interface Guide](leanengine_cli.html) for more instructions on CLI.
+If you are managing applications with multiple groups using command-line interface (CLI), make sure the version of it is `0.7.1` or above. You can check the version of your CLI installed by running `$ lean --version`. See [Command-Line Interface Guide](leanengine_cli.html) for more instructions on CLI.
 
 ## Pricing
 

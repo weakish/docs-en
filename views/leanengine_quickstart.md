@@ -1,6 +1,6 @@
 # LeanEngine Quick Start
 
-In this documentation, you will learn how to create a LeanEngine project, debug locally, and deploy your project to the cloud.
+In this documentation, you will learn how to create a LeanEngine project, debug it locally, and deploy your project to the cloud.
 
 ## Creating a Project
 
@@ -24,7 +24,7 @@ Follow the prompts to enter the project information.
 
 ### Creating a Project from a Template
 
-You can use our sample project as a basement to start your project. Run the following command to clone the sample project from GitHub:
+You can use our sample project as a skeleton to start your project. Run the following command to clone the sample project from GitHub:
 
 ```js
 git clone https://github.com/leancloud/node-js-getting-started.git

@@ -17,17 +17,17 @@ brew install lean-cli
 
 ### Windows
 
-You can go to our [GitHub releases](https://releases.leanapp.cn/#/leancloud/lean-cli/releases) and download the 32-bit or 64-bit **msi** file to install. After installing, you can run `lean` under any directory in Command Prompt or PowerShell to use the CLI.
+You can go to our [releases page](https://releases.leanapp.cn/#/leancloud/lean-cli/releases) and download the 32-bit or 64-bit **msi** file to install. After installing, you can run `lean` under any directory in Command Prompt or PowerShell to use the CLI.
 
 You can also download the pre-compiled **exe** file, rename it to `lean.exe`, and add it into **PATH** environment variable (instructions available [here](https://www.java.com/en/download/help/path.xml)). After doing this, you can run `lean` under any directory in Command Prompt or PowerShell to use the CLI. As an alternative, you can move the file into any directory that is already declared in PATH, like `C:\Windows\System32`.
 
 ### Linux
 
-Download the pre-compiled file `lean-linux-x64` from our [GitHub releases](https://releases.leanapp.cn/#/leancloud/lean-cli/releases), rename it to `lean`, and move it into any directory that is already declared in PATH.
+Download the pre-compiled file `lean-linux-x64` from our [releases page](https://releases.leanapp.cn/#/leancloud/lean-cli/releases), rename it to `lean`, and move it into any directory that is already declared in PATH.
 
 #### Arch Linux
 
-You can install the CLI with this AUR: https://aur.archlinux.org/packages/lean-cli-git/.
+You can install the CLI from this AUR: https://aur.archlinux.org/packages/lean-cli-git/.
 
 ### Installing with Source Code
 
@@ -190,11 +190,11 @@ You can specify the port your project uses with `$ lean up --port new-port-numbe
 Attach `-h` in the end of any command of the CLI to get help information (like `$ lean up -h`).
 {% endcall %}
 
-Beside using the CLI, you can also run a project **natively** by using commands like `node server.js` or `python wsgi.py`, which helps you better integrate LeanEngine into your existing workflows and IDEs. Keep in mind that the projects created with CLI depends on several environment variables, so make sure they are configured correctly.
+Beside using the CLI, you can also run a project **natively** by using commands like `node server.js` or `python wsgi.py`, which helps you better integrate LeanEngine into your existing workflows and IDEs. Keep in mind that projects created with CLI depend on several environment variables, so make sure they are configured correctly.
 
 You can get a list of environment variables mentioned above by running `$ lean env`. By setting them up manually in the terminal, you will not be required to run your project with the CLI anymore. If your shell supports `sh`, you can run `eval $(lean env)` to get this done.
 
-You can attach custom parameters for running you project by adding `--` and these parameters after `$ lean up`. All the parameters will be passed to the actual start-up command. For example, if you want to pass `--inspect` to the start-up command of a Node.js project to enable the remote debugging function, you can run `$ lean up -- --inspect`.
+`$ lean up` supports pass-through custom start-up parameters. All parameters after `--` will be passed to the actual start-up command. For example, if you want to pass `--inspect` to the start-up command of a Node.js project to enable the remote debugging function, you can run `$ lean up -- --inspect`.
 
 You can also use your own start-up command with `--cmd`, like `$ lean up --cmd=my-custom-command`.
 
@@ -216,7 +216,7 @@ After testing your project locally, you can deploy it to LeanEngine with the fol
 $ lean deploy
 ```
 
-If you only have a <u>trial instance</u> in the production environment, the command above will deploy the project directly to the **production environment** and override the previous version in it (no matter if you are deploying from local computer, deploying from Git repository, or editing cloud functions on the web console). If you have a <u>standard instance</u> in the production environment, the command above will deploy the project to the **staging environment** first. You can run `$ lean publish` later to publish your project in the production environment.
+If you only have a *trial instance* in the production environment, the command above will deploy the project directly to the **production environment** and override the previous version in it (no matter if you are deploying from local computer, deploying from Git repository, or editing cloud functions on the web console). If you have a *standard instance* in the production environment, the command above will deploy the project to the **staging environment** first. You can run `$ lean publish` later to publish your project in the production environment.
 
 The progress will be printed out while the project is being deployed:
 
@@ -255,9 +255,9 @@ After deploying, you can start testing cloud functions with `curl` or visit the 
 
 #### Ignoring Certain Files when Deploying
 
-If your project directory contains temporary files that do not need to be uploaded to the cloud, you can added them into `.leanignore`.
+If your project directory contains temporary files that do not need to be uploaded to the cloud, you can add them into `.leanignore`.
 
-`.leanignore` shares a similar format with `.gitignore`, with each single line as a file or directory to be ignored. If your project does not contain a `.leanignore`, the CLI will automatically create one according to the language used for the project. Make sure to confirm that the content in the file meets the need of your project.
+`.leanignore` shares a similar format with `.gitignore`, with each single line as a file or directory to be ignored. If your project does not contain a `.leanignore`, the CLI will automatically create one according to the language used for the project. Make sure to check that the content in the file meets the need of your project.
 
 ### Deploying from Git Repository
 
@@ -319,9 +319,9 @@ $ lean logs
 2016-05-16 16:03:55 [PROD] [INFO] 部署完成：2 个实例部署成功
 ```
 
-The command will return 30 logs by default, with the latest ones on the bottom.
+The command will return 30 entities by default, with the latest ones on the bottom.
 
-You can specify the amount of logs returned by using the `-l` option. For example, to return the latest 100 logs:
+You can specify the amount of entities returned by using the `-l` option. For example, to return the latest 100 entities:
 
 ```sh
 $ lean logs -l 100
@@ -375,7 +375,7 @@ Item | Description
 `80% Duration Time` | 80% response time.
 `95% Duration Time` | 95% response time.
 
-`metric` takes in similar parameters as `logs` does:
+`metric` takes in similar parameters as `logs`:
 
 ```sh
 $ lean metric -h
@@ -512,4 +512,4 @@ leancloud.init(app_id, master_key=master_key)
 print(leancloud.User.query.count())
 ```
 
-Give it the permission of being executed by running `$ chmod +x /usr/local/bin/lean-usercount`, and then run `$ lean usercount` under the project directory. Now you will see the total amount of records in `_User`.
+Grant the execute permission to it by running `$ chmod +x /usr/local/bin/lean-usercount`, and then run `$ lean usercount` under the project directory. Now you will see the total amount of records in `_User`.

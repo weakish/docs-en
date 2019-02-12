@@ -9,7 +9,7 @@ LeanEngine offers a way for you to define logics on the cloud to perform certain
 
 In this documentation, you will learn how to enforce ACL settings on objects created by clients.
 
-Imagine that you are building an application for iOS, Android, and web (JavaScript), and you need to implement a function that add permission settings to all the objects created. Traditionally, you will need to write the same function in different languages for each platform. But since now you can write the same function only once and put it on the cloud, the development process will be way easier.
+Imagine that you are building an application for iOS, Android, and web (JavaScript), and you need to implement a function that adds permission settings to all the objects created. Traditionally, you will need to write the same function in different languages for each platform. But now you can write the same function only once and put it on the cloud, which makes the development process way easier.
 
 Let's say that your application wants the administrators of the website to have the permission to read and write all the posts created by users. The first thing you need to do is to create a [hook](leanengine_cloudfunction_guide-node.html#beforesave) that can be triggered before a post is saved:
 

@@ -4,7 +4,7 @@ LeanEngine is a hosting platform that lets you run server-side programs written 
 
 Here is a list of documentations that help you learn about LeanEngine:
 
-- [LeanEngine Quick Start](leanengine_quickstart.html): Learn how to create a LeanEngine project, debug locally, and deploy the project to the cloud.
+- [LeanEngine Quick Start](leanengine_quickstart.html): Learn how to create a LeanEngine project, debug it locally, and deploy the project to the cloud.
 - [LeanEngine Plans and Prices](leanengine_plan.html): Learn about a variety of plans available for your applications with different sizes and purposes.
 - [Web Hosting Guide](leanengine_webhosting_guide-node.html): Create a website with the language you are familiar with and assign a domain to it. You can use it to build a web application, a landing page for your mobile application, or a web console for administrators.
 - [Cloud Function Guide](leanengine_cloudfunction_guide-node.html): Put the functions shared by multiple platforms in one place and call them directly within the SDK of each platform. You can also create hook functions that can be triggered when certain events happen, or create timers that run certain functions periodically.
