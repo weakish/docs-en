@@ -37,7 +37,7 @@
     <div class="col-sm-9 sidebar-gruntfile-trigger">
       <div class="doc-content with-comment" id="content">
         <div class="docs-meta">
-          <!-- <span class="icon icon-github"></span><a href="https://github.com/leancloud/docs-en#contribute">Edit this page</a> -->
+          <span class="icon icon-github"></span><a href="https://github.com/leancloud/docs-en#contribute">Edit</a>
         </div>
         {{body}}
       </div>
