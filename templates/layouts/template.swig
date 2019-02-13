@@ -13,10 +13,9 @@
 
 {% include 'templates/include/header.html' %}
 
+{% include 'templates/include/doc-nav.html' %}
 
-{# {% include 'templates/include/doc-nav.html' %}  #}
-
-<div class="container">
+<div class="container-fluid">
 
   <div class="row">
 
@@ -35,10 +34,10 @@
     </div>
     <!-- .col-md-3 -->
 
-    <div class="col-md-7 col-xs-12 sidebar-gruntfile-trigger">
+    <div class="col-sm-9 sidebar-gruntfile-trigger">
       <div class="doc-content with-comment" id="content">
         <div class="docs-meta">
-          <!-- <span class="icon icon-github"></span><a href="https://github.com/leancloud/docs-en#contribute">Edit this page</a> -->
+          <span class="icon icon-github"></span><a href="https://github.com/leancloud/docs-en#contribute">Edit</a>
         </div>
         {{body}}
       </div>
