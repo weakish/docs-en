@@ -355,9 +355,11 @@ realtime.createIMClient('Tom').then(function (clientTom) {
 - (void)tomSendMessageToJerry {
     self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
     [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
-        [self.client createConversationWithName:@"Era of Peace" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
-            // {# TODO #}
-        }];
+        [self.client createConversationWithName:@"Era of Peace"       
+            clientIds:@[@"Jerry"] options:AVIMConversationOptionUnique
+            callback:^(AVIMConversation *conversation, NSError *error) {
+                // {# TODO #}
+            }];
     }];
 }
 ```
@@ -370,7 +372,10 @@ public void sendMessageToJerryFromTom() {
         @Override
         public void done(AVIMClient client, AVIMException e) {
             if (e == null) {
-                client.createConversation(Arrays.asList("Jerry"), "Era of Peace", null,
+                client.createConversation(Arrays.asList("Jerry"), "Era of Peace",
+                    null, /* without addtional attributes */
+                    false, /* not transient */
+                    true, /* unique */
                     new AVIMConversationCreatedCallback() {
                         @Override
                         public void done(AVIMConversation conversation, AVIMException e) {
@@ -405,12 +410,59 @@ clientTom.createConversation({
 {% endif %}
 {% if platform_name === "Objective-C" %}
 ```objc
-{# TODO #}
+- (void)tomCreateConversationWithFriends {
+    self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+
+    [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+        NSArray *friends = @[@"Jerry", @"Bob", @"Harry", @"William"];
+        [self.client createConversationWithName:@"Tom and friends"
+            clientIds:friends options:AVIMConversationOptionUnique callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom sends a message to his friends
+            [conversation sendMessage:[AVIMTextMessage messageWithText:@"Where are you?" attributes:nil] callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"Success!");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endif %}
 {% if platform_name === "Android" %}
 ```java
-{# TODO #}
+public void sendMessageToJerryFromTom() {
+    AVIMClient tom = AVIMClient.getInstance("Tom");
+    
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          client.createConversation(Arrays.asList("Jerry","Bob","Harry","William"),
+            "Tom & Jerry & friedns", null, false, true,
+              new AVIMConversationCreatedCallback() {
+
+                @Override
+                public void done(AVIMConversation conversation, AVIMException e) {
+                  if (e == null) {
+                    AVIMTextMessage msg = new AVIMTextMessage();
+                    msg.setText("你们在哪儿？");
+                    // 发送消息
+                    conversation.sendMessage(msg, new AVIMConversationCallback() {
+
+                      @Override
+                      public void done(AVIMException e) {
+                        if (e == null) {
+                          Log.d("Tom & Jerry", "发送成功！");
+                        }
+                      }
+                    });
+                  }
+                }
+              });
+        }
+      }
+    });
+  }
 ```
 {% endif %}
 
@@ -513,11 +565,13 @@ clientTom.createConversation({
         @"type": @"private",
         @"pinned": @(YES) 
     };
-    [self.client createConversationWithName:@"Cats Love Mice" clientIds:@[@"Jerry"] attributes:attributes options:AVIMConversationOptionNone callback:^(AVIMConversation *conversation, NSError *error) {
-        if (succeeded) {
+    [self.client createConversationWithName:@"Cats Love Mice" clientIds:@[@"Jerry"] attributes:attributes
+        options:AVIMConversationOptionNone | AVIMConversationOptionUnique
+        callback:^(AVIMConversation *conversation, NSError *error) {
+            if (succeeded) {
             NSLog(@"Success.");
-        }
-    }];
+            }
+        }];
 }];
 ```
 {% endif %}
@@ -526,7 +580,8 @@ clientTom.createConversation({
 HashMap<String,Object> attr = new HashMap<String,Object>();
 attr.put("type", "private");
 attr.put("pinned", true);
-client.createConversation(Arrays.asList("Jerry"), "Cats Love Mice", attr,
+client.createConversation(Arrays.asList("Jerry"),
+    "Cats Love Mice", attr, false, true
     new AVIMConversationCreatedCallback(){
         @Override
         public void done(AVIMConversation conv, AVIMException e){
@@ -543,27 +598,7 @@ Custom properties are visible and accessible to all conversation members. They c
 
 ### Unique Conversations
 
-When creating a `{{ conversationObjectName }}`, you have the option to make it unique by {% if platform_name === "JavaScript" %}adding the `unique` parameter and setting it to `true`{% endif %}{% if platform_name === "Objective-C" %}adding the `AVIMConversationOptionUnique` option to `options`{% endif %}{% if platform_name === "Android" %}adding the `isUnique` parameter and setting it to `true`{% endif %}. It means once a `{{ conversationObjectName }}` with certain users has been created, any further attempts by any of these users to create a new `{{ conversationObjectName }}` with the same members will lead them to the existing `{{ conversationObjectName }}`:
-
-{% if platform_name === "JavaScript" %}
-```js
-clientTom.createConversation({
-  members: ['Jerry', 'Spike', 'Butch'],
-  name:    'Party on Weekends',
-  unique:  true
-});
-```
-{% endif %}
-{% if platform_name === "Objective-C" %}
-```objc
-{# TODO #}
-```
-{% endif %}
-{% if platform_name === "Android" %}
-```java
-{# TODO #}
-```
-{% endif %}
+When creating a `{{ conversationObjectName }}`, you have the option to make it unique by {% if platform_name === "JavaScript" %}adding the `unique` parameter and setting it to `true`{% endif %}{% if platform_name === "Objective-C" %}adding the `AVIMConversationOptionUnique` option to `options`{% endif %}{% if platform_name === "Android" %}adding the `isUnique` parameter and setting it to `true`{% endif %}. It means once a `{{ conversationObjectName }}` with certain users has been created, any further attempts by any of these users to create a new `{{ conversationObjectName }}` with the same members will lead them to the existing `{{ conversationObjectName }}`.
 
 Conversations are **NOT** unique by default. So when {% if platform_name === "JavaScript" %}the `unique` parameter is omitted or set to be `false`{% endif %}{% if platform_name === "Objective-C" %}the `AVIMConversationOptionUnique` option is omitted{% endif %}{% if platform_name === "Android" %}the `isUnique` parameter is omitted or set to be `false`{% endif %}, multiple users can independently create multiple instances of `{{ conversationObjectName }}` with the same set of members.
 
@@ -585,19 +620,100 @@ var chat3 = clientTom.createConversation({
 {% endif %}
 {% if platform_name === "Objective-C" %}
 ```objc
-{# TODO #}
+NSArray *friends = @[@"Jerry", @"Spike"];
+
+(void)chat1 {
+    self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+    [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+        [self.client createConversationWithName:@"Tom and friends"
+            clientIds:friends options:AVIMConversationOptionUnique callback:^(AVIMConversation *conversation, NSError *error) {
+            // omitted for brevity
+        }];
+    }];
+}
+
+(void)chat2 {
+    self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+    [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+        [self.client createConversationWithName:@"Tom and friends"
+            clientIds:friends options:AVIMConversationOptionUnique callback:^(AVIMConversation *conversation, NSError *error) {
+            // omitted for brevity
+        }];
+    }];
+}
+
+(void)chat3 {
+    self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+    [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+        [self.client createConversationWithName:@"Tom and friends"
+            clientIds:friends callback:^(AVIMConversation *conversation, NSError *error) {
+            // omitted for brevity
+        }];
+    }];
+}
 ```
 {% endif %}
 {% if platform_name === "Android" %}
 ```java
-{# TODO #}
+public void chat1() {
+    AVIMClient tom = AVIMClient.getInstance("Tom");
+    
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          client.createConversation(Arrays.asList("Jerry", "Spike"),
+            "Tom & Jerry & friedns", null, false, true,
+              new AVIMConversationCreatedCallback() {
+                // omitted for brevity 
+              });
+        }
+      }
+    });
+}
+
+public void chat2() {
+    AVIMClient tom = AVIMClient.getInstance("Tom");
+    
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          client.createConversation(Arrays.asList("Jerry", "Spike"),
+            "Tom & Jerry & friedns", null, false, true,
+              new AVIMConversationCreatedCallback() {
+                // omitted for brevity 
+              });
+        }
+      }
+    });
+}
+
+public void chat3() {
+    AVIMClient tom = AVIMClient.getInstance("Tom");
+    
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          client.createConversation(Arrays.asList("Jerry", "Spike"),
+            "Tom & Jerry & friedns", null, false, false,
+              new AVIMConversationCreatedCallback() {
+                // omitted for brevity 
+              });
+        }
+      }
+    });
+}
 ```
+
+
 {% endif %}
 
 In the above example:
 
-- `chat1` and `chat2` return the same `{{ conversationObjectName }}`.
-- `chat1` and `chat3` are both newly created `{{ conversationObjectName }}`s.
+- `chat1` and `chat2` shares a same `{{ conversationObjectName }}`.
+- `chat3` creates a new `{{ conversationObjectName }}`.
 
 ### Managing Members
 
@@ -737,6 +853,7 @@ realtime.createIMClient('Tom').then(function(tom) {
   // create a conversation with Jerry
   return tom.createConversation({
     members: ['Jerry'],
+    unique: true
   })
 }).then(function(conversation) {
   // send message
