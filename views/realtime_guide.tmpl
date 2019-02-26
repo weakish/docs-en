@@ -445,14 +445,14 @@ public void sendMessageToJerryFromTom() {
                 public void done(AVIMConversation conversation, AVIMException e) {
                   if (e == null) {
                     AVIMTextMessage msg = new AVIMTextMessage();
-                    msg.setText("你们在哪儿？");
-                    // 发送消息
+                    msg.setText("Where are you?");
+
                     conversation.sendMessage(msg, new AVIMConversationCallback() {
 
                       @Override
                       public void done(AVIMException e) {
                         if (e == null) {
-                          Log.d("Tom & Jerry", "发送成功！");
+                          Log.d("Tom & Jerry", "Success!");
                         }
                       }
                     });
