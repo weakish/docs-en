@@ -410,59 +410,20 @@ clientTom.createConversation({
 {% endif %}
 {% if platform_name === "Objective-C" %}
 ```objc
-- (void)tomCreateConversationWithFriends {
-    self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
-
-    [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
-        NSArray *friends = @[@"Jerry", @"Bob", @"Harry", @"William"];
-        [self.client createConversationWithName:@"Tom and friends"
-            clientIds:friends options:AVIMConversationOptionUnique callback:^(AVIMConversation *conversation, NSError *error) {
-            // Tom sends a message to his friends
-            [conversation sendMessage:[AVIMTextMessage messageWithText:@"Where are you?" attributes:nil] callback:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    NSLog(@"Success!");
-                }
-            }];
-        }];
-    }];
-}
+NSArray *friends = @[@"Jerry", @"Bob", @"Harry", @"William"];
+[avIMClient createConversationWithName:@"Tom and friends"
+  clientIds:friends options:AVIMConversationOptionUnique callback:^(AVIMConversation *conversation, NSError *error) {
+    // Tom sends a message to his friends
+}];
 ```
 {% endif %}
 {% if platform_name === "Android" %}
 ```java
-public void sendMessageToJerryFromTom() {
-    AVIMClient tom = AVIMClient.getInstance("Tom");
-    
-    tom.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
-        if (e == null) {
-          client.createConversation(Arrays.asList("Jerry","Bob","Harry","William"),
-            "Tom & Jerry & friedns", null, false, true,
-              new AVIMConversationCreatedCallback() {
-
-                @Override
-                public void done(AVIMConversation conversation, AVIMException e) {
-                  if (e == null) {
-                    AVIMTextMessage msg = new AVIMTextMessage();
-                    msg.setText("Where are you?");
-
-                    conversation.sendMessage(msg, new AVIMConversationCallback() {
-
-                      @Override
-                      public void done(AVIMException e) {
-                        if (e == null) {
-                          Log.d("Tom & Jerry", "Success!");
-                        }
-                      }
-                    });
-                  }
-                }
-              });
-        }
-      }
-    });
-  }
+avIMClient.createConversation(Arrays.asList("Jerry","Bob","Harry","William"),
+  "Tom & Jerry & friedns", null, false, true,
+  new AVIMConversationCreatedCallback() {
+    // code omitted for brevity
+}
 ```
 {% endif %}
 
