@@ -23,7 +23,9 @@ You can also download the pre-compiled **exe** file, rename it to `lean.exe`, an
 
 ### Linux
 
-Download the pre-compiled file `lean-linux-x64` from our [releases page](https://releases.leanapp.cn/#/leancloud/lean-cli/releases), rename it to `lean`, and move it into any directory that is already declared in PATH.
+For Debian-based Linux distributions, you can download and install the Debian package `lean-cli-x64.deb` from our [releases page](https://releases.leanapp.cn/#/leancloud/lean-cli/releases).
+
+For other distributions, download the pre-compiled file `lean-linux-x64` from our [releases page](https://releases.leanapp.cn/#/leancloud/lean-cli/releases), rename it to `lean`, and move it into any directory that is already declared in PATH.
 
 #### Arch Linux
 
@@ -93,6 +95,21 @@ You can check the version of the CLI installed with `--version` option:
 $ lean --version
 lean version 0.20.0
 ```
+
+To look up help information for a specific command, run `lean command -h`. For example:
+
+ ```sh
+ NAME:
+    lean login - Log in to LeanCloud
+
+ USAGE:
+    lean login [command options] [-u username -p password (--region <CN> | <US> | <TAB>)]
+
+ OPTIONS:
+    --username value, -u value  Username
+    --password value, -p value  Password
+    --region value, -r value    The LeanCloud region to log in to (e.g., US, CN)
+ ```
 
 We will use `$ lean` in the rest of this documentation to indicate a command that can be run in terminal.
 
@@ -216,7 +233,7 @@ After testing your project locally, you can deploy it to LeanEngine with the fol
 $ lean deploy
 ```
 
-If you only have a *trial instance* in the production environment, the command above will deploy the project directly to the **production environment** and override the previous version in it (no matter if you are deploying from local computer, deploying from Git repository, or editing cloud functions on the web console). If you have a *standard instance* in the production environment, the command above will deploy the project to the **staging environment** first. You can run `$ lean publish` later to publish your project in the production environment.
+If you only have a <i>trial instance</i> in the production environment, the command above will deploy the project directly to the **production environment** and override the previous version in it (no matter if you are deploying from local computer, deploying from Git repository, or editing cloud functions on the web console). If you have a <i>standard instance</i> in the production environment, the command above will deploy the project to the **staging environment** first. You can run `$ lean publish` later to publish your project in the production environment.
 
 The progress will be printed out while the project is being deployed:
 
@@ -256,7 +273,7 @@ After deploying, you can start testing cloud functions with `curl` or visit the 
 
 If your project directory contains temporary files that do not need to be uploaded to the cloud, you can add them into `.leanignore`.
 
-`.leanignore` shares a similar format with `.gitignore`, with each single line as a file or directory to be ignored. If your project does not contain a `.leanignore`, the CLI will automatically create one according to the language used for the project. Make sure to check that the content in the file meets the need of your project.
+`.leanignore` shares a similar format with `.gitignore` (the syntax for `.leanignore` is actually a subset of that for `.gitignore`), with each single line as a file or directory to be ignored. If your project does not contain a `.leanignore`, the CLI will automatically create one [according to the language used for the project](https://github.com/leancloud/lean-cli/blob/master/runtimes/ignorefiles.go#L13). Make sure to check if the content in the file meets the need of your project.
 
 ### Deploying from Git Repository
 
@@ -276,7 +293,7 @@ $ lean deploy -g
 The instructions below only works if you have a [standard instance](leanengine_plan.html#standard-instance).
 {% endcall %}
 
-If you have finished testing your project in the staging environment, you can publish it to the production environment by going to your app's [Dashboard > LeanEngine > Deployments](/cloud.html?appid={{appid}}#/deploy) or by running the following command:
+If you have finished testing your project in the staging environment, you can publish it to the production environment by going to your app's [Dashboard > LeanEngine > Deploy](/cloud.html?appid={{appid}}#/deploy) or by running the following command:
 
 ```sh
 $ lean publish
@@ -460,22 +477,6 @@ $ lean cache list
 ```
 
 Keep in mind that the CLI interacts with LeanCache through HTTPS, which means that commands demanding persistent connections (including `pub/sub` and `blpop`) cannot be used here. You can still use such commands through other channels.
-
-## Other Commands
-
-You can search a keyword among documentations with `$ lean search`:
-
-```sh
-$ lean search AVObject
-```
-
-The command above will display [search results](https://leancloud.cn/dashboard/search.html?q=AVObject) in your browser.
-
-You can search multiple keywords by splitting them with a space:
-
-```sh
-$ lean search LeanEngine CLI
-```
 
 ### Custom Commands
 
