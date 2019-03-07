@@ -41,7 +41,7 @@ Imagine that you have an app that lets users review the movies they have watched
 }
 ```
 
-`stars` is the score given by the user, ranging from 1 to 5. If you want to obtain the average score of <i>Despicable Me</i>, one thing you can do is to have the client search for all the reviews of this movie and calculate the average score on the device. However, this requires all the reviews of this movie to be fetched to the client, which leads to unnecessary network traffic. With cloud function, you can simply have the client pass the name of the movie to the cloud and receive the calculated score only.
+`stars` is the score given by the user, ranging from 1 to 5. If you want to obtain the average score of *Despicable Me*, one thing you can do is to have the client search for all the reviews of this movie and calculate the average score on the device. However, this requires all the reviews of this movie to be fetched to the client, which leads to unnecessary network traffic. With cloud function, you can simply have the client pass the name of the movie to the cloud and receive the calculated score only.
 
 Cloud functions accept parameters in JSON objects which we can include the name of the movie in. All the methods defined in {% if platformName === "Node.js" %}[LeanStorage JavaScript SDK](leanstorage_guide-js.html){% endif %}{% if platformName === "Python" %}[LeanStorage Python SDK](leanstorage_guide-python.html){% endif %}{% if platformName === "PHP" %}[LeanStorage PHP SDK](leanstorage_guide-php.html){% endif %}{% if platformName === "Java" %}[LeanStorage Java SDK](leanstorage_guide-java.html){% endif %} can be used on LeanEngine, so we can write the cloud function `averageStars` like this:
 
