@@ -213,8 +213,6 @@ body {
 
   pre {
     margin-bottom: 18px;
-    // fix inline comment indicator not showing in overflowed container
-    overflow: visible;
   }
 
   li > pre {
@@ -245,6 +243,11 @@ body {
     font-style: normal;
     text-emphasis: dot #bbb;
     text-emphasis-position: under right;
+  }
+
+  em:lang(en) {
+    font-style: italic;
+    text-emphasis: none;
   }
 
   dt {

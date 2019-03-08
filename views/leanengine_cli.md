@@ -233,7 +233,7 @@ After testing your project locally, you can deploy it to LeanEngine with the fol
 $ lean deploy
 ```
 
-If you only have a <i>trial instance</i> in the production environment, the command above will deploy the project directly to the **production environment** and override the previous version in it (no matter if you are deploying from local computer, deploying from Git repository, or editing cloud functions on the web console). If you have a <i>standard instance</i> in the production environment, the command above will deploy the project to the **staging environment** first. You can run `$ lean publish` later to publish your project in the production environment.
+If you only have a *trial instance* in the production environment, the command above will deploy the project directly to the **production environment** and override the previous version in it (no matter if you are deploying from local computer, deploying from Git repository, or editing cloud functions on the web console). If you have a *standard instance* in the production environment, the command above will deploy the project to the **staging environment** first. You can run `$ lean publish` later to publish your project in the production environment.
 
 The progress will be printed out while the project is being deployed:
 
