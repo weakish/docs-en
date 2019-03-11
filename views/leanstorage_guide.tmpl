@@ -3,43 +3,6 @@
 ^((?!ticket).)*&dollar;{% if useSingleQuotes == true %}&apos;{% else %}&quot;{% endif %}
 {%- endmacro %}
 
-<!--
-{% if platform_name === "Objective-C" %}
-```objc
-
-```
-{% endif %}
-{% if platform_name === "JavaScript" %}
-```js
-
-```
-{% endif %}
-{% if platform_name === "Python" %}
-```python
-
-```
-{% endif %}
-{% if platform_name === "PHP" %}
-```php
-
-```
-{% endif %}
-{% if platform_name === "Java" %}
-```java
-
-```
-{% endif %}
-{% if platform_name === "Swift" %}
-```swift
-
-```
-{% endif %}
--->
-
-<!--
-{% if platform_name === "Objective-C" %}{% endif %}{% if platform_name === "JavaScript" %}{% endif %}{% if platform_name === "Python" %}{% endif %}{% if platform_name === "PHP" %}{% endif %}{% if platform_name === "Java" %}{% endif %}{% if platform_name === "Swift" %}{% endif %}
--->
-
 # LeanStorage {{platform_name}} Guide
 
 The LeanStorage {{platform_name}} SDK can be used to persist and query data in LeanCloud. The code below shows how you can create an object and store it into the cloud:
@@ -270,26 +233,26 @@ For Maven:
 <dependency>
     <groupId>cn.leancoud</groupId>
     <artifactId>storage-core</artifactId>
-    <version>{currentVersion}</version>
+    <version>{{currentVersion}}</version>
 </dependency>
 ```
 
 For Ivy:
 
 ```xml
-<dependency org="cn.leancloud" name="storage-core" rev="{currentVersion}" />
+<dependency org="cn.leancloud" name="storage-core" rev="{{currentVersion}}" />
 ```
 
 For SBT:
 
 ```sbt
-libraryDependencies += "cn.leancloud" %% "storage-core" % "{currentVersion}"
+libraryDependencies += "cn.leancloud" %% "storage-core" % "{{currentVersion}}"
 ```
 
 For Gradle:
 
 ```groovy
-implementation('cn.leancloud:storage-android:{currentVersion}')
+implementation 'cn.leancloud:storage-android:{{currentVersion}}'
 implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
 implementation 'com.alibaba:fastjson:1.1.70.android'
 ```
@@ -369,8 +332,7 @@ Import `Client` and call `initialize` to initialize:
 use \LeanCloud\Client;
 // Provide App Id, App Key, and Master Key as parameters
 Client::initialize("{{appid}}", "{{appkey}}", "{{masterkey}}");
-Client::setServerUrl("https://FIRST_8_DIGITS_OF_APP_ID.api.lncld.net");
-Client::useRegion(Region::US);
+Client::setServerUrl("{{host}}");
 ```
 {% endif %}
 {% if platform_name === "Java" %}
@@ -378,7 +340,6 @@ If you are building a Java project, add the following lines to the beginning of 
 
 ```java
 AVOSCloud.initialize("{{appid}}", "{{appkey}}");
-AVOSCloud.setRegion(AVOSCloud.REGION.NorthAmerica);
 ```
 
 If you are building for Android, add the following code into the `onCreate` function of the `Application` class:
@@ -414,8 +375,8 @@ Then specify the permissions needed by the SDK and declare the `MyLeanCloudApp` 
 
   <!-- RTM modules and push notifications START -->
   <!-- Both RTM modules and push notifications need PushService -->
-  <service android:name="cn.leancloud.PushService"/>
-  <receiver android:name="cn.leancloud.AVBroadcastReceiver">
+  <service android:name="cn.leancloud.push.PushService"/>
+  <receiver android:name="cn.leancloud.push.AVBroadcastReceiver">
     <intent-filter>
       <action android:name="android.intent.action.BOOT_COMPLETED"/>
       <action android:name="android.intent.action.USER_PRESENT"/>
@@ -696,7 +657,7 @@ We do not recommend storing large pieces of binary data like images or documents
 {% call docs.noteWrap() %}
 Keep in mind that our backend stores dates in UTC format and the SDK will convert them to local times upon retrieval.
 
-The date values displayed in the your app's [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/) are also converted to match your operating system's time zone. The only exception is that when you retrieve these date values through our [REST API](rest_api.html), they will remain in UTC format. You can manually convert them using appropriate time zones when necessary.
+The date values displayed in your app's [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/) are also converted to match your operating system's time zone. The only exception is that when you retrieve these date values through our [REST API](rest_api.html), they will remain in UTC format. You can manually convert them using appropriate time zones when necessary.
 {% endcall %}
 
 To learn about how you can protect the data stored on LeanCloud, see [Data and Security](data_security.html).
@@ -709,13 +670,13 @@ The code below creates a new instance of `{{ baseObjectName }}` with class `Todo
 ```objc
 AVObject *todo = [AVObject objectWithClassName:@"Todo"];
 
-// You can also use this way
+// You can also use this equivalent way
 AVObject *todo = [[AVObject alloc] initWithClassName:@"Todo"];
 ```
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-// Create a new subclass of AV.Object with the name of class defined in dashboard
+// Create a new subclass of AV.Object
 var Todo = AV.Object.extend('Todo');
 
 // Create a new instance of that class
@@ -727,7 +688,7 @@ new AV.Object('Todo');
 {% endif %}
 {% if platform_name === "Python" %}
 ```python
-# Create a new subclass of leancloud.Object with the name of class defined in dashboard
+# Create a new subclass of leancloud.Object
 Todo = leancloud.Object.extend('Todo')
 
 # Create a new instance of that class
@@ -738,7 +699,7 @@ todo = Todo()
 ```php
 $todo = new LeanObject("Todo");
 
-// You can also use this way
+// You can also use this equivalent way
 $todo = LeanObject::create("Todo");
 ```
 {% endif %}
@@ -1316,68 +1277,32 @@ Take Twitter as an example, we need to keep track of how many Likes and Retweets
 
 {% if platform_name === "Objective-C" %}
 ```objc
-AVObject *post = [AVObject objectWithClassName:@"Post" objectId:@"57328ca079bc44005c2472d0"];
-[post setObject:[NSNumber numberWithInt:0] forKey:@"likes"];
-[post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-    [post incrementKey:@"likes" byAmount:@1];
-    [post saveInBackground];
-}];
+[post incrementKey:@"likes" byAmount:@1];
 ```
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var post = AV.Object.createWithoutData('Post', '57328ca079bc44005c2472d0');
-post.set('likes', 0);
-post.save().then(function (post) {
-  post.increment('likes', 1);
-  post.save();
-});
+post.increment('likes', 1);
 ```
 {% endif %}
 {% if platform_name === "Python" %}
 ```python
-Post = leancloud.Object.extend('Post')
-post = Post.create_without_data('57328ca079bc44005c2472d0')
-post.set('likes', 0)
-post.save()
-
 post.increment('likes', 1)
-post.save()
 ```
 {% endif %}
 {% if platform_name === "PHP" %}
 ```php
-$post = LeanObject::create("Post", "57328ca079bc44005c2472d0");
-$post->set("likes", 0);
-$post->save();
-
 $post->increment("likes", 1);
-$post->save();
 ```
 {% endif %}
 {% if platform_name === "Java" %}
 ```java
-AVObject todo = AVObject.createWithoutData("Post", "57328ca079bc44005c2472d0");
-todo.put("likes", 0);
-todo.saveInBackground().subscribe(new Observer<AVObject>() {
-    public void onSubscribe(Disposable disposable) {}
-    public void onNext(AVObject todo) {
-        todo.increment("likes", 1);
-        todo.saveInBackground().blockingSubscribe();
-    }
-    public void onError(Throwable throwable) {}
-    public void onComplete() {}
-});
+todo.increment("likes", 1);
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-let post = LCObject(className: "Post", objectId: "57328ca079bc44005c2472d0")
-post.set("likes", value: 0)
-post.save()
-
 post.increase("likes", by: 1)
-post.save()
 ```
 {% endif %}
 
@@ -1491,7 +1416,7 @@ $todo->save();
 {% if platform_name === "Java" %}
 ```java
 Date getDateWithDateString(String dateString) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date date = dateFormat.parse(dateString);
     return date;
 }
@@ -3818,8 +3743,8 @@ See [Installing SDK](#installing-sdk) for more details.
 {% endif %}
 {% if platform_name === "Java" %}
 ```xml
-<service android:name="cn.leancloud.PushService"/>
-<receiver android:name="cn.leancloud.AVBroadcastReceiver">
+<service android:name="cn.leancloud.push.PushService"/>
+<receiver android:name="cn.leancloud.push.AVBroadcastReceiver">
   <intent-filter>
     <action android:name="android.intent.action.BOOT_COMPLETED"/>
     <action android:name="android.intent.action.USER_PRESENT"/>
@@ -4305,9 +4230,9 @@ Given the real-time feature of LiveQuery, developers may find it tempting to use
 
 ### Creating Files
 
-There are a couple of ways to create a file. You can create a file from a base64-encoded string:
-
 {% if platform_name === "Objective-C" %}
+You can create a file from a string:
+
 ```objc
 NSData *data = [@"LeanCloud" dataUsingEncoding:NSUTF8StringEncoding];
 // resume.txt is the file name
@@ -4315,13 +4240,15 @@ AVFile *file = [AVFile fileWithData:data name:@"resume.txt"];
 ```
 {% endif %}
 {% if platform_name === "JavaScript" %}
+You can create a file from a base64-encoded string:
+
 ```js
 var data = { base64: 'TGVhbkNsb3Vk' };
 // resume.txt is the file name
 var file = new AV.File('resume.txt', data);
 ```
 
-Alternatively, you can create a file from an array of byte values:
+You can also create a file from an array of byte values:
 
 ```js
 var data = [0x4c, 0x65, 0x61, 0x6e, 0x43, 0x6c, 0x6f, 0x75, 0x64];
@@ -4329,6 +4256,8 @@ var file = new AV.File('resume.txt', data);
 ```
 {% endif %}
 {% if platform_name === "Python" %}
+You can create a file from a string:
+
 ```python
 from StringIO import StringIO
 
@@ -4337,7 +4266,7 @@ data = StringIO('LeanCloud')
 file = leancloud.File('resume.txt', data)
 ```
 
-Alternatively, you can create a file from byte values with `buffer`:
+You can also create a file from byte values with `buffer`:
 
 ```python
 data = buffer('\x4c\x65\x61\x6e\x43\x6c\x6f\x75\x64')
@@ -4345,18 +4274,24 @@ file = leancloud.File('resume.txt', data)
 ```
 {% endif %}
 {% if platform_name === "PHP" %}
+You can create a file from a string:
+
 ```php
 // resume.txt is the file name
 $file = File::createWithData("resume.txt", "LeanCloud");
 ```
 {% endif %}
 {% if platform_name === "Java" %}
+You can create a file from a string:
+
 ```java
 // resume.txt is the file name
 AVFile file = new AVFile("resume.txt", "LeanCloud".getBytes());
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
+You can create a file from a string:
+
 ```swift
 if let data = "LeanCloud".data(using: .utf8) {
     let file = LCFile(payload: .data(data: data))
@@ -4410,10 +4345,12 @@ if let url = URL(string: "https://leancloud.cn/assets/imgs/press/Logo%20-%20Blue
 When creating files from URLs, the SDK will not upload the actual files into the cloud but will store the addresses of the files as strings. This will not lead to actual traffic for uploading files, as opposed to creating files in other ways by doing which the files will be actually stored into the cloud.
 {% endcall %}
 
-LeanCloud will auto-detect the type of the file you are uploading based on the file extension, but you can specify the `Content-Type` (commonly referred to as MIME type) with a third parameter:
+LeanCloud will auto-detect the type of the file you are uploading based on the file extension, but you can also specify the `Content-Type` (commonly referred to as MIME type):
 
 {% if platform_name === "Objective-C" %}
+```objc
 {# TODO #}
+```
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
@@ -4431,10 +4368,19 @@ $file = File::createWithData("resume.txt", "{\"company\":\"LeanCloud\"}", "appli
 ```
 {% endif %}
 {% if platform_name === "Java" %}
-{# TODO #}
+```java
+Map<String, Object> meta = new HashMap<String, Object>();
+meta.put("mime_type", "application/json");
+AVFile file = new AVFile("resume.txt", "LeanCloud".getBytes(), meta);
+```
 {% endif %}
 {% if platform_name === "Swift" %}
-{# TODO #}
+```swift
+if let data = "{\"company\":\"LeanCloud\"}".data(using: .utf8) {
+    let file = LCFile(payload: .data(data: data))
+    file.mimeType = "application/json"
+}
+```
 {% endif %}
 
 But the most common method for creating files is to upload them from local paths{{ ". In a web app, you can first create an input button in the user interface:" if platform_name === "JavaScript" else ":" }}
@@ -4562,56 +4508,59 @@ A file successfully uploaded can be found in the `_File` class and cannot be mod
 You can associate a file with `{{ baseObjectName }}` after it is saved:
 
 {% if platform_name === "Objective-C" %}
-{# TODO #}
+```objc
+AVObject *todo = [AVObject objectWithClassName:@"Todo"];
+[todo setObject:@"Get Cakes" forKey:@"title"];
+// attachments is an Array field
+[todo addObject:file forKey:@"attachments"];
+[todo saveInBackground];
+```
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-file.save().then(function (file) {
-  var Todo = AV.Object.extend('Todo');
-  var todo = new Todo();
-  todo.set('title', 'Get Cakes');
-  // attachments is an Array field
-  todo.add('attachments', file);
-  todo.save();
-});
+var Todo = AV.Object.extend('Todo');
+var todo = new Todo();
+todo.set('title', 'Get Cakes');
+// attachments is an Array field
+todo.add('attachments', file);
+todo.save();
 ```
 {% endif %}
 {% if platform_name === "Python" %}
-{# TODO #}
+```python
+Todo = leancloud.Object.extend('Todo')
+todo = Todo()
+todo.set('title', 'Get Cakes')
+# attachments is an Array field
+todo.add('attachments', file)
+todo.save()
+```
 {% endif %}
 {% if platform_name === "PHP" %}
-{# TODO #}
+```php
+$todo = new LeanObject("Todo");
+$todo->set("title", "Get Cakes");
+// attachments is an Array field
+$todo->addIn("attachments", $file);
+$todo->save();
+```
 {% endif %}
 {% if platform_name === "Java" %}
 ```java
-file.saveInBackground().subscribe(new Observer<AVFile>() {
-    public void onSubscribe(Disposable disposable) {}
-    public void onNext(AVFile file) {
-        AVObject todo = new AVObject("Todo");
-        todo.put("title", "Get Cakes");
-        // attachments is an Array field
-        todo.add("attachments", file);
-        todo.saveInBackground().blockingSubscribe();
-    }
-    public void onError(Throwable throwable) {}
-    public void onComplete() {}
-});
+AVObject todo = new AVObject("Todo");
+todo.put("title", "Get Cakes");
+// attachments is an Array field
+todo.add("attachments", file);
+todo.saveInBackground().blockingSubscribe();
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-file.save { result in
-    switch result {
-    case .success:
-        let todo = LCObject(className: "Todo")
-        todo.set("title", value: "Get Cakes")
-        // attachments is an Array field
-        todo.append("attachments", element: file)
-        todo.save()
-    case .failure(let error):
-        print(error)
-    }
-}
+let todo = LCObject(className: "Todo")
+todo.set("title", value: "Get Cakes")
+// attachments is an Array field
+todo.append("attachments", element: file)
+todo.save()
 ```
 {% endif %}
 
@@ -4692,7 +4641,7 @@ You can monitor the progress of uploading and display that to the user:
 {% if platform_name === "Objective-C" %}
 ```objc
 [file uploadWithProgress:^(NSInteger percent) {
-    // percent indicates the progress and is between 0 and 100
+    // percent is an integer between 0 and 100, indicating uploading progress
 } completionHandler:^(BOOL succeeded, NSError *error) {
     // Things to do after saving
 }];
@@ -4715,7 +4664,9 @@ file.save({
 ```
 {% endif %}
 {% if platform_name === "Java" %}
+```java
 {# TODO #}
+```
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
@@ -4740,10 +4691,20 @@ file.save(
 
 When uploading a file, you can attach additional properties to it with `metaData`. A file's `metaData` cannot be updated once the file is stored to the cloud.
 
-{# Code for other languages only mentioned how to set metadata without how to retrieve metadata. #}
-
 {% if platform_name === "Objective-C" %}
-{# TODO #}
+```objc
+[file.metaData setObject:@"LeanCloud" forKey:@"author"];
+[file uploadWithCompletionHandler:^(BOOL succeeded, NSError *error) {
+    // Get all metadata
+    NSDictionary *metadata = file.metaData;
+    // Get author
+    NSString *author = metadata[@"author"];
+    // Get file name
+    NSString *fileName = file.name;
+    // Get size (not available for files created from base64-encoded strings or URLs)
+    NSUInteger *size = file.size;
+}];
+```
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
@@ -4762,16 +4723,74 @@ file.save().then(function (file) {
 ```
 {% endif %}
 {% if platform_name === "Python" %}
-{# TODO #}
+```python
+# Set metadata
+file.metadata['author'] = 'LeanCloud'
+file.save()
+
+# Get all metadata
+metadata = file.metadata
+# Get author
+author = metadata['author']
+# Get file name
+file_name = file.name
+# Get size (not available for files created from base64-encoded strings or URLs)
+size = file.size
+```
 {% endif %}
 {% if platform_name === "PHP" %}
-{# TODO #}
+```php
+// Set metadata
+$file->setMeta("author", "LeanCloud");
+$file->save();
+
+// Get all metadata
+$metadata = $file->getMeta();
+// Get author
+$author = $file->getMeta("author");
+// Get file name
+$fileName = $file->getName();
+// Get size (not available for files created from base64-encoded strings or URLs)
+$size = $file->getSize();
+```
 {% endif %}
 {% if platform_name === "Java" %}
-{# TODO #}
+```java
+// Set metadata
+file.addMetaData("author", "LeanCloud");
+file.saveInBackground().subscribe(new Observer<AVFile>() {
+    public void onSubscribe(Disposable disposable) {}
+    public void onNext(AVFile file) {
+        // Get author
+        String author = (String) file.getMetaData("author");
+        // Get file name
+        String fileName = file.getName();
+        // Get size (not available for files created from base64-encoded strings or URLs)
+        int size = file.getSize();
+    }
+    public void onError(Throwable throwable) {}
+    public void onComplete() {}
+});
+```
 {% endif %}
 {% if platform_name === "Swift" %}
-{# TODO #}
+```swift
+// Set metadata
+file.metaData["author"] = "LeanCloud"
+file.save { result in
+    switch result {
+    case .success:
+        // Get author
+        String? author = file.metaData["author"]
+        // Get file name
+        String? fileName = file.name
+        // Get size (not available for files created from base64-encoded strings or URLs)
+        UInt64? size = file.metaData["size"]
+    case .failure(let error):
+        print(error)
+    }
+}
+```
 {% endif %}
 
 {# ### Retrieving Files #}
@@ -5921,6 +5940,12 @@ if (currentUser) {
 {% if platform_name === "Python" %}
 ```python
 current_user = leancloud.User.get_current()
+if current_user is not None:
+    # Redirect to the home page
+    pass
+else:
+    # Show the sign-up or log-in page
+    pass
 ```
 {% endif %}
 {% if platform_name === "PHP" %}
@@ -5945,8 +5970,7 @@ if (currentUser != null) {
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-let currentUser = LCUser.current
-if currentUser {
+if let currentUser = LCUser.current {
     // Redirect to the home page
 } else {
     // Show the sign-up or log-in page
@@ -6088,7 +6112,15 @@ The code below checks if a session token is valid:
 
 {% if platform_name === "Objective-C" %}
 ```objc
-{# TODO #}
+AVUser *currentUser = [AVUser currentUser];
+NSString *token = currentUser.sessionToken;
+[currentUser isAuthenticatedWithSessionToken:token callback:^(BOOL succeeded, NSError * _Nullable error) {
+    if (succeeded) {
+        // The session token is valid
+    } else {
+        // The session token is invalid
+    }
+}];
 ```
 {% endif %}
 {% if platform_name === "JavaScript" %}
@@ -6105,17 +6137,33 @@ currentUser.isAuthenticated().then(function (authenticated) {
 {% endif %}
 {% if platform_name === "Python" %}
 ```python
-leancloud.User.get_current().is_authenticated()
+authenticated = leancloud.User.get_current().is_authenticated()
+if authenticated:
+    # The session token is valid
+    pass
+else:
+    # The session token is invalid
+    pass
 ```
 {% endif %}
 {% if platform_name === "PHP" %}
 ```php
-User::isAuthenticated();
+$authenticated = User::isAuthenticated();
+if ($authenticated) {
+    // The session token is valid
+} else {
+    // The session token is invalid
+}
 ```
 {% endif %}
 {% if platform_name === "Java" %}
 ```java
-{# TODO #}
+boolean authenticated = AVUser.getCurrentUser().isAuthenticated();
+if (authenticated) {
+    // The session token is valid
+} else {
+    // The session token is invalid
+}
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
@@ -6453,7 +6501,39 @@ The reason behind is that most data stored in `{{ userObjectName }}` can be very
 The code below illustrates this security policy:
 
 {% if platform_name === "Objective-C" %}
-{# TODO #}
+```objc
+[AVUser logInWithUsernameInBackground:@"Tom" password:@"cat!@#123" block:^(AVUser *user, NSError *error) {
+    if (user != nil) {
+        // Attempt to change username
+        [user setObject:@"Jerry" forKey:@"username")];
+        // Password is hashed and an empty string will be returned
+        NSString *password = user[@"password"];
+        // Save changes
+        [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                // This will work since the user is authenticated
+
+                // Get the user with a non-authenticated method
+                AVQuery *query = [AVQuery queryWithClassName:@"_User"]; 
+                [query getObjectInBackgroundWithId:user.objectId block:^(AVObject *unauthenticatedUser, NSError *error) {
+                    [unauthenticatedUser setObject:@"Toodle" forKey:@"username"];
+                    [unauthenticatedUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                        if (succeeded) {
+                            // This will not succeed since the user is unauthenticated
+                        } else {
+                            // Failure is expected
+                        }
+                    }];
+                }];
+            } else {
+                // Error handling
+            }
+        }];
+    } else {
+        // Error handling
+    }
+}];
+```
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
@@ -6464,15 +6544,14 @@ var user = AV.User.logIn('Tom', 'cat!@#123').then(function (user) {
   var password = user.get('password');
   // Save changes
   user.save().then(function (user) {
-    // This works since the user was authenticated
+    // This will work since the user is authenticated
 
     // Get the user with a non-authenticated method
     var query = new AV.Query('_User');
     query.get(user.objectId).then(function (unauthenticatedUser) {
       unauthenticatedUser.set('username', 'Toodle');
-      // Save changes
       unauthenticatedUser.save().then(function (unauthenticatedUser) { }, function (error) {
-        // This will cause error since the AV.User is not authenticated
+        // This will cause error since the user is unauthenticated
       });
     });
   });
@@ -6480,16 +6559,110 @@ var user = AV.User.logIn('Tom', 'cat!@#123').then(function (user) {
 ```
 {% endif %}
 {% if platform_name === "Python" %}
-{# TODO #}
+```python
+leancloud.User.login('Tom', 'cat!@#123')
+current_user = leancloud.User.get_current()
+
+# Attempt to change username
+current_user.set('username', 'Jerry')
+# Password is hashed and an empty string will be returned
+password = current_user.get('password')
+# This will work since the user is authenticated
+current_user.save()
+
+# Get the user with a non-authenticated method
+query = leancloud.Query('_User')
+unauthenticated_user = query.get(current_user.id)
+unauthenticated_user.set('username', 'Toodle')
+# This will cause error since the user is unauthenticated
+unauthenticated_user.save()
+```
 {% endif %}
 {% if platform_name === "PHP" %}
-{# TODO #}
+```php
+User::logIn("Tom", "cat!@#123");
+$currentUser = User::getCurrentUser();
+
+// Attempt to change username
+$currentUser->set("username", "Jerry");
+// Password is hashed and an empty string will be returned
+$password = $currentUser->get("password");
+// This will work since the user is authenticated
+$currentUser->save();
+
+// Get the user with a non-authenticated method
+$query = new Query("_User");
+$unauthenticatedUser = $query->get($currentUser->getObjectId())
+$unauthenticatedUser->set("username", "Toodle");
+// This will cause error since the user is unauthenticated
+$unauthenticatedUser->save()
+```
 {% endif %}
 {% if platform_name === "Java" %}
-{# TODO #}
+```java
+AVUser.logIn("Tom", "cat!@#123").subscribe(new Observer<AVUser>() {
+    public void onSubscribe(Disposable disposable) {}
+    public void onNext(AVUser user) {
+        // Attempt to change username
+        user.put("username", "Jerry");
+        // Password is hashed and an empty string will be returned
+        String password = user.getString("password");
+        // This will work since the user is authenticated
+        user.save();
+
+        // Get the user with a non-authenticated method
+        AVQuery<AVUser> query = new AVQuery<>("_User");
+        query.getInBackground(user.getObjectId()).subscribe(new Observer<AVUser>() {
+            public void onSubscribe(Disposable disposable) {}
+            public void onNext(AVUser unauthenticatedUser) {
+                unauthenticatedUser.put("username", "Toodle");
+                // This will cause error since the user is unauthenticated
+                unauthenticatedUser.save();
+            }
+            public void onError(Throwable throwable) {}
+            public void onComplete() {}
+        });
+    }
+    public void onError(Throwable throwable) {}
+    public void onComplete() {}
+});
+```
 {% endif %}
 {% if platform_name === "Swift" %}
-{# TODO #}
+```swift
+LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
+    switch result {
+    case .success(let user):
+        // Attempt to change username
+        try! user.set("username", "Jerry")
+        // Password is hashed and an empty string will be returned
+        let password = user.get("password")
+        // Saving works since the user was authenticated
+        user.save()
+
+        // Get the user with a non-authenticated method
+        let query = LCQuery(className: "_User")
+        query.get(user.objectId) { result in
+            switch result {
+                case .success(let unauthenticatedUser):
+                    try! unauthenticatedUser.set("username", "Toodle")
+                    unauthenticatedUser.save() { result in
+                        switch result {
+                            .success:
+                                // This will not succeed since the user is unauthenticated
+                            .failure:
+                                // Failure is expected
+                        }
+                    }
+                case .failure(let error):
+                    print(error)
+            }
+        }
+    case .failure(let error):
+        print(error)
+    }
+}
+```
 {% endif %}
 
 The `{{ userObjectName }}` obtained from `{% if platform_name === "Objective-C" %}[AVUser currentUser]{% endif %}{% if platform_name === "JavaScript" %}AV.User.current(){% endif %}{% if platform_name === "Python" %}leancloud.User.get_current(){% endif %}{% if platform_name === "PHP" %}User::getCurrentUser(){% endif %}{% if platform_name === "Java" %}AVUser.getCurrentUser(){% endif %}{% if platform_name === "Swift" %}LCUser.current{% endif %}` will always be authenticated.
@@ -6702,7 +6875,12 @@ The code below checks if the current user is anonymous:
 
 {% if platform_name === "Objective-C" %}
 ```objc
-{# TODO #}
+AVUser *currentUser = [AVUser currentUser];
+if (currentUser.isAnonymous) {
+    // currentUser is anonymous
+} else {
+    // currentUser is not anonymous
+}
 ```
 {% endif %}
 {% if platform_name === "JavaScript" %}
