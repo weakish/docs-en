@@ -633,7 +633,7 @@ testObject.put("testDate",      date);
 testObject.put("testData",      data);
 testObject.put("testArrayList", arrayList);
 testObject.put("testHashMap",   hashMap);
-testObject.saveInBackground().blockingSubscribe();
+testObject.save();
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
@@ -1147,7 +1147,7 @@ $todo->save();
 ```java
 AVObject todo = AVObject.createWithoutData("Todo", "582570f38ac247004f39c24b");
 todo.put("content", "Weekly meeting has been rescheduled to Wed 3pm for this week.");
-todo.saveInBackground().blockingSubscribe();
+todo.save();
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
@@ -1427,7 +1427,7 @@ Date alarm3 = getDateWithDateString("2018-04-30 07:30:00");
 
 AVObject todo = new AVObject("Todo");
 todo.addAllUnique("alarms", Arrays.asList(alarm1, alarm2, alarm3));
-todo.saveInBackground().blockingSubscribe();
+todo.save();
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
@@ -1484,7 +1484,7 @@ $todo->destroy();
 {% if platform_name === "Java" %}
 ```java
 AVObject todo = AVObject.createWithoutData("Todo", "582570f38ac247004f39c24b");
-todo.deleteInBackground().blockingSubscribe();
+todo.delete();
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
@@ -1682,7 +1682,7 @@ query.findInBackground().subscribe(new Observer<List<AVObject>>() {
             todo.put("isComplete", true);
         }
         // Save all at once
-        AVObject.saveAllInBackground(todos).blockingSubscribe();
+        AVObject.saveAll(todos);
     }
     public void onError(Throwable throwable) {}
     public void onComplete() {}
@@ -1810,7 +1810,7 @@ comment.put("content", "KFC is the best!");
 comment.put("parent", post);
 
 // This will save both post and comment
-comment.saveInBackground().blockingSubscribe();
+comment.save();
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
@@ -4345,13 +4345,10 @@ if let url = URL(string: "https://leancloud.cn/assets/imgs/press/Logo%20-%20Blue
 When creating files from URLs, the SDK will not upload the actual files into the cloud but will store the addresses of the files as strings. This will not lead to actual traffic for uploading files, as opposed to creating files in other ways by doing which the files will be actually stored into the cloud.
 {% endcall %}
 
+{% if platform_name === "JavaScript" or platform_name === "Python" or platform_name === "PHP" or platform_name === "Java" or platform_name === "Swift" %}
 LeanCloud will auto-detect the type of the file you are uploading based on the file extension, but you can also specify the `Content-Type` (commonly referred to as MIME type):
-
-{% if platform_name === "Objective-C" %}
-```objc
-{# TODO #}
-```
 {% endif %}
+
 {% if platform_name === "JavaScript" %}
 ```js
 var file = new AV.File('resume.txt', data, 'application/json');
@@ -4551,7 +4548,7 @@ AVObject todo = new AVObject("Todo");
 todo.put("title", "Get Cakes");
 // attachments is an Array field
 todo.add("attachments", file);
-todo.saveInBackground().blockingSubscribe();
+todo.save();
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
@@ -4665,7 +4662,12 @@ file.save({
 {% endif %}
 {% if platform_name === "Java" %}
 ```java
-{# TODO #}
+Observable<AVFile> result = file.saveInBackground(new ProgressCallback() {
+    @Override
+    public void done(Integer percent) {
+        // percent is an integer between 0 and 100, indicating uploading progress
+    }
+});
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
@@ -4825,13 +4827,13 @@ $file->destroy();
 {% endif %}
 {% if platform_name === "Java" %}
 ```java
-{# TODO #}
-file.deleteInBackground().blockingSubscribe();
+AVObject file = AVObject.createWithoutData("_File", "552e0a27e4b0643b709e891e");
+file.delete()
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-{# TODO #}
+let file = LCObject(className: "_File", objectId: "552e0a27e4b0643b709e891e")
 file.delete()
 ```
 {% endif %}
