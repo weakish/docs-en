@@ -6759,7 +6759,7 @@ A user who has GitHub linked may have the following object as `authData`:
 }
 ```
 
-LeanCloud automatically validates the access tokens for certain services to prevent data forge attack. When the validation fails, LeanCloud will respond with `invalid authData` error and the linking will not be established. For other services (such as GitHub, Twitter, and Facebook), you are responsible for validating access tokens by yourself. You can turn off the **Validate the access token for third-party login** option in your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) if you prefer not to have LeanCloud validate access tokens for you.
+LeanCloud automatically validates the access tokens for certain services to prevent data forge attack. When the validation fails, LeanCloud will respond with `invalid authData` error and the linking will not be established. For services that are not recognized by LeanCloud, you are responsible for validating access tokens by yourself. You can turn off the **Validate the access token for third-party login** option in your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) if you prefer not to have LeanCloud validate access tokens for you.
 
 #### Unlinking 
 
