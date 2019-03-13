@@ -5,3 +5,4 @@
 {% set fileObjectName = "AVFile" %}
 {% set geoPointObjectName = "AVGeoPoint" %}
 {% set userObjectName = "AVUser" %}
+{% set currentVersion = "5.0.12" %}
