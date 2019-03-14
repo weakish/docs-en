@@ -6227,8 +6227,7 @@ LCUser.requestPasswordReset(email: "tom@leancloud.rocks")
 The code above will check if there is a user in the `_User` table that has the `email` to be the same as the one provided, and will send them a password reset email if so. As mentioned previously, you can make the `username` of each user to be the same as their `email`, or collect the email separately and store it in the `email` field.
 
 {% call docs.noteWrap() %}
-The content of the password reset email is fully customizable. You can go to your app's [Dashboard > Settings > Email Templates](/app.html?appid={{appid}}#/email) and modify
-the corresponding template.
+The content of the password reset email is fully customizable. You can go to your app's [Dashboard > Settings > Email Templates](/app.html?appid={{appid}}#/email) and modify the corresponding template.
 {% endcall %}
 
 Alternatively, you can ask for the mobile phone number instead of the email to reset their password:
@@ -6760,7 +6759,7 @@ A user who has GitHub linked may have the following object as `authData`:
 }
 ```
 
-LeanCloud automatically validates the access tokens for certain services to prevent data forge attack. When the validation fails, LeanCloud will respond with `invalid authData` error and the linking will not be established. For other services (such as GitHub, Twitter, and Facebook), you are responsible for validating access tokens by yourself. You can turn off the **Validate the access token for third-party login** option in your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) if you prefer not to have LeanCloud validate access tokens for you.
+LeanCloud automatically validates the access tokens for certain services to prevent data forge attack. When the validation fails, LeanCloud will respond with `invalid authData` error and the linking will not be established. For services that are not recognized by LeanCloud, you are responsible for validating access tokens by yourself. You can turn off the **Validate the access token for third-party login** option in your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) if you prefer not to have LeanCloud validate access tokens for you.
 
 #### Unlinking 
 
