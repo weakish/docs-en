@@ -51,7 +51,6 @@ After installing the CLI, run `$ lean help` in terminal to see the help informat
 
 ```sh
 $ lean help
-
  _                        ______ _                 _
 | |                      / _____) |               | |
 | |      ____ ____ ____ | /     | | ___  _   _  _ | |
@@ -65,7 +64,7 @@ USAGE:
    lean [global options] command [command options] [arguments...]
 
 VERSION:
-   0.20.0
+   0.20.1
 
 COMMANDS:
      login    Log in to LeanCloud
@@ -83,7 +82,7 @@ COMMANDS:
      cache    LeanCache shell
      cql      Start CQL interactive mode
      search   Search development docs
-     help, h  Show all commands or help info for one command
+     help, h  Show all commands
 
 GLOBAL OPTIONS:
    --version, -v  print the version
