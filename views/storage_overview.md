@@ -131,6 +131,10 @@ A user can sign up or log in with the following methods:
 
 A user can also reset password with email or phone number. See guides of each SDK for more details.
 
+## Hooks
+
+See [Cloud Function Guide > Hooking](leanengine_cloudfunction_guide-node.html#hooking).
+
 ## Key Metrics
 
 LeanCloud guarantees a 99.9% service availability and ensures a high capability and scalability for your business:
