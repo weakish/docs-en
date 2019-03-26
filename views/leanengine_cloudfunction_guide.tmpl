@@ -18,12 +18,36 @@ With cloud function, you can deploy these logic written in any language (JavaScr
 
 If you have no idea how to deploy you project to LeanEngine, take a look at [LeanEngine Quick Start](leanengine_quickstart.html).
 
+## Other Languages
+
 This guide uses {{platformName}} as an example, but LeanEngine supports many other languages as well. You can choose the one you are familiar with for development:
 
 - [Node.js](leanengine_cloudfunction_guide-node.html){% if platformName === "Node.js" %} <span class="text-muted">(current)</span>{% endif %}
 - [Python](leanengine_cloudfunction_guide-python.html){% if platformName === "Python" %} <span class="text-muted">(current)</span>{% endif %}
 - [PHP](leanengine_cloudfunction_guide-php.html){% if platformName === "PHP" %} <span class="text-muted">(current)</span>{% endif %}
 - [Java](leanengine_cloudfunction_guide-java.html){% if platformName === "Java" %} <span class="text-muted">(current)</span>{% endif %}
+
+## Switching Environments
+
+You can switch between the production environment and the staging environment on the client:
+
+```objc
+[AVCloud setProductionMode:NO]; // Staging environment
+```
+```js
+AV.setProduction(false); // Staging environment
+```
+```python
+leancloud.use_production(False) # Staging environment
+```
+```php
+LeanClient::useProduction(false); // Staging environment
+```
+```java
+AVCloud.setProductionMode(false); // Staging environment
+```
+
+Apps with only [trial instances](leanengine_plan.html#trial-instances) would only have production environments. Please do not attempt to switch to staging environments.
 
 ## Cloud Functions
 
@@ -507,6 +531,34 @@ A hook can be **automatically** triggered when certain events happen (like befor
 - Hooks cannot be applied to `_Installation` table.
 
 For hooks starting with `before` (including `{% if platformName === "Node.js" %}onLogin{% endif %}{% if platformName === "Python" %}on_login{% endif %}{% if platformName === "PHP" %}onLogin{% endif %}{% if platformName === "Java" %}onLogin{% endif %}`), if an exception occurs inside the function, the data operation will be terminated. Therefore, you can reject certain data operations by having functions throw an error. For hooks starting with `after` (including `{% if platformName === "Node.js" %}onVerified{% endif %}{% if platformName === "Python" %}on_verified{% endif %}{% if platformName === "PHP" %}onVerified{% endif %}{% if platformName === "Java" %}onVerified{% endif %}`), such exception will not terminate the data operation because the operation is already completed before the function is executed.
+
+```mermaid
+graph LR
+A((save)) -->D{object}
+D-->E(new)
+E-->|beforeSave|H{error?}
+H-->N(No)
+N-->B[create new object on the cloud]
+B -->|afterSave|C((done))
+H-->Y(Yes)
+Y-->Z((interrupted))
+D-->F(existing)
+F-->|beforeUpdate|I{error?}
+I-->Y
+I-->V(No)
+V-->G[update existing object on the cloud]
+G-->|afterUpdate|C
+```
+
+```mermaid
+graph LR
+A((delete))-->|beforeDelete|H{error?}
+H-->Y(Yes)
+Y-->Z((interrupted))
+H-->N(No)
+N-->B[delete object on the cloud]
+B -->|afterDelete|C((done))
+```
 
 To ensure that hooks are triggered internally by LeanStorage services, our SDK will verify the source of each request. If the verification fails, the error message `Hook key check failed` will be returned. If you see such error message when debugging locally, make sure you are using our command-line interface for debugging.
 
