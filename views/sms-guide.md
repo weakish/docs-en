@@ -303,15 +303,15 @@ Now the message will look like this:
 
 Here is a list of parameters you can use with the `requestSmsCode` method.
 
-| Parameter                                                            | Default           | Description                                                                                                                                                                                                               |
-|----------------------------------------------------------------------|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `mobilePhoneNumber`<br/>{{ docs.paramAttr("string, **required**") }} |                   | the target phone number. See [Formatting Phone Numbers](#formatting-phone-numbers)                                                                                                                                        |
-| `smsType`<br/> {{ docs.paramAttr("string") }}                        | sms               | whether to send the message via `sms` (text) or `voice`. See [Voice Verification Code](#voice-verification-code)                                                                                                          |
-| `ttl`<br/> {{ docs.paramAttr("number") }}                            | 10                | how soon the verification code will expire (in minutes)                                                                                                                                                                   |
-| `name`<br/> {{ docs.paramAttr("string") }}                           | *App's name*      | if omitted, defaults to your app's name.                                                                                                                                                                                  |
-| `op`<br/> {{ docs.paramAttr("string") }}                             | SMS verification  | the action or operation that requires authentication in your app. Defaults to "SMS verification" if omitted.                                                                                                              |
-| `template`<br/> {{ docs.paramAttr("string") }}                       |                   | template to use for sending messages with customized content. Required when sending transactional or promotional messages. If omitted, our platform will use a generic template instead. See [Customizing Message Content](#customizing-message-content). |
-| `sign`<br/> {{ docs.paramAttr("string") }}                           | *default signature* | which SMS signature to use if there are more than one signature. If you have not created any templates, the default signature will be used regardless of the value of this parameter.                                     |
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `mobilePhoneNumber` | `String` | | The target phone number. Required. See [Formatting Phone Numbers](#formatting-phone-numbers). |
+| `smsType` | `String` | `sms` | Whether to send the message via `sms` (text) or `voice`. See [Voice Verification Code](#voice-verification-code). |
+| `ttl` | `Number` | `10` | How soon the verification code will expire (in minutes). |
+| `name` | `String` | *App's name* | If omitted, defaults to your app's name. |
+| `op` | `string` | `SMS verification` | The action or operation that requires authentication in your app. Defaults to `SMS verification` if omitted. |
+| `template` | `String` | | Template to use for sending messages with customized content. Required when sending transactional or promotional messages. If omitted, our platform will use a generic template instead. See [Customizing Message Content](#customizing-message-content). |
+| `sign` | `String` | *Default signature* | Which SMS signature to use if there are more than one signature. If you have not created any templates, the default signature will be used regardless of the value of this parameter. |
 
 Verifying the verification code is quite straightforward. Just be careful that the Verification Code parameter comes first, then you are good to go. 
 
@@ -403,7 +403,7 @@ Built-in variables are:
 
 With the help of these variables, you can cook up your own verification messages if you prefer not using the default template. Let's say you want to verify user upon registration, and you can compose your template like this:
 
-{% call docs.bubbleWrap(false) -%}
+{% call docs.bubbleWrap() -%}
 Thank you for creating an account with {{ docs.mustache("name") }}. Your verification code is {{ docs.mustache("code") }}. Please use it within the next {{ docs.mustache("ttl") }} minutes. Do not let other people know about the code.
 {% endcall %}
 
@@ -417,7 +417,7 @@ You can also create your own variables and use them in the template by simply pa
 
 Suppose you have a pre-approved *transactional* message template named `delivery_notice_en_US` which contains a user-defined variable `order_id`, and your signature name is **general** which has a value of `TMALL`:
 
-{% call docs.bubbleWrap(false) -%}
+{% call docs.bubbleWrap() -%}
 Your order #{{ docs.mustache("order_id") }} is being delivered to you. Please keep your phone handy in case our delivery guy might contact you. Thank you for your business.
 {% endcall %}
 
@@ -457,10 +457,10 @@ Your order #<mark>7623432424540</mark> is being delivered to you. Please keep yo
 **Links**: For security reasons, you should not put a URL in a variable, but you can use variables and text to construct a URL in your template. For example:
   
 **INCORRECT**:
-{% call docs.bubbleWrap(false) -%}You can download our app from {{ docs.mustache("download_link") }}{% endcall %}
+{% call docs.bubbleWrap() -%}You can download our app from {{ docs.mustache("download_link") }}{% endcall %}
 
 CORRECT:
-{% call docs.bubbleWrap(false) -%}You can get the status of your package from here: http://www.sf-express.com/cn/#search/{{ docs.mustache("bill_number") }}{% endcall %}
+{% call docs.bubbleWrap() -%}You can get the status of your package from here: http://www.sf-express.com/cn/#search/{{ docs.mustache("bill_number") }}{% endcall %}
 
 
 ## CAPTCHA Service
@@ -670,11 +670,11 @@ When using `AV.Captcha.request` to create `AV.Captcha` instance, available param
 
 The `bind` method of an `AV.Captcha` instance can take the following parameters:
 
-| Parameter                                                         |  Description                        |
-|-------------------------------------------------------------------|--------------------------|
-| `textInput`<br/>{{ docs.paramAttr("string or HTMLInputElement")}} | the text input for entering the verification code. It can be the *id* value of the input tag or a reference to the `<input>` element. |
-| `image`<br/>{{ docs.paramAttr("string or HTMLImageElement")}}     | the image that displays CAPTCHA content. It can be the *id* value of the image tag or a reference to the `<img>` element. |
-| `verifyButton`<br/>{{ docs.paramAttr("string or HTMLElement")}}   | the button for submitting user's input.  It can be the *id* value of the button or a reference to the `<button>` element. |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `textInput` | `String` or `HTMLInputElement` | The text input for entering the verification code. It can be the *id* value of the input tag or a reference to the `<input>` element. |
+| `image` | `String` or `HTMLInputElement` | The image that displays CAPTCHA content. It can be the *id* value of the image tag or a reference to the `<img>` element. |
+| `verifyButton` | `String` or `HTMLInputElement` | the button for submitting user's input. It can be the *id* value of the button or a reference to the `<button>` element. |
 
 ## Sending Limitations on SMS Messages
 
