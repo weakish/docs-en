@@ -162,7 +162,7 @@ var AV = require('leancloud-storage');
 // Create references to the global AV
 var { Query, User } = AV;
 // Initialize SDK
-AV.init('APP_ID', 'APP_KEY');
+AV.init('{{appid}}', '{{appkey}}');
 ```
 
 You may also use a pre-compiled SDK file in your webpage with the following `<script>` tag:
@@ -177,7 +177,7 @@ And then create references to the SDK:
 // Create references to the global AV
 var { Query, User } = AV;
 // Initialize SDK
-AV.init('APP_ID', 'APP_KEY');
+AV.init('{{appid}}', '{{appkey}}');
 ```
 
 Check out our [releases page](https://releases.leanapp.cn/#/leancloud/javascript-sdk/releases) for more releases and file formats.
@@ -312,7 +312,7 @@ Add the following code into your project:
 var APP_ID  = '{{appid}}';
 var APP_KEY = '{{appkey}}';
 
-// Same as using AV.init('APP_ID', 'APP_KEY')
+// Same as using AV.init(APP_ID, APP_KEY)
 AV.init({
   appId:  APP_ID,
   appKey: APP_KEY
