@@ -1549,6 +1549,7 @@ LeanEngine supports the following dependencies:
 - `phantomjs`: A headless WebKit browser (deprecated).
 - `chrome-headless`: A headless Chrome browser (takes more time to be deployed and consumes a lot of CPU and memory; if you use `puppeter`, you need to pass `{executablePath: '/usr/bin/google-chrome', args: ['--no-sandbox', '--disable-setuid-sandbox']}` to `puppeteer.launch`; does not support Java).
 - `node-canvas`: System dependencies required for installing `node-canvas` (you still need to install `node-canvas` by yourself).
+- `python-talib`: A library for performing technical analysis of financial market data
 
 Adding system dependencies will slow down the deployment. Please don't add unused dependencies.
 
