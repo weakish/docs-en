@@ -994,6 +994,7 @@ private void OnMembersLeft(object sender, AVIMOnMembersLeftEventArgs e)
     // e.InvitedBy is the operator; e.ConversationId is the ID of the conversation
     Debug.Log(string.Format("{0} left {1}; operated by {2}",e.JoinedMembers, e.ConversationId, e.InvitedBy));
 }
+```
 
 ### Summary of Event Notifications Regarding Changes of Members
 
