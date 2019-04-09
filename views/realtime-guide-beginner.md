@@ -652,7 +652,7 @@ Cloud-->Mary: 2. Sends notification: you are added to the conversation by Tom
 Cloud-->Jerry: 2. Sends notification: Mary is added to the conversation by Tom
 ```
 
-On Mary’s side, to know that she is added to the conversation between Tom and Jerry, she can follow the way Jerry listens to the `INVITED` event, which can be found in [## One-on-One Chatting](one-on-one-chatting).
+On Mary’s side, to know that she is added to the conversation between Tom and Jerry, she can follow the way Jerry listens to the `INVITED` event, which can be found in [One-on-One Chatting](#one-on-one-chatting).
 
 If Tom wants to **create a new conversation with all the members included**, the following code can be used:
 
@@ -995,7 +995,7 @@ private void OnMembersLeft(object sender, AVIMOnMembersLeftEventArgs e)
     Debug.Log(string.Format("{0} left {1}; operated by {2}",e.JoinedMembers, e.ConversationId, e.InvitedBy));
 }
 
-# Summary of Event Notifications Regarding Changes of Members
+### Summary of Event Notifications Regarding Changes of Members
 
 The sequence diagrams displayed earlier already described what would happen when certain events are triggered. The table below serves as a summary of them.
 
