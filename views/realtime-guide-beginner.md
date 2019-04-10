@@ -26,7 +26,7 @@ We aim these documentations to not only help you complete the functions you are 
 
 > Before you continue:
 >
-> Take a look at [LeanMessage Overview](realtime_v2.html) if you haven’t done yet. Also make sure you have already followed [SDK Installation](start.html) to install and initialize the SDK for the platform (language) you are using.
+> Take a look at [LeanMessage Overview](realtime_v2.html) if you haven’t done it yet. Also make sure you have already followed [SDK Installation](start.html) to install and initialize the SDK for the platform (language) you are using.
 
 ## One-on-One Chatting
 
@@ -321,7 +321,7 @@ Although SDKs for different languages/platforms share different interfaces, they
 1. `members`: Required; includes the initial list of members in the conversation. The initiator of the conversation is included by default, so `members` does not have to include the `clientId` of the current user.
 2. `name`: The name of the conversation; optional. The code above puts “Tom & Jerry” for it.
 3. `attributes`: The custom attributes of the conversation; optional. The code above does not specify any attributes. If you ever specify them for your conversations, you can retrieve them later with `AVIMConversation`. Such attributes will be stored in the `attr` field of the `_Conversation` table.
-4. `unique`/`isUnique` or `AVIMConversationOptionUnique`: Markes if the conversation is unique; optional.
+4. `unique`/`isUnique` or `AVIMConversationOptionUnique`: Marks if the conversation is unique; optional.
    - If true, the cloud will perform a query on conversations with the list of members specified. If an existing conversation contains the same members, the conversation will be returned, otherwise a new conversation will be created.
    - If false, a new conversation will be created each time `createConversation` is called.
    - If not specified, it defaults to true for Java SDK and false for others (will be changed to true in the future).
@@ -1505,7 +1505,7 @@ public static void registerMessageHandler(Class<? extends AVIMMessage> clazz, Me
 public static void unregisterMessageHandler(Class<? extends AVIMMessage> clazz, MessageHandler<?> handler);
 ```
 
-Different handlers can be registered or deregistered for different message types (including those defined by yourself). These handles should be set up when initializing the app.
+Different handlers can be registered or deregistered for different message types (including those defined by yourself). These handlers should be set up when initializing the app.
 
 If you call `registerDefaultMessageHandler` on `AVIMMessageManager` for multiple times, only the last one would work. However, if you register `AVIMMessageHandler` through `registerMessageHandler`, different handlers could coexist with each other.
 
@@ -2299,7 +2299,7 @@ query.WhereMatches("name","^((?!education).)* $ ");
 
 ### Queries on Array Values
 
-You can use `containsAll`, `containedIn`, and `notContainedIn` to perform queries no array values. For example, to look for all conversations containing `Tom`:
+You can use `containsAll`, `containedIn`, and `notContainedIn` to perform queries on array values. For example, to look for all conversations containing `Tom`:
 
 ```js
 query.containedIn('m', ['Tom']);
@@ -2915,7 +2915,8 @@ Caching is enabled by default. You can turn it off with the following interface:
 avimClient.messageQueryCacheEnabled = false;
 ```
 ```java
-// Need to be set before calling AVIMClient.open(callback)AVIMClient.setMessageQueryCacheEnable(false)
+// Need to be set before calling AVIMClient.open(callback)
+AVIMClient.setMessageQueryCacheEnable(false)
 ```
 ```cs
 // Not supported yet
