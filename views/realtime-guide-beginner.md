@@ -142,7 +142,7 @@ AVUser.logInInBackground("username", "password", new LogInCallback<AVUser>() {
         client.open(new AVIMClientCallback() {
           @Override
           public void done(final AVIMClient avimClient, AVIMException e) {
-            // do something as you need.
+            // Do something as you need
           }
        });
     }
@@ -162,13 +162,13 @@ Since Tom is already logged in, he can start chatting with other users now. If h
 
 ```js
 // Create a conversation with Jerry
-return tom.CreateConversationAsync({
+tom.CreateConversationAsync({
   // Members of the conversation include Tom (the SDK will automatically add the current user into the conversation) and Jerry
   members: ['Jerry'],
   // Name of the conversation
   name: 'Tom & Jerry',
   unique: true
-});.catch(console.error);
+}).then(/* Do something as you need */)
 ```
 ```objc
 // Create a conversation with Jerry
@@ -532,7 +532,7 @@ In the previous conversation between Tom and Jerry (assuming conversation ID to 
 
 ```js
 // Get the conversation with ID
-tom.getConversation(‘CONVERSATION_ID’).then(function(conversation) {
+tom.getConversation('CONVERSATION_ID').then(function(conversation) {
   // Invite Mary
   return conversation.add(['Mary']);
 }).then(function(conversation) {
@@ -618,7 +618,7 @@ AVIMMessageManager.setConversationEventHandler(new CustomConversationEventHandle
 ```cs
 private void OnMembersJoined(object sender, AVIMOnInvitedEventArgs e)
 {
-    // e.InvitedBy is the inviter, e.ConversationId is the ID of the conversation
+    // e.InvitedBy is the inviter; e.ConversationId is the ID of the conversation
     Debug.Log(string.Format("{0} invited {1} to the conversation {2}", e.InvitedBy,e.JoinedMembers, e.ConversationId));
 }
 jerry.OnMembersJoined += OnMembersJoined;
@@ -969,7 +969,7 @@ Other members can listen to `MEMBERS_LEFT` to know that Jerry left the conversat
 
 ```js
 mary.on(Event.MEMBERS_LEFT, function membersLeftEventHandler(payload, conversation) {
-    console.log(payload.members, payload.invitedBy, conversation.id);
+    console.log(payload.members, payload.kickedBy, conversation.id);
 });
 ```
 ```objc
@@ -991,8 +991,8 @@ public class CustomConversationEventHandler extends AVIMConversationEventHandler
 mary.OnMembersLeft += OnMembersLeft;
 private void OnMembersLeft(object sender, AVIMOnMembersLeftEventArgs e)
 {
-    // e.InvitedBy is the operator; e.ConversationId is the ID of the conversation
-    Debug.Log(string.Format("{0} left {1}; operated by {2}",e.JoinedMembers, e.ConversationId, e.InvitedBy));
+    // e.KickedBy is the operator; e.ConversationId is the ID of the conversation
+    Debug.Log(string.Format("{0} left {1}; operated by {2}",e.JoinedMembers, e.ConversationId, e.KickedBy));
 }
 ```
 
@@ -1314,7 +1314,7 @@ For example, when sending an audio message, the basic flow would be: read the au
 var AV = require('leancloud-storage');
 var { AudioMessage } = require('leancloud-realtime-plugin-typed-messages');
 
-var fileUploadControl = $('#photoFileUpload')[0];
+var fileUploadControl = $('#musicFileUpload')[0];
 var file = new AV.File('never-gonna-give-you-up.mp3', fileUploadControl.files[0]);
 file.save().then(function() {
   var message = new AudioMessage(file);
@@ -1507,7 +1507,7 @@ public static void unregisterMessageHandler(Class<? extends AVIMMessage> clazz, 
 
 Different handlers can be registered or deregistered for different message types (including those defined by yourself). These handles should be set up when initializing the app.
 
-If you register `defaultMessageHandler` directly in `AVIMMessageManager` for multiple times, only the last one would work. However, if you register `AVIMMessageHandler` through `registerMessageHandler`, different handlers could coexist with each other.
+If you call `registerDefaultMessageHandler` on `AVIMMessageManager` for multiple times, only the last one would work. However, if you register `AVIMMessageHandler` through `registerMessageHandler`, different handlers could coexist with each other.
 
 When a message is received by the client, the SDK would:
 
@@ -2032,7 +2032,7 @@ client.on(Event.CONVERSATION_INFO_UPDATED, function(payload) {
  *
  * @param client
  * @param conversation
- * @param attr      The properties being updated.
+ * @param attr      The properties being updated
  * @param operator  The ID of the operator
  */
 public void onInfoChanged(AVIMClient client, AVIMConversation conversation, JSONObject attr,
@@ -2752,7 +2752,7 @@ conversation.queryMessages({ type: ImageMessage.TYPE }).then(messages => {
 }];
 ```
 ```java
-int msgType = .AVIMMessageType.TEXT_MESSAGE_TYPE;
+int msgType = .AVIMMessageType.IMAGE_MESSAGE_TYPE;
 conversation.queryMessagesByType(msgType, limit, new AVIMMessagesQueryCallback() {
     @Override
     public void done(List<AVIMMessage> messages, AVIMException e){
@@ -2775,24 +2775,24 @@ var { MessageQueryDirection } = require('leancloud-realtime');
 conversation.queryMessages({
   direction: MessageQueryDirection.OLD_TO_NEW,
 }).then(function(messages) {
-  // handle result
+  // Handle result
 }.catch(function(error) {
-  // handle error
+  // Handle error
 });
 ```
 ```objc
 [conversation queryMessagesInInterval:nil direction:AVIMMessageQueryDirectionFromOldToNew limit:20 callback:^(NSArray<AVIMMessage *> * _Nullable messages, NSError * _Nullable error) {
     if (messages.count) {
-        // handle result.
+        // Handle result
     }
 }];
 ```
 ```java
-AVIMMessageInterval internal = new AVIMMessageInterval(null, null);
-conversation.queryMessages(internal, AVIMMessageQueryDirectionFromOldToNew, limit,
+AVIMMessageInterval interval = new AVIMMessageInterval(null, null);
+conversation.queryMessages(interval, AVIMMessageQueryDirectionFromOldToNew, limit,
   new AVIMMessagesQueryCallback(){
     public void done(List<AVIMMessage> messages, AVIMException exception) {
-      // handle result
+      // Handle result
     }
 });
 ```
@@ -2819,9 +2819,9 @@ conversation.queryMessages({
 startClosed: false,
   direction: MessageQueryDirection.OLD_TO_NEW,
 }).then(function(messages) {
-  // handle result
+  // Handle result
 }.catch(function(error) {
-  // handle error
+  // Handle error
 });
 ```
 ```objc
@@ -2835,18 +2835,18 @@ AVIMMessageInterval *interval = [[AVIMMessageInterval alloc] initWithStartInterv
 ```
 ```java
 AVIMMessageIntervalBound start = AVIMMessageInterval.createBound(messageId, timestamp, false);
-AVIMMessageInterval internal = new AVIMMessageInterval(start, null);
+AVIMMessageInterval interval = new AVIMMessageInterval(start, null);
 AVIMMessageQueryDirection direction;
-conversation.queryMessages(internal, direction, limit,
+conversation.queryMessages(interval, direction, limit,
   new AVIMMessagesQueryCallback(){
     public void done(List<AVIMMessage> messages, AVIMException exception) {
-      // handle result
+      // Handle result
     }
 });
 ```
 ```cs
 var earliestMessages = await conversation.QueryMessageAsync(direction: 0, limit: 1);
-// get some messages after earliestMessages.Last()
+// Get some messages after earliestMessages.Last()
 var nextPageMessages = await conversation.QueryMessageAfterAsync(earliestMessages.Last());
 ```
 
@@ -2863,9 +2863,9 @@ conversation.queryMessages({
   endTime: endTimestamp,
   endMessageId: endMessageId,
 }).then(function(messages) {
-  // handle result
+  // Handle result
 }.catch(function(error) {
-  // handle error
+  // Handle error
 });
 ```
 ```objc
@@ -2874,26 +2874,26 @@ AVIMMessageIntervalBound *start = [[AVIMMessageIntervalBound alloc] initWithMess
 AVIMMessageInterval *interval = [[AVIMMessageInterval alloc] initWithStartIntervalBound:start endIntervalBound:end];
 [conversation queryMessagesInInterval:interval direction:direction limit:100 callback:^(NSArray<AVIMMessage *> * _Nullable messages, NSError * _Nullable error) {
     if (messages.count) {
-        // handle result.
+        // Handle result
     }
 }];
 ```
 ```java
 AVIMMessageIntervalBound start = AVIMMessageInterval.createBound(messageId, timestamp, false);
 AVIMMessageIntervalBound end = AVIMMessageInterval.createBound(endMessageId, endTimestamp, false);
-AVIMMessageInterval internal = new AVIMMessageInterval(start, end);
+AVIMMessageInterval interval = new AVIMMessageInterval(start, end);
 AVIMMessageQueryDirection direction;
-conversation.queryMessages(internal, direction, limit,
+conversation.queryMessages(interval, direction, limit,
   new AVIMMessagesQueryCallback(){
     public void done(List<AVIMMessage> messages, AVIMException exception) {
-      // handle result
+      // Handle result
     }
 });
 ```
 ```cs
 var earliestMessage = await conversation.QueryMessageAsync(direction: 0, limit: 1);
 var latestMessage = await conversation.QueryMessageAsync(limit: 1);
-// mex count for messagesInInterval is 100
+// Max count for messagesInInterval is 100
 var messagesInInterval = await conversation.QueryMessageInIntervalAsync(earliestMessage.FirstOrDefault(), latestMessage.FirstOrDefault());
 ```
 
@@ -2915,7 +2915,7 @@ Caching is enabled by default. You can turn it off with the following interface:
 avimClient.messageQueryCacheEnabled = false;
 ```
 ```java
-// Need to be set before calling AVIMClient.open(callback)AVIMClient.setMessageQueryCacheEnable(false);
+// Need to be set before calling AVIMClient.open(callback)AVIMClient.setMessageQueryCacheEnable(false)
 ```
 ```cs
 // Not supported yet
