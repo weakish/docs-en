@@ -15,14 +15,14 @@ A lot of products today have the needs to offer instant messaging functions to t
 - To have the audience of live-streamed contents interact with each other.
 - To have the users of an app or players of a game chat with each other.
 
-Based on the hierarchy of needs and the difficulty of implementation, we wrote the following documentations for you to learn how you can embed LeanMessage into your app:
+Based on the hierarchy of needs and the difficulty of implementation, we wrote four chapters of documentation for you to learn how you can embed LeanMessage into your app:
 
-- In this documentation, we will introduce how you can implement one-on-one chatting and group chats, how you can create and join conversations, and how you can send and receive rich media messages. We will also introduce how history messages are kept on the cloud and how you can retrieve them. By the end of this documentation, you should be able to build a simple chatting page in your app.
-- [In the second documentation](realtime-guide-intermediate.html), we will introduce some advanced features built around messaging, including mentioning people with @, deleting messages, editing messages, getting reports when messages are delivered and read, sending push notifications, and synchronizing messages. The implementation of multi device sign-on and custom message types will also be covered. By the end of this documentation, you should be able to integrate a chatting component into your app with these features.
-- [In the third documentation](realtime-guide-senior.html), we will introduce the security features offered by our services, including third-party signing mechanism, permission management of members, and blacklisting. We will also go over the usage of chat rooms and temporary conversations. By the end of this documentation, you will get a set of skills to improve the security and usability of your app, as well as to build conversations that serve different purposes.
-- [In the last documentation](realtime-guide-systemconv.html), we will introduce the usage of hooks and system conversations, plus how you can build your own chatbots based on them. By the end of this documentation, you will learn how you can make your app extensible and adapted to a wide variety of requirements.
+- In this chapter, we will introduce how you can implement one-on-one chatting and group chats, how you can create and join conversations, and how you can send and receive rich media messages. We will also introduce how history messages are kept on the cloud and how you can retrieve them. By the end of this chapter, you should be able to build a simple chatting page in your app.
+- [In the second chapter](realtime-guide-intermediate.html), we will introduce some advanced features built around messaging, including mentioning people with “@”, recalling messages, editing messages, getting receipts when messages are delivered and read, sending push notifications, and synchronizing messages. The implementation of multi device sign-on and custom message types will also be covered. By the end of this chapter, you should be able to integrate a chatting component into your app with these features.
+- [In the third chapter](realtime-guide-senior.html), we will introduce the security features offered by our services, including third-party signing mechanism, permission management of members, and blacklisting. We will also go over the usage of chat rooms and temporary conversations. By the end of this chapter, you will get a set of skills to improve the security and usability of your app, as well as to build conversations that serve different purposes.
+- [In the last chapter](realtime-guide-systemconv.html), we will introduce the usage of hooks and system conversations, plus how you can build your own chatbots based on them. By the end of this chapter, you will learn how you can make your app extensible and adapted to a wide variety of requirements.
 
-We aim these documentations to not only help you complete the functions you are currently building but also give you a better understanding of all the things LeanMessage can do (which you will find helpful when you plan to add more features into your app).
+We aim our documentation to not only help you complete the functions you are currently building but also give you a better understanding of all the things LeanMessage can do (which you will find helpful when you plan to add more features into your app).
 
 > Before you continue:
 >
@@ -125,7 +125,7 @@ AV.User.logIn('username', 'password').then(function(user) {
     AVIMClient *client = [[AVIMClient alloc] initWithUser:user];
     // Open the client to connect to the cloud
     [client openWithCallback:^(BOOL succeeded, NSError * _Nullable error) {
-        // Do something you like.
+        // Do something you like
     }];
 }];
 ```
@@ -162,13 +162,13 @@ Since Tom is already logged in, he can start chatting with other users now. If h
 
 ```js
 // Create a conversation with Jerry
-tom.CreateConversationAsync({
+tom.CreateConversationAsync({ // tom is an IMClient instance
   // Members of the conversation include Tom (the SDK will automatically add the current user into the conversation) and Jerry
   members: ['Jerry'],
   // Name of the conversation
   name: 'Tom & Jerry',
   unique: true
-}).then(/* Do something as you need */)
+}).then(/* Do something as you need */);
 ```
 ```objc
 // Create a conversation with Jerry
@@ -214,7 +214,7 @@ async createConversation({
   unique,
   tempConv,
   tempConvTTL,
-  ...properties
+  // You may add more properties
 });
 ```
 ```objc
@@ -317,7 +317,6 @@ public Task<AVIMConversation> CreateConversationAsync(string member = null,
 
 Although SDKs for different languages/platforms share different interfaces, they take in the similar set of parameters when creating a conversation:
 
-
 1. `members`: Required; includes the initial list of members in the conversation. The initiator of the conversation is included by default, so `members` does not have to include the `clientId` of the current user.
 2. `name`: The name of the conversation; optional. The code above puts “Tom & Jerry” for it.
 3. `attributes`: The custom attributes of the conversation; optional. The code above does not specify any attributes. If you ever specify them for your conversations, you can retrieve them later with `AVIMConversation`. Such attributes will be stored in the `attr` field of the `_Conversation` table.
@@ -392,9 +391,9 @@ AVIMClient jerry = AVIMClient.getInstance("Jerry");
 jerry.open(new AVIMClientCallback(){
   @Override
   public void done(AVIMClient client,AVIMException e){
-      if(e==null){
-        ... // Things to do after logging in
-      }
+    if(e==null){
+      // Things to do after logging in
+    }
   }
 });
 ```
@@ -419,13 +418,14 @@ jerry.on(Event.INVITED, function invitedEventHandler(payload, conversation) {
     console.log(payload.invitedBy, conversation.id);
 });
 
-// The current user receives a message
+// The current user receives a message; can be handled by responding to Event.MESSAGE
 jerry.on(Event.MESSAGE, function(message, conversation) {
     console.log('Message received: ' + message.text);
 });
 ```
 ```objc
 // Objective-C SDK responds to notifications with AVIMClientDelegate
+jerry.delegate = self;
 
 /*!
  The current user is added to a conversation
@@ -902,7 +902,7 @@ jerry.on(Event.MEMBERS_JOINED, function membersJoinedEventHandler(payload, conve
 ```
 ```objc
 - (void)conversation:(AVIMConversation *)conversation membersAdded:(NSArray *)clientIds byClientId:(NSString *)clientId {
-    NSLog(@"%@", [NSString stringWithFormat:@"%@ joined the convesation; operated by %@",[clientIds objectAtIndex:0],clientId]);
+    NSLog(@"%@", [NSString stringWithFormat:@"%@ joined the conversation; operated by %@",[clientIds objectAtIndex:0],clientId]);
 }
 ```
 ```java
@@ -1200,7 +1200,7 @@ AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"She is sweet." f
 }];
 ```
 ```java
-AVFile file =new AVFile("cute-girl","http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif", null);
+AVFile file = new AVFile("cute-girl","http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif", null);
 AVIMImageMessage m = new AVIMImageMessage(file);
 m.setText("She is sweet.");
 // Create an image message
@@ -1351,7 +1351,7 @@ conv.sendMessage(m, new AVIMConversationCallback() {
 });
 ```
 ```cs
-var audio = new AVFile("tante.mp3", Path.Combine(Application.persistentDataPath, "tante.mp3"));
+var audio = new AVFile("never-gonna-give-you-up.mp3", Path.Combine(Application.persistentDataPath, "never-gonna-give-you-up.mp3"));
 var audioMessage = new AVIMAudioMessage();
 audioMessage.File = audio;
 audioMessage.TextContent = "I heard this song became a meme.";
@@ -1383,7 +1383,7 @@ AVIMAudioMessage *message = [AVIMAudioMessage messageWithText:@"Here is the reco
 }];
 ```
 ```java
-AVFile file =new AVFile("apple.acc", "https://some.website.com/apple.acc", null);
+AVFile file = new AVFile("apple.acc", "https://some.website.com/apple.acc", null);
 AVIMAudioMessage m = new AVIMAudioMessage(file);
 m.setText("Here is the recording from Apple Special Event.");
 conv.sendMessage(m, new AVIMConversationCallback() {
@@ -1427,7 +1427,7 @@ AVIMLocationMessage *message = [AVIMLocationMessage messageWithText:@"Here is th
 }];
 ```
 ```java
-final AVIMLocationMessage locationMessage=new AVIMLocationMessage();
+final AVIMLocationMessage locationMessage = new AVIMLocationMessage();
 // The location here is hardcoded for demonstration; you can get actual locations with the API offered by the device
 locationMessage.setLocation(new AVGeoPoint(31.3753285,120.9664658));
 locationMessage.setText("Here is the location of the bakery.");
@@ -1460,7 +1460,7 @@ When a new message comes in, no matter what type of message it is, the JavaScrip
 
 The Objective-C SDK handles new messages with `AVIMClientDelegate` and uses two separate methods to handle basic messages (`AVIMMessage`) and rich media messages (`AVIMTypedMessage`; including messages with custom types):
 
-```
+```objc
 /*!
  New basic message received.
  @param conversation － The conversation.
@@ -1482,7 +1482,7 @@ The Objective-C SDK handles new messages with `AVIMClientDelegate` and uses two 
 
 The Java/Android SDK handles new messages with `AVIMMessageHandler`. You can register your own message handlers by calling `AVIMMessageManager#registerDefaultMessageHandler`. `AVIMMessageManager` offers two different methods for you to register default message handlers and handlers for specific message types:
 
-```
+```java
 /**
  * Register default message handler.
  *
@@ -1538,20 +1538,20 @@ Below are the conditions:
 
 Condition 1:
 
-```c#
+```cs
 AVIMClient.Status != Online
 ``` 
 
 Condition 2:
 
-```c#
+```cs
    AVIMClient.Status == Online 
 && AVIMClient.OnMessageReceived != null
 ```
 
 Condition 3:
 
-```c#
+```cs
    AVIMClient.Status == Online 
 && AVIMClient.OnMessageReceived != null 
 && AVIMConversation.OnMessageReceived != null
@@ -1559,7 +1559,7 @@ Condition 3:
 
 Condition 4:
 
-```c#
+```cs
    AVIMClient.Status == Online 
 && AVIMClient.OnMessageReceived != null 
 && AVIMConversation.OnMessageReceived != null
@@ -1569,7 +1569,7 @@ Condition 4:
 
 Condition 5:
 
-```c#
+```cs
    AVIMClient.Status == Online 
 && AVIMClient.OnMessageReceived != null 
 && AVIMConversation.OnMessageReceived != null
@@ -1601,30 +1601,30 @@ client.on(Event.MESSAGE, function messageEventHandler(message, conversation) {
   var file;
   switch (message.type) {
     case TextMessage.TYPE:
-      console.log('Text message received. Text: ' + message.getText() + ', msgId: ' + message.id);
+      console.log('Text message received. Text: ' + message.getText() + ', ID: ' + message.id);
       break;
     case FileMessage.TYPE:
       file = message.getFile(); // file is an AV.File instance
-      console.log('File message received. URL: ' + file.url() + ', size: ' + file.metaData('size'));
+      console.log('File message received. URL: ' + file.url() + ', Size: ' + file.metaData('size'));
       break;
     case ImageMessage.TYPE:
       file = message.getFile();
-      console.log('Image message received. URL: ' + file.url() + ', width: ' + file.metaData('width'));
+      console.log('Image message received. URL: ' + file.url() + ', Width: ' + file.metaData('width'));
       break;
     case AudioMessage.TYPE:
       file = message.getFile();
-      console.log('Audio message received. URL: ' + file.url() + ', width: ' + file.metaData('duration'));
+      console.log('Audio message received. URL: ' + file.url() + ', Duration: ' + file.metaData('duration'));
       break;
     case VideoMessage.TYPE:
       file = message.getFile();
-      console.log('Video message received. URL: ' + file.url() + ', width: ' + file.metaData('duration'));
+      console.log('Video message received. URL: ' + file.url() + ', Duration: ' + file.metaData('duration'));
       break;
     case LocationMessage.TYPE:
       var location = message.getLocation();
       console.log('Location message received. Latitude: ' + location.latitude + ', Longitude: ' + location.longitude);
       break;
     default:
-      console.warn('Unknown message received.');
+      console.warn('Message with unknown type received.');
   }
 });
 
@@ -1634,12 +1634,10 @@ conversation.on(Event.MESSAGE, function messageEventHandler(message) {
 });
 ```
 ```objc
-// Handle built-in typed message
+// Handle messages with built-in types
 - (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
-    // For example: received image message
     if (message.mediaType == kAVIMMessageMediaTypeImage) {
-        AVIMImageMessage *imageMessage = (AVIMImageMessage *)message;
-        // Handle image message
+        AVIMImageMessage *imageMessage = (AVIMImageMessage *)message; // Handle image message
     } else if(message.mediaType == kAVIMMessageMediaTypeAudio){
         // Handle audio message
     } else if(message.mediaType == kAVIMMessageMediaTypeVideo){
@@ -1653,13 +1651,13 @@ conversation.on(Event.MESSAGE, function messageEventHandler(message) {
     }
 }
 
-// Handle customize typed message
+// Handle messages with custom types
 
 // 1. Register subclass
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [AVIMCustomMessage registerSubclass];
 }
-// 2. Received message
+// 2. Receive message
 - (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
     if (message.mediaType == 1) {
         AVIMCustomMessage *imageMessage = (AVIMCustomMessage *)message;
@@ -1671,69 +1669,69 @@ conversation.on(Event.MESSAGE, function messageEventHandler(message) {
 // 1. Register default handler
 AVIMMessageManager.registerDefaultMessageHandler(new AVIMMessageHandler(){
     public void onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
-      // Receive new-coming message
+        // Receive the message
     }
 
     public void onMessageReceipt(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
-      // Do something responding of message receipt event
+        // Do something after receiving the message
     }
 });
-// 2. Register typed message handler
+// 2. Register handler for each type of message
 AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, new AVIMTypedMessageHandler<AVIMTypedMessage>(){
     public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
-    switch (message.getMessageType()) {
-        case AVIMMessageType.TEXT_MESSAGE_TYPE:
-        // Do something
-        AVIMTextMessage textMessage = (AVIMTextMessage)message;
-        break;
-        case AVIMMessageType.IMAGE_MESSAGE_TYPE:
-        // Do something
-        AVIMImageMessage imageMessage = (AVIMImageMessage)message;
-        break;
-        case AVIMMessageType.AUDIO_MESSAGE_TYPE:
-        // Do something
-        AVIMAudioMessage audioMessage = (AVIMAudioMessage)message;
-        break;
-        case AVIMMessageType.VIDEO_MESSAGE_TYPE:
-        // Do something
-        AVIMVideoMessage videoMessage = (AVIMVideoMessage)message;
-        break;
-        case AVIMMessageType.LOCATION_MESSAGE_TYPE:
-        // Do something
-        AVIMLocationMessage locationMessage = (AVIMLocationMessage)message;
-        break;
-        case AVIMMessageType.FILE_MESSAGE_TYPE:
-        // Do something
-        AVIMFileMessage fileMessage = (AVIMFileMessage)message;
-        break;
-        case AVIMMessageType.RECALLED_MESSAGE_TYPE:
-        // Do something
-        AVIMRecalledMessage recalledMessage = (AVIMRecalledMessage)message;
-        break;
-        default:
-        // UnsupportedMessageType
-        break;
-    }
+        switch (message.getMessageType()) {
+            case AVIMMessageType.TEXT_MESSAGE_TYPE:
+                // Do something
+                AVIMTextMessage textMessage = (AVIMTextMessage)message;
+                break;
+            case AVIMMessageType.IMAGE_MESSAGE_TYPE:
+                // Do something
+                AVIMImageMessage imageMessage = (AVIMImageMessage)message;
+                break;
+            case AVIMMessageType.AUDIO_MESSAGE_TYPE:
+                // Do something
+                AVIMAudioMessage audioMessage = (AVIMAudioMessage)message;
+                break;
+            case AVIMMessageType.VIDEO_MESSAGE_TYPE:
+                // Do something
+                AVIMVideoMessage videoMessage = (AVIMVideoMessage)message;
+                break;
+            case AVIMMessageType.LOCATION_MESSAGE_TYPE:
+                // Do something
+                AVIMLocationMessage locationMessage = (AVIMLocationMessage)message;
+                break;
+            case AVIMMessageType.FILE_MESSAGE_TYPE:
+                // Do something
+                AVIMFileMessage fileMessage = (AVIMFileMessage)message;
+                break;
+            case AVIMMessageType.RECALLED_MESSAGE_TYPE:
+                // Do something
+                AVIMRecalledMessage recalledMessage = (AVIMRecalledMessage)message;
+                break;
+            default:
+                // UnsupportedMessageType
+                break;
+        }
     }
 
     public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
-    // Do something responding of message receipt event
+        // Do something after receiving the message
     }
 });
 
-// Handle customize typed message
+// Handle messages with custom types
 public class CustomMessage extends AVIMMessage {
   
 }
 
 AVIMMessageManager.registerMessageHandler(CustomMessage.class, new MessageHandler<CustomMessage>(){
-  public void onMessage(CustomMessage message, AVIMConversation conversation, AVIMClient client) {
-    // Receive new-coming message
-  }
+    public void onMessage(CustomMessage message, AVIMConversation conversation, AVIMClient client) {
+        // Receive the message
+    }
 
-  public void onMessageReceipt(CustomMessage message, AVIMConversation conversation, AVIMClient client){
-    // Do something responding of message receipt event
-  }
+    public void onMessageReceipt(CustomMessage message, AVIMConversation conversation, AVIMClient client){
+        // Do something after receiving the message
+    }
 });
 ```
 ```cs
@@ -1935,7 +1933,7 @@ conversation.updateInfoInBackground(new AVIMConversationCallback(){
   @Override
   public void done(AVIMException e){        
     if(e==null){
-    // Updated
+      // Updated
     }
   }
 });
@@ -1977,7 +1975,7 @@ conversation.updateInfoInBackground(new AVIMConversationCallback(){
   @Override
   public void done(AVIMException e){        
     if(e==null){
-    // Saved
+      // Saved
     }
   }
 });
@@ -2000,7 +1998,6 @@ await conversation.SaveAsync();
 The properties of a conversation (like name) are shared by everyone in it. If someone ever changes a property, other members need to get updated on it. In the example we used earlier, a user changed the name of a conversation to “Tom is Smart”. How would other members get to know about it?
 
 LeanMessage offers the mechanism that automatically delivers the change made by a user to a conversation to all the members in it (for those who are offline, they will receive updates once they get online):
-
 
 ```js
 /**
@@ -2051,11 +2048,13 @@ public void onInfoChanged(AVIMClient client, AVIMConversation conversation, JSON
 To get the list of members in a conversation, we can call the method for fetching on a `Conversation` object and then get the result from it:
 
 ```js
+// fetch will trigger an operation to retrieve the latest data from the cloud
 conversation.fetch().then(function(conversation) {
   console.log('members: ', conversation.members);
 ).catch(console.error.bind(console));
 ```
 ```objc
+// fetchWithCallback will trigger an operation to retrieve the latest data from the cloud
 [conversation fetchWithCallback:^(BOOL succeeded, NSError *error) {
     if (succeeded) {
         NSLog(@"", conversation.members);
@@ -2063,6 +2062,7 @@ conversation.fetch().then(function(conversation) {
 }];
 ```
 ```java
+// fetchInfoInBackground will trigger an operation to retrieve the latest data from the cloud
 conversation.fetchInfoInBackground(new AVIMConversationCallback() {
   @Override
   public void done(AVIMException e) {
@@ -2237,10 +2237,10 @@ You can also apply conditions like “greater than”, “greater than or equal 
 You can use regular expressions as conditions when querying with `ConversationsQuery`. For example, to look for all the conversations that have `language` to be Chinese:
 
 ```js
-query.matches('language',/[\\u4e00-\\u9fa5]/);
+query.matches('language',/[\\u4e00-\\u9fa5]/); // language is Chinese characters
 ```
 ```objc
-[query whereKey:@"language" matchesRegex:@"[\u4e00-\u9fa5]"];
+[query whereKey:@"language" matchesRegex:@"[\u4e00-\u9fa5]"]; // language is Chinese characters
 ```
 ```java
 query.whereMatches("language","[\\u4e00-\\u9fa5]"); // language is Chinese characters
@@ -2260,10 +2260,10 @@ query.startsWith('name','education');
 [query whereKey:@"name" hasPrefix:@"education"];
 ```
 ```java
-query.whereStartsWith("name","education"); 
+query.whereStartsWith("name","education");
 ```
 ```cs
-query.WhereStartsWith("name","education"); 
+query.WhereStartsWith("name","education");
 ```
 
 You can also look for conversations with string values that **include** a particular string, which is similar to `LIKE '%keyword%'` in SQL. For example, to look for all conversations with names including `education`:
@@ -2275,10 +2275,10 @@ query.contains('name','education');
 [query whereKey:@"name" containsString:@"education"];
 ```
 ```java
-query.whereContains("name","education"); 
+query.whereContains("name","education");
 ```
 ```cs
-query.WhereContains("name","education"); 
+query.WhereContains("name","education");
 ```
 
 If you want to look for conversations with string values that **exclude** a particular string, you can use [regular expressions](#using-regular-expressions). For example, to look for all conversations with names excluding `education`:
@@ -2288,10 +2288,10 @@ var regExp = new RegExp('^((?!education).)*$', 'i');
 query.matches('name', regExp);
 ```
 ```objc
-[query whereKey:@"name" matchesRegex:@"^((?!education).)* $ "]; 
+[query whereKey:@"name" matchesRegex:@"^((?!education).)* $ "];
 ```
 ```java
-query.whereMatches("name","^((?!education).)* $ "); 
+query.whereMatches("name","^((?!education).)* $ ");
 ```
 ```cs
 query.WhereMatches("name","^((?!education).)* $ ");
@@ -2308,12 +2308,12 @@ query.containedIn('m', ['Tom']);
 [query whereKey:@"m" containedIn:@[@"Tom"]];
 ```
 ```java
-query.whereContainedIn("m", Arrays.asList("Tom")); 
+query.whereContainedIn("m", Arrays.asList("Tom"));
 ```
 ```cs
 List<string> members = new List<string>();
 members.Add("Tom");
-query.WhereContainedIn("m", members); 
+query.WhereContainedIn("m", members);
 ```
 
 ### Queries on Existence
@@ -2829,7 +2829,7 @@ AVIMMessageIntervalBound *start = [[AVIMMessageIntervalBound alloc] initWithMess
 AVIMMessageInterval *interval = [[AVIMMessageInterval alloc] initWithStartIntervalBound:start endIntervalBound:nil];
 [conversation queryMessagesInInterval:interval direction:direction limit:20 callback:^(NSArray<AVIMMessage *> * _Nullable messages, NSError * _Nullable error) {
     if (messages.count) {
-        // handle result.
+        // Handle result
     }
 }];
 ```
@@ -2846,7 +2846,7 @@ conversation.queryMessages(interval, direction, limit,
 ```
 ```cs
 var earliestMessages = await conversation.QueryMessageAsync(direction: 0, limit: 1);
-// Get some messages after earliestMessages.Last()
+// Get messages sent after earliestMessages.Last()
 var nextPageMessages = await conversation.QueryMessageAfterAsync(earliestMessages.Last());
 ```
 
@@ -2893,7 +2893,7 @@ conversation.queryMessages(interval, direction, limit,
 ```cs
 var earliestMessage = await conversation.QueryMessageAsync(direction: 0, limit: 1);
 var latestMessage = await conversation.QueryMessageAsync(limit: 1);
-// Max count for messagesInInterval is 100
+// messagesInInterval can get at most 100 messages
 var messagesInInterval = await conversation.QueryMessageInIntervalAsync(earliestMessage.FirstOrDefault(), latestMessage.FirstOrDefault());
 ```
 
@@ -2945,7 +2945,7 @@ tom.close(new AVIMClientCallback(){
     @Override
     public void done(AVIMClient client,AVIMException e){
         if(e==null){
-        // Logged out
+            // Logged out
         }
     }
 });
@@ -2984,10 +2984,10 @@ realtime.on(Event.ONLINE, function() {
   console.log('Network is recovered.');
 });
 realtime.on(Event.SCHEDULE, function(attempt, delay) {
-  console.log('Reconnecting in ' + delay + ' ms as attempt ' + (attempt + 1));
+  console.log('Reconnecting in ' + delay + ' ms as attempt ' + (attempt + 1) + '.');
 });
 realtime.on(Event.RETRY, function(attempt) {
-  console.log('Reconnecting as attempt ' + (attempt + 1));
+  console.log('Reconnecting as attempt ' + (attempt + 1) + '.');
 });
 realtime.on(Event.RECONNECT, function() {
   console.log('Connection to the server is recovered.');
@@ -3047,7 +3047,7 @@ Beside the [one-on-one chatting](#one-on-one-chatting) and [group chats](#group-
 
 ## Continue Reading
 
-[2. Advanced Messages, Push Notifications, Synchronization, and Multi Device Sign-on](realtime-guide-intermediate.html)
+[2. Advanced Messaging Features, Push Notifications, Synchronization, and Multi Device Sign-on](realtime-guide-intermediate.html)
 
 [3. Security, Permission Management, Chat Rooms, and Temporary Conversations](realtime-guide-senior.html)
 

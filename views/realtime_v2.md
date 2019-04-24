@@ -6,7 +6,7 @@ LeanMessage is one of the core features offered by LeanCloud that allows you to 
   Many of our customers already have their products running smoothly and the only thing they need is to add instant messaging as a bonus feature in their apps. With this in mind, LeanMessage is designed to work independently without interfering your existing account systems.<br/>
   We offer a full collection of UI frameworks and SDKs for you to design and develop messaging functions for browsers (JavaScript), Android, iOS, Unity 3D, and even Windows desktop. In case you need it, we also offer a Python SDK for you to build your custom logic on the server side.
 * **Provide extensibility for custom features**<br/>
-  LeanMessage supports common types of messages including text messages, images, audios, videos, locations, and binary data. You can define your own types of messages and build UI for them if you need. You can also implement functions like deleting messages, editing messages, mentioning people, transient messages, delivery reports, push notifications, and keyword filtering. If you want to build chat rooms that could hold infinite numbers of users, or system conversations that could be used for chatbots, LeanMessage also got you covered.
+  LeanMessage supports common types of messages including text messages, images, audios, videos, locations, and binary data. You can define your own types of messages and build UI for them if you need. You can also implement functions like recalling messages, editing messages, mentioning people, transient messages, delivery receipts, push notifications, and keyword filtering. If you want to build chat rooms that could hold infinite numbers of users, or system conversations that could be used for chatbots, LeanMessage also got you covered.
 * **Enhance security with permission management**<br/>
   When you use LeanMessage, clients and servers use full-duplex communication channels through WebSocket with TLS encrypted transmissions. This ensures that conversations happening within your app cannot be fetched by any unauthorized parties. To further control user activities, you can use our third-party signing mechanism to verify all the sensitive operations before they can be processed. We also provide out-of-the-box role management and blacklist system which works perfectly for scenarios like group chats and chat rooms.
 * **Lower costs for maintenance**<br/>
@@ -22,10 +22,10 @@ Here are the main features offered by LeanMessage:
   - Beside one-on-one chatting and group chats, we also offer **open chat rooms** that could hold infinite numbers of people, which can be used for scenarios like live streaming and open courses that demand massive discussions in a group. There are also **system conversations** that could interact with users spontaneously, as well as **temporary conversations** which work best if you need to build customer service systems. All these functions share the same programming interface.
   - Users can send all kinds of messages, including text messages, images, audios, videos, locations, and **binary data**. You can develop your own types of messages if you need.
   - History messages are automatically saved on the cloud, which can be retrieved in multiple ways.
-* **Additional chatting functions**<br/>
-  - Mentioning people with **@**
-  - **Deleting and editing** messages
-  - **Getting reports** when messages are delivered and read
+* **Advanced messaging features**<br/>
+  - Mentioning people with **“@”**
+  - **Recalling and editing** messages
+  - **Getting receipts** when messages are delivered and read
   - Setting **do-not-disturb** for group chats
   - **Sending status updates** like “Someone is typing…”
   - Converting messages to **push notifications** when receivers are offline
@@ -64,7 +64,7 @@ Feel free to take a look at their source code on our [GitHub page](https://githu
 
 ## Core Notions
 
-The concepts mentioned below will be used frequently in our further documentations. It would be helpful if you could familiarize yourself with them.
+The concepts mentioned below will be used frequently in our further documentation. It would be helpful if you could familiarize yourself with them.
 
 ### `clientId`, User, and Log in
 
@@ -121,7 +121,7 @@ This is the most commonly used type of conversation that could serve one-on-one 
 * Send and receive messages among members of it
 * Add and remove members (500 maximum) with all the existing members notified
 * Find out who are online
-* Mention members, delete messages, edit messages, send transient messages, get reports when messages are delivered and read, send will messages, and receive push notifications
+* Mention members, recall messages, edit messages, send transient messages, get receipts when messages are delivered and read, send will messages, and receive push notifications
 * Receive push notifications when offline and synchronize unreceived messages when online
 * Store message history on the cloud and perform various types of queries on it
 
@@ -136,7 +136,7 @@ This type of conversation is dedicated for chat rooms (it has `tr` to be `true` 
 
 * **No limit on the number of people**; does not have a fixed list of members; members are removed once they are offline (field `m` is ignored)
 * **The amount of members** can be retrieved instead of the specific list of members
-* No offline messages, push notifications, or delivery reports
+* No offline messages, push notifications, or delivery receipts
 * No notifications for members joining or leaving
 * Cannot invite or remove people
 * A user can only be in one chat room at each time and will automatically leave the previous one when joining a new one
@@ -188,7 +188,7 @@ Type of Conversation | Scenarios | Member Management | Message Operations | Mess
 
 A message is a basic unit for transmitting data within a conversation. Each message can hold at most **5 KB** of data in the format of text. There is no requirement on how the text should be formatted and you are free to define your own types of messages based on it.
 
-When sending a message, a parameter can be specified to make it either a normal message or a transient message. A normal message comes with features like delivery reports, persistent storage, and push notifications, while a transient message cannot be saved, received later, or pushed to offline users. Therefore, status updates like “Someone is typing…” are best sent as transient messages and messages composed by users shall be sent as normal messages.
+When sending a message, a parameter can be specified to make it either a normal message or a transient message. A normal message comes with features like delivery receipts, persistent storage, and push notifications, while a transient message cannot be saved, received later, or pushed to offline users. Therefore, status updates like “Someone is typing…” are best sent as transient messages and messages composed by users shall be sent as normal messages.
 
 Our service ensures that a normal message can be delivered for at least once. At the same time, our SDKs are able to filter out duplicate messages. We offer both SDKs and REST API for you to send messages: SDKs are often for clients and REST API is for sending messages from the server side. When using REST API, you can specify the sender of a message and the ID of the target conversation, as well as the receivers of the message if it is sent to a system conversation.
 
@@ -208,20 +208,20 @@ The image below shows the inheritance relationships among them:
 
 See [LeanMessage REST API · Formats of Rich Media Messages](realtime_rest_api.html#formats-of-rich-media-messages) for more information regarding formats. You can even define your own types of messages based on our framework.
 
-#### Additional Functions
+#### Advanced Features
 
 As mentioned earlier, we offer the following functions beside basic chatting:
 
-- Mentioning people with @
-- Deleting and editing messages
+- Mentioning people with “@”
+- Recalling and editing messages
 - Filtering out keywords
-- Getting reports when messages are delivered and read
+- Getting receipts when messages are delivered and read
 - Setting do-not-disturb for group chats
 - Sending status updates like “Someone is typing…”
 - Converting messages to push notifications when receivers are offline
 - Setting priorities for messages in chat rooms so that important messages can get quicker delivery
 
-You can read [Additional Chatting Functions](realtime-guide-intermediate.html#additional-chatting-functions) and [Keyword Filtering](realtime-guide-senior.html#keyword-filtering) to learn more about them.
+You can read [Advanced Messaging Features](realtime-guide-intermediate.html#advanced-messaging-features) and [Keyword Filtering](realtime-guide-senior.html#keyword-filtering) to learn more about them.
 
 ## Restrictions
 
@@ -254,6 +254,6 @@ See [Hooks](realtime-guide-systemconv.html#hooks).
 ## Guides
 
 - [1. Basic Conversations and Messages](realtime-guide-beginner.html)
-- [2. Advanced Messages, Push Notifications, Synchronization, and Multi Device Sign-on](realtime-guide-intermediate.html)
+- [2. Advanced Messaging Features, Push Notifications, Synchronization, and Multi Device Sign-on](realtime-guide-intermediate.html)
 - [3. Security, Permission Management, Chat Rooms, and Temporary Conversations](realtime-guide-senior.html)
 - [4. Hooks and System Conversations](realtime-guide-systemconv.html)

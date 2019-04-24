@@ -4,4 +4,4 @@
 
 {{ docs.useIMLangSpec()}}
 
-# 2. Advanced Messages, Push Notifications, Synchronization, and Multi Device Sign-on
+# 2. Advanced Messaging Features, Push Notifications, Synchronization, and Multi Device Sign-on

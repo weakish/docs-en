@@ -2,7 +2,7 @@
 
 LeanEngine is a hosting platform that lets you run server-side programs written in the language of your choice (Node.js, Python, etc.). Simply deploy the server-side logic to the cloud (websites or cloud functions) and LeanEngine will handle load balancing and rolling deployment for you.
 
-Here is a list of documentations that help you learn about LeanEngine:
+Here is a list of documentation that help you learn about LeanEngine:
 
 - [LeanEngine Quick Start](leanengine_quickstart.html): Learn how to create a LeanEngine project, debug it locally, and deploy the project to the cloud.
 - [LeanEngine Plans and Prices](leanengine_plan.html): Learn about a variety of plans available for your applications with different sizes and purposes.
