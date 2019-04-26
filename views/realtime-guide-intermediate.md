@@ -575,7 +575,7 @@ Therefore, we offer another kind of receipt showing if a receiver has actually s
 
 Again, since messages are delivered in time order, we don't have to check if every single message is being read. Think about a scenario like this:
 
-<img src="images/realtime_read_confirm.png" width="400" class="img-responsive" alt="A pop-up with the title "Welcome Back" says "You have 5002 unread messages. Would you like to skip them all? (Select ‘Yes' to mark them as read)". There are two buttons on the bottom: "Yes" and "No".">
+<img src="images/realtime_read_confirm.png" width="400" class="img-responsive" alt="A pop-up with the title &quot;Welcome Back&quot; says &quot;You have 5002 unread messages. Would you like to skip them all? (Select 'Yes' to mark them as read)&quot;. There are two buttons on the bottom: &quot;Yes&quot; and &quot;No&quot;.">
 
 When a user opens a conversation, we can say that the user has read all the messages in it. You can use the following interface of `Conversation` to mark all the messages in it as read:
 
@@ -714,7 +714,7 @@ If a user doesn't want to receive notifications from a conversation but still wa
 
 Will message can be used to automatically notify other members in a conversation when a user goes offline unexpectedly. It gets its name from the wills filed by testators, giving people a feeling that the last messages of a person should always be heard. It looks like the message saying "Tom is offline and cannot receive messages" in this image:
 
-<img src="images/lastwill-message.png" width="400" class="img-responsive" alt="In a conversation named "Tom & Jerry", Jerry receives a will message saying "Tom is offline and cannot receive messages". The will message looks like a system notification and shares a different style with other messages.">
+<img src="images/lastwill-message.png" width="400" class="img-responsive" alt="In a conversation named &quot;Tom & Jerry&quot;, Jerry receives a will message saying &quot;Tom is offline and cannot receive messages&quot;. The will message looks like a system notification and shares a different style with other messages.">
 
 A will message needs to be composed ahead of time and cached on the cloud. The cloud doesn't send it out immediately after receiving it. Instead, it waits until the sender of it goes offline unexpectedly. You can implement your own logic to handle such event.
 
