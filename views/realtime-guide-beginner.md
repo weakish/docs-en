@@ -18,7 +18,7 @@ A lot of products today have the needs to offer instant messaging functions to t
 Based on the hierarchy of needs and the difficulty of implementation, we wrote four chapters of documentation for you to learn how you can embed LeanMessage into your app:
 
 - In this chapter, we will introduce how you can implement one-on-one chatting and group chats, how you can create and join conversations, and how you can send and receive rich media messages. We will also introduce how history messages are kept on the cloud and how you can retrieve them. By the end of this chapter, you should be able to build a simple chatting page in your app.
-- [In the second chapter](realtime-guide-intermediate.html), we will introduce some advanced features built around messaging, including mentioning people with “@”, recalling messages, editing messages, getting receipts when messages are delivered and read, sending push notifications, and synchronizing messages. The implementation of multi device sign-on and custom message types will also be covered. By the end of this chapter, you should be able to integrate a chatting component into your app with these features.
+- [In the second chapter](realtime-guide-intermediate.html), we will introduce some advanced features built around messaging, including mentioning people with "@", recalling messages, editing messages, getting receipts when messages are delivered and read, sending push notifications, and synchronizing messages. The implementation of multi device sign-on and custom message types will also be covered. By the end of this chapter, you should be able to integrate a chatting component into your app with these features.
 - [In the third chapter](realtime-guide-senior.html), we will introduce the security features offered by our services, including third-party signing mechanism, permission management of members, and blacklisting. We will also go over the usage of chat rooms and temporary conversations. By the end of this chapter, you will get a set of skills to improve the security and usability of your app, as well as to build conversations that serve different purposes.
 - [In the last chapter](realtime-guide-systemconv.html), we will introduce the usage of hooks and system conversations, plus how you can build your own chatbots based on them. By the end of this chapter, you will learn how you can make your app extensible and adapted to a wide variety of requirements.
 
@@ -26,11 +26,11 @@ We aim our documentation to not only help you complete the functions you are cur
 
 > Before you continue:
 >
-> Take a look at [LeanMessage Overview](realtime_v2.html) if you haven’t done it yet. Also make sure you have already followed [SDK Installation](start.html) to install and initialize the SDK for the platform (language) you are using.
+> Take a look at [LeanMessage Overview](realtime_v2.html) if you haven't done it yet. Also make sure you have already followed [SDK Installation](start.html) to install and initialize the SDK for the platform (language) you are using.
 
 ## One-on-One Chatting
 
-Before diving into the main topic, let’s see what an `IMClient` object is in LeanMessage SDK:
+Before diving into the main topic, let's see what an `IMClient` object is in LeanMessage SDK:
 
 > An `IMClient` refers to an actual user, meaning that the user logged in to the system as a client.
 
@@ -38,7 +38,7 @@ See [LeanMessage Overview](realtime_v2.html#clientId,-user,-and-log-in) for more
 
 ### Creating `IMClient`
 
-Assuming that there is a user named “Tom”. Now let’s create an `IMClient` instance for him:
+Assuming that there is a user named "Tom". Now let's create an `IMClient` instance for him:
 
 ```js
 var realtime = new Realtime({
@@ -193,7 +193,7 @@ var tom = await realtime.CreateClientAsync('Tom');
 var conversation = await tom.CreateConversationAsync("Jerry", name:"Tom & Jerry", isUnique:true);
 ```
 
-`createConversation` creates a new conversation and stores it into the `_Conversation` table which can be found in your app’s [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/). Below are the interfaces offered by different SDKs for creating conversations:
+`createConversation` creates a new conversation and stores it into the `_Conversation` table which can be found in your app's [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/). Below are the interfaces offered by different SDKs for creating conversations:
 
 ```js
 /**
@@ -234,7 +234,7 @@ async createConversation({
  @param name - The name of the conversation
  @param clientIds - The list of clientIds of participants in the conversation (except the creator)
  @param attributes - Custom attributes
- @param options － Optional; multiple options can be divided by “|”
+ @param options － Optional; multiple options can be divided by "|"
  @param callback － The callback after the conversation is created
  */
 - (void)createConversationWithName:(NSString * _Nullable)name
@@ -318,7 +318,7 @@ public Task<AVIMConversation> CreateConversationAsync(string member = null,
 Although SDKs for different languages/platforms share different interfaces, they take in the similar set of parameters when creating a conversation:
 
 1. `members`: Required; includes the initial list of members in the conversation. The initiator of the conversation is included by default, so `members` does not have to include the `clientId` of the current user.
-2. `name`: The name of the conversation; optional. The code above puts “Tom & Jerry” for it.
+2. `name`: The name of the conversation; optional. The code above puts "Tom & Jerry" for it.
 3. `attributes`: The custom attributes of the conversation; optional. The code above does not specify any attributes. If you ever specify them for your conversations, you can retrieve them later with `AVIMConversation`. Such attributes will be stored in the `attr` field of the `_Conversation` table.
 4. `unique`/`isUnique` or `AVIMConversationOptionUnique`: Marks if the conversation is unique; optional.
    - If true, the cloud will perform a query on conversations with the list of members specified. If an existing conversation contains the same members, the conversation will be returned, otherwise a new conversation will be created.
@@ -402,13 +402,13 @@ var realtime = new AVRealtime('your-app-id','your-app-key');
 var jerry = await realtime.CreateClientAsync('Jerry');
 ```
 
-As the receiver of the message, Jerry doesn’t have to create a conversation with Tom and may as well not know that Tom created a conversation with him. Jerry needs to set up a callback function to get notified for the things Tom did.
+As the receiver of the message, Jerry doesn't have to create a conversation with Tom and may as well not know that Tom created a conversation with him. Jerry needs to set up a callback function to get notified for the things Tom did.
 
 By setting up callbacks, clients will be able to handle notifications sent from the cloud. Here we focus on the following two events:
-- The user is invited to a conversation. At the moment Tom creates a new conversation with Jerry, Jerry will receive a notification saying something like “Tom invited you to a conversation”.
-- A new message is delivered to a conversation the user is already in. At the moment Tom sends out the message “Get up, Jerry!”, Jerry will receive a notification including the message itself as well as the context information like the conversation the message is sent to and the sender of the message.
+- The user is invited to a conversation. At the moment Tom creates a new conversation with Jerry, Jerry will receive a notification saying something like "Tom invited you to a conversation".
+- A new message is delivered to a conversation the user is already in. At the moment Tom sends out the message "Get up, Jerry!", Jerry will receive a notification including the message itself as well as the context information like the conversation the message is sent to and the sender of the message.
 
-Now let’s see how clients should handle such notifications. The code below handles both “joining conversation” and “getting new message” events for Jerry:
+Now let's see how clients should handle such notifications. The code below handles both "joining conversation" and "getting new message" events for Jerry:
 
 ```js
 // JS SDK responds to notifications by binding events on IMClient with callbacks
@@ -507,7 +507,7 @@ jerry.OnMessageReceived += Jerry_OnMessageReceived;
 
 With the two event handling functions above, Jerry will be able to receive messages from Tom. Jerry can send messages to Tom as well, as long as Tom has the same functions on his side.
 
-Now let’s take a look at the sequence diagram showing how the first message sent from Tom to Jerry is processed:
+Now let's take a look at the sequence diagram showing how the first message sent from Tom to Jerry is processed:
 
 ```seq
 Tom->Cloud: 1. Tom adds Jerry into the conversation
@@ -518,13 +518,13 @@ Cloud-->Jerry: 5. Sends notification: you have a new message
 Jerry-->UI: 6. Shows the message
 ```
 
-Beside responding to notifications about new messages, clients also need to respond to those indicating the change of members in a conversation, like “XX invited XX into the conversation”, “XX left the conversation”, and “XX is removed by the admin”. Such notifications will be delivered to clients in real time. See [Summary of Event Notifications Regarding Changes of Members](#summary-of-event-notifications-regarding-changes-of-members) for more details.
+Beside responding to notifications about new messages, clients also need to respond to those indicating the change of members in a conversation, like "XX invited XX into the conversation", "XX left the conversation", and "XX is removed by the admin". Such notifications will be delivered to clients in real time. See [Summary of Event Notifications Regarding Changes of Members](#summary-of-event-notifications-regarding-changes-of-members) for more details.
 
 ## Group Chats
 
-We just discussed how we can create a conversation between two users. Now let’s see how we can create a group chat with more people.
+We just discussed how we can create a conversation between two users. Now let's see how we can create a group chat with more people.
 
-There aren’t many differences between the two types of conversations and a major one would be the amount of members in them. You can either specify all the members of a group chat when creating it, or add them later after the conversation is created.
+There aren't many differences between the two types of conversations and a major one would be the amount of members in them. You can either specify all the members of a group chat when creating it, or add them later after the conversation is created.
 
 ### Creating Group Chats
 
@@ -570,7 +570,7 @@ var conversation = await tom.GetConversationAsync("CONVERSATION_ID");
 await tom.InviteAsync(conversation, "Mary");
 ```
 
-On Jerry’s side, he can add a listener for handling events regarding “new members being added”. With the code below, he will be notified once Tom invites Mary to the conversation:
+On Jerry's side, he can add a listener for handling events regarding "new members being added". With the code below, he will be notified once Tom invites Mary to the conversation:
 
 ```js
 // A user is added to the conversation
@@ -652,7 +652,7 @@ Cloud-->Mary: 2. Sends notification: you are added to the conversation by Tom
 Cloud-->Jerry: 2. Sends notification: Mary is added to the conversation by Tom
 ```
 
-On Mary’s side, to know that she is added to the conversation between Tom and Jerry, she can follow the way Jerry listens to the `INVITED` event, which can be found in [One-on-One Chatting](#one-on-one-chatting).
+On Mary's side, to know that she is added to the conversation between Tom and Jerry, she can follow the way Jerry listens to the `INVITED` event, which can be found in [One-on-One Chatting](#one-on-one-chatting).
 
 If Tom wants to **create a new conversation with all the members included**, the following code can be used:
 
@@ -849,7 +849,7 @@ jerry.OnKicked += OnKicked;
 
 ### Joining Conversations
 
-Tom is feeling bored after removing Mary. He goes to William and tells him that there is a group chat that Jerry and himself are in. He gives the ID (or name) of the group chat to William which makes him curious about what’s going on in it. William then adds himself to the group:
+Tom is feeling bored after removing Mary. He goes to William and tells him that there is a group chat that Jerry and himself are in. He gives the ID (or name) of the group chat to William which makes him curious about what's going on in it. William then adds himself to the group:
 
 ```js
 william.getConversation('CONVERSATION_ID').then(function(conversation) {
@@ -928,7 +928,7 @@ jerry.OnMembersJoined += OnMembersJoined;
 
 ### Leaving Conversations
 
-With more and more people being invited by Tom, Jerry feels that he doesn’t like most of them and wants to leave the conversation. He can do that with `Conversation#quit`:
+With more and more people being invited by Tom, Jerry feels that he doesn't like most of them and wants to leave the conversation. He can do that with `Conversation#quit`:
 
 ```js
 conversation.quit().then(function(conversation) {
@@ -1011,12 +1011,12 @@ Jerry leaves | `MEMBERS_LEFT` | `MEMBERS_LEFT` | / | `MEMBERS_LEFT`
 
 ## Rich Media Messages
 
-We’ve seen how we can send messages containing plain text. Now let’s see how we can send rich media messages like images, videos, and locations.
+We've seen how we can send messages containing plain text. Now let's see how we can send rich media messages like images, videos, and locations.
 
 By default LeanCloud supports text messages, files, images, audios, videos, locations, and binary data. All of them, except binary data, are sent as strings, though there are some slight differences between text messages and rich media messages (files, images, audios, and videos):
 
 - When sending text messages, the messages themselves are sent directly as strings.
-- When sending rich media messages (like images), the SDK will first upload the binary files to the cloud with LeanStorage’s `AVFile` interface, then embed the URLs of them into the messages being sent. We can say that **the essence of an image message is a text message holding the URL of the image**.
+- When sending rich media messages (like images), the SDK will first upload the binary files to the cloud with LeanStorage's `AVFile` interface, then embed the URLs of them into the messages being sent. We can say that **the essence of an image message is a text message holding the URL of the image**.
 
 > Files stored on LeanStorage have CDN enabled by default. Therefore, binary data (like images) are not directly encoded as part of text messages. This helps users access them faster and the cost on you can be lowered at the same time.
 
@@ -1117,7 +1117,7 @@ Cloud->Jerry: 5. Receive the image message and display that in UI
 ```
 
 Notes:
-1. The “Local” in the diagram could be `localStorage` or `camera`, meaning that the image could be either from the local storage of the phone (like iPhone’s Camera Roll) or taken in real time with camera API.
+1. The "Local" in the diagram could be `localStorage` or `camera`, meaning that the image could be either from the local storage of the phone (like iPhone's Camera Roll) or taken in real time with camera API.
 2. `AVFile` is the file object used by LeanStorage. See [AVFile](storage_overview.html#avfile) for more details.
 
 The diagram above may look complicated, but the code itself is quite simple since the image gets automatically uploaded when being sent with `send` method:
@@ -1527,7 +1527,7 @@ The C# SDK handles new messages with `OnMessageReceived`. There are **two levels
 
 The table below illustrates how these two levels work. Assuming that we are receiving an `AVIMTextMessage`:
 
-Receiver’s `AVIMClient` | Condition 1 | Condition 2 | Condition 3 | Condition 4 | Condition 5
+Receiver's `AVIMClient` | Condition 1 | Condition 2 | Condition 3 | Condition 4 | Condition 5
 --- | --- | --- | --- | --- | ---
 `AVIMClient.OnMessageReceived` | × | √ | √ | √ | √
 `AVIMConversation.OnMessageReceived` | × | × | √ | × | ×
@@ -1860,7 +1860,7 @@ Beside these built-in properties, you can also define your custom attributes to 
 
 ### Creating Custom Attributes
 
-When introducing [one-on-one conversations](#creating-conversations), we mentioned that `IMClient#createConversation` allows you to attach custom attributes to a conversation. Now let’s see how we can do that.
+When introducing [one-on-one conversations](#creating-conversations), we mentioned that `IMClient#createConversation` allows you to attach custom attributes to a conversation. Now let's see how we can do that.
 
 Assume that we need to add two properties `{ "type": "private", "pinned": true }` to a conversation we are creating. We can do so by passing in the properties when calling `IMClient#createConversation`:
 
@@ -1876,7 +1876,7 @@ tom.createConversation({
 }).catch(console.error.bind(console));
 ```
 ```objc
-// Tom creates a conversation named “Tom & Jerry” and attaches custom attributes to it
+// Tom creates a conversation named "Tom & Jerry" and attaches custom attributes to it
 NSDictionary *attributes = @{ 
     @"type": @"private",
     @"pinned": @(YES) 
@@ -1995,7 +1995,7 @@ await conversation.SaveAsync();
 
 ### Synchronization of Properties
 
-The properties of a conversation (like name) are shared by everyone in it. If someone ever changes a property, other members need to get updated on it. In the example we used earlier, a user changed the name of a conversation to “Tom is Smart”. How would other members get to know about it?
+The properties of a conversation (like name) are shared by everyone in it. If someone ever changes a property, other members need to get updated on it. In the example we used earlier, a user changed the name of a conversation to "Tom is Smart". How would other members get to know about it?
 
 LeanMessage offers the mechanism that automatically delivers the change made by a user to a conversation to all the members in it (for those who are offline, they will receive updates once they get online):
 
@@ -2078,7 +2078,7 @@ conversation.fetchInfoInBackground(new AVIMConversationCallback() {
 
 > Notes:
 >
-> You can only get member lists of **basic conversations**. Chat rooms and system conversations don’t have member lists.
+> You can only get member lists of **basic conversations**. Chat rooms and system conversations don't have member lists.
 
 ## Querying Conversations with Advanced Conditions
 
@@ -2124,7 +2124,7 @@ var conversation = await query.GetAsync("551260efe4b01608686c3e0f");
 
 LeanMessage offers a variety of ways for you to look for conversations that satisfy certain conditions.
 
-Let’s start with `equalTo` which is the simplest method for querying conversations. The code below looks for all the conversations that have `type` (a string field) to be `private`:
+Let's start with `equalTo` which is the simplest method for querying conversations. The code below looks for all the conversations that have `type` (a string field) to be `private`:
 
 ```js
 var query = client.getQuery();
@@ -2167,14 +2167,14 @@ var query = tom.GetQuery().WhereEqualTo("attr.type","private");
 await query.FindAsync();
 ```
 
-The interface for querying conversations is very similar to that for querying objects in LeanStorage. If you’re already familiar with LeanStorage, it shouldn’t be hard for you to learn how to query conversations:
+The interface for querying conversations is very similar to that for querying objects in LeanStorage. If you're already familiar with LeanStorage, it shouldn't be hard for you to learn how to query conversations:
 
 - You can get query results with `find`
 - You can get number of results with `count`
 - You can get the first conversation satisfying conditions with `first`
 - You can implement pagination with `skip` and `limit`
 
-You can also apply conditions like “greater than”, “greater than or equal to”, “less than”, and “less than or equal to” to `Number` and `Date` fields:
+You can also apply conditions like "greater than", "greater than or equal to", "less than", and "less than or equal to" to `Number` and `Date` fields:
 
 {{ docs.langSpecStart('js') }}
 
@@ -2230,7 +2230,7 @@ You can also apply conditions like “greater than”, “greater than or equal 
 
 > Notes about default query conditions:
 >
-> When querying conversations, if there isn’t any `where` condition specified, `ConversationQuery` will look for conversations containing the current user by default. Such condition will be dismissed if any `where` condition is applied to the query. If you want to look for conversations containing certain `clientId`, you can follow the way introduced in [Queries on Array Values](#queries-on-array-values) to perform queries on `m` with the value of `clientId`. This won’t cause any conflict with the default condition.
+> When querying conversations, if there isn't any `where` condition specified, `ConversationQuery` will look for conversations containing the current user by default. Such condition will be dismissed if any `where` condition is applied to the query. If you want to look for conversations containing certain `clientId`, you can follow the way introduced in [Queries on Array Values](#queries-on-array-values) to perform queries on `m` with the value of `clientId`. This won't cause any conflict with the default condition.
 
 ### Using Regular Expressions
 
@@ -2454,7 +2454,7 @@ tom.open(new AVIMClientCallback() {
 
 ### Excluding Member Lists from Results
 
-When searching conversations, you can exclude the lists of members from query results if you don’t need them. By doing so, their `members` fields will become empty arrays. This helps you improve the speed of your app and reduces the bandwidth needed.
+When searching conversations, you can exclude the lists of members from query results if you don't need them. By doing so, their `members` fields will become empty arrays. This helps you improve the speed of your app and reduces the bandwidth needed.
 
 ```js
 query.compact(true);
@@ -2546,7 +2546,7 @@ public void queryConversationWithLastMessage() {
 // Not supported yet
 ```
 
-Keep in mind that what this option really does is to refresh the latest messages of conversations. Due to the existence of cache, it is still possible for you to retrieve the outdated “latest messages” even though you set the option to be `false`.
+Keep in mind that what this option really does is to refresh the latest messages of conversations. Due to the existence of cache, it is still possible for you to retrieve the outdated "latest messages" even though you set the option to be `false`.
 
 ### Caching Results
 
@@ -2570,7 +2570,7 @@ Keep in mind that query results will be fed with local cache first and will be s
 @property (nonatomic) NSTimeInterval cacheMaxAge;
 ```
 
-If you want cache to be accessed only when there’s an error querying with the cloud, you can do this way:
+If you want cache to be accessed only when there's an error querying with the cloud, you can do this way:
 
 ```objc
 AVIMConversationQuery *query = [[AVIMClient defaultClient] conversationQuery];
@@ -2593,7 +2593,7 @@ Keep in mind that query results will be fed with local cache first and will be s
 public void setQueryPolicy(AVQuery.CachePolicy policy);
 ```
 
-If you want cache to be accessed only when there’s an error querying with the cloud, you can do this way:
+If you want cache to be accessed only when there's an error querying with the cloud, you can do this way:
 
 ```java
 AVIMConversationsQuery query = client.getConversationsQuery();
@@ -2619,8 +2619,8 @@ Not supported yet.
 Since `Conversation` objects are stored on LeanStorage, you can make use of indexes to improve the efficiency of querying, just like how you would do to other classes. Here are some suggestions for optimizing performance:
 
 - By default, indexes are created for `objectId`, `updatedAt`, and `createdAt` of `Conversation`, so querying by these fields would be naturally fast.
-- Although it’s possible to implement pagination with `skip` and `limit`, the speed would slow down when the dataset grows larger. It would be more efficient to make use of `updatedAt` or `lastMessageAt` instead.
-- When searching for conversations containing a certain user by using `contains` on `m`, it’s recommended that you stick to the default `limit` (which is 10) and make use of `updatedAt` or `lastMessageAt` for pagination.
+- Although it's possible to implement pagination with `skip` and `limit`, the speed would slow down when the dataset grows larger. It would be more efficient to make use of `updatedAt` or `lastMessageAt` instead.
+- When searching for conversations containing a certain user by using `contains` on `m`, it's recommended that you stick to the default `limit` (which is 10) and make use of `updatedAt` or `lastMessageAt` for pagination.
 - If you app has too many conversations, consider creating a cloud function that periodically cleans up inactive conversations.
 
 ## Retrieving Messages
@@ -2683,7 +2683,7 @@ messageIterator.next().then(function(result) {
   // }
 }).catch(console.error.bind(console));
 // Call next for the second time and get the 11th to 20th messages; done equals to false means that there are more messages
-// The iterator will keep track of the breaking point so you don’t have to specify it
+// The iterator will keep track of the breaking point so you don't have to specify it
 messageIterator.next().then(function(result) {
   // result: {
   //   value: [message11, ..., message20],
@@ -2954,7 +2954,7 @@ tom.close(new AVIMClientCallback(){
 await tom.CloseAsync();
 ```
 
-After the function is called, the connection between the client and the server will be terminated. If you check the status of the corresponding `clientId` on the cloud, it would show as “offline”.
+After the function is called, the connection between the client and the server will be terminated. If you check the status of the corresponding `clientId` on the cloud, it would show as "offline".
 
 ### Network Changes
 
@@ -3031,7 +3031,7 @@ The following events will be populated on `AVRealtime`:
 
 ### Sorting Conversations by Last Activities
 
-In many scenarios you may need to sort conversations based on the time the last message in each of them is sent. Here we offer a property `lastMessageAt` for each `AVIMConversation` (`lm` in the `_Conversation` table) which dynamically changes to reflect the time of the last message. The time is server-based (accurate to a second) so you don’t have to worry about the time on the clients. `AVIMConversation` also offers a method for you to retrieve the last message of each conversation, which gives you more flexibility to design the UI of your app.
+In many scenarios you may need to sort conversations based on the time the last message in each of them is sent. Here we offer a property `lastMessageAt` for each `AVIMConversation` (`lm` in the `_Conversation` table) which dynamically changes to reflect the time of the last message. The time is server-based (accurate to a second) so you don't have to worry about the time on the clients. `AVIMConversation` also offers a method for you to retrieve the last message of each conversation, which gives you more flexibility to design the UI of your app.
 
 ### Auto Reconnecting
 
@@ -3041,9 +3041,9 @@ If the connection between a client and the cloud is not properly closed, our iOS
 
 Beside the [one-on-one chatting](#one-on-one-chatting) and [group chats](#group-chats) mentioned earlier, LeanMessage also supports these types of conversations:
 
-- Chat room: This can be used to build conversations that serve scenarios like live streaming. It’s different than a basic group chat on the number of members supported and the deliverability promised. See [3. Chat Rooms](realtime-guide-senior.html#chat-rooms) for more details.
-- Temporary conversation: This can be used to build conversations between users and customer service representatives. It’s different than a basic one-on-one chatting on the fact that it has a shorter TTL which brings higher flexibility and lower cost (on data storage). See [3. Temporary Conversations](realtime-guide-senior.html#temporary-conversations) for more details.
-- System conversation: This can be used to build accounts that could broadcast messages to all their subscribers. It’s different than a basic group chat on the fact that users can subscribe to it and there isn’t a number limit of members. Subscribers can also send one-on-one messages to these accounts and these messages won’t be seen by other users. See [4. System Conversations](realtime-guide-systemconv.html#system-conversations) for more details.
+- Chat room: This can be used to build conversations that serve scenarios like live streaming. It's different than a basic group chat on the number of members supported and the deliverability promised. See [3. Chat Rooms](realtime-guide-senior.html#chat-rooms) for more details.
+- Temporary conversation: This can be used to build conversations between users and customer service representatives. It's different than a basic one-on-one chatting on the fact that it has a shorter TTL which brings higher flexibility and lower cost (on data storage). See [3. Temporary Conversations](realtime-guide-senior.html#temporary-conversations) for more details.
+- System conversation: This can be used to build accounts that could broadcast messages to all their subscribers. It's different than a basic group chat on the fact that users can subscribe to it and there isn't a number limit of members. Subscribers can also send one-on-one messages to these accounts and these messages won't be seen by other users. See [4. System Conversations](realtime-guide-systemconv.html#system-conversations) for more details.
 
 ## Continue Reading
 

@@ -11,7 +11,7 @@
 In the previous chapter [Basic Conversations and Messages](realtime-guide-beginner.html), we introduced how you can create components in your app that support one-on-one chatting and group chats, as well as how you can handle events triggered by the cloud. In this chapter, we will show you how to implement advanced features like:
 
 - Getting receipts when messages are delivered and read
-- Mentioning people with “@”
+- Mentioning people with "@"
 - Recalling and editing messages
 - Push notifications and message synchronization
 - Single device or multi device sign-on
@@ -21,26 +21,26 @@ In the previous chapter [Basic Conversations and Messages](realtime-guide-beginn
 
 If you are building an app for team collaboration or social networking, you may want more features to be included beside basic messaging. For example:
 
-- To mention someone with “@” so that they can easily find out what messages are important to them.
+- To mention someone with "@" so that they can easily find out what messages are important to them.
 - To edit or recall a piece of message that has been sent out.
-- To send status messages like “Someone is typing”.
-- To allow the sender of a message to know if it’s delivered or read.
+- To send status messages like "Someone is typing".
+- To allow the sender of a message to know if it's delivered or read.
 - To synchronize messages sent to a receiver that has been offline.
 
 With LeanMessage, you can easily implement the functions mentioned above.
 
 ### Mentioning People
 
-Some group chats have a lot of messages going on and people may easily overlook the information that’s important to them. That’s why we need a way for senders to get people’s attention.
+Some group chats have a lot of messages going on and people may easily overlook the information that's important to them. That's why we need a way for senders to get people's attention.
 
-The most commonly used way to mention someone is to type “@ + name” when composing a message. But if we break it down, we’ll notice that the “name” here is something determined by the app (it could be the real name or the nickname of the user) and could be totally different from the `clientId` identifying the user (since one is for people to see and one is for computers to read). A problem could be caused if someone changes their name at the moment another user sends a message with the old name mentioned. Beside this, we also need to consider the way to mention all the members in a conversation. Is it “@all”? “@group”? Or “@everyone”? Maybe all of them will be used, which totally depends on how the UI of the app is designed.
+The most commonly used way to mention someone is to type "@ + name" when composing a message. But if we break it down, we'll notice that the "name" here is something determined by the app (it could be the real name or the nickname of the user) and could be totally different from the `clientId` identifying the user (since one is for people to see and one is for computers to read). A problem could be caused if someone changes their name at the moment another user sends a message with the old name mentioned. Beside this, we also need to consider the way to mention all the members in a conversation. Is it "@all"? "@group"? Or "@everyone"? Maybe all of them will be used, which totally depends on how the UI of the app is designed.
 
-So we cannot mention people by simply adding “@ + name” into a message. To walk through that, LeanMessage allows you to specify two properties with `AVIMMessage`:
+So we cannot mention people by simply adding "@ + name" into a message. To walk through that, LeanMessage allows you to specify two properties with `AVIMMessage`:
 
 - `mentionList`, an array of strings containing the list of `clientId`s being mentioned;
 - `mentionAll`, a `Bool` indicating whether all the members are mentioned.
 
-Based on the logic of your app, it’s possible for you to have both `mentionAll` to be set and `mentionList` to contain a list of members. Your app shall provide the UI that allows users to type in and select the members they want to mention. The only thing you need to do with the SDK is to call the setters of `mentionList` and `mentionAll` to set the members being mentioned. Here is a code example:
+Based on the logic of your app, it's possible for you to have both `mentionAll` to be set and `mentionList` to contain a list of members. Your app shall provide the UI that allows users to type in and select the members they want to mention. The only thing you need to do with the SDK is to call the setters of `mentionList` and `mentionAll` to set the members being mentioned. Here is a code example:
 
 ```js
 const message = new TextMessage(`@Tom Come back early.`).setMentionList('Tom');
@@ -189,7 +189,7 @@ private void OnMessageReceived(object sender, AVIMMessageEventArgs e)
 
 ### Recalling and Editing Messages
 
-> Before implementing these functions, go to your app’s [Dashboard > Messaging > LeanMessage > Settings > LeanMessage Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) and enable **Allow editing messages with SDK** and **Allow recalling messages with SDK**.
+> Before implementing these functions, go to your app's [Dashboard > Messaging > LeanMessage > Settings > LeanMessage Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) and enable **Allow editing messages with SDK** and **Allow recalling messages with SDK**.
 
 A user has the ability to edit or recall messages they have sent out with `Conversation#updateMessage` or `Conversation#recallMessage` methods. There are no limits on the time within which they can perform these operations. However, users are only allowed to edit or recall the messages they have sent out, not the ones sent by others.
 
@@ -265,7 +265,7 @@ private void Tom_OnMessageRecalled(object sender, AVIMMessagePatchEventArgs e)
 
 For Android and iOS SDKs, if caching is enabled (enabled by default), the SDKs will first delete the recalled message from the cache and then trigger an event to the app. This ensures the consistency of data internally. When you receive such event, simply refresh the chatting page to reflect the latest collection of messages. Based on your implementation, either the total amount of messages would become less or a message indicating message being recalled would be displayed.
 
-Beside deleting the message, Tom can also **edit the message directly**. When this happens, what you would do is not to update the original message instance, but to create a new one and call `Conversation#updateMessage(oldMessage, newMessage)` to submit the request to the cloud (doesn’t apply to C# SDK). Here is a code example:
+Beside deleting the message, Tom can also **edit the message directly**. When this happens, what you would do is not to update the original message instance, but to create a new one and call `Conversation#updateMessage(oldMessage, newMessage)` to submit the request to the cloud (doesn't apply to C# SDK). Here is a code example:
 
 ```js
 var newMessage = new TextMessage('The new message.');
@@ -344,13 +344,13 @@ For Android and iOS SDKs, if caching is enabled (enabled by default), the SDKs w
 
 ### Transient Messages
 
-Sometimes we need to send status updates like “Someone is typing…” or “Someone changed the group name to XX”. Different from messages sent by users, these messages don’t need to be stored to the history, nor do they need to be guaranteed to be delivered (if members are offline or there is a network error, it would be okay if these messages are not delivered). Such messages are best sent as transient messages.
+Sometimes we need to send status updates like "Someone is typing…" or "Someone changed the group name to XX". Different from messages sent by users, these messages don't need to be stored to the history, nor do they need to be guaranteed to be delivered (if members are offline or there is a network error, it would be okay if these messages are not delivered). Such messages are best sent as transient messages.
 
 Transient message is a special type of message. It has the following differences comparing to a basic message:
 
-- It won’t be stored to the cloud so it couldn’t be retrieved from history messages.
-- It’s only delivered to those who are online. Offline members cannot receive it later or get push notifications about it.
-- It’s not guaranteed to be delivered. If there’s a network error preventing the message from being delivered, the server won’t make a second attempt.
+- It won't be stored to the cloud so it couldn't be retrieved from history messages.
+- It's only delivered to those who are online. Offline members cannot receive it later or get push notifications about it.
+- It's not guaranteed to be delivered. If there's a network error preventing the message from being delivered, the server won't make a second attempt.
 
 Therefore, transient messages are best for communicating real-time updates of statuses that are changing frequently or implementing simple control protocols.
 
@@ -438,7 +438,7 @@ With `AVIMMessageOption`, we can specify:
 - Whether it is a will message (field `will`; more details will be covered later).
 - The content for push notification (field `pushData`; more details will be covered later); if the receiver is offline, a push notification with this content will be triggered.
 
-The code below sends a transient message saying “Tom is typing…” to the conversation when Tom’s input box gets focused:
+The code below sends a transient message saying "Tom is typing…" to the conversation when Tom's input box gets focused:
 
 ```js
 const message = new TextMessage('Tom is typing…');
@@ -475,7 +475,7 @@ var option = new AVIMSendOptions(){Transient = true};
 await conv.SendAsync(textMessage, option);
 ```
 
-The procedure for receiving transient messages is also the same as that for basic messages. You can run different logic based on the types of messages. The example above sets the type of the message to be text message, but it would be better if you assign a distinct type to it. Our SDK doesn’t offer a type for transient messages, so you may build your own depending on what you need. See [Custom Message Types](#custom-message-types) for more details.
+The procedure for receiving transient messages is also the same as that for basic messages. You can run different logic based on the types of messages. The example above sets the type of the message to be text message, but it would be better if you assign a distinct type to it. Our SDK doesn't offer a type for transient messages, so you may build your own depending on what you need. See [Custom Message Types](#custom-message-types) for more details.
 
 ### Receipts
 
@@ -527,7 +527,7 @@ When a message is delivered to the receiver, the cloud will give a delivery rece
 var { Event } = require('leancloud-realtime');
 conversation.on(Event.LAST_DELIVERED_AT_UPDATE, function() {
   console.log(conversation.lastDeliveredAt);
-  // Update the UI to mark all the messages before lastDeliveredAt to be “delivered”
+  // Update the UI to mark all the messages before lastDeliveredAt to be "delivered"
 });
 ```
 ```objc
@@ -565,7 +565,7 @@ conversaion.OnMessageDeliverd += (s, e) =>
 await conversaion.SendTextMessageAsync("Wanna go to bakery tonight?");
 ```
 
-The content included in the receipt will not be a specific message. Instead, it will be the time the messages in the current conversation are last delivered (`lastDeliveredAt`). We have mentioned earlier that messages are delivered according to the sequence they are pushed to the cloud. Therefore, given the time of the last delivery, we can infer that all the messages sent before it are delivered. On the UI of the app, you can mark all the messages sent before `lastDeliveredAt` to be “delivered”.
+The content included in the receipt will not be a specific message. Instead, it will be the time the messages in the current conversation are last delivered (`lastDeliveredAt`). We have mentioned earlier that messages are delivered according to the sequence they are pushed to the cloud. Therefore, given the time of the last delivery, we can infer that all the messages sent before it are delivered. On the UI of the app, you can mark all the messages sent before `lastDeliveredAt` to be "delivered".
 
 #### Read Receipts
 
@@ -573,9 +573,9 @@ When we say a message is delivered, what we mean is that the message is received
 
 Therefore, we offer another kind of receipt showing if a receiver has actually seen a message.
 
-Again, since messages are delivered in time order, we don’t have to check if every single message is being read. Think about a scenario like this:
+Again, since messages are delivered in time order, we don't have to check if every single message is being read. Think about a scenario like this:
 
-<img src="images/realtime_read_confirm.png" width="400" class="img-responsive" alt="A pop-up with the title “Welcome Back” says “You have 5002 unread messages. Would you like to skip them all? (Select ‘Yes’ to mark them as read)”. There are two buttons on the bottom: “Yes” and “No”.">
+<img src="images/realtime_read_confirm.png" width="400" class="img-responsive" alt="A pop-up with the title "Welcome Back" says "You have 5002 unread messages. Would you like to skip them all? (Select ‘Yes' to mark them as read)". There are two buttons on the bottom: "Yes" and "No".">
 
 When a user opens a conversation, we can say that the user has read all the messages in it. You can use the following interface of `Conversation` to mark all the messages in it as read:
 
@@ -650,7 +650,7 @@ So if Tom is chatting with Jerry and wants to know if Jerry has read the message
     // Not supported yet
     ```
 
-2. Jerry reads Tom’s message and call `read` on the conversation to mark the latest messages as read:
+2. Jerry reads Tom's message and call `read` on the conversation to mark the latest messages as read:
   
     ```js
     conversation.read().then(function(conversation) {
@@ -667,13 +667,13 @@ So if Tom is chatting with Jerry and wants to know if Jerry has read the message
     // Not supported yet
     ```
 
-3. Tom gets a read receipt with the conversation’s `lastReadAt` updated. The UI can be updated to mark all messages sent before `lastReadAt` to be read:
+3. Tom gets a read receipt with the conversation's `lastReadAt` updated. The UI can be updated to mark all messages sent before `lastReadAt` to be read:
   
     ```js
     var { Event } = require('leancloud-realtime');
     conversation.on(Event.LAST_READ_AT_UPDATE, function() {
       console.log(conversation.lastReadAt);
-      // Update the UI to mark all the messages before lastReadAt to be “read”
+      // Update the UI to mark all the messages before lastReadAt to be "read"
     });
     ```
     ```objc
@@ -681,7 +681,7 @@ So if Tom is chatting with Jerry and wants to know if Jerry has read the message
     - (void)conversation:(AVIMConversation *)conversation didUpdateForKey:(NSString *)key {
         if ([key isEqualToString:@"lastReadAt"]) {
             NSDate *lastReadAt = conversation.lastReadAt;
-            /* The message is read by Jerry; lastReadAt can be used to update UI; for example, to mark all the messages before lastReadAt to be “read” */
+            /* The message is read by Jerry; lastReadAt can be used to update UI; for example, to mark all the messages before lastReadAt to be "read" */
         }
     }
     ```
@@ -708,15 +708,15 @@ So if Tom is chatting with Jerry and wants to know if Jerry has read the message
 
 ### Do Not Disturb
 
-If a user doesn’t want to receive notifications from a conversation but still wants to stay in it, they can mute the conversation. See [Do Not Disturb](realtime-guide-senior.html#do-not-disturb) in the next chapter for more details.
+If a user doesn't want to receive notifications from a conversation but still wants to stay in it, they can mute the conversation. See [Do Not Disturb](realtime-guide-senior.html#do-not-disturb) in the next chapter for more details.
 
 ### Will Messages
 
-Will message can be used to automatically notify other members in a conversation when a user goes offline unexpectedly. It gets its name from the wills filed by testators, giving people a feeling that the last messages of a person should always be heard. It looks like the message saying “Tom is offline and cannot receive messages” in this image:
+Will message can be used to automatically notify other members in a conversation when a user goes offline unexpectedly. It gets its name from the wills filed by testators, giving people a feeling that the last messages of a person should always be heard. It looks like the message saying "Tom is offline and cannot receive messages" in this image:
 
-<img src="images/lastwill-message.png" width="400" class="img-responsive" alt="In a conversation named “Tom & Jerry”, Jerry receives a will message saying “Tom is offline and cannot receive messages”. The will message looks like a system notification and shares a different style with other messages.">
+<img src="images/lastwill-message.png" width="400" class="img-responsive" alt="In a conversation named "Tom & Jerry", Jerry receives a will message saying "Tom is offline and cannot receive messages". The will message looks like a system notification and shares a different style with other messages.">
 
-A will message needs to be composed ahead of time and cached on the cloud. The cloud doesn’t send it out immediately after receiving it. Instead, it waits until the sender of it goes offline unexpectedly. You can implement your own logic to handle such event.
+A will message needs to be composed ahead of time and cached on the cloud. The cloud doesn't send it out immediately after receiving it. Instead, it waits until the sender of it goes offline unexpectedly. You can implement your own logic to handle such event.
 
 ```js
 var message = new TextMessage('I am a will message. I will be sent out to other members in the conversation when the sender goes offline unexpectedly.');
@@ -771,7 +771,7 @@ Once the sender goes offline unexpectedly, other members will immediately receiv
 Will message has the **following restrictions**:
 
 - Each user can only have one will message set up at a time. This means that if a user sets will messages for multiple conversations or multiple will messages for the same conversation, only the last one will take effect.
-- Will messages don’t get stored to the history.
+- Will messages don't get stored to the history.
 - If a user logs out proactively, the will message set by this user will not be sent out (if there is one).
 
 ### Keyword Filtering
@@ -780,7 +780,7 @@ If you app allows users to create group chats, you might consider filtering cuss
 
 ### Handling Undelivered Messages
 
-Sometimes you may need to store the messages that are not successfully sent out into a local cache and handle them later. For example, if a client’s connection to the server is lost and a message cannot be sent out due to this, you may still keep the message locally. Perhaps you can add an error icon and a button for retrying next to the message displayed on the UI. The user may tap on the button when the connection is recovered to make another attempt to send the message.
+Sometimes you may need to store the messages that are not successfully sent out into a local cache and handle them later. For example, if a client's connection to the server is lost and a message cannot be sent out due to this, you may still keep the message locally. Perhaps you can add an error icon and a button for retrying next to the message displayed on the UI. The user may tap on the button when the connection is recovered to make another attempt to send the message.
 
 By default, both Android and iOS SDKs enable a local cache for storing messages. The cache stores all the messages that are already sent to the cloud and keeps itself updated with the data in the cloud. To make things easier, undelivered messages can also be stored in the same cache.
 
@@ -814,7 +814,7 @@ conversation.removeFromLocalCache(message);
 // Not supported yet
 ```
 
-When reading messages from the cache, you can make messages look different on the UI based on the property `message.status`. If the `status` of a message is `AVIMMessageStatusFailed`, it means the message cannot be sent out, so you can add a button for retrying on the UI. An additional benefit for using the local cache is that the SDK will make sure the same message only gets sent out once. This ensures that there won’t be any duplicate messages on the cloud.
+When reading messages from the cache, you can make messages look different on the UI based on the property `message.status`. If the `status` of a message is `AVIMMessageStatusFailed`, it means the message cannot be sent out, so you can add a button for retrying on the UI. An additional benefit for using the local cache is that the SDK will make sure the same message only gets sent out once. This ensures that there won't be any duplicate messages on the cloud.
 
 ## Push Notifications
 
@@ -826,13 +826,13 @@ The highlight of this feature is that you can **customize the contents of push n
 
 1. Setting up a static message
 
-  You can fill in a global static JSON string in your app’s [Dashboard > Messaging > LeanMessage > Settings > Push Notification Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) for delivering push notifications with a static message. For example, if you put:
+  You can fill in a global static JSON string in your app's [Dashboard > Messaging > LeanMessage > Settings > Push Notification Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) for delivering push notifications with a static message. For example, if you put:
 
   ```json
   { "alert": "New message received", "badge": "Increment" }
   ```
 
-  Then whenever there is a new message going to an offline user, the user will receive a push notification saying “New message received”.
+  Then whenever there is a new message going to an offline user, the user will receive a push notification saying "New message received".
 
   Keep in mind that `badge` is for iOS devices only which means to increase the number displayed on the badge of the app. Its value `Increment` is case-sensitive. [iOS Push Notification Guide · Customizing Push Notifications](ios_push_guide.html#customizing-push-notifications) introduces how you can clear the badge. Besides, you can also customize the sounds of push notifications for iOS devices. See [Push Notification Guide · Message Contents](push_guide.html#message-contents) for more details.
 
@@ -913,11 +913,11 @@ If more than one of these methods are implemented at the same time, the push not
 
 ### Implementations and Restrictions
 
-If your app is using push notification services together with LeanMessage, when a client is logging in, the SDK will automatically associate the `clientId` with the device information (stored in the `Installation` table) by having the device **subscribe** to the channel with `clientId` as its name. Such association can be seen in the `channels` field of the `_Installation` table. By doing so, when the cloud wants to send a push notification to a client, the client’s device can be targeted with the `clientId` associated with it.
+If your app is using push notification services together with LeanMessage, when a client is logging in, the SDK will automatically associate the `clientId` with the device information (stored in the `Installation` table) by having the device **subscribe** to the channel with `clientId` as its name. Such association can be seen in the `channels` field of the `_Installation` table. By doing so, when the cloud wants to send a push notification to a client, the client's device can be targeted with the `clientId` associated with it.
 
-Since LeanMessage generates way more push notifications than other sources, the cloud will not keep any records for it, nor can you find them in your app’s **Dashboard** > **Messaging** > **Push Notifications** > **Push Notification History**.
+Since LeanMessage generates way more push notifications than other sources, the cloud will not keep any records for it, nor can you find them in your app's **Dashboard** > **Messaging** > **Push Notifications** > **Push Notification History**.
 
-Each push notification is only valid for 7 days. This means that if a device doesn’t connect to the service for more than 7 days, it will not receive the push notification anymore.
+Each push notification is only valid for 7 days. This means that if a device doesn't connect to the service for more than 7 days, it will not receive the push notification anymore.
 
 ### Advanced Settings for Push Notifications
 
@@ -930,7 +930,7 @@ By default, **production certificate** is used for sending push notifications. Y
 }
 ```
 
-Apple doesn’t allow a single request to include push notifications sent to devices belonging to different Team IDs. If your app has private keys for multiple Team IDs, please confirm the one that should be used for you target devices and fill it into the `_apns_team_id` parameter:
+Apple doesn't allow a single request to include push notifications sent to devices belonging to different Team IDs. If your app has private keys for multiple Team IDs, please confirm the one that should be used for you target devices and fill it into the `_apns_team_id` parameter:
 
 ```json
 {
@@ -941,7 +941,7 @@ Apple doesn’t allow a single request to include push notifications sent to dev
 
 `_profile` and `_apns_team_id` will not be included in the actual contents of push notifications.
 
-For the message set up in your app’s [Dashboard > Messaging > LeanMessage > Settings > Push Notification Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf), you can include the following variables:
+For the message set up in your app's [Dashboard > Messaging > LeanMessage > Settings > Push Notification Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf), you can include the following variables:
 
 * `${convId}` The ID of the conversation
 * `${timestamp}` The Unix timestamp when the push notification is triggered
@@ -954,27 +954,27 @@ If you are building an iOS or Android app, you can utilize the built-in push not
 
 ## Message Synchronization
 
-Push notification seems to be a good way to remind users of new messages, but the actual messages won’t get delivered until the user goes online. If a user hasn’t been online for an extremely long time, there will be tons of messages piled up on the cloud. How can we make sure that all these messages will be perfectly delivered once the user goes online?
+Push notification seems to be a good way to remind users of new messages, but the actual messages won't get delivered until the user goes online. If a user hasn't been online for an extremely long time, there will be tons of messages piled up on the cloud. How can we make sure that all these messages will be perfectly delivered once the user goes online?
 
 LeanMessage offers two methods for synchronizing messages:
 
 - One is to have the cloud push messages to the client. The cloud keeps track of the last message each user receives from each conversation. When a user goes online, the cloud will automatically push new messages generated in each conversation to the client (the client can handle them as ordinary new messages). For each conversation, the cloud will push at most 20 messages and the rest of them will not be pushed.
 - Another one is to have the client pull messages from the cloud. The cloud keeps track of the last message each user receives from each conversation. When a user goes online, the conversations containing new messages as well as the number of unread messages in each of them will be computed and the client will receive a notification indicating that there is an update on the total number of unread messages. The client can then proactively fetch these messages.
 
-The first method is relatively easier to implement, but since the cloud only pushes no more than 20 messages for each conversation, this method won’t work for many of the scenarios, including those that demand displaying the progress of each user reading messages or the exact number of unread messages. Therefore, we highly recommend that you use the second method to have the client pull messages from the cloud.
+The first method is relatively easier to implement, but since the cloud only pushes no more than 20 messages for each conversation, this method won't work for many of the scenarios, including those that demand displaying the progress of each user reading messages or the exact number of unread messages. Therefore, we highly recommend that you use the second method to have the client pull messages from the cloud.
 
 For historical reasons, different SDKs have different supports for the two methods introduced above:
 1. Android and iOS SDKs support both of them and use the first method (pushing) by default.
 2. JavaScript SDK supports the second method (pulling) by default.
-3. .NET SDK doesn’t support the second method yet.
+3. .NET SDK doesn't support the second method yet.
 
-> Please don’t use different methods for different platforms at the same time (for example, to use the first method for iOS and the second one for Android). This will make your app unable to fetch messages correctly.
+> Please don't use different methods for different platforms at the same time (for example, to use the first method for iOS and the second one for Android). This will make your app unable to fetch messages correctly.
 
 ### Notifications on Updates of Unread Message Count
 
 To know when to pull messages from the cloud, the client relies on the notifications sent from the cloud regarding updates of the numbers of unread messages in all the conversations the current user is in. These numbers are computed at the moment the client goes online.
 
-To receive such notifications, the client needs to indicate that it is using the method of pulling messages from the cloud. As mentioned earlier, JavaScript SDK uses this method by default, so there isn’t any configuration that needs to be done. For Android and iOS SDKs, the following line needs to be added when initializing `AVOSCloud` to indicate that this method will be used:
+To receive such notifications, the client needs to indicate that it is using the method of pulling messages from the cloud. As mentioned earlier, JavaScript SDK uses this method by default, so there isn't any configuration that needs to be done. For Android and iOS SDKs, the following line needs to be added when initializing `AVOSCloud` to indicate that this method will be used:
 
 ```js
 // Supported by default; no extra configuration required
