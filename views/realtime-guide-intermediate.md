@@ -43,7 +43,7 @@ So we cannot mention people by simply adding "@ + name" into a message. To walk 
 Based on the logic of your app, it's possible for you to have both `mentionAll` to be set and `mentionList` to contain a list of members. Your app shall provide the UI that allows users to type in and select the members they want to mention. The only thing you need to do with the SDK is to call the setters of `mentionList` and `mentionAll` to set the members being mentioned. Here is a code example:
 
 ```js
-const message = new TextMessage(`@Tom Come back early.`).setMentionList('Tom');
+const message = new TextMessage(`@Tom Come back early.`).setMentionList(['Tom']);
 conversation.send(message).then(function(message) {
   console.log('Sent!');
 }).catch(console.error);
