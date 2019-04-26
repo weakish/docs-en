@@ -346,7 +346,7 @@ For Android and iOS SDKs, if caching is enabled (enabled by default), the SDKs w
 
 Sometimes we need to send status updates like “Someone is typing…” or “Someone changed the group name to XX”. Different from messages sent by users, these messages don’t need to be stored to the history, nor do they need to be guaranteed to be delivered (if members are offline or there is a network error, it would be okay if these messages are not delivered). Such messages are best sent as transient messages.
 
-Transient message is a special type of message. It has the following differences comparing to basic message:
+Transient message is a special type of message. It has the following differences comparing to a basic message:
 
 - It won’t be stored to the cloud so it couldn’t be retrieved from history messages.
 - It’s only delivered to those who are online. Offline members cannot receive it later or get push notifications about it.
