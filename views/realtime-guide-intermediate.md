@@ -905,7 +905,7 @@ The highlight of this feature is that you can **customize the contents of push n
   - [Node.js Cloud Function Guide · Hooks for LeanMessage](leanengine_cloudfunction_guide-node.html#onIMReceiversOffline)
   - [Python Cloud Function Guide · Hooks for LeanMessage](leanengine_cloudfunction_guide-python.html#_receiversOffline)
   - [PHP Cloud Function Guide · Hooks for LeanMessage](leanengine_cloudfunction_guide-php.html#_receiversOffline)
-  - [Java Cloud Function Guide · Hooks for LeanMessage](leanengine_cloudfunction_guide-java.html#_receiversOffline)
+  - [Java Cloud Function Guide · Hooks for LeanMessage](leanengine_cloudfunction_guide-java.html#receiversOffline)
 
 Here is a comparison of the priorities of the three methods mentioned above: **Generating contents dynamically on the server side > Specifying contents when sending messages from a client > Setting up a static message**.
 
