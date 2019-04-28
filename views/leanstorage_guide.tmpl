@@ -5756,7 +5756,7 @@ LCUser.logIn(mobilePhoneNumber: "+19490008888", verificationCode: "123456") { re
 
 During the development of your application, you may need to test the sign-up or log-in related API intensively with your phone. As there are, however, limits to how quickly messages can be sent into the carrier networks, your testing pace can be greatly affected.
 
-To work around it, you can set up a sandbox phone number in [Dashboard > Messaging > SMS > Settings](/messaging.html?appid={{appid}}#/message/sms/conf). LeanCloud will issue a fixed verification code to go with that sandbox phone number. Whenever LeanCloud detects such combination of data, the user will be let right in authenticated without any connections to the carrier networks being made.
+To work around it, you can set up a sandbox phone number in [Dashboard > Message > SMS > Settings](/messaging.html?appid={{appid}}#/message/sms/conf). LeanCloud will issue a fixed verification code to go with that sandbox phone number. Whenever LeanCloud detects such combination of data, the user will be let right in authenticated without any connections to the carrier networks being made.
 
 On a related note, a sandbox phone number also comes in handy for iOS apps that allow users to log in with SMS code. This is because Apple may ask developers to provide a fixed combination of phone number and verification code for them to review the app as a normal user. Failure to do so may result in their app being rejected by App Store.
 
