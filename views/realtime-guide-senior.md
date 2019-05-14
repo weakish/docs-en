@@ -123,7 +123,7 @@ There are two formats of signatures for two types of blacklist operations:
 
 #### Testing Signatures
 
-You can easily test signatures in your app's dashboard. Simply go to [Messaging > LeanMessage > Clients](/dashboard/messaging.html?appid={{appid}}#/message/realtime/client){% endif %}, search a `clientId`, and click on **Test Signature**.
+You can easily test signatures in your app's dashboard. Simply go to [Messaging > LeanMessage > Clients](/dashboard/messaging.html?appid={{appid}}#/message/realtime/client), search a `clientId`, and click on **Test Signature**.
 
 <img src="images/console-im-signature-test.png" width="600" class="img-responsive" alt="A form with title &quot;Test Signature&quot;, containing fields &quot;Operation&quot;, &quot;Client ID&quot;, &quot;Member IDs&quot;, &quot;Timestamp&quot;, and &quot;Nonce&quot;, and a button saying &quot;Generate Signature&quot;.">
 
