@@ -481,7 +481,7 @@ The procedure for receiving transient messages is also the same as that for basi
 
 When the cloud is delivering messages, it follows the sequence the messages are pushed to the cloud and delivers the former messages in advance of the latter ones (FIFO). Our internal protocol also requires that the SDK sends an acknowledgement (ack) back to the cloud for every single message received by it. If a message is received by the SDK but the ack is not received by the cloud due to a packet loss, the cloud would assume that the message is not successfully delivered and will keep redelivering it until an ack is received. Correspondingly, the SDK also does it work to make duplicate messages insensible by the app. The entire mechanism ensures that no message will be lost in the entire delivery process.
 
-However, in certain scenarios, functionalities beyond the one mentioned above are demanded. For example, a sender may want to know when the receiver got the message and when they opened the message. In a product for team collaboration or private communication, a sender may even want to monitor the real-time status of every message sent out by them. Such requirements can be satisfied with the help of receipts.
+However, in certain scenarios, functionality beyond the one mentioned above is demanded. For example, a sender may want to know when the receiver got the message and when they opened the message. In a product for team collaboration or private communication, a sender may even want to monitor the real-time status of every message sent out by them. Such requirements can be satisfied with the help of receipts.
 
 Similar to the way of sending transient messages, if you want receipts to be given back, you need to specify an option in `AVIMMessageOption`:
 
@@ -706,9 +706,9 @@ So if Tom is chatting with Jerry and wants to know if Jerry has read the message
 >
 > To use read receipts, turn on [notifications on updates of unread message count](#notifications-on-updates-of-unread-message-count) when initializing your app.
 
-### Do Not Disturb
+### Muting Conversations
 
-If a user doesn't want to receive notifications from a conversation but still wants to stay in it, they can mute the conversation. See [Do Not Disturb](realtime-guide-senior.html#do-not-disturb) in the next chapter for more details.
+If a user doesn't want to receive notifications from a conversation but still wants to stay in it, they can mute the conversation. See [Muting Conversations](realtime-guide-senior.html#muting-conversations) in the next chapter for more details.
 
 ### Will Messages
 

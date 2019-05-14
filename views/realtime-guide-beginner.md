@@ -1908,7 +1908,7 @@ options.Add("pinned",true);
 var conversation = await tom.CreateConversationAsync("Jerry", name:"Tom & Jerry", isUnique:true, options:options);
 ```
 
-**The SDK allows everyone in a conversation to access its custom attributes.** You can also query conversations by custom attributes. See [Querying Conversations with Advanced Conditions](#querying-conversations-with-advanced-conditions).
+**The SDK allows everyone in a conversation to access its custom attributes.** You can even query conversations that satisfy certain attributes. See [Querying Conversations with Custom Conditions](#querying-conversations-with-custom-conditions).
 
 ### Updating and Retrieving Properties
 
@@ -2080,7 +2080,7 @@ conversation.fetchInfoInBackground(new AVIMConversationCallback() {
 >
 > You can only get member lists of **basic conversations**. Chat rooms and system conversations don't have member lists.
 
-## Querying Conversations with Advanced Conditions
+## Querying Conversations with Custom Conditions
 
 There are more ways to get a `Conversation` beside listening to incoming events. You might want your users to search chat rooms by the names or locations of them, or to look for conversations that has certain members in them. All these requirements can be satisfied with the help of queries.
 
