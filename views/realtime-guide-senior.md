@@ -92,13 +92,10 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 #### Signatures for Retrieving Message Histories
 
 ```
-appid:client_id:convid:nonce:signature_ts
+appid:client_id:convid:nonce:timestamp
 ```
 
-* `client_id` is the ID of the viewer.
-* `nonce` is a random string.
-* `signature_ts` is the timestamp in milliseconds.
-* `signature` is the signature.
+The meanings of these parameters are the same as above.
 
 #### Signatures for Blacklist Operations
 
@@ -396,7 +393,7 @@ Once `IMClient` is logged in, all the other features work in the same way as dis
 
 ## Permission Management and Blacklisting
 
-The third-party signing mechanism helps to maintain a general security in your app, but each conversation still needs to keep its own order. For example, a chat room may need managers that can temporarily or permanently mute users that are behaving improperly. In this section, we will talk about how permission management within conversations can be implemented.
+The third-party signing mechanism helps to maintain the general security of your app, but each conversation still needs to keep its own order. For example, a chat room may need managers that can temporarily or permanently mute users that are behaving improperly. In this section, we will talk about how permission management within conversations can be implemented.
 
 ### Setting Member Permissions
 
@@ -526,7 +523,7 @@ A `Conversation` object offers two ways for getting permission information of me
   // Not supported yet
   ```
 
-Each return value contains permission information of members in tuples (arrays) in the format of `<ConversationId, MemberId, ConversationMemberRole>`.
+Each return value contains permission information of members in a triple or array `<ConversationId, MemberId, ConversationMemberRole>`.
 
 ### Muting Members
 
@@ -758,7 +755,7 @@ tom.createChatRoom(null, "Chat Room", null,
 tom.CreateChatRoomAsync("Chat Room");
 ```
 
-When creating a chat room, you can specify its name and additional attributes (not required). The interface for creating chat rooms has the following differences comparing to [that for creating basic conversations](realtime-guide-beginner.html#creating-conversations):
+When creating a chat room, you can specify its name and optional attributes. The interface for creating chat rooms has the following differences comparing to [that for creating basic conversations](realtime-guide-beginner.html#creating-conversations):
 
 - A chat room doesn't have a member list, so there is no need to specify `members`.
 - For the same reason, there is no need to specify `unique` (the cloud doesn't need to merge conversations by member lists).
@@ -1045,7 +1042,7 @@ After a conversation is muted, the current user will not get push notifications 
 
 ### Keyword Filtering
 
-While allowing users to create group chats, you might consider filtering cuss words out from the messages sent by users. LeanMessage offers a built-in component that helps you easily implement such function. It works not only for chat rooms, but also for **basic conversations and system conversations**.
+You might consider filtering cuss words out from the messages sent into group chats by users. LeanMessage offers a built-in component that helps you easily implement such function. It works not only for chat rooms, but also for **basic conversations and system conversations**.
 
 To use it, go to your app's [Dashboard > Messaging > LeanMessage > Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) and enable **Keyword Filtering**. LeanCloud offers a set of keywords by default, but you can also use your own keywords by uploading a file. A keyword appearing in a message will be replaced by `***`.
 
