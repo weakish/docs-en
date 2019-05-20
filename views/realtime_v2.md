@@ -26,7 +26,7 @@ Here are the main features offered by LeanMessage:
   - Mentioning people with **"@"**
   - **Recalling and editing** messages
   - **Getting receipts** when messages are delivered and read
-  - Setting **do-not-disturb** for group chats
+  - **Muting** conversations
   - **Sending status updates** like "Someone is typing…"
   - Converting messages to **push notifications** when receivers are offline
   - Setting **priorities** for messages in chat rooms so that important messages can get quicker delivery
@@ -34,7 +34,7 @@ Here are the main features offered by LeanMessage:
   It is becoming a common requirement that users can have their accounts logged in on multiple devices at the same time. Here we allow you to make your own decision whether users can do so and receive messages on all their devices, or they can only **log in on a single device** at a time.<br/>
   What if a user accidentally loses their connection to the Internet? No worries. Our **synchronization mechanism** guarantees that unreceived messages can always be synchronized to users' devices once the connection is re-established.
 * **Group management**<br/>
-  For group chats and chat rooms, users can be nominated as **administrators** so they can gain additional permissions and help creators manage conversations. Features like inviting users, removing users, and **blacklisting users** can also be easily implemented.<br/>
+  For group chats and chat rooms, users can be nominated as **administrators** so they can gain additional permissions and help creators manage conversations. Features like inviting users, removing users, **blacklisting users**, and **muting users** can also be easily implemented.<br/>
   The messages sent through all the conversations can be filtered upon a list of keywords you define or through a plugin you build. This helps your apps comply with the laws and regulations in the area they are operated.
 * **Access control**<br/>
   For any user that wants to send and receive messages, the only thing they need is a `clientId` identifying them. By decoupling with the account system of the app, it is made easy for you to add LeanMessage into your app and it also helps us better focus on our role as a "messenger".<br/>
@@ -216,7 +216,7 @@ As mentioned earlier, we offer the following functions beside basic chatting:
 - Recalling and editing messages
 - Filtering out keywords
 - Getting receipts when messages are delivered and read
-- Setting do-not-disturb for group chats
+- Muting conversations
 - Sending status updates like "Someone is typing…"
 - Converting messages to push notifications when receivers are offline
 - Setting priorities for messages in chat rooms so that important messages can get quicker delivery
