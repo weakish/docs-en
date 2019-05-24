@@ -105,7 +105,7 @@ You can create multiple groups of instances with different domains assigned to e
 - Having edge systems separated out from the main system so that the problems occurring on edge systems won't affect the main system.
 - Having cloud functions and the main website written in different languages. For example, you can write cloud functions in Node.js and the main website in PHP.
 
-Each application will have a default group which handles cloud functions, hooks, and schedules tasks. Other groups will become treated as extended groups which **do not support cloud functions, hooks, or scheduled tasks but can only offer web hosting with second-level domains or custom domains binded**. You can change the default group at any time through the web console.
+Each application will have a primary group which handles cloud functions, hooks, and scheduled tasks. Other groups will be treated as secondary groups which **do not support defining cloud functions (including hooks and scheduled tasks) and can only offer web hosting with second-level domains or custom domains binded**. You can change the primary group at any time through the web console.
 
 Each group has its own staging environment and second-level domain. Configurations like environment variables and Git repositories are also independent. You can deploy your project to a group without affecting other ones. The methods introduced in [Managing Instances](#managing-instances) can be used to manage instances inside each group as well. If a group doesn't have any instances in it, it won't be able to handle requests. If a group has multiple instances, it will also gain the ability of load balancing and have its availability increased.
 
@@ -113,7 +113,7 @@ See [Pricing for Group Management](#pricing-for-group-management) for pricing in
 
 ### Creating and Managing Groups
 
-You can create, delete, or change default groups by going to your app's [Dashboard > LeanEngine](/cloud.html?appid={{appid}}). On the top-left corner, you will see a group selector. Click on it, then click on **Manage Groups**. You will see all the groups you have.
+You can create, delete, or change primary groups by going to your app's [Dashboard > LeanEngine](/cloud.html?appid={{appid}}). On the top-left corner, you will see a group selector. Click on it, then click on **Manage Groups**. You will see all the groups you have.
 
 After selecting a group, you will be able to change its settings like Git repository, second-level domain, and environment variables. When a group is first created, it has no instances in it and you can only create a standard instance in its production environment. A staging environment will be provided with a free trial instance if you have at least one instance under the production environment, and it will be deleted if you delete all other instances in the group. A group can be deleted only if it has no instances in it.
 
