@@ -230,9 +230,10 @@ After Tom calls `recallMessage`, other members in the conversation will receive 
 
 ```js
 var { Event } = require('leancloud-realtime');
-conversation.on(Event.MESSAGE_RECALL, function(recalledMessage) {
+conversation.on(Event.MESSAGE_RECALL, function(recalledMessage, reason) {
   // recalledMessage is the message being recalled
   // Look for the original message with its ID and replace it with recalledMessage
+  // reason (optional) is the reason the message is recalled; see the part for editing messages for more details
 });
 ```
 ```objc
@@ -265,7 +266,7 @@ private void Tom_OnMessageRecalled(object sender, AVIMMessagePatchEventArgs e)
 
 For Android and iOS SDKs, if caching is enabled (enabled by default), the SDKs will first delete the recalled message from the cache and then trigger an event to the app. This ensures the consistency of data internally. When you receive such event, simply refresh the chatting page to reflect the latest collection of messages. Based on your implementation, either the total amount of messages would become less or a message indicating message being recalled would be displayed.
 
-Beside deleting the message, Tom can also **edit the message directly**. When this happens, what you would do is not to update the original message instance, but to create a new one and call `Conversation#updateMessage(oldMessage, newMessage)` to submit the request to the cloud (doesn't apply to C# SDK). Here is a code example:
+Beside recalling the message, Tom can also **edit the message directly**. When this happens, what you would do is not to update the original message instance, but to create a new one and call `Conversation#updateMessage(oldMessage, newMessage)` to submit the request to the cloud. Here is a code example:
 
 ```js
 var newMessage = new TextMessage('The new message.');
@@ -308,9 +309,16 @@ After Tom updates the message, other members in the conversation will receive th
 
 ```js
 var { Event } = require('leancloud-realtime');
-conversation.on(Event.MESSAGE_UPDATE, function(newMessage) {
+conversation.on(Event.MESSAGE_UPDATE, function(newMessage, reason) {
   // newMessage is the message being updated
   // Look for the original message with its ID and replace it with newMessage
+  // reason (optional) is the reason the message is edited
+  // If reason is not specified, it means the sender edited the message
+  // If the code of reason is positive, it means a hook on LeanEngine caused the edit
+  // (the code value can be specified when defining hooks)
+  // If the code of reason is negative, it means a built-in mechanism of the system caused the edit
+  // For example, -4408 means the message is edited due to keyword filtering
+  // The detail of reason is a string containing explanation
 });
 ```
 ```objc
@@ -341,6 +349,8 @@ tom.OnMessageUpdated += (sender, e) => {
 ```
 
 For Android and iOS SDKs, if caching is enabled (enabled by default), the SDKs will first update the edited message in the cache and then trigger an event to the app. When you receive such event, simply refresh the chatting page to reflect the latest collection of messages.
+
+If a message is edited by the system (for example, due to keyword filtering or by a hook on LeanEngine), all the members in the conversation (including the sender) will receive a `MESSAGE_UPDATE` event.
 
 ### Transient Messages
 

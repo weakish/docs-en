@@ -81,6 +81,8 @@ However, when a field is saved for at least one time, the type of data it can ac
 
 One exception is that all the fields can accept `null` regardless of their types. Keep in mind that if a field is saved for the first time with `null` as its value, the type of this field will be locked to `Object`. This may lead to unexpected outcomes in certain cases. For example, if a `User` object has a field `nickname` and the first user being created doesn't set a nickname, then if the user is saved with `nickname` to be `null`, the type of `nickname` will be locked to `Object`. If this user or another user ever set a string for this field, an error will be thrown. Therefore, it is discouraged that you set `null` as the value of a field. If a field doesn't have a value, you may simply skip setting a value for the field. In Java SDK, the operation of setting `null` as a value will be ignored, which means that `put(key, null)` will not trigger any effect.
 
+Once the type of a field is solidified, it cannot be changed anymore unless all the data in that field is deleted. For example, if there is a `String` field `indexId` holding numbers as strings and you need to change its type to `Number`, you may create a temporary field, copy the original data into there, delete the existing `indexId`, and copy the data back from the temporary field.
+
 ### Data Management
 
 You can manage the data in your application by going to [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/) in your browser. This web console shows all the objects stored in your application in JSON.

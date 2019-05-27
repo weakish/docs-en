@@ -4418,7 +4418,7 @@ if (avatarUpload.files.length) {
 {% endif %}
 {% if platform_name === "Python" %}
 ```python
-with open('/tmp/avatar.jpg') as f:
+with open('/tmp/avatar.jpg', 'rb') as f:
     file = leancloud.File('avatar.jpg', f)
 ```
 {% endif %}
