@@ -3839,6 +3839,10 @@ func subscribe() {
 ```
 {% endif %}
 
+{% call docs.noteWrap() %}
+You can't use subqueries or restrict fields being returned when using LiveQuery.
+{% endcall %}
+
 Now you will be able to receive updates related to `{{ baseObjectName }}`. If an `Employee` object is created by another client with `Kelly` as `firstName`, the following code can get the new `Employee` for you:
 
 {% if platform_name === "Objective-C" %}
@@ -5554,7 +5558,7 @@ AV.User.logIn('Tom', 'cat!@#123').then(function (user) {
 {% endif %}
 {% if platform_name === "Python" %}
 ```python
-leancloud.User.login('Tom', 'cat!@#123')
+leancloud.User.login(username='Tom', password='cat!@#123')
 ```
 {% endif %}
 {% if platform_name === "PHP" %}
@@ -5579,6 +5583,69 @@ AVUser.logIn("Tom", "cat!@#123").subscribe(new Observer<AVUser>() {
 {% if platform_name === "Swift" %}
 ```swift
 LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
+    switch result {
+    case .success(let user):
+        // Logged in successfully
+        break
+    case .failure(let error):
+        // Failed to log in (the password may be incorrect)
+        print(error)
+    }
+}
+```
+{% endif %}
+
+#### Logging in with Emails
+
+The code below logs a user in with email and password:
+
+{% if platform_name === "Objective-C" %}
+```objc
+[AVUser loginWithEmail:@"tom@leancloud.rocks" password:@"cat!@#123" block:^(AVUser *user, NSError *error) {
+    if (user != nil) {
+        // Logged in successfully
+    } else {
+        // Failed to log in (the password may be incorrect)
+    }
+}];
+```
+{% endif %}
+{% if platform_name === "JavaScript" %}
+```js
+AV.User.loginWithEmail('tom@leancloud.rocks', 'cat!@#123').then(function (user) {
+  // Logged in successfully
+}, function (error) {
+  // Failed to log in (the password may be incorrect)
+});
+```
+{% endif %}
+{% if platform_name === "Python" %}
+```python
+leancloud.User.login(email='tom@leancloud.rocks', password='cat!@#123')
+```
+{% endif %}
+{% if platform_name === "PHP" %}
+```php
+User::logInWithEmail("tom@leancloud.rocks", "cat!@#123");
+```
+{% endif %}
+{% if platform_name === "Java" %}
+```java
+AVUser.loginByEmail("tom@leancloud.rocks", "cat!@#123").subscribe(new Observer<AVUser>() {
+    public void onSubscribe(Disposable disposable) {}
+    public void onNext(AVUser user) {
+        // Logged in successfully
+    }
+    public void onError(Throwable throwable) {
+        // Failed to log in (the password may be incorrect)
+    }
+    public void onComplete() {}
+});
+```
+{% endif %}
+{% if platform_name === "Swift" %}
+```swift
+LCUser.logIn(email: "tom@leancloud.rocks", password: "cat!@#123") { result in
     switch result {
     case .success(let user):
         // Logged in successfully

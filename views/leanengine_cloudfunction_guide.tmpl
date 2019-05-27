@@ -29,7 +29,18 @@ This guide uses {{platformName}} as an example, but LeanEngine supports many oth
 
 ## Switching Environments
 
-You can switch between the production environment and the staging environment on the client:
+LeanEngine offers two environments for each app: production environment and staging environment. When calling cloud functions within LeanEngine instances using SDK, no matter explicitly or implicitly (by triggering hooks), the SDK uses the function defined in the same environment as the instance. For example, if beforeDelete hook is defined and an object is deleted with SDK in the staging environment, the beforeDelete hook in the staging environment will be triggered.
+
+When calling cloud functions outside of LeanEngine instances using SDK, no matter explicitly or implicitly, `X-LC-Prod` is set to be `1` by default, which means that the production environment will be used. For historical reasons, there are some differences between each SDK:
+
+- For Node.js, PHP, and Java SDKs, the production environment will always be used by default.
+- For Python SDK, when debugging locally with lean-cli, the staging environment will be used if it exists, otherwise the production environment will be used.
+- For Java example projects [java-war-getting-started] and [spring-boot-getting-started], when debugging locally with lean-cli, the staging environment will be used if it exists, otherwise the production environment will be used (same as Python SDK).
+
+[java-war-getting-started]: https://github.com/leancloud/java-war-getting-started/
+[spring-boot-getting-started]: https://github.com/leancloud/spring-boot-getting-started/
+
+You can specify the environment being used with SDK:
 
 ```objc
 [AVCloud setProductionMode:NO]; // Staging environment
@@ -39,6 +50,7 @@ AV.setProduction(false); // Staging environment
 ```
 ```python
 leancloud.use_production(False) # Staging environment
+# Call it before `leancloud.init`
 ```
 ```php
 LeanClient::useProduction(false); // Staging environment
@@ -273,7 +285,7 @@ AV.Cloud.run('averageStars', {
 });
 ```
 
-By doing so, a local function call will be triggered without initiating an HTTP request. If you want to call the cloud function through an HTTP request, add `remote: true` as an option. This will be helpful when you use Node.js SDK outside of a LeanEngine environment:
+By doing so, a local function call will be triggered without initiating an HTTP request. If you want to call the cloud function through an HTTP request, add `remote: true` as an option. This will be helpful when you use Node.js SDK outside of a LeanEngine environment (including calling cloud functions defined in primary groups from secondary groups):
 
 ```js
 AV.Cloud.run('averageStars', { movie: 'Despicable Me' }, { remote: true }).then(function (data) {
