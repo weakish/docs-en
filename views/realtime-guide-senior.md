@@ -716,6 +716,10 @@ Once a user is added into the blacklist of a conversation, the user will be remo
 
 All the members in the conversation will receive notifications when someone get blacklisted.
 
+#### Blocking Messages from Specific Users
+
+Another scenario is that a user doesn’t want to receive messages from a specific user. This can be implemented with hooks. See [Hooks for LeanMessage](leanengine_cloudfunction_guide-node.html#hooks-for-leanmessage) for more details.
+
 ## Chat Rooms
 
 We have seen different types of [scenarios and conversations](realtime_v2.html#common-scenarios) in our service overview. Now let's learn how to build a chat room.
