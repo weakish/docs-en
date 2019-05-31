@@ -1149,6 +1149,41 @@ By inheriting from `TypedMessage`, you can define your own types of messages. Th
 
 For example, to implement the `OperationMessage` introduced in [Transient Messages](#transient-messages):
 
+{{ docs.langSpecEnd('js') }}
+
+{{ docs.langSpecStart('objc') }}
+
+By inheriting from `AVIMTypedMessage`, you can define your own types of messages. The basic steps include:
+
+* Implement `AVIMTypedMessageSubclassing` protocol;
+* Register the subclass. This is often done by calling `[YourClass registerSubclass]` in the `+load` method of the subclass or `-application:didFinishLaunchingWithOptions:` in `UIApplication`.
+
+{{ docs.langSpecEnd('objc') }}
+
+{{ docs.langSpecStart('java') }}
+
+By inheriting from `AVIMTypedMessage`, you can define your own types of messages. The basic steps include:
+
+* Implement the new message type inherited from `AVIMTypedMessage`. Make sure to:
+  * Add the `@AVIMMessageType(type=123)` annotation to the class<br/>The value assigned to the type (`123` here) can be defined by yourself. Negative numbers are for types offered by default and positive numbers are for those defined by you.
+  * Add the `@AVIMMessageField(name="")` annotation when declaring custom fields<br/>`name` is optional. Custom fields need to have their getters and setters.
+  * **Include an empty constructor and a Creator** (see the sample below), otherwise there will be an error with type conversion.
+* Call `AVIMMessageManager.registerAVIMMessageType()` to register the class.
+* Call `AVIMMessageManager.registerMessageHandler()` to register the handler for messages.
+
+For your reference, here is the source code of `AVIMTextMessage`:
+
+{{ docs.langSpecEnd('java') }}
+
+{{ docs.langSpecStart('cs') }}
+
+By inheriting from `AVIMTypedMessage`, you can define your own types of messages. The basic steps include:
+
+* Define a subclass inherited from `AVIMTypedMessage`.
+* Register the subclass when initializing.
+
+{{ docs.langSpecEnd('cs') }}
+
 ```js
 // TypedMessage, messageType, messageField are provided by leancloud-realtime
 // Use `var { TypedMessage, messageType, messageField } = AV;` in browser
@@ -1163,16 +1198,6 @@ messageField('op')(OperationMessage);
 // Register the class, otherwise an incoming OperationMessage cannot be automatically resolved
 realtime.register(OperationMessage);
 ```
-
-{{ docs.langSpecEnd('js') }}
-
-{{ docs.langSpecStart('objc') }}
-
-By inheriting from `AVIMTypedMessage`, you can define your own types of messages. The basic steps include:
-
-* Implement `AVIMTypedMessageSubclassing` protocol;
-* Register the subclass. This is often done by calling `[YourClass registerSubclass]` in the `+load` method of the subclass or `-application:didFinishLaunchingWithOptions:` in `UIApplication`.
-
 ```objc
 // Definition
 
@@ -1202,22 +1227,6 @@ By inheriting from `AVIMTypedMessage`, you can define your own types of messages
     }
 }
 ```
-
-{{ docs.langSpecEnd('objc') }}
-
-{{ docs.langSpecStart('java') }}
-
-By inheriting from `AVIMTypedMessage`, you can define your own types of messages. The basic steps include:
-
-* Implement the new message type inherited from `AVIMTypedMessage`. Make sure to:
-  * Add the `@AVIMMessageType(type=123)` annotation to the class<br/>The value assigned to the type (`123` here) can be defined by yourself. Negative numbers are for types offered by default and positive numbers are for those defined by you.
-  * Add the `@AVIMMessageField(name="")` annotation when declaring custom fields<br/>`name` is optional. Custom fields need to have their getters and setters.
-  * **Include an empty constructor and a Creator** (see the sample below), otherwise there will be an error with type conversion.
-* Call `AVIMMessageManager.registerAVIMMessageType()` to register the class.
-* Call `AVIMMessageManager.registerMessageHandler()` to register the handler for messages.
-
-For your reference, here is the source code of `AVIMTextMessage`:
-
 ```java
 @AVIMMessageType(type = AVIMMessageType.TEXT_MESSAGE_TYPE)
 public class AVIMTextMessage extends AVIMTypedMessage {
@@ -1250,13 +1259,6 @@ public class AVIMTextMessage extends AVIMTypedMessage {
   public static final Creator<AVIMTextMessage> CREATOR = new AVIMMessageCreator<AVIMTextMessage>(AVIMTextMessage.class);
 }
 ```
-
-{{ docs.langSpecEnd('java') }}
-
-{{ docs.langSpecStart('cs') }}
-
-First, define a subclass inherited from `AVIMTypedMessage`:
-
 ```cs
 // Provide a class name
 [AVIMMessageClassName("InputtingMessage")]
@@ -1269,19 +1271,11 @@ public class InputtingMessage : AVIMTypedMessage
     [AVIMMessageFieldName("Ecode")]
     public string Ecode { get; set; }
 }
-```
 
-Then register the subclass when initializing:
-
-```cs
+// Register subclass
 realtime.RegisterMessageType<InputtingMessage>();
-```
 
-Now the custom type is available for you to use,
-
-To send a message with the custom type:
-
-```cs
+// Send a message with the custom type:
 var inputtingMessage = new InputtingMessage();
 // TextContent is inherited from AVIMTypedMessage
 inputtingMessage.TextContent = "Typing…";
@@ -1290,11 +1284,8 @@ inputtingMessage.Ecode = "#e001";
         
 // At this point, the user is already logged in and the conversation object for the current conversation is already obtained
 await conversation.SendMessageAsync(inputtingMessage);
-```
 
 For other members in the same `conversation`, they can receive the message with the following code:
-
-```cs
 async void Start() 
 {   
     var jerry = await realtime.CreateClientAsync("jerry");
@@ -1309,11 +1300,9 @@ void Jerry_OnMessageReceived(object sender, AVIMMessageEventArgs e)
         Debug.Log(string.Format("Message with custom type received: {0} {1}", inputtingMessage.TextContent, inputtingMessage.Ecode));
     }
 }
+
+// Here we introduced how you can build your own message type to support the function of displaying typing status. However, to fully implement such function, you have to make the message into a [transient message](#transient-messages).
 ```
-
-Here we introduced how you can build your own message type to support the function of displaying typing status. However, to fully implement such function, you have to make the message into a [transient message](#transient-messages).
-
-{{ docs.langSpecEnd('cs') }}
 
 See [Back to Receiving Messages](realtime-guide-beginner.html#back-to-receiving-messages) in the previous chapter for more details on how to receive messages with custom types.
 
