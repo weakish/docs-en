@@ -132,6 +132,16 @@ Cloud::define("averageStars", function($params, $user) {
     }
 });
 ```
+
+The PHP SDK offers the `Cloud::start` function which can be used to quickly initialize cloud function services. The example below shows the `index.php` of a LeanEngine project dedicated to cloud function services:
+
+```php
+<?php
+use \LeanCloud\Engine\Cloud;
+require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../src/cloud.php'; // Contains the definitions of cloud functions
+Cloud::start();
+```
 {% endif %}
 {% if platformName === "Java" %}
 ```java

@@ -48,6 +48,22 @@ conversation.send(message).then(function(message) {
   console.log('Sent!');
 }).catch(console.error);
 ```
+```swift
+do {
+    let message = IMTextMessage(text: "@Tom Come back early.")
+    message.mentionedMembers = ["Tom"]
+    try conversation.send(message: message, completion: { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
 ```objc
 AVIMMessage *message = [AVIMTextMessage messageWithText:@"@Tom Come back early." attributes:nil];
 message.mentionList = @[@"Tom"];
@@ -83,6 +99,22 @@ const message = new TextMessage(`@all`).mentionAll();
 conversation.send(message).then(function(message) {
   console.log('Sent!');
 }).catch(console.error);
+```
+```swift
+do {
+    let message = IMTextMessage(text: "@all")
+    message.isAllMembersMentioned = true
+    try conversation.send(message: message, completion: { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
 ```
 ```objc
 AVIMMessage *message = [AVIMTextMessage messageWithText:@"@all" attributes:nil];
@@ -120,6 +152,26 @@ client.on(Event.MESSAGE, function messageEventHandler(message, conversation) {
   var mentionList = receivedMessage.getMentionList();
 });
 ```
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case .received(message: let message):
+            if let mentionedMembers = message.mentionedMembers {
+                print(mentionedMembers)
+            }
+            if let isAllMembersMentioned = message.isAllMembersMentioned {
+                print(isAllMembersMentioned)
+            }
+        default:
+            break
+        }
+    default:
+        break
+    }
+}
+```
 ```objc
 // The code below shows how you can get a list of clientIds being mentioned in an AVIMTypedMessage; the code can be modified to serve other types inherited from AVIMMessage
 - (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
@@ -156,6 +208,21 @@ client.on(Event.MESSAGE, function messageEventHandler(message, conversation) {
   var mentionedAll = receivedMessage.mentionedAll;
   var mentionedMe = receivedMessage.mentioned;
 });
+```
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case .received(message: let message):
+            print(message.isCurrentClientMentioned)
+        default:
+            break
+        }
+    default:
+        break
+    }
+}
 ```
 ```objc
 // The code below shows how you can check if all the members in the conversation or the current user is mentioned in an AVIMTypedMessage; the code can be modified to serve other types inherited from AVIMMessage
@@ -203,6 +270,20 @@ conversation.recall(oldMessage).then(function(recalledMessage) {
   // Handle error
 });
 ```
+```swift
+do {
+    try conversation.recall(message: oldMessage, completion: { (result) in
+        switch result {
+        case .success(value: let recalledMessage):
+            print(recalledMessage)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
 ```objc
 AVIMMessage *oldMessage = <#MessageYouWantToRecall#>;
 
@@ -235,6 +316,23 @@ conversation.on(Event.MESSAGE_RECALL, function(recalledMessage, reason) {
   // Look for the original message with its ID and replace it with recalledMessage
   // reason (optional) is the reason the message is recalled; see the part for editing messages for more details
 });
+```
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case let .updated(updatedMessage: updatedMessage, reason: _):
+            if let recalledMessage = updatedMessage as? IMRecalledMessage {
+                print(recalledMessage)
+            }
+        default:
+            break
+        }
+    default:
+        break
+    }
+}
 ```
 ```objc
 /* A delegate method for handling events of editing and recalling messages */
@@ -275,6 +373,21 @@ conversation.update(oldMessage, newMessage).then(function() {
 }).catch(function(error) {
   // Handle error
 });
+```
+```swift
+do {
+    let newMessage = IMTextMessage(text: "Just a new message")
+    try conversation.update(oldMessage: oldMessage, to: newMessage, completion: { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
 ```
 ```objc
 AVIMMessage *oldMessage = <#MessageYouWantToUpdate#>;
@@ -320,6 +433,21 @@ conversation.on(Event.MESSAGE_UPDATE, function(newMessage, reason) {
   // For example, -4408 means the message is edited due to keyword filtering
   // The detail of reason is a string containing explanation
 });
+```
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case let .updated(updatedMessage: updatedMessage, reason: _):
+            print(updatedMessage)
+        default:
+            break
+        }
+    default:
+        break
+    }
+}
 ```
 ```objc
 /* A delegate method for handling events of editing and recalling messages */
@@ -374,6 +502,18 @@ The way to construct a transient message is the same as that for a basic message
  */
 async send(message)
 ```
+```swift
+/// Send Message.
+///
+/// - Parameters:
+///   - message: The message to be sent.
+///   - options: @see `MessageSendOptions`.
+///   - priority: @see `IMChatRoom.MessagePriority`.
+///   - pushData: The push data of APNs.
+///   - progress: The file uploading progress.
+///   - completion: callback.
+public func send(message: IMMessage, options: MessageSendOptions = .default, priority: IMChatRoom.MessagePriority? = nil, pushData: [String : Any]? = nil, progress: ((Double) -> Void)? = nil, completion: @escaping (LCBooleanResult) -> Void) throws
+```
 ```objc
 /*!
  Send a message
@@ -409,6 +549,30 @@ In fact, an additional parameter `AVIMMessageOption` can be provided when sendin
  * @return {Promise.<Message>} The message being sent
  */
 async send(message, options)
+```
+```swift
+/// Message Sending Option
+public struct MessageSendOptions: OptionSet {
+    /// Get Receipt when other client received message or read message.
+    public static let needReceipt = MessageSendOptions(rawValue: 1 << 0)
+    
+    /// Indicates whether this message is transient.
+    public static let isTransient = MessageSendOptions(rawValue: 1 << 1)
+    
+    /// Indicates whether this message will be auto delivering to other client when this client disconnected.
+    public static let isAutoDeliveringWhenOffline = MessageSendOptions(rawValue: 1 << 2)
+}
+
+/// Send Message.
+///
+/// - Parameters:
+///   - message: The message to be sent.
+///   - options: @see `MessageSendOptions`.
+///   - priority: @see `IMChatRoom.MessagePriority`.
+///   - pushData: The push data of APNs.
+///   - progress: The file uploading progress.
+///   - completion: callback.
+public func send(message: IMMessage, options: MessageSendOptions = .default, priority: IMChatRoom.MessagePriority? = nil, pushData: [String : Any]? = nil, progress: ((Double) -> Void)? = nil, completion: @escaping (LCBooleanResult) -> Void) throws
 ```
 ```objc
 /*!
@@ -453,6 +617,21 @@ The code below sends a transient message saying "Tom is typing…" to the conver
 ```js
 const message = new TextMessage('Tom is typing…');
 conversation.send(message, {transient: true});
+```
+```swift
+do {
+    let message = IMTextMessage(text: "Tom is typing…")
+    try conversation.send(message: message, options: [.isTransient], completion: { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
 ```
 ```objc
 AVIMMessage *message = [AVIMTextMessage messageWithText:@"Tom is typing…" attributes:nil];
@@ -501,6 +680,21 @@ conversation.send(message, {
   receipt: true,
 });
 ```
+```swift
+do {
+    let message = IMTextMessage(text: "A very important message.")
+    try conversation.send(message: message, options: [.needReceipt], completion: { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
 ```objc
 [conversation sendMessage:message options:AVIMMessageSendOptionRequestReceipt callback:^(BOOL succeeded, NSError *error) {
   if (succeeded) {
@@ -539,6 +733,23 @@ conversation.on(Event.LAST_DELIVERED_AT_UPDATE, function() {
   console.log(conversation.lastDeliveredAt);
   // Update the UI to mark all the messages before lastDeliveredAt to be "delivered"
 });
+```
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case let .delivered(toClientID: toClientID, messageID: messageID, deliveredTimestamp: deliveredTimestamp):
+            if messageID == message.ID {
+                message.deliveredTimestamp = deliveredTimestamp
+            }
+        default:
+            break
+        }
+    default:
+        break
+    }
+}
 ```
 ```objc
 // `conversation:messageDelivered` listens if there are messages delivered
@@ -596,6 +807,12 @@ When a user opens a conversation, we can say that the user has read all the mess
  */
 async read();
 ```
+```swift
+/// Clear unread messages that its sent timestamp less than the sent timestamp of the parameter message.
+///
+/// - Parameter message: The default is the last message.
+public func read(message: IMMessage? = nil)
+```
 ```objc
 /*!
  Mark as read
@@ -624,6 +841,21 @@ So if Tom is chatting with Jerry and wants to know if Jerry has read the message
     conversation.send(message, {
       receipt: true,
     });
+    ```
+    ```swift
+    do {
+        let message = IMTextMessage(text: "Hello, Jerry!")
+        try conversation.send(message: message, options: [.needReceipt], completion: { (result) in
+            switch result {
+            case .success:
+                break
+            case .failure(error: let error):
+                print(error)
+            }
+        })
+    } catch {
+        print(error)
+    }
     ```
     ```objc
     AVIMMessageOption *option = [[AVIMMessageOption alloc] init];
@@ -667,6 +899,9 @@ So if Tom is chatting with Jerry and wants to know if Jerry has read the message
       ;
     }).catch(console.error.bind(console));
     ```
+    ```swift
+    conversation.read()
+    ```
     ```objc
     [conversation readInBackground];
     ```
@@ -685,6 +920,23 @@ So if Tom is chatting with Jerry and wants to know if Jerry has read the message
       console.log(conversation.lastReadAt);
       // Update the UI to mark all the messages before lastReadAt to be "read"
     });
+    ```
+    ```swift
+    func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+        switch event {
+        case .message(event: let messageEvent):
+            switch messageEvent {
+            case let .read(byClientID: byClientID, messageID: messageID, readTimestamp: readTimestamp):
+                if messageID == message.ID {
+                    message.readTimestamp = readTimestamp
+                }
+            default:
+                break
+            }
+        default:
+            break
+        }
+    }
     ```
     ```objc
     // Tom can get the update of lastReadAt within the delegate method of client
@@ -735,6 +987,21 @@ conversation.send(message, { will: true }).then(function() {
 }).catch(function(error) {
   // Handle error
 });
+```
+```swift
+do {
+    let message = IMTextMessage(text: "I am a will message. I will be sent out to other members in the conversation when the sender goes offline unexpectedly.")
+    try conversation.send(message: message, options: [.isAutoDeliveringWhenOffline], completion: { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
 ```
 ```objc
 AVIMMessageOption *option = [[AVIMMessageOption alloc] init];
@@ -799,6 +1066,9 @@ The code below adds a message to the cache:
 ```js
 // Not supported yet
 ```
+```swift
+// Not supported yet
+```
 ```objc
 [conversation addMessageToCache:message];
 ```
@@ -812,6 +1082,9 @@ conversation.addToLocalCache(message);
 The code below removes a message from the cache:
 
 ```js
+// Not supported yet
+```
+```swift
 // Not supported yet
 ```
 ```objc
@@ -863,6 +1136,28 @@ The highlight of this feature is that you can **customize the contents of push n
           "custom-key": "This is a custom attribute. custom-key is just an example. You can use your own names for keys."
       }
   });
+  ```
+  ```swift
+  do {
+      let message = IMTextMessage(text: "Hey Jerry, me and Kate are going to a bar to watch a game tonight. Do you wanna come?")
+      let pushData: [String: Any] = [
+          "alert": "New message received",
+          "category": "Message",
+          "badge": 1,
+          "sound": "message.mp3",
+          "custom-key": "This is a custom attribute. custom-key is just an example. You can use your own names for keys."
+      ]
+      try conversation.send(message: message, pushData: pushData, completion: { (result) in
+          switch result {
+          case .success:
+              break
+          case .failure(error: let error):
+              print(error)
+          }
+      })
+  } catch {
+      print(error)
+  }
   ```
   ```objc
   AVIMMessageOption *option = [[AVIMMessageOption alloc] init];
@@ -989,6 +1284,18 @@ To receive such notifications, the client needs to indicate that it is using the
 ```js
 // Supported by default; no extra configuration required
 ```
+```swift
+// Supported by default; no extra configuration required
+
+// Turn off notifications
+do {
+    var options = IMClient.Options.default
+    options.remove(.receiveUnreadMessageCountAfterSessionDidOpen)
+    let client = try IMClient(ID: "CLIENT_ID", options: options)
+} catch {
+    print(error)
+}
+```
 ```objc
 [AVIMClient setUnreadNotificationEnabled:YES];
 ```
@@ -1014,6 +1321,16 @@ client.on(Event.UNREAD_MESSAGES_COUNT_UPDATE, function(conversations) {
     console.log(conv.id, conv.name, conv.unreadMessagesCount);
   }
 });
+```
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .unreadMessageCountUpdated:
+        print(conversation.unreadMessageCount)
+    default:
+        break
+    }
+}
 ```
 ```objc
 // Use delegate method conversation:didUpdateForKey: to observe the unreadMessagesCount property of the conversation
@@ -1060,6 +1377,21 @@ realtime.createIMClient('Tom', { tag: 'Mobile' }).then(function(tom) {
   console.log('Tom is logged in.');
 });
 ```
+```swift
+do {
+    let client = try IMClient(ID: "CLIENT_ID", tag: "Mobile")
+    client.open { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 AVIMClient *currentClient = [[AVIMClient alloc] initWithClientId:@"Tom" tag:@"Mobile"];
 [currentClient openWithCallback:^(BOOL succeeded, NSError *error) {
@@ -1095,6 +1427,18 @@ var { Event } = require('leancloud-realtime');
 tom.on(Event.CONFLICT, function() {
   // Tell the user that the same clientId is logged in on another device
 });
+```
+```swift
+func client(_ client: IMClient, event: IMClientEvent) {
+    switch event {
+    case .sessionDidClose(error: let error):
+        if error.code == 4111 {
+            // Tell the user that the same clientId is logged in on another device
+        }
+    default:
+        break
+    }
+}
 ```
 ```objc
 -(void)client:(AVIMClient *)client didOfflineWithError:(NSError *)error{
@@ -1151,6 +1495,15 @@ For example, to implement the `OperationMessage` introduced in [Transient Messag
 
 {{ docs.langSpecEnd('js') }}
 
+{{ docs.langSpecStart('swift') }}
+
+By inheriting from `IMCategorizedMessage`, you can define your own types of messages. The basic steps include:
+
+* Implement `IMMessageCategorizing` protocol;
+* Register the subclass. This is often done by calling `try CustomMessage.register()` in the `application(_:didFinishLaunchingWithOptions:)` method of `AppDelegate`.
+
+{{ docs.langSpecEnd('swift') }}
+
 {{ docs.langSpecStart('objc') }}
 
 By inheriting from `AVIMTypedMessage`, you can define your own types of messages. The basic steps include:
@@ -1197,6 +1550,42 @@ messageType(1)(OperationMessage);
 messageField('op')(OperationMessage);
 // Register the class, otherwise an incoming OperationMessage cannot be automatically resolved
 realtime.register(OperationMessage);
+```
+```swift
+class CustomMessage: IMCategorizedMessage {
+    
+    class override var messageType: MessageType {
+        return 1
+    }
+}
+
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    
+    do {
+        try CustomMessage.register()
+    } catch {
+        print(error)
+        return false
+    }
+    
+    return true
+}
+
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case .received(message: let message):
+            if let customMessage = message as? CustomMessage {
+                print(customMessage)
+            }
+        default:
+            break
+        }
+    default:
+        break
+    }
+}
 ```
 ```objc
 // Definition
