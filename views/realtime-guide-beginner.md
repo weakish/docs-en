@@ -51,6 +51,13 @@ realtime.createIMClient('Tom').then(function(tom) {
   // Successfully logged in
 }).catch(console.error);
 ```
+```swift
+do {
+    let tom = try IMClient(ID: "Tom")
+} catch {
+    print(error)
+}
+```
 ```objc
 @property (nonatomic, strong) AVIMClient *tom;
 // clientId is Tom
@@ -78,6 +85,21 @@ For JavaScript and C# (Unity3D) SDKs, clients will be automatically logged in wh
 realtime.createIMClient('Tom').then(function(tom) {
   // Successfully logged in
 }).catch(console.error);
+```
+```swift
+do {
+    let tom = try IMClient(ID: "Tom")
+    tom.open { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
 ```
 ```objc
 // Tom creates a client and logs in with his name as clientId
@@ -117,6 +139,9 @@ var AV = require('leancloud-storage');
 AV.User.logIn('username', 'password').then(function(user) {
   return realtime.createIMClient(user);
 }).catch(console.error.bind(console));
+```
+```swift
+// Not supported yet
 ```
 ```objc
 // Log in to LeanMessage with the username and password of an AVUser
@@ -170,6 +195,20 @@ tom.CreateConversationAsync({ // tom is an IMClient instance
   unique: true
 }).then(/* Do something as you need */);
 ```
+```swift
+do {
+    try tom.createConversation(clientIDs: ["Jerry"], name: "Tom & Jerry", isUnique: true, completion: { (result) in
+        switch result {
+        case .success(value: let conversation):
+            print(conversation)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
 ```objc
 // Create a conversation with Jerry
 [tom createConversationWithName:@"Tom & Jerry" clientIds:@[@"Jerry"] attributes:nil options:AVIMConversationOptionUnique
@@ -216,6 +255,33 @@ async createConversation({
   tempConvTTL,
   // You may add more properties
 });
+```
+```swift
+/// Create a Normal Conversation. Default is a Unique Conversation.
+///
+/// - Parameters:
+///   - clientIDs: The set of client ID. it's the members of the conversation which will be created. the initialized members always contains current client's ID. if the created conversation is unique, and server has one unique conversation with the same members, that unique conversation will be returned.
+///   - name: The name of the conversation.
+///   - attributes: The attributes of the conversation.
+///   - isUnique: True means create or get a unique conversation, default is true.
+///   - completion: callback.
+public func createConversation(clientIDs: Set<String>, name: String? = nil, attributes: [String : Any]? = nil, isUnique: Bool = true, completion: @escaping (LCGenericResult<IMConversation>) -> Void) throws
+
+/// Create a Chat Room.
+///
+/// - Parameters:
+///   - name: The name of the chat room.
+///   - attributes: The attributes of the chat room.
+///   - completion: callback.
+public func createChatRoom(name: String? = nil, attributes: [String : Any]? = nil, completion: @escaping (LCGenericResult<IMChatRoom>) -> Void) throws
+
+/// Create a Temporary Conversation. Temporary Conversation is unique in it's Life Cycle.
+///
+/// - Parameters:
+///   - clientIDs: The set of client ID. it's the members of the conversation which will be created. the initialized members always contains this client's ID.
+///   - timeToLive: The time interval for the life of the temporary conversation.
+///   - completion: callback.
+public func createTemporaryConversation(clientIDs: Set<String>, timeToLive: Int32, completion: @escaping (LCGenericResult<IMTemporaryConversation>) -> Void) throws
 ```
 ```objc
 /*!
@@ -339,6 +405,21 @@ conversation.send(new TextMessage('Get up, Jerry!')).then(function(message) {
   console.log('Tom & Jerry', 'Message sent!');
 }).catch(console.error);
 ```
+```swift
+do {
+    let textMessage = IMTextMessage(text: "Get up, Jerry!")
+    try conversation.send(message: textMessage) { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 AVIMTextMessage *message = [AVIMTextMessage messageWithText:@"Get up, Jerry!" attributes:nil];
 [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
@@ -378,6 +459,21 @@ var { Event } = require('leancloud-realtime');
 // Jerry logs in
 realtime.createIMClient('Jerry').then(function(jerry) {
 }).catch(console.error);
+```
+```swift
+do {
+    let jerry = try IMClient(ID: "Jerry")
+    jerry.open { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
 ```
 ```objc
 jerry = [[AVIMClient alloc] initWithClientId:@"Jerry"];
@@ -423,9 +519,26 @@ jerry.on(Event.MESSAGE, function(message, conversation) {
     console.log('Message received: ' + message.text);
 });
 ```
+```swift
+jerry.delegate = delegator
+
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case .received(message: let message):
+            print(message)
+        default:
+            break
+        }
+    default:
+        break
+    }
+}
+```
 ```objc
 // Objective-C SDK responds to notifications with AVIMClientDelegate
-jerry.delegate = self;
+jerry.delegate = delegator;
 
 /*!
  The current user is added to a conversation
@@ -540,6 +653,40 @@ tom.getConversation('CONVERSATION_ID').then(function(conversation) {
   // The conversation now contains ['Mary', 'Tom', 'Jerry']
 }).catch(console.error.bind(console));
 ```
+```swift
+do {
+    let conversationQuery = client.conversationQuery
+    try conversationQuery.getConversation(by: "CONVERSATION_ID") { (result) in
+        switch result {
+        case .success(value: let conversation):
+            do {
+                try conversation.add(members: ["Mary"], completion: { (result) in
+                    switch result {
+                    case .allSucceeded:
+                        break
+                    case .failure(error: let error):
+                        print(error)
+                    case let .slicing(success: succeededIDs, failure: failures):
+                        if let succeededIDs = succeededIDs {
+                            print(succeededIDs)
+                        }
+                        for (failedIDs, error) in failures {
+                            print(failedIDs)
+                            print(error)
+                        }
+                    }
+                })
+            } catch {
+                print(error)
+            }
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 // Get the conversation with ID
 AVIMConversationQuery *query = [self.client conversationQuery];
@@ -578,8 +725,25 @@ jerry.on(Event.MEMBERS_JOINED, function membersjoinedEventHandler(payload, conve
     console.log(payload.members, payload.invitedBy, conversation.id);
 });
 ```
+```swift
+jerry.delegate = delegator
+
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case let .joined(byClientID: byClientID, at: atDate):
+        print(byClientID)
+        print(atDate)
+    case let .membersJoined(members: members, byClientID: byClientID, at: atDate):
+        print(members)
+        print(byClientID)
+        print(atDate)
+    default:
+        break
+    }
+}
+```
 ```objc
-jerry.delegate = self;
+jerry.delegate = delegator;
 
 #pragma mark - AVIMClientDelegate
 /*!
@@ -665,6 +829,20 @@ tom.createConversation({
   unique: true,
 }).catch(console.error);
 ```
+```swift
+do {
+    try tom.createConversation(clientIDs: ["Jerry", "Mary"], name: "Tom & Jerry & friends", isUnique: true, completion: { (result) in
+        switch result {
+        case .success(value: let conversation):
+            print(conversation)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
 ```objc
 // Tom creates a conversation with his friends
 NSArray *friends = @[@"Jerry", @"Mary"];
@@ -699,6 +877,21 @@ For example, if Tom sends a welcoming message to the group:
 
 ```js
 conversation.send(new TextMessage('Welcome everyone!'));
+```
+```swift
+do {
+    let textMessage = IMTextMessage(text: "Welcome everyone!")
+    try conversation.send(message: textMessage, completion: { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
 ```
 ```objc
 [conversation sendMessage:[AVIMTextMessage messageWithText:@"Welcome everyone!" attributes:nil] callback:^(BOOL succeeded, NSError *error) {
@@ -735,6 +928,28 @@ One day Mary spoke something that made Tom angry and Tom wants to kick her out o
 conversation.remove(['Mary']).then(function(conversation) {
   console.log('Member removed!', conversation.members);
 }).catch(console.error.bind(console));
+```
+```swift
+do {
+    try conversation.remove(members: ["Mary"], completion: { (result) in
+        switch result {
+        case .allSucceeded:
+            break
+        case .failure(error: let error):
+            print(error)
+        case let .slicing(success: succeededIDs, failure: failures):
+            if let succeededIDs = succeededIDs {
+                print(succeededIDs)
+            }
+            for (failedIDs, error) in failures {
+                print(failedIDs)
+                print(error)
+            }
+        }
+    })
+} catch {
+    print(error)
+}
 ```
 ```objc
 [conversation removeMembersWithClientIds:@[@"Mary"] callback:^(BOOL succeeded, NSError *error) {
@@ -775,8 +990,25 @@ jerry.on(Event.KICKED, function membersjoinedEventHandler(payload, conversation)
     console.log(payload.kickedBy, conversation.id);
 });
 ```
+```swift
+jerry.delegate = delegator
+
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case let .left(byClientID: byClientID, at: atDate):
+        print(byClientID)
+        print(atDate)
+    case let .membersLeft(members: members, byClientID: byClientID, at: atDate):
+        print(members)
+        print(byClientID)
+        print(atDate)
+    default:
+        break
+    }
+}
+```
 ```objc
-jerry.delegate = self;
+jerry.delegate = delegator;
 
 #pragma mark - AVIMClientDelegate
 /*!
@@ -859,6 +1091,32 @@ william.getConversation('CONVERSATION_ID').then(function(conversation) {
   // The conversation now contains ['William', 'Tom', 'Jerry']
 }).catch(console.error.bind(console));
 ```
+```swift
+do {
+    let conversationQuery = client.conversationQuery
+    try conversationQuery.getConversation(by: "CONVERSATION_ID") { (result) in
+        switch result {
+        case .success(value: let conversation):
+            do {
+                try conversation.join(completion: { (result) in
+                    switch result {
+                    case .success:
+                        break
+                    case .failure(error: let error):
+                        print(error)
+                    }
+                })
+            } catch {
+                print(error)
+            }
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 AVIMConversationQuery *query = [william conversationQuery];
 [query getConversationById:@"CONVERSATION_ID" callback:^(AVIMConversation *conversation, NSError *error) {
@@ -900,6 +1158,18 @@ jerry.on(Event.MEMBERS_JOINED, function membersJoinedEventHandler(payload, conve
     console.log(payload.members, payload.invitedBy, conversation.id);
 });
 ```
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case let .membersJoined(members: members, byClientID: byClientID, at: atDate):
+        print(members)
+        print(byClientID)
+        print(atDate)
+    default:
+        break
+    }
+}
+```
 ```objc
 - (void)conversation:(AVIMConversation *)conversation membersAdded:(NSArray *)clientIds byClientId:(NSString *)clientId {
     NSLog(@"%@", [NSString stringWithFormat:@"%@ joined the conversation; operated by %@",[clientIds objectAtIndex:0],clientId]);
@@ -934,6 +1204,20 @@ With more and more people being invited by Tom, Jerry feels that he doesn't like
 conversation.quit().then(function(conversation) {
   console.log('You left the conversation!', conversation.members);
 }).catch(console.error.bind(console));
+```
+```swift
+do {
+    try conversation.leave(completion: { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
 ```
 ```objc
 [conversation quitWithCallback:^(BOOL succeeded, NSError *error) {
@@ -971,6 +1255,18 @@ Other members can listen to `MEMBERS_LEFT` to know that Jerry left the conversat
 mary.on(Event.MEMBERS_LEFT, function membersLeftEventHandler(payload, conversation) {
     console.log(payload.members, payload.kickedBy, conversation.id);
 });
+```
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case let .membersLeft(members: members, byClientID: byClientID, at: atDate):
+        print(members)
+        print(byClientID)
+        print(atDate)
+    default:
+        break
+    }
+}
 ```
 ```objc
 // If Mary is logged in, the following callback will be triggered when Jerry leaves the conversation
@@ -1045,6 +1341,27 @@ All of them are derived from `AVIMMessage`, with the following properties availa
 | `status`      | `Symbol` | The status of the message. Could be one of the members of [`MessageStatus`](https://leancloud.github.io/js-realtime-sdk/docs/module-leancloud-realtime.html#.MessageStatus:<br/><br/>`MessageStatus.NONE` (unknown)<br/>`MessageStatus.SENDING` (sending)<br/>`MessageStatus.SENT` (sent)<br/>`MessageStatus.DELIVERED` (delivered)<br/>`MessageStatus.FAILED` (failed) |
 
 {{ docs.langSpecEnd('js') }}
+
+{{ docs.langSpecStart('swift') }}
+
+| 属性 | 类型 | 描述 |
+| --- | --- | --- |
+| `content`                  | `IMMessage.Content`    | The content of the message. Could be `String` or `Data`. |
+| `fromClientID`             | `String`               | The `clientId` of the sender. |
+| `currentClientID`          | `String`               | The `client ID` of the receiver. |
+| `conversationID`           | `String`               | The `conversation ID` of the conversation. |
+| `ID`                       | `String`               | A unique `message ID` for each message. Assigned by the cloud automatically. |
+| `sentTimestamp`            | `int64_t`              | The time the message is sent. Assigned by the cloud automatically. |
+| `deliveredTimestamp`       | `int64_t`              | The time the message is received. |
+| `readTimestamp`            | `int64_t`              | The time the message is read. |
+| `patchedTimestamp`         | `int64_t`              | The time the message is edited. |
+| `isAllMembersMentioned`    | `Bool`                 | Whether all members are mentioned. |
+| `mentionedMembers`         | `[String]`             | A list of members being mentioned. |
+| `isCurrentClientMentioned` | `Bool`                 | Whether the current `Client` is mentioned. |
+| `status`                   | `IMMessage.Status`     | The status of the message. Could be one of:<br/><br/>`none` (unknown)<br/>`sending` (sending)<br/>`sent` (sent)<br/>`delivered` (delivered)<br/>`read` (read)<br/>`failed` (failed) |
+| `ioType`                   | `IMMessage.IOType`     | The direction of the message. Could be one of:<br/><br/>`in` (sent to the current user)<br/>`out` (sent by the current user) |
+
+{{ docs.langSpecEnd('swift') }}
 
 {{ docs.langSpecStart('objc') }}
 
@@ -1137,6 +1454,23 @@ file.save().then(function() {
   console.log('Sent!');
 }).catch(console.error.bind(console));
 ```
+```swift
+do {
+    if let imageFilePath = Bundle.main.url(forResource: "image", withExtension: "jpg")?.path {
+        let imageMessage = IMImageMessage(filePath: imageFilePath, format: "jpg")
+        try conversation.send(message: imageMessage, completion: { (result) in
+            switch result {
+            case .success:
+                break
+            case .failure(error: let error):
+                print(error)
+            }
+        })
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -1189,6 +1523,23 @@ file.save().then(function() {
   console.log('Sent!');
 }).catch(console.error.bind(console));
 ```
+```swift
+do {
+    if let url = URL(string: "http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif") {
+        let imageMessage = IMImageMessage(url: url, format: "gif")
+        try conversation.send(message: imageMessage, completion: { (result) in
+            switch result {
+            case .success:
+                break
+            case .failure(error: let error):
+                print(error)
+            }
+        })
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 // Tom sends an image to Jerry
 AVFile *file = [AVFile fileWithURL:[self @"http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif"]];
@@ -1237,6 +1588,26 @@ client.on(Event.MESSAGE, function messageEventHandler(message, conversation) {
         console.log('Image received. URL: ' + file.url());
         break;
    }
+}
+```
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case .received(message: let message):
+            switch message {
+            case let imageMessage as IMImageMessage:
+                print(imageMessage)
+            default:
+                break
+            }
+        default:
+            break
+        }
+    default:
+        break
+    }
 }
 ```
 ```objc
@@ -1324,6 +1695,24 @@ file.save().then(function() {
   console.log('Sent!');
 }).catch(console.error.bind(console));
 ```
+```swift
+do {
+    if let filePath = Bundle.main.url(forResource: "audio", withExtension: "mp3")?.path {
+        let audioMessage = IMAudioMessage(filePath: filePath, format: "mp3")
+        audioMessage.text = "I heard this song became a meme."
+        try conversation.send(message: audioMessage, completion: { (result) in
+            switch result {
+            case .success:
+                break
+            case .failure(error: let error):
+                print(error)
+            }
+        })
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 NSError *error = nil;
 AVFile *file = [AVFile fileWithLocalPath:localPath error:&error];
@@ -1373,6 +1762,24 @@ file.save().then(function() {
   console.log('Sent!');
 }).catch(console.error.bind(console));
 ```
+```swift
+do {
+    if let url = URL(string: "https://some.website.com/apple.acc") {
+        let audioMessage = IMAudioMessage(url: url, format: "acc")
+        audioMessage.text = "Here is the recording from Apple Special Event."
+        try conversation.send(message: audioMessage, completion: { (result) in
+            switch result {
+            case .success:
+                break
+            case .failure(error: let error):
+                print(error)
+            }
+        })
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 AVFile *file = [AVFile fileWithRemoteURL:[NSURL URLWithString:@"https://some.website.com/apple.acc"]];
 AVIMAudioMessage *message = [AVIMAudioMessage messageWithText:@"Here is the recording from Apple Special Event." file:file attributes:nil];
@@ -1411,12 +1818,27 @@ The code below sends a message containing a location:
 var AV = require('leancloud-storage');
 var { LocationMessage } = require('leancloud-realtime-plugin-typed-messages');
 
-var location = new AV.GeoPoint(31.3753285,120.9664658);
+var location = new AV.GeoPoint(31.3753285, 120.9664658);
 var message = new LocationMessage(location);
 message.setText('Here is the location of the bakery.');
 conversation.send(message).then(function() {
   console.log('Sent!');
 }).catch(console.error.bind(console));
+```
+```swift
+do {
+    let locationMessage = IMLocationMessage(latitude: 31.3753285, longitude: 120.9664658)
+    try conversation.send(message: locationMessage, completion: { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
 ```
 ```objc
 AVIMLocationMessage *message = [AVIMLocationMessage messageWithText:@"Here is the location of the bakery." latitude:31.3753285 longitude:120.9664658 attributes:nil];
@@ -1455,6 +1877,28 @@ await conversation.SendMessageAsync(locationMessage);
 When a new message comes in, no matter what type of message it is, the JavaScript SDK would always trigger the callback set for the event `Event.MESSAGE` on `IMClient`. You can address different types of messages in different ways within the callback function.
 
 {{ docs.langSpecEnd('js') }}
+
+{{ docs.langSpecStart('swift') }}
+
+The Swift SDK handles new messages with `IMClientDelegate`:
+
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case .received(message: let message):
+            print(message)
+        default:
+            break
+        }
+    default:
+        break
+    }
+}
+```
+
+{{ docs.langSpecEnd('swift') }}
 
 {{ docs.langSpecStart('objc') }}
 
@@ -1633,6 +2077,79 @@ conversation.on(Event.MESSAGE, function messageEventHandler(message) {
   // Your logic here
 });
 ```
+```swift
+// Handle messages with built-in types
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case .received(message: let message):
+            if let categorizedMessage = message as? IMCategorizedMessage {
+                switch categorizedMessage {
+                case let textMessage as IMTextMessage:
+                    print(textMessage)
+                case let imageMessage as IMImageMessage:
+                    print(imageMessage)
+                case let audioMessage as IMAudioMessage:
+                    print(audioMessage)
+                case let videoMessage as IMVideoMessage:
+                    print(videoMessage)
+                case let fileMessage as IMFileMessage:
+                    print(fileMessage)
+                case let locationMessage as IMLocationMessage:
+                    print(locationMessage)
+                case let recalledMessage as IMRecalledMessage:
+                    print(recalledMessage)
+                default:
+                    break
+                }
+            } else {
+                print(message)
+            }
+        default:
+            break
+        }
+    default:
+        break
+    }
+}
+
+// Handle messages with custom types
+class CustomMessage: IMCategorizedMessage {
+    
+    class override var messageType: MessageType {
+        return 1
+    }    
+}
+
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    
+    do {
+        try CustomMessage.register()
+    } catch {
+        print(error)
+        return false
+    }
+    
+    return true
+}
+
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case .received(message: let message):
+            if let customMessage = message as? CustomMessage {
+                print(customMessage)
+            }
+        default:
+            break
+        }
+    default:
+        break
+    }
+}
+```
 ```objc
 // Handle messages with built-in types
 - (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
@@ -1791,6 +2308,29 @@ A `Conversation` object holds some built-in properties which match the fields in
 
 {{ docs.langSpecEnd('js') }}
 
+{{ docs.langSpecStart('swift') }}
+
+| Property of `IMConversation` | Field in `_Conversation` | Description |
+| --- | --- | --- |
+| `ID`                            | `objectId`         | A globally unique `ID`. |
+| `uniqueID`                      | `uniqueId`         | A globally unique `ID` for `Unique Conversation`. |
+| `isUnique`                      | `unique`           | Whether it is a `Unique Conversation`. |
+| `name`                          | `name`             | The name of the conversation. |
+| `members`                       | `m`                | The list of members. |
+| `creator`                       | `c`                | The creator of the conversation. |
+| `attributes`                    | `attr`             | Custom attributes. |
+| `createdAt`                     | `createdAt`        | The time the conversation is created. |
+| `updatedAt`                     | `updatedAt`        | The time the conversation is updated. |
+| `lastMessage`                   | N/A                | The last message. Could be empty. |
+| `isMuted`                       | N/A                | Whether the current user muted the conversation. |
+| `unreadMessageCount`            | N/A                | The number of unread messages. |
+| `isUnreadMessageContainMention` | N/A                | Whether an unread message mentions the current `Client`. |
+| `client`                        | N/A                | The `Client` the conversation belongs to. |
+| `clientID`                      | N/A                | The `ID` of the `Client` the conversation belongs to. |
+| `isOutdated`                    | N/A                | Whether the properties of the conversation are outdated. Can be used to determine if the data of the conversation needs to be updated. |
+
+{{ docs.langSpecEnd('swift') }}
+
 {{ docs.langSpecStart('objc') }}
 
 | Property of `AVIMConversation` | Field in `_Conversation` | Description |
@@ -1875,6 +2415,20 @@ tom.createConversation({
   console.log('Conversation created! ID: ' + conversation.id);
 }).catch(console.error.bind(console));
 ```
+```swift
+do {
+    try tom.createConversation(clientIDs: ["Jerry"], name: "Tom & Jerry", attributes: ["type": "private", "pinned": true], isUnique: true, completion: { (result) in
+        switch result {
+        case .success(value: let conversation):
+            print(conversation)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
 ```objc
 // Tom creates a conversation named "Tom & Jerry" and attaches custom attributes to it
 NSDictionary *attributes = @{ 
@@ -1918,6 +2472,20 @@ The built-in properties (like `name`) of a `Conversation` object can be updated 
 conversation.name = 'Tom is Smart';
 conversation.save();
 ```
+```swift
+do {
+    try conversation.update(attribution: ["name": "Tom is Smart"], completion: { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
 ```objc
 conversation[@"name"] = @"Tom is Smart";
 [conversation updateWithCallback:^(BOOL succeeded, NSError * _Nullable error) {
@@ -1953,9 +2521,24 @@ conversation.set('attr.pinned',false);
 // Save
 conversation.save();
 ```
+```swift
+do {
+    let type = conversation.attributes?["type"] as? String
+    try conversation.update(attribution: ["attr.pinned": false]) { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 // Retrieve custom attribute
-NSString *type = [conversation objectForKey:@"attr.type"];
+NSString *type = conversation.attributes[@"type"];
 // Set new value for pinned
 [conversation setObject:@(NO) forKey:@"attr.pinned"];
 // Save
@@ -2011,6 +2594,19 @@ var { Event } = require('leancloud-realtime');
 client.on(Event.CONVERSATION_INFO_UPDATED, function(payload) {
 });
 ```
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case let .dataUpdated(updatingData: updatingData, updatedData: updatedData, byClientID: byClientID, at: atDate):
+        print(updatingData)
+        print(updatedData)
+        print(byClientID)
+        print(atDate)
+    default:
+        break
+    }
+}
+```
 ```objc
 /**
  The properties of a conversation are updated
@@ -2053,6 +2649,22 @@ conversation.fetch().then(function(conversation) {
   console.log('members: ', conversation.members);
 ).catch(console.error.bind(console));
 ```
+```swift
+do {
+    try conversation.refresh { (result) in
+        switch result {
+        case .success:
+            if let members = conversation.members {
+                print(members)
+            }
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 // fetchWithCallback will trigger an operation to retrieve the latest data from the cloud
 [conversation fetchWithCallback:^(BOOL succeeded, NSError *error) {
@@ -2093,6 +2705,21 @@ tom.getConversation('551260efe4b01608686c3e0f').then(function(conversation) {
   console.log(conversation.id);
 }).catch(console.error.bind(console));
 ```
+```swift
+do {
+    let conversationQuery = tom.conversationQuery
+    try conversationQuery.getConversation(by: "551260efe4b01608686c3e0f") { (result) in
+        switch result {
+        case .success(value: let conversation):
+            print(conversation)
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 AVIMConversationQuery *query = [tom conversationQuery];
 [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
@@ -2132,6 +2759,22 @@ query.equalTo('attr.type','private');
 query.find().then(function(conversations) {
   // conversations contains all the results
 }).catch(console.error.bind(console));
+```
+```swift
+do {
+    let conversationQuery = tom.conversationQuery
+    try conversationQuery.where("attr.type", .equalTo("private"))
+    try conversationQuery.findConversations { (result) in
+        switch result {
+        case .success(value: let conversations):
+            print(conversations)
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
 ```
 ```objc
 AVIMConversationQuery *query = [tom conversationQuery];
@@ -2189,6 +2832,19 @@ You can also apply conditions like "greater than", "greater than or equal to", "
 
 {{ docs.langSpecEnd('js') }}
 
+{{ docs.langSpecStart('swift') }}
+
+| Logic | `Constraint` of `IMConversationQuery` |
+| --- | --- |
+| Equal to | `equalTo` |
+| Not equal to | `notEqualTo` |
+| Greater than | `greaterThan` |
+| Greater than or equal to | `greaterThanOrEqualTo` |
+| Less than | `lessThan` |
+| Less than or equal to | `lessThanOrEqualTo` |
+
+{{ docs.langSpecEnd('swift') }}
+
 {{ docs.langSpecStart('objc') }}
 
 | Logic | `AVIMConversationQuery` Method |
@@ -2239,8 +2895,11 @@ You can use regular expressions as conditions when querying with `ConversationsQ
 ```js
 query.matches('language',/[\\u4e00-\\u9fa5]/); // language is Chinese characters
 ```
+```swift
+try conversationQuery.where("language", .matchedRegularExpression("[\\u4e00-\\u9fa5]", option: nil))
+```
 ```objc
-[query whereKey:@"language" matchesRegex:@"[\u4e00-\u9fa5]"]; // language is Chinese characters
+[query whereKey:@"language" matchesRegex:@"[\\u4e00-\\u9fa5]"]; // language is Chinese characters
 ```
 ```java
 query.whereMatches("language","[\\u4e00-\\u9fa5]"); // language is Chinese characters
@@ -2256,6 +2915,9 @@ You can look for conversations with string values that **start with** a particul
 ```js
 query.startsWith('name','education');
 ```
+```swift
+try conversationQuery.where("name", .prefixedBy("education"))
+```
 ```objc
 [query whereKey:@"name" hasPrefix:@"education"];
 ```
@@ -2270,6 +2932,9 @@ You can also look for conversations with string values that **include** a partic
 
 ```js
 query.contains('name','education');
+```
+```swift
+try conversationQuery.where("name", .matchedSubstring("education"))
 ```
 ```objc
 [query whereKey:@"name" containsString:@"education"];
@@ -2287,6 +2952,9 @@ If you want to look for conversations with string values that **exclude** a part
 var regExp = new RegExp('^((?!education).)*$', 'i');
 query.matches('name', regExp);
 ```
+```swift
+try conversationQuery.where("name", .matchedRegularExpression("^((?!education).)* $ ", option: nil))
+```
 ```objc
 [query whereKey:@"name" matchesRegex:@"^((?!education).)* $ "];
 ```
@@ -2303,6 +2971,9 @@ You can use `containsAll`, `containedIn`, and `notContainedIn` to perform querie
 
 ```js
 query.containedIn('m', ['Tom']);
+```
+```swift
+try conversationQuery.where("m", .containedIn(["Tom"]))
 ```
 ```objc
 [query whereKey:@"m" containedIn:@[@"Tom"]];
@@ -2323,6 +2994,9 @@ You can look for conversations with or without certain fields to be empty. For e
 ```js
 query.doesNotExist('lm')
 ```
+```swift
+try conversationQuery.where("lm", .notExisted)
+```
 ```objc
 [query whereKeyDoesNotExist:@"lm"];
 ```
@@ -2337,6 +3011,9 @@ Or, to look for all conversations with `lm` not to be empty:
 
 ```js
 query.exists('lm')
+```
+```swift
+try conversationQuery.where("lm", .existed)
 ```
 ```objc
 [query whereKeyExists:@"lm"];
@@ -2356,6 +3033,10 @@ To look for all conversations with `age` to be less than `18` and `keywords` con
 // Look for all conversations with `age` to be less than `18` and `keywords` containing `education`
 query.contains('keywords', 'education').lessThan('age', 18);
 ```
+```swift
+try conversationQuery.where("keywords", .matchedSubstring("education"))
+try conversationQuery.where("age", .lessThan(18))
+```
 ```objc
 [query whereKey:@"keywords" containsString:@"'education'"];
 [query whereKey:@"age" lessThan:@(18)];
@@ -2374,6 +3055,19 @@ For example, to look for all conversations that either has `age` to be less than
 
 ```js
 // Not supported yet
+```
+```swift
+do {
+    let ageQuery = tom.conversationQuery
+    try ageQuery.where("age", .greaterThan(18))
+    
+    let keywordsQuery = tom.conversationQuery
+    try keywordsQuery.where("keywords", .matchedSubstring("education"))
+    
+    let conversationQuery = try ageQuery.or(keywordsQuery)
+} catch {
+    print(error)
+}
 ```
 ```objc
 AVIMConversationQuery *ageQuery = [tom conversationQuery];
@@ -2409,17 +3103,11 @@ You can sort the results of a query by ascending or descending order on certain 
 // Ascend by name and descend by creation time
 query.addAscending('name').addDescending('createdAt');
 ```
+```swift
+try conversationQuery.where("createdAt", .descending)
+```
 ```objc
-AVIMClient *client = [[AVIMClient alloc] initWithClientId:@"Tom"];
-
-[client openWithCallback:^(BOOL succeeded, NSError *error) {
-    AVIMConversationQuery *query = [client conversationQuery];
-    /* Descend by creation time */
-    [query orderByDescending:@"createdAt"];
-    [query findConversationsWithCallback:^(NSArray *conversations, NSError *error) {
-        NSLog(@"%ld conversations found!", [conversations count]);
-    }];
-}];
+[query orderByDescending:@"createdAt"];
 ```
 ```java
 AVIMClient tom = AVIMClient.getInstance("Tom");
@@ -2459,17 +3147,11 @@ When searching conversations, you can exclude the lists of members from query re
 ```js
 query.compact(true);
 ```
+```swift
+conversationQuery.options = [.notContainMembers]
+```
 ```objc
-AVIMClient *client = [[AVIMClient alloc] initWithClientId:@"Tom"];
-
-[client openWithCallback:^(BOOL succeeded, NSError *error) {
-    AVIMConversationQuery *query = [client conversationQuery];
-    /* Exclude member lists from results */
-    query.option = AVIMConversationQueryOptionCompact;
-    [query findConversationsWithCallback:^(NSArray *conversations, NSError *error) {
-        NSLog(@"%ld conversations found!", [conversations count]);
-    }];
-}];
+query.option = AVIMConversationQueryOptionCompact;
 ```
 ```java
 public void queryConversationCompact() {
@@ -2506,17 +3188,11 @@ Many chatting apps show the latest messages of conversations together in a list.
 // withLastMessagesRefreshed includes the latest messages of conversations in results
 query.withLastMessagesRefreshed(true);
 ```
+```swift
+conversationQuery.options = [.containLastMessage]
+```
 ```objc
-AVIMClient *client = [[AVIMClient alloc] initWithClientId:@"Tom"];
-
-[client openWithCallback:^(BOOL succeeded, NSError *error) {
-    AVIMConversationQuery *query = [client conversationQuery];
-    /* Include the latest messages of conversations in results */
-    query.option = AVIMConversationQueryOptionWithMessage;
-    [query findConversationsWithCallback:^(NSArray *conversations, NSError *error) {
-        NSLog(@"%ld conversations found!", [conversations count]);
-    }];
-}];
+query.option = AVIMConversationQueryOptionWithMessage;
 ```
 ```java
 public void queryConversationWithLastMessage() {
@@ -2555,6 +3231,93 @@ Keep in mind that what this option really does is to refresh the latest messages
 Conversations will be cached in memory using dictionaries according to their IDs. Such cache will not be persisted.
 
 {{ docs.langSpecEnd('js') }}
+
+{{ docs.langSpecStart('swift') }}
+
+The Swift SDK allows you to cache conversation to either memory or local storage.
+
+The code below caches conversations to memory:
+
+```swift
+client.getCachedConversation(ID: "CONVERSATION_ID") { (result) in
+    switch result {
+    case .success(value: let conversation):
+        print(conversation)
+    case .failure(error: let error):
+        print(error)
+    }
+}
+
+client.removeCachedConversation(IDs: ["CONVERSATION_ID"]) { (result) in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+}
+```
+
+The code below caches conversations to local storage. **Note that when querying or deleting conversations stored in local storage, you need to call `prepareLocalStorage` and make sure the result is success; `prepareLocalStorage` only needs to be called once (for a result with success) and is often called between `IMClient.init()` and `IMClient.open()`**:
+
+```swift
+// Switch for Local Storage of IM Client
+do {
+    // Client init with Local Storage feature
+    let clientWithLocalStorage = try IMClient(ID: "CLIENT_ID")
+    
+    // Client init without Local Storage feature
+    var options = IMClient.Options.default
+    options.remove(.usingLocalStorage)
+    let clientWithoutLocalStorage = try IMClient(ID: "CLIENT_ID", options: options)
+} catch {
+    print(error)
+}
+
+// Preparetion for Local Storage of IM Client
+do {
+    try client.prepareLocalStorage { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+
+// Get and Load Stored Conversations to Memory
+do {
+    try client.getAndLoadStoredConversations(completion: { (result) in
+        switch result {
+        case .success(value: let conversations):
+            print(conversations)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+
+// Delete Stored Conversations and Messages belong to them
+do {
+    try client.deleteStoredConversationAndMessages(IDs: ["CONVERSATION_ID"], completion: { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
+
+{{ docs.langSpecEnd('swift') }}
 
 {{ docs.langSpecStart('objc') }}
 
@@ -2640,6 +3403,20 @@ conversation.queryMessages({
   // The last 10 messages ordered from old to new
 }).catch(console.error.bind(console));
 ```
+```swift
+do {
+    try conversation.queryMessage(type: 10) { (result) in
+        switch result {
+        case .success(value: let messages):
+            print(messages)
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 // Retrieve the last 10 messages; limit could be any number from 1 to 1000 (defaults to 100)
 [conversation queryMessagesWithLimit:10 callback:^(NSArray *objects, NSError *error) {
@@ -2690,6 +3467,25 @@ messageIterator.next().then(function(result) {
   //   done: false,
   // }
 }).catch(console.error.bind(console));
+```
+```swift
+do {
+    let start = IMConversation.MessageQueryEndpoint(
+        messageID: "MESSAGE_ID",
+        sentTimestamp: 31415926,
+        isClosed: false
+    )
+    try conversation.queryMessage(start: start, limit: 10, completion: { (result) in
+        switch result {
+        case .success(value: let messages):
+            print(messages)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
 ```
 ```objc
 // Retrieve the last 10 messages
@@ -2744,6 +3540,20 @@ conversation.queryMessages({ type: ImageMessage.TYPE }).then(messages => {
   console.log(messages);
 }).catch(console.error);
 ```
+```swift
+do {
+    try conversation.queryMessage(limit: 10, type: IMTextMessage.messageType, completion: { (result) in
+        switch result {
+        case .success(value: let messages):
+            print(messages)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
 ```objc
 [conversation queryMediaMessagesFromServerWithType:kAVIMMessageMediaTypeImage limit:10 fromMessageId:nil fromTimestamp:0 callback:^(NSArray *messages, NSError *error) {
     if (!error) {
@@ -2779,6 +3589,20 @@ conversation.queryMessages({
 }.catch(function(error) {
   // Handle error
 });
+```
+```swift
+do {
+    try conversation.queryMessage(direction: .oldToNew, limit: 10, completion: { (result) in
+        switch result {
+        case .success(value: let messages):
+            print(messages)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
 ```
 ```objc
 [conversation queryMessagesInInterval:nil direction:AVIMMessageQueryDirectionFromOldToNew limit:20 callback:^(NSArray<AVIMMessage *> * _Nullable messages, NSError * _Nullable error) {
@@ -2824,6 +3648,25 @@ startClosed: false,
   // Handle error
 });
 ```
+```swift
+do {
+    let start = IMConversation.MessageQueryEndpoint(
+        messageID: "MESSAGE_ID",
+        sentTimestamp: 31415926,
+        isClosed: true
+    )
+    try conversation.queryMessage(start: start, direction: .oldToNew, limit: 10, completion: { (result) in
+        switch result {
+        case .success(value: let messages):
+            print(messages)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
 ```objc
 AVIMMessageIntervalBound *start = [[AVIMMessageIntervalBound alloc] initWithMessageId:nil timestamp:timestamp closed:false];
 AVIMMessageInterval *interval = [[AVIMMessageInterval alloc] initWithStartIntervalBound:start endIntervalBound:nil];
@@ -2868,6 +3711,30 @@ conversation.queryMessages({
   // Handle error
 });
 ```
+```swift
+do {
+    let start = IMConversation.MessageQueryEndpoint(
+        messageID: "MESSAGE_ID_1",
+        sentTimestamp: 31415926,
+        isClosed: true
+    )
+    let end = IMConversation.MessageQueryEndpoint(
+        messageID: "MESSAGE_ID_2",
+        sentTimestamp: 31415900,
+        isClosed: true
+    )
+    try conversation.queryMessage(start: start, end: end, completion: { (result) in
+        switch result {
+        case .success(value: let messages):
+            print(messages)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
 ```objc
 AVIMMessageIntervalBound *start = [[AVIMMessageIntervalBound alloc] initWithMessageId:nil timestamp:startTimestamp closed:false];
     AVIMMessageIntervalBound *end = [[AVIMMessageIntervalBound alloc] initWithMessageId:nil timestamp:endTimestamp closed:false];
@@ -2910,6 +3777,41 @@ Caching is enabled by default. You can turn it off with the following interface:
 ```js
 // Not supported yet
 ```
+```swift
+// Switch for Local Storage of IM Client
+do {
+    // Client init with Local Storage feature
+    let clientWithLocalStorage = try IMClient(ID: "CLIENT_ID")
+    
+    // Client init without Local Storage feature
+    var options = IMClient.Options.default
+    options.remove(.usingLocalStorage)
+    let clientWithoutLocalStorage = try IMClient(ID: "CLIENT_ID", options: options)
+} catch {
+    print(error)
+}
+
+// Message Query Policy
+enum MessageQueryPolicy {
+    case `default`
+    case onlyNetwork
+    case onlyCache
+    case cacheThenNetwork
+}
+    
+do {
+    try conversation.queryMessage(policy: .default, completion: { (result) in
+        switch result {
+        case .success(value: let messages):
+            print(messages)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
 ```objc
 // Need to be set before calling [avimClient openWithCallback:callback]
 avimClient.messageQueryCacheEnabled = false;
@@ -2932,6 +3834,16 @@ If your app allows users to log out, you can use the `close` method provided by 
 tom.close().then(function() {
   console.log('Tom logged out.');
 }).catch(console.error.bind(console));
+```
+```swift
+tom.close { (result) in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+}
 ```
 ```objc
 [tom closeWithCallback:^(BOOL succeeded, NSError * _Nullable error) {
@@ -2995,6 +3907,25 @@ realtime.on(Event.RECONNECT, function() {
 ```
 
 {{ docs.langSpecEnd('js') }}
+
+{{ docs.langSpecStart('swift') }}
+
+```swift
+func client(_ client: IMClient, event: IMClientEvent) {
+    switch event {
+    case .sessionDidOpen:
+        break
+    case .sessionDidPause(error: let error):
+        print(error)
+    case .sessionDidResume:
+        break
+    case .sessionDidClose(error: let error):
+        print(error)
+    }
+}
+```
+
+{{ docs.langSpecEnd('swift') }}
 
 {{ docs.langSpecStart('objc') }}
 

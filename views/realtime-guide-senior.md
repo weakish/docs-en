@@ -168,6 +168,9 @@ realtime.createIMClient('Tom', {
   // Errors thrown by signatureFactory or for invalid signatures will be caught here
 });
 ```
+```swift
+// Not supported yet
+```
 ```objc
 // Methods offered by AVIMSignatureDataSource
 /*!
@@ -352,6 +355,9 @@ AV.User.logIn('username', 'password').then(function(user) {
   return realtime.createIMClient(user);
 }).catch(console.error.bind(console));
 ```
+```swift
+// Not supported yet
+```
 ```objc
 // Log in to the account system with the username and password of an AVUser
 [AVUser logInWithUsernameInBackground:username password:password block:^(AVUser * _Nullable user, NSError * _Nullable error) {
@@ -421,6 +427,9 @@ The `Owner` of a conversation cannot be changed. For other members, their roles 
  */
 async updateMemberRole(memberId, role);
 ```
+```swift
+// Not supported yet
+```
 ```objc
 /**
  Update the role of a member
@@ -459,6 +468,9 @@ A `Conversation` object offers two ways for getting permission information of me
    * @return {Promise.<ConversationMemberInfo[]>} A list containing all members' permission information
    */
   async getAllMemberInfo({ noCache = false } = {})
+  ```
+  ```swift
+  // Not supported yet
   ```
   ```objc
   /**
@@ -554,6 +566,9 @@ async unmuteMembers(clientIds);
  * @return {PagedResults.<string>} Results; the existence of cureser indicates that there are more results
  */
 async queryMutedMembers({ limit, next } = {});
+```
+```swift
+// Not supported yet
 ```
 ```objc
 /**
@@ -653,6 +668,9 @@ async unblockMembers(clientIds);
  */
 async queryBlockedMembers({ limit, next } = {});
 ```
+```swift
+// Not supported yet
+```
 ```objc
 /**
  Put certain users into the blacklist of the current conversation
@@ -731,6 +749,20 @@ We have seen different types of [scenarios and conversations](realtime_v2.html#c
 ```js
 tom.createChatRoom({ name:'Chat Room' }).catch(console.error);
 ```
+```swift
+do {
+    try client.createChatRoom(name: "Chat Room", attributes: nil) { (result) in
+        switch result {
+        case .success(value: let chatRoom):
+            print(chatRoom)
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 [client createChatRoomWithName:@"Chat Room" attributes:nil callback:^(AVIMChatRoom *chatRoom, NSError *error) {
     if (chatRoom && !error) {        
@@ -775,6 +807,24 @@ var query = tom.getQuery().equalTo('tr',true); // Restrict to chat rooms
 query.find().then(function(conversations) {
   // conversations contains all the results
 }).catch(console.error);
+```
+```swift
+do {
+    let query = client.conversationQuery
+    try query.where("tr", .equalTo(true))
+    try query.findConversations { (result) in
+        switch result {
+        case .success(value: let conversations):
+            guard conversations is [IMChatRoom] else {
+                return
+            }
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
 ```
 ```objc
 AVIMConversationQuery *query = [tom conversationQuery];
@@ -821,24 +871,25 @@ chatRoom.count().then(function(count) {
   console.log('Count: ' + count);
 }).catch(console.error.bind(console));
 ```
-```objc
-- (void)tomCountsChatroomMembers{
-    // Tom creates a client and logs in with his name as clientId
-    self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
-    NSString *conversationId=@"55dd9d7200b0c86eb4fdcbaa";
-    // Tom logs in
-    [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
-        // Tom creates a query
-        AVIMConversationQuery *query = [self.client conversationQuery];
-        // Get the conversation instance by ID
-        [query getConversationById:conversationId callback:^(AVIMConversation *conversation, NSError *error) {
-            // Get the count of people
-            [conversation countMembersWithCallback:^(NSInteger number, NSError *error) {
-                NSLog(@"%ld",number);
-            }];
-        }];
-    }];
+```swift
+do {
+    chatRoom.getOnlineMembersCount { (result) in
+        switch result {
+        case .success(count: let count):
+            print(count)
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
 }
+```
+```objc
+// Get the count of people
+[conversation countMembersWithCallback:^(NSInteger number, NSError *error) {
+    NSLog(@"%ld",number);
+}];
 ```
 ```java
 private void TomQueryWithLimit() {
@@ -917,6 +968,21 @@ realtime.createIMClient('host').then(function (host) {
     console.log(message);
 }).catch(console.error);
 ```
+```swift
+do {
+    let message = IMTextMessage(text: "The score is still 0:0. China definitely needs a substitution for the second half.")
+    try chatRoom.send(message: message, priority: .high) { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 // Tom creates a client and logs in with his name as clientId
 self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
@@ -990,6 +1056,16 @@ tom.getConversation('CONVERSATION_ID').then(function(conversation) {
 }).then(function(conversation) {
   console.log('Muted!');
 }).catch(console.error.bind(console));
+```
+```swift
+conversation.mute { (result) in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+}
 ```
 ```objc
 - (void)tomMuteConversation {
@@ -1075,6 +1151,20 @@ realtime.createIMClient('Tom').then(function(tom) {
   return conversation.send(new AV.TextMessage('This is a temporary conversation.'));
 }).catch(console.error);
 ```
+```swift
+do {
+    try client.createTemporaryConversation(clientIDs: ["Jerry", "William"], timeToLive: 3600) { (result) in
+        switch result {
+        case .success(value: let tempConversation):
+            print(tempConversation)
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
 ```objc
 [tom createTemporaryConversationWithClientIds:@[@"Jerry", @"William"]
                                                 timeToLive:3600
@@ -1122,6 +1212,20 @@ realtime.createIMClient('Tom').then(function(tom) {
 }).then(function(conversation) {
   return conversation.send(new AV.TextMessage('This is a temporary conversation. The conversation will expire in 1 hour.'));
 }).catch(console.error);
+```
+```swift
+do {
+    try client.createTemporaryConversation(clientIDs: ["Jerry", "William"], timeToLive: 3600) { (result) in
+        switch result {
+        case .success(value: let tempConversation):
+            print(tempConversation)
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
 ```
 ```objc
 AVIMClient *client = [[AVIMClient alloc] initWithClientId:@"Tom"];
