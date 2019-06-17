@@ -102,23 +102,27 @@ todo.saveInBackground().subscribe(new Observer<AVObject>() {
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-// Create an object
-let todo = LCObject(className: "Todo")
+do {
+    // Create an object
+    let todo = LCObject(className: "Todo")
 
-// Set values of fields
-todo.set("title",   value: "R&D Weekly Meeting")
-todo.set("content", value: "All team members, Tue 2pm")
+    // Set values of fields
+    try todo.set("title",   value: "R&D Weekly Meeting")
+    try todo.set("content", value: "All team members, Tue 2pm")
 
-// Save the object to the cloud
-todo.save { result in
-    switch result {
-    case .success:
-        // Execute any logic that should take place after the object is saved
-        print("Object saved. objectId: " + todo.objectId)
-    case .failure(let error):
-        // Execute any logic that should take place if the save fails
-        print(error)
+    // Save the object to the cloud
+    _ = todo.save { result in
+        switch result {
+        case .success:
+            // Execute any logic that should take place after the object is saved
+            break
+        case .failure(error: let error):
+            // Execute any logic that should take place if the save fails
+            print(error)
+        }
     }
+} catch {
+    print(error)
 }
 ```
 {% endif %}
@@ -264,30 +268,40 @@ implementation 'com.alibaba:fastjson:1.1.70.android'
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
-The easiest way to integrate our SDK in your project is to use [CocoaPods](https://cocoapods.org). To install `cocoapods`, run the following command (make sure you already have Ruby installed):
+[CocoaPods](https://cocoapods.org) is a tool used to manage third-party dependencies (pods) used by macOS and iOS apps. It makes it easy for you to manage  the versions of all the third-party libraries your app depends on. See [Using CocoaPods](https://guides.cocoapods.org/using/index.html) for more details.
+
+To get started, make sure you have Ruby installed (macOS comes with Ruby but we recommend you installing Xcode which comes with newer version of it) and run the following command to install cocoapods:
 
 ```sh
-sudo gem install cocoapods
+$ sudo gem install cocoapods
 ```
 
 Now create a `Podfile` (with no extension) under the root directory of your project and add the following content:
 
 ```ruby
-platform :ios, '10.0'
-use_frameworks!
+target 'YOUR_APP_TARGET' do # Replace YOUR_APP_TARGET with your app's name
+    use_frameworks!
+    inhibit_all_warnings!
 
-target 'YOUR_APP_TARGET' do # Replace YOUR_APP_TARGET with you app's name
-    pod 'LeanCloud'
+    pod 'LeanCloud', '~> SDK_VERSION' # In most cases you can use the latest version for SDK_VERSION; you can find it on https://github.com/leancloud/swift-sdk/releases
 end
 ```
 
 Then install the SDK with the following command:
 
 ```sh
-pod install --repo-update
+$ pod update
 ```
 
-Close all the windows related to your project in Xcode. From now on, you can open your project with `<PROJECT_NAME>.xcworkspace` under the root directory of your project.
+Or
+
+```sh
+$ pod install --repo-update
+```
+
+See [official documentation](https://guides.cocoapods.org/using/pod-install-vs-update.html) for the differences between them.
+
+After installing the SDK, you can open your project with `<PROJECT_NAME>.xcworkspace` under the root directory of your project.
 {% endif %}
 
 ### Initializing Your Project
@@ -400,23 +414,27 @@ Then specify the permissions needed by the SDK and declare the `MyLeanCloudApp` 
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
-Add the following line to the top of `AppDelegate.swift`:
+First, obtain your App ID and App Key in your app's [Dashboard > Settings > API Keys](/app.html?appid={{appid}}#/key).
+
+Then add the following line to the top of `AppDelegate.swift`:
 
 ```swift
 import LeanCloud
 ```
 
-Then add the code below into the function `application:didFinishLaunchingWithOptions`:
+Then add the code below into the function `application(_:didFinishLaunchingWithOptions:)`:
 
 ```swift
-LCApplication.default.set(
-    id:  "{{appid}}",
-    key: "{{appkey}}"
-)
+do {
+    try LCApplication.default.set(
+        id: "YOUR_APP_ID",
+        key: "YOUR_APP_KEY"
+    )
+} catch {
+    fatalError("\(error)")
+}
 ```
 {% endif %}
-
-If you already have your app created, you can find the App ID and App Key in your app's [Dashboard > Settings > API Keys](/app.html?appid={{appid}}#/key).
 
 ### Debugging
 
@@ -474,8 +492,8 @@ AVOSCloud.setLogLevel(AVLogger.Level.DEBUG);
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-// Place the line after LCApplication.default.set
-LCApplication.default.logLevel = .debug
+// Place the line before LCApplication.default.set; only needs to be called once
+LCApplication.logLevel = .all
 ```
 {% endif %}
 
@@ -644,17 +662,21 @@ testObject.save();
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-let number     : LCNumber     = 42
-let bool       : LCBool       = true
-let string     : LCString     = "foo"
-let object     : LCObject     = LCObject()
-let dictionary : LCDictionary = LCDictionary(["name": string, "count": number])
-let array      : LCArray      = LCArray([number, bool, string])
-let acl        : LCACL        = LCACL()
-let point      : LCGeoPoint   = LCGeoPoint(latitude: 45, longitude: -45)
-let date       : LCDate       = LCDate()
-let data       : LCData       = LCData()
-let null       : LCNull       = LCNull()
+let number       : LCNumber       = 42
+let bool         : LCBool         = true
+let string       : LCString       = "foo"
+let dictionary   : LCDictionary   = LCDictionary(["name": string, "count": number])
+let array        : LCArray        = LCArray([number, bool, string])
+let data         : LCData         = LCData()
+let date         : LCDate         = LCDate()
+let null         : LCNull         = LCNull()
+let geoPoint     : LCGeoPoint     = LCGeoPoint(latitude: 45, longitude: -45)
+let acl          : LCACL          = LCACL()
+let object       : LCObject       = LCObject()
+let relation     : LCRelation     = object.relationForKey("elements")
+let user         : LCUser         = LCUser()
+let file         : LCFile         = LCFile()
+let installation : LCInstallation = LCInstallation()
 ```
 {% endif %}
 
@@ -840,23 +862,27 @@ todo.saveInBackground().subscribe(new Observer<AVObject>() {
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-// Create an object
-let todo = LCObject(className: "Todo")
+do {
+    // Create an object
+    let todo = LCObject(className: "Todo")
 
-// Set values of fields
-todo.set("title", value: "Sign up for Marathon")
-todo.set("priority", value: 2)
+    // Set values of fields
+    try todo.set("title", value: "Sign up for Marathon")
+    try todo.set("priority", value: 2)
 
-// Save the object to the cloud
-todo.save { result in
-    switch result {
-    case .success:
-        // Execute any logic that should take place after the object is saved
-        print("Object saved. objectId: " + todo.objectId)
-    case .failure(let error):
-        // Execute any logic that should take place if the save fails
-        print(error)
+    // Save the object to the cloud
+    _ = todo.save { result in
+        switch result {
+        case .success:
+            // Execute any logic that should take place after the object is saved
+            break
+        case .failure(error: let error):
+            // Execute any logic that should take place if the save fails
+            print(error)
+        }
     }
+} catch {
+    print(error)
 }
 ```
 {% endif %}
@@ -880,7 +906,7 @@ To make sure the data is successfully saved, take a look at [Dashboard > LeanSto
 ```
 
 {% call docs.noteWrap() %}
-You don't have to create or set up a new class called `Todo` in [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/) before running the code above. The class will be automatically created in your app.
+You don't have to create or set up a new class called `Todo` in [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/) before running the code above. If the class doesn't exist, it will be automatically created.
 {% endcall %}
 
 There are several built-in fields that are provided by default which you don't need to specify in your code:
@@ -975,9 +1001,9 @@ query.getInBackground("582570f38ac247004f39c24b").subscribe(new Observer<AVObjec
 {% if platform_name === "Swift" %}
 ```swift
 let query = LCQuery(className: "Todo")
-query.get("582570f38ac247004f39c24b") { result in
+let _ = query.get("582570f38ac247004f39c24b") { (result) in
     switch result {
-    case .success(let todo):
+    case .success(object: let todo):
         // todo is the instance of the Todo object with objectId 582570f38ac247004f39c24b
         let title     = todo.get("title")
         let priority  = todo.get("priority")
@@ -986,7 +1012,7 @@ query.get("582570f38ac247004f39c24b") { result in
         let objectId  = todo.objectId
         let updatedAt = todo.updatedAt
         let createdAt = todo.createdAt
-    case .failure(let error):
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -1062,12 +1088,12 @@ todo.fetchInBackground().subscribe(new Observable<AVObject>() {
 {% if platform_name === "Swift" %}
 ```swift
 let todo = LCObject(className: "Todo", objectId: "582570f38ac247004f39c24b")
-todo.fetch { result in
+_ = todo.fetch { result in
     switch result {
     case .success:
         // todo is refreshed
         break
-    case .failure(let error):
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -1308,7 +1334,7 @@ todo.increment("likes", 1);
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-post.increase("likes", by: 1)
+try todo.increase("likes", by: 1)
 ```
 {% endif %}
 
@@ -1438,21 +1464,45 @@ todo.save();
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-func dateWithString(string: String) -> LCDate {
-    let dateFormatter = NSDateFormatter()
+func dateWithString(_ string: String) -> LCDate {
+    let dateFormatter = DateFormatter()
+
     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-    dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-    let date = LCDate(dateFormatter.dateFromString(string)!)
+    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+
+    let date = LCDate(dateFormatter.date(from: string)!)
+
     return date
 }
 
-let alarm1 = dateWithString("2018-04-30 07:10:00")
-let alarm2 = dateWithString("2018-04-30 07:20:00")
-let alarm3 = dateWithString("2018-04-30 07:30:00")
+func testSetArray() {
+    do {
+        let todo = LCObject(className: "Todo")
 
-let todo = LCObject(className: "Todo")
-todo.append("alarms", elements: [alarm1, alarm2, alarm3], unique: true)
-todo.save()
+        let reminder1 = dateWithString("2018-04-30 07:10:00")
+        let reminder2 = dateWithString("2018-04-30 07:20:00")
+
+        try todo.set("reminders", value: [reminder1, reminder2])
+
+        let result = todo.save()
+        assert(result.isSuccess)
+
+        let reminder3 = dateWithString("2018-04-30 07:30:00")
+
+        try todo.append("reminders", element: reminder3, unique: true)
+
+        _ = todo.save { result in
+            switch result {
+            case .success:
+                break
+            case .failure(error: let error):
+                print(error)
+            }
+        }
+    } catch {
+        print(error)
+    }
+}
 ```
 {% endif %}
 
@@ -1496,7 +1546,14 @@ todo.delete();
 {% if platform_name === "Swift" %}
 ```swift
 let todo = LCObject(className: "Todo", objectId: "582570f38ac247004f39c24b")
-todo.delete()
+_ = todo.delete { result in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+}
 ```
 {% endif %}
 
@@ -1600,22 +1657,34 @@ fetchAllInBackground()
 let objects: [LCObject] = []
 
 // Batch create and update
-LCObject.save(objects)
-LCObject.save(objects, completion: { result in
-    // Handle result
+_ = LCObject.save(objects, completion: { (result) in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
 })
 
 // Batch delete
-LCObject.delete(objects)
-LCObject.delete(objects) { result in
-    // Handle result
-}
+_ = LCObject.delete(objects, completion: { (result) in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+})
 
 // Batch fetch
-LCObject.fetch(objects)
-LCObject.fetch(objects) { result in
-    // Handle result
-}
+_ = LCObject.fetch(objects, completion: { (result) in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+})
 ```
 {% endif %}
 
@@ -1698,17 +1767,28 @@ query.findInBackground().subscribe(new Observer<List<AVObject>>() {
 {% if platform_name === "Swift" %}
 ```swift
 let query = LCQuery(className: "Todo")
-query.find { result in
+_ = query.find { (result) in
     switch result {
-    case .success(let todos):
+    case .success(objects: let todos):
         // Get a collection of todos to work on
         for todo in todos {
-            // Update value
-            todo.set("isComplete", value: true)
+            do {
+                // Update value
+                try todo.set("isComplete", value: true)
+            } catch {
+                print(error)
+            }
         }
         // Save all at once
-        LCObject.save(todos)
-    case .failure(let error):
+        let _ = LCObject.save(todos, completion: { (result) in
+            switch result {
+            case .success:
+                break
+            case .failure(error: let error):
+                print(error)
+            }
+        })
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -1821,20 +1901,24 @@ comment.save();
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-// Create a post
-let post = AVObject(className: "Post")
-post["title"] = "I am starving!"
-post["content"] = "Hmmm, where should I go for lunch?"
+do {
+    // Create a post
+    let post = AVObject(className: "Post")
+    try post.set("title", value: "I am starving!")
+    try post.set("content", value: "Hmmm, where should I go for lunch?")
 
-// Create a comment
-let comment = AVObject(className: "Comment")
-comment["content"] = "KFC is the best!"
+    // Create a comment
+    let comment = AVObject(className: "Comment")
+    try comment.set("content", value: "KFC is the best!")
 
-// Add the post as a property of the comment
-comment["parent"] = post
+    // Add the post as a property of the comment
+    try comment.set("parent", value: post)
 
-// This will save both post and comment
-comment.save()
+    // This will save both post and comment
+    assert(comment.save().isSuccess)
+} catch {
+    print(error)
+}
 ```
 {% endif %}
 
@@ -1874,7 +1958,7 @@ comment.put("post", post);
 {% if platform_name === "Swift" %}
 ```swift
 let post = LCObject(className: "Post", objectId: "57328ca079bc44005c2472d0")
-comment.set("post", post)
+try comment.set("post", value: post)
 ```
 {% endif %}
 
@@ -1957,12 +2041,12 @@ query.findInBackground().subscribe(new Observer<List<AVObject>>() {
 ```swift
 let query = LCQuery(className: "Student")
 query.whereKey("lastName", .equalTo("Smith"))
-query.find { result in
+_ = query.find { result in
     switch result {
-    case .success(let students):
+    case .success(objects: let students):
         // students is an array of Student objects satisfying conditions
         break
-    case .failure(let error):
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -2138,7 +2222,7 @@ query.whereKey("age", .greaterThan(18))
 ```
 {% endif %}
 
-You can limit the number of results by setting `limit` (default to `100`):
+You can limit the number of results by setting `limit` (defaults to `100`):
 
 {% if platform_name === "Objective-C" %}
 ```objc
@@ -2234,12 +2318,11 @@ query.getFirstInBackground().subscribe(new Observer<AVObject>() {
 ```swift
 let query = LCQuery(className: "Todo")
 query.whereKey("priority", .equalTo(2))
-query.getFirst { result in
+_ = query.getFirst { result in
     switch result {
-    case .success(let todo):
-        // todo is the first Todo object satisfying conditions
-        break
-    case .failure(let error):
+    case .success(object: let todo):
+        print(todo)
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -2594,13 +2677,13 @@ query.getFirstInBackground().subscribe(new Observer<AVObject>() {
 let query = LCQuery(className: "Todo")
 query.whereKey("title", .selected)
 query.whereKey("content", .selected)
-query.getFirst { result in
+_ = query.getFirst { result in
     switch result {
-    case .success(let todo):
+    case .success(object: let todo):
         let title = todo.get("title") // √
         let content = todo.get("content") // √
         let notes = todo.get("notes") // nil
-    case .failure(let error):
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -3029,12 +3112,12 @@ query.findInBackground().subscribe(new Observer<List<AVObject>>() {
 let post = LCObject(className: "Post", objectId: "57328ca079bc44005c2472d0")
 let query = LCQuery(className: "Comment")
 query.whereKey("post", .equalTo(post))
-query.find { result in
+_ = query.find { result in
     switch result {
-    case .success(let comments):
+    case .success(objects: let comments):
         // comments contains the comments for the post
         break
-    case .failure(let error):
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -3225,15 +3308,15 @@ query.limit = 10
 // Include the related post together with each comment
 query.whereKey("post", .included)
 
-query.find { result in
+_ = query.find { result in
     switch result {
-    case .success(let comments):
+    case .success(objects: let comments):
         // comments contains the last ten comments including the post associated with each
         for comment in comments {
             // This does not require a network access
             let post = comment.get("post") as? LCObject
         }
-    case .failure(let error):
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -3377,14 +3460,7 @@ query.countInBackground().subscribe(new Observer<Integer>() {
 ```swift
 let query = LCQuery(className: "Todo")
 query.whereKey("isComplete", .equalTo(true))
-query.count { result in
-    switch result {
-    case .success(let count):
-        print(count + " todos completed.")
-    case .failure(let error):
-        print(error)
-    }
-}
+let count = query.count()
 ```
 {% endif %}
 
@@ -4496,11 +4572,11 @@ file.saveInBackground().subscribe(new Observer<AVFile>() {
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-file.save { result in
+_ = file.save { result in
     switch result {
     case .success:
         print("File uploaded. objectId: " + file.objectId)
-    case .failure(let error):
+    case .failure(error: let error):
         // The file either could not be read or could not be saved to LeanCloud
         print(error)
     }
@@ -4682,20 +4758,17 @@ Observable<AVFile> result = file.saveInBackground(new ProgressCallback() {
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-file.save(
-    progress: { progress in
-        print(progress)
-    },
-    completion: { result in
-        switch result {
-        case .success:
-            // Things to do after saving
-            break
-        case .failure(let error):
-            print(error)
-        }
+_ = file.save(progress: { (progress) in
+    print(progress)
+}) { (result) in
+    switch result {
+    case .success:
+        // Things to do after saving
+        break
+    case .failure(error: let error):
+        print(error)
     }
-)
+}
 ```
 {% endif %}
 
@@ -4789,7 +4862,7 @@ file.saveInBackground().subscribe(new Observer<AVFile>() {
 ```swift
 // Set metadata
 file.metaData["author"] = "LeanCloud"
-file.save { result in
+_ = file.save { result in
     switch result {
     case .success:
         // Get author
@@ -4798,7 +4871,7 @@ file.save { result in
         String? fileName = file.name
         // Get size (not available for files created from base64-encoded strings or URLs)
         UInt64? size = file.metaData["size"]
-    case .failure(let error):
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -5083,7 +5156,7 @@ todo.put("location", point);
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-todo.set("location", value: point)
+try todo.set("location", value: point)
 ```
 {% endif %}
 
@@ -5165,12 +5238,12 @@ query.whereKey("location", .locatedNear(point))
 
 // Limit to 10 results
 query.limit = 10
-query.find { result in
+_ = query.find { result in
     switch result {
-    case .success(let todos):
+    case .success(objects: let todos):
         // todos is an array of Todo objects satisfying conditions
         break
-    case .failure(let error):
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -5400,16 +5473,7 @@ user.set("mobilePhoneNumber", value: "+19490008888")
 // Other fields can be set in the same way as LCObject
 user.set("gender", value: "secret")
 
-user.signUp { result in
-    switch result {
-    case .success:
-        // Sign-up completed
-        print("User created. objectId: " + user.objectId)
-    case .failure(let error):
-        // Sign-up failed (often because the username is already taken)
-        print(error)
-    }
-}
+assert(user.signUp().isSuccess)
 ```
 {% endif %}
 
@@ -5454,7 +5518,14 @@ AVUser.requestLoginSmsCodeInBackground("+19490008888").blockingSubscribe();
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.requestVerificationCode(mobilePhoneNumber: "+19490008888")
+_ = LCSMSClient.requestVerificationCode(mobilePhoneNumber: "+19490008888") { (result) in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+}
 ```
 {% endif %}
 
@@ -5509,16 +5580,14 @@ AVUser.signUpOrLoginByMobilePhoneInBackground("+19490008888", "123456").subscrib
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.logIn(mobilePhoneNumber: "+19490008888", verificationCode: "123456") { result in
+_ = LCSMSClient.verifyMobilePhoneNumber("+19490008888", verificationCode: "123456", completion: { (result) in
     switch result {
-    case .success(let user):
-        // Logged in successfully
-        print("User created. objectId: " + user.objectId)
-    case .failure(let error):
-        // Verification code is incorrect
+    case .success:
+        break
+    case .failure(error: let error):
         print(error)
     }
-}
+})
 ```
 {% endif %}
 
@@ -5582,13 +5651,11 @@ AVUser.logIn("Tom", "cat!@#123").subscribe(new Observer<AVUser>() {
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
+_ = LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
     switch result {
-    case .success(let user):
-        // Logged in successfully
-        break
-    case .failure(let error):
-        // Failed to log in (the password may be incorrect)
+    case .success(object: let user):
+        print(user)
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -5645,13 +5712,11 @@ AVUser.loginByEmail("tom@leancloud.rocks", "cat!@#123").subscribe(new Observer<A
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.logIn(email: "tom@leancloud.rocks", password: "cat!@#123") { result in
+_ = LCUser.logIn(email: "tom@leancloud.rocks", password: "cat!@#123") { result in
     switch result {
-    case .success(let user):
-        // Logged in successfully
-        break
-    case .failure(let error):
-        // Failed to log in (the password may be incorrect)
+    case .success(object: let user):
+        print(user)
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -5708,13 +5773,11 @@ AVUser.loginByMobilePhoneNumber("+19490008888", "cat!@#123").subscribe(new Obser
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.logIn(mobilePhoneNumber: "+19490008888", password: "cat!@#123") { result in
+_ = LCUser.logIn(mobilePhoneNumber: "+19490008888", password: "cat!@#123") { result in
     switch result {
-    case .success(let user):
-        // Logged in successfully
-        break
-    case .failure(let error):
-        // Failed to log in (the password may be incorrect)
+    case .success(object: let user):
+        print(user)
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -5754,7 +5817,14 @@ AVUser.requestLoginSmsCodeInBackground("+19490008888").blockingSubscribe();
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.requestLoginVerificationCode(mobilePhoneNumber: "+19490008888")
+_ = LCUser.requestLoginVerificationCode(mobilePhoneNumber: "+19490008888") { result in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+}
 ```
 {% endif %}
 
@@ -5806,13 +5876,11 @@ AVUser.signUpOrLoginByMobilePhoneInBackground("+19490008888", "123456").subscrib
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.logIn(mobilePhoneNumber: "+19490008888", verificationCode: "123456") { result in
+_ = LCUser.logIn(mobilePhoneNumber: "+19490008888", verificationCode: "123456") { result in
     switch result {
-    case .success(let user):
-        // Logged in successfully
-        break
-    case .failure(let error):
-        // Verification code is incorrect
+    case .success(object: let user):
+        print(user)
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -5876,7 +5944,14 @@ AVUser.requestEmailVerifyInBackground("tom@leancloud.rocks").blockingSubscribe()
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.requestVerificationMail(email: "tom@leancloud.rocks")
+_ = LCUser.requestVerificationMail(email: "tom@leancloud.rocks") { result in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+}
 ```
 {% endif %}
 
@@ -5915,7 +5990,14 @@ AVUser.requestMobilePhoneVerifyInBackground("+19490008888").blockingSubscribe();
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.requestVerificationCode(mobilePhoneNumber: "+19490008888")
+_ = LCUser.requestVerificationCode(mobilePhoneNumber: "+19490008888") { result in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+}
 ```
 {% endif %}
 
@@ -5967,12 +6049,12 @@ AVUser.verifyMobilePhoneInBackground("123456").subscribe(new Observer<AVNull>() 
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.verifyMobilePhoneNumber(mobilePhoneNumber: "+19490008888", verificationCode: "123456") { result in
+_ = LCUser.verifyMobilePhoneNumber(mobilePhoneNumber: "+19490008888", verificationCode: "123456") { result in
     switch result {
     case .success:
         // mobilePhoneVerified is set to true
         break
-    case .failure(let error):
+    case .failure(error: let error):
         // Verification code is incorrect
         print(error)
     }
@@ -6045,11 +6127,7 @@ if (currentUser != null) {
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-if let currentUser = LCUser.current {
-    // Redirect to the home page
-} else {
-    // Show the sign-up or log-in page
-}
+let currentUser = LCApplication.default.currentUser
 ```
 {% endif %}
 
@@ -6100,7 +6178,7 @@ AVUser currentUser = AVUser.getCurrentUser();
 LCUser.logOut()
 
 // currentUser becomes nil
-let currentUser = LCUser.current
+let currentUser = LCApplication.default.currentUser
 ```
 {% endif %}
 
@@ -6162,12 +6240,12 @@ AVUser.becomeWithSessionTokenInBackground("anmlwi96s381m6ca7o7266pzf").subscribe
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.logIn(sessionToken: "anmlwi96s381m6ca7o7266pzf") { result in
+_ = LCUser.logIn(sessionToken: "anmlwi96s381m6ca7o7266pzf") { (result) in
     switch result {
-    case .success(let user):
+    case .success(object: let user):
         // Logged in successfully
-        break
-    case .failure(let error):
+        print(user)
+    case .failure(error: let error):
         // Session token is invalid
         print(error)
     }
@@ -6287,7 +6365,14 @@ AVUser.requestPasswordResetInBackground("tom@leancloud.rocks").blockingSubscribe
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.requestPasswordReset(email: "tom@leancloud.rocks")
+_ = LCUser.requestPasswordReset(email: "tom@leancloud.rocks") { (result) in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+}
 ```
 {% endif %}
 
@@ -6332,7 +6417,14 @@ AVUser.requestPasswordResetBySmsCodeInBackground("+19490008888").blockingSubscri
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.requestPasswordReset(mobilePhoneNumber: "+19490008888")
+_ = LCUser.requestPasswordReset(mobilePhoneNumber: "+19490008888") { (result) in
+    switch result {
+    case .success:
+        break
+    case .failure(error: let error):
+        print(error)
+    }
+}
 ```
 {% endif %}
 
@@ -6390,12 +6482,12 @@ AVUser.resetPasswordBySmsCodeInBackground("123456", "cat!@#123").subscribe(new O
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.resetPassword(mobilePhoneNumber: "+19490008888", verificationCode: "123456", newPassword: "cat!@#123") { result in
+_ = LCUser.resetPassword(mobilePhoneNumber: "+19490008888", verificationCode: "123456", newPassword: "cat!@#123") { result in
     switch result {
     case .success:
         // Password is updated
         break
-    case .failure(let error):
+    case .failure(error: let error):
         // Verification code is incorrect
         print(error)
     }
@@ -6544,22 +6636,22 @@ let book = LCObject(className: "Book")
 let author = LCUser.current
 book.set("title", value: "My Fifth Book")
 book.set("author", value: author)
-book.save { result in
+_ = book.save { result in
     switch result {
     case .success:
         // Find all the books by the same author
         let query = LCQuery(className: "Book")
         query.whereKey("author", .equalTo(author))
-        query.find { result in
+        _ = query.find { result in
             switch result {
-            case .success(let books):
+            case .success(objects: let books):
                 // books is an array of Book objects by the same author
                 break
-            case .failure(let error):
+            case .failure(error: let error):
                 print(error)
             }
         }
-    case .failure(let error):
+    case .failure(error: let error):
         print(error)
     }
 }
@@ -6704,9 +6796,9 @@ AVUser.logIn("Tom", "cat!@#123").subscribe(new Observer<AVUser>() {
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
+_ = LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
     switch result {
-    case .success(let user):
+    case .success(object: let user):
         // Attempt to change username
         try! user.set("username", "Jerry")
         // Password is hashed and an empty string will be returned
@@ -6716,11 +6808,11 @@ LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
 
         // Get the user with a non-authenticated method
         let query = LCQuery(className: "_User")
-        query.get(user.objectId) { result in
+        _ = query.get(user.objectId) { result in
             switch result {
-                case .success(let unauthenticatedUser):
+                case .success(object: let unauthenticatedUser):
                     try! unauthenticatedUser.set("username", "Toodle")
-                    unauthenticatedUser.save() { result in
+                    _ = unauthenticatedUser.save { result in
                         switch result {
                             .success:
                                 // This will not succeed since the user is unauthenticated
@@ -6728,11 +6820,11 @@ LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
                                 // Failure is expected
                         }
                     }
-                case .failure(let error):
+                case .failure(error: let error):
                     print(error)
             }
         }
-    case .failure(let error):
+    case .failure(error: let error):
         print(error)
     }
 }
