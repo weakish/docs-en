@@ -427,8 +427,8 @@ Then add the code below into the function `application(_:didFinishLaunchingWithO
 ```swift
 do {
     try LCApplication.default.set(
-        id: "YOUR_APP_ID",
-        key: "YOUR_APP_KEY"
+        id: "{{appid}}",
+        key: "{{appkey}}"
     )
 } catch {
     fatalError("\(error)")
@@ -1329,12 +1329,12 @@ $post->increment("likes", 1);
 {% endif %}
 {% if platform_name === "Java" %}
 ```java
-todo.increment("likes", 1);
+post.increment("likes", 1);
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-try todo.increase("likes", by: 1)
+try post.increase("likes", by: 1)
 ```
 {% endif %}
 
