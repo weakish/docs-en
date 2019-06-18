@@ -1108,7 +1108,7 @@ If you are building an iOS or Android app, you can utilize the built-in push not
 1. [Push Notification Overview](push_guide.html)
 2. [Android Push Notification Guide](android_push_guide.html) / [iOS Push Notification Guide](ios_push_guide.html)
 
-LeanCloud offers a complete set of push notification services that works perfectly with LeanMessage. When being implemented, it links the `clientId`s of users with the `_Installation` table of your app that keeps track of the device information. When a user sends a message to a conversation, the cloud will automatically convert the message to a push notification and sent it to those who are offline but are using iOS devices or using Android devices with push notification services enabled. We also allow you to connect third-party push notification services to your app.
+LeanCloud offers a complete set of push notification services that works perfectly with LeanMessage. When being implemented, it links the `clientId`s of users with the `_Installation` table of your app that keeps track of the device information. When a user sends a message to a conversation, the cloud will automatically convert the message to a push notification and send it to those who are offline but are using iOS devices or using Android devices with push notification services enabled. We also allow you to connect third-party push notification services to your app.
 
 The highlight of this feature is that you can **customize the contents of push notifications**. You have the following three ways to specify the contents:
 
