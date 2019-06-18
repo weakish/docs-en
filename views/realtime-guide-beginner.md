@@ -3405,7 +3405,7 @@ conversation.queryMessages({
 ```
 ```swift
 do {
-    try conversation.queryMessage(type: 10) { (result) in
+    try conversation.queryMessage(limit: 10) { (result) in
         switch result {
         case .success(value: let messages):
             print(messages)
