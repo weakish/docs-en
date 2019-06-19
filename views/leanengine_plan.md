@@ -36,7 +36,7 @@ Standard instances will never sleep.
 
 Trial instances will **sleep** under certain circumstances.
 
-- A trial instances will start sleeping if no request is made in the past 30 minutes.
+- A trial instance will start sleeping if no request is made in the past 30 minutes.
 - A sleeping instance will resume when a request comes in. It may take 2 to 10 seconds for the instance to get back running and have the request processed. The requests made after that will be responded immediately.
 - If a trial instance has run more than 18 hours in the past 24 hours, it will be forced to sleep and incoming requests will receive `503` as the error code. You can view error logs in your app's [Dashboard > LeanEngine > Statistics](/cloud.html?appid={{appid}}#/stat).
 
@@ -74,7 +74,7 @@ See [Usage Data](#usage-data) to learn about how you can view the stress of your
 
 ### Resizing Instances
 
-A standard instance has 0.5 CPU and 256 MB memory by default. You can change the size of all the instances by clicking on **Resize**.
+A standard instance has 0.5 CPU and 256 MB memory by default. You can change the size of all instances (including trial instances in the staging environment) by clicking on **Resize**.
 
 We recommend that you increase the sizes of your instances when:
 

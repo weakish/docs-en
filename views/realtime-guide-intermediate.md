@@ -1103,7 +1103,12 @@ When reading messages from the cache, you can make messages look different on th
 
 If your users are using your app on mobile devices, they might close the app at anytime, which prevents you from delivering new messages to them in the ordinary way. At this time, using push notifications becomes a good alternative to get users notified when new messages are coming in.
 
-LeanCloud offers a complete set of [push notification services](push_guide.html) that works perfectly with LeanMessage. When being implemented, it links the `clientId`s of users with the `_Installation` table of your app that keeps track of the device information. When a user sends a message to a conversation, the cloud will automatically convert the message to a push notification and sent it to those who have their clients closed. We also allow you to connect third-party push notification services to your app.
+If you are building an iOS or Android app, you can utilize the built-in push notification services offered by these operating systems, as long as you have your certificates configured for iOS or have the function enabled for Android. Check the following documentation for more details:
+
+1. [Push Notification Overview](push_guide.html)
+2. [Android Push Notification Guide](android_push_guide.html) / [iOS Push Notification Guide](ios_push_guide.html)
+
+LeanCloud offers a complete set of push notification services that works perfectly with LeanMessage. When being implemented, it links the `clientId`s of users with the `_Installation` table of your app that keeps track of the device information. When a user sends a message to a conversation, the cloud will automatically convert the message to a push notification and send it to those who are offline but are using iOS devices or using Android devices with push notification services enabled. We also allow you to connect third-party push notification services to your app.
 
 The highlight of this feature is that you can **customize the contents of push notifications**. You have the following three ways to specify the contents:
 
@@ -1252,18 +1257,13 @@ For the message set up in your app's [Dashboard > Messaging > LeanMessage > Sett
 * `${timestamp}` The Unix timestamp when the push notification is triggered
 * `${fromClientId}` The `clientId` of the sender
 
-If you are building an iOS or Android app, you can utilize the built-in push notification services offered by these operating systems, as long as you have your certificates configured for iOS or have the function enabled for Android. Check the following documentation for more details:
-
-1. [Push Notification Overview](push_guide.html)
-2. [Android Push Notification Guide](android_push_guide.html) / [iOS Push Notification Guide](ios_push_guide.html)
-
 ## Message Synchronization
 
 Push notification seems to be a good way to remind users of new messages, but the actual messages won't get delivered until the user goes online. If a user hasn't been online for an extremely long time, there will be tons of messages piled up on the cloud. How can we make sure that all these messages will be perfectly delivered once the user goes online?
 
 LeanMessage offers two methods for synchronizing messages:
 
-- One is to have the cloud push messages to the client. The cloud keeps track of the last message each user receives from each conversation. When a user goes online, the cloud will automatically push new messages generated in each conversation to the client (the client can handle them as ordinary new messages). For each conversation, the cloud will push at most 20 messages and the rest of them will not be pushed.
+- One is to have the cloud push messages to the client. The cloud keeps track of the last message each user receives from each conversation. When a user goes online, the cloud will automatically push new messages generated in each conversation to the client, with one push notification for each message (the client can handle them in the same way as receiving new messages). For each conversation, the cloud will deliver at most 20 messages and the rest of them will not be delivered.
 - Another one is to have the client pull messages from the cloud. The cloud keeps track of the last message each user receives from each conversation. When a user goes online, the conversations containing new messages as well as the number of unread messages in each of them will be computed and the client will receive a notification indicating that there is an update on the total number of unread messages. The client can then proactively fetch these messages.
 
 The first method is relatively easier to implement, but since the cloud only pushes no more than 20 messages for each conversation, this method won't work for many of the scenarios, including those that demand displaying the progress of each user reading messages or the exact number of unread messages. Therefore, we highly recommend that you use the second method to have the client pull messages from the cloud.
