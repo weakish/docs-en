@@ -318,9 +318,9 @@ AV.Cloud.run('averageStars', { movie: 'Despicable Me' }, { remote: true }).then(
 });
 ```
 
-Here `remote` is passed into `AV.Cloud.run` as a property of an optional parameter `options`. `options` has the following parameters:
+Here `remote` is passed into `AV.Cloud.run` as a property of an optional parameter `options`. `options` has the following properties:
 
-- `remote?: boolean`: The same `remote` used in the example above; defaults to `false`.
+- `remote?: boolean`: The same `remote` as used in the example above; defaults to `false`.
 - `user?: AV.User`: The user used to run the function (often used when `remote` is `false`).
 - `sessionToken?: string`: The `sessionToken` used to run the function (often used when `remote` is `true`).
 - `req?: http.ClientRequest | express.Request`: Used to provide `remoteAddress` to the function being called.
