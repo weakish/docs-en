@@ -183,6 +183,19 @@ A `Request` will be passed into a cloud function as a parameter. Each `Request` 
 - `sessionToken?: String`: The `sessionToken` sent from the client (according to the header `X-LC-Session`).
 - `meta: object`: Other information about the client, including `remoteAddress` which is the IP address of the client.
 
+`AV.Cloud.define` also takes in an optional parameter `options` (between the function name and the actual function) which has the following properties:
+
+- `fetchUser: boolean`: Whether to automatically get the user information from the client; defaults to `true`. When set to `false`, `Request` will not have the `currentUser` property.
+- `internal: boolean`: Whether to only allow the function to be called within LeanEngine (using `AV.Cloud.run` without enabling `remote`) or with Master Key (by passing in `useMasterKey` to `AV.Cloud.run`) and prevent it from being called directly by the client; defaults to `false`.
+
+For example, if we don't allow a client to call the function above directly and the function does not need the user information, we can rewrite the function in this way:
+
+```js
+AV.Cloud.define('averageStars', { fetchUser: false, internal: true }, function (request) {
+  // Same definition as above
+});
+```
+
 If the cloud function returns a Promise, the client will receive the response once the Promise is resolved. If an error occurred in the Promise, the client will receive the error as the response. An exception made by `AV.Cloud.Error` will be considered as a client-side error and will not be output as an error message. The error messages for other exceptions will be printed out accordingly.
 
 We recommend that you chain Promises together to make it easy to process tasks asynchronously and handle errors. **Make sure to have the cloud function return the chained Promises.** You can read [Promises/A+ Proposal](https://github.com/promises-aplus/promises-spec) to learn more about Promises.
@@ -304,6 +317,13 @@ AV.Cloud.run('averageStars', { movie: 'Despicable Me' }, { remote: true }).then(
   // Error handling
 });
 ```
+
+Here `remote` is passed into `AV.Cloud.run` as a property of an optional parameter `options`. `options` has the following properties:
+
+- `remote?: boolean`: The same `remote` as used in the example above; defaults to `false`.
+- `user?: AV.User`: The user used to run the function (often used when `remote` is `false`).
+- `sessionToken?: string`: The `sessionToken` used to run the function (often used when `remote` is `true`).
+- `req?: http.ClientRequest | express.Request`: Used to provide `remoteAddress` to the function being called.
 {% endif %}
 {% if platformName === "Python" %}
 ```python
@@ -603,6 +623,12 @@ AV.Cloud.beforeSave('Review', function (request) {
   }
 });
 ```
+
+Here `request.object` is the `AV.Object` being operated. `request` has another property beside `object`:
+
+- `currentUser?: AV.User`: The user triggering the operation.
+
+`object` and `currentUser` can be found in the `request` of other hooks as well.
 {% endif %}
 {% if platformName === "Python" %}
 ```python
@@ -1094,6 +1120,8 @@ AV.Cloud.onVerified('sms', function (request) {
   console.log('User ' + request.object + ' is verified by SMS.');
 });
 ```
+
+Here `object` can be replaced by `currentUser` as well since the object being operated is the user itself. Same for `onLogin`.
 {% endif %}
 {% if platformName === "Python" %}
 ```python

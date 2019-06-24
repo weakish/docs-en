@@ -347,6 +347,11 @@ app.use(AV.express());
 app.listen(process.env.LEANCLOUD_APP_PORT);
 ```
 
+Here `AV.express` takes in an optional parameter `options` which is an object containing the following optional properties:
+
+- `onError`: A global error handling function triggered when a cloud function (including hook) throws an error. Often used to send error reports.
+- `ignoreInvalidSessionToken`: Boolean. When set to `true`, ignore the invalid `sessionToken` (header `X-LC-session`) sent from the client. When set to `false`, throw a `401` error `{"code": 211, "error": "Verify sessionToken failed, maybe login expired: ..."}`. `sessionToken` is included in the header `X-LC-session` sent by client-side SDKs. It may expire for various of reasons, but many cloud functions don't need to take care of it. Therefore, the `ignoreInvalidSessionToken` option is provided so you can ignore a `sessionToken` if it is invalid. If this option is set to `false`, the client will need to re-authenticate when an error is received.
+
 You can define custom HTTP APIs:
 
 ```js
@@ -389,6 +394,8 @@ var app = koa();
 app.use(AV.koa2());  // use AV.koa() if you're using version 1.
 app.listen(process.env.LEANCLOUD_APP_PORT);
 ```
+
+`AV.koa` takes in an optional parameter `options` as well. See the last section for more details.
 
 You can use Koa to render pages and set up custom HTTP APIs:
 
