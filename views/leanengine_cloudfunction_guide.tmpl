@@ -797,10 +797,7 @@ AV.Cloud.beforeUpdate('Review', function (request) {
 @engine.before_update('Review')
 def before_hook_object_update(obj):
     # Check the length of comment if it is updated
-    if 'comment' not in obj.updated_keys:
-        # Skip the check if comment is not updated
-        return
-    if len(obj.get('comment')) > 140:
+    if 'comment' in obj.updated_keys and len(obj.get('comment')) > 140:
         # Reject the update if comment is too long
         raise leancloud.LeanEngineError(message='Your comment cannot be longer than 140 characters.')
 ```
@@ -808,7 +805,7 @@ def before_hook_object_update(obj):
 {% if platformName === "PHP" %}
 ```php
 Cloud::beforeUpdate("Review", function($review, $user) {
-    // updateKeys contains all the fields being updated
+    // If comment is changed, check its length
     if (in_array("comment", $review->updatedKeys) &&
         strlen($review->get("comment")) > 140) {
         throw new FunctionError("Your comment cannot be longer than 140 characters.");
@@ -822,6 +819,7 @@ Cloud::beforeUpdate("Review", function($review, $user) {
 public static AVObject reviewBeforeUpdateHook(AVObject review) throws Exception {
   List<String> updateKeys = EngineRequestContext.getUpdateKeys();
   for (String key : updateKeys) {
+    // If comment is changed, check its length
     if ("comment".equals(key) && review.getString("comment").length()>140) {
       throw new Exception("Your comment cannot be longer than 140 characters.");
     }
@@ -845,37 +843,47 @@ The object passed into the function is a temporary object and may be different f
 Dead loops may be triggered if this hook is not defined properly. This may lead to extra API calls or even extra bills. See [Preventing Dead Loops](#preventing-dead-loops) for more details.
 {% endcall %}
 
-You can perform an operation after an object is updated. For example, to create a log each time an article is edited:
+You can perform an operation after an object is updated. You will be able to know which fields are updated (same as `beforeUpdate`).
 
 {% if platformName === "Node.js" %}
 ```js
-AV.Cloud.afterUpdate('Article', function (request) {
-  console.log('Article with id ' + request.object.id + ' is updated.');
+AV.Cloud.afterUpdate('Review', function(request) {
+  if (request.object.updatedKeys.indexOf('comment') != -1) {
+    if (request.object.get('comment').length < 5) {
+      console.log(review.ObjectId + " seems like a spam: " + comment)
+    }
+  }
 });
 ```
 {% endif %}
 {% if platformName === "Python" %}
 ```python
-import leancloud
-
-@engine.after_update('Article') # Article is the name of the class that needs this hook
-def after_article_update(article):
-    print 'Article with id {} is updated.'.format(article.id)
+@engine.after_update('Review')
+def after_review_update(article):
+    if 'comment' in obj.updated_keys and len(obj.get('comment')) < 5:
+        print(review.ObjectId + " seems like a spam: " + comment)
 ```
 {% endif %}
 {% if platformName === "PHP" %}
 ```php
-Cloud::afterUpdate("Article", function($article, $user) {
-    // Print logs to the console
-    error_log("Article with id {$article->getObjectId()} is updated.");
+Cloud::afterUpdate("Review", function($review, $user) {
+    if (in_array("comment", $review->updatedKeys) &&
+        strlen($review->get("comment")) < 5) {
+        error_log(review.ObjectId . " seems like a spam: " . comment);
+    }
 });
 ```
 {% endif %}
 {% if platformName === "Java" %}
 ```java
-@EngineHook(className = "Article", type = EngineHookType.afterUpdate)
-public static void articleAfterUpdateHook(AVObject article) throws Exception {
-  LogUtil.avlog.d("Article with id " + article.getObjectId() + " is updated.");
+@EngineHook(className = "Review", type = EngineHookType.afterUpdate)
+public static void reviewAfterUpdateHook(AVObject review) throws Exception {
+  List<String> updateKeys = EngineRequestContext.getUpdateKeys();
+  for (String key : updateKeys) {
+    if ("comment".equals(key) && review.getString("comment").length()<5) {
+      LogUtil.avlog.d(review.ObjectId + " seems like a spam: " + comment);
+    }
+  }
 }
 ```
 {% endif %}
