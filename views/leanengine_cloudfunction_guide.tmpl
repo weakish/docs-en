@@ -1964,7 +1964,7 @@ If you just want to use cloud functions without setting up a complete Node.js pr
 - Setting up cloud functions on the web console will override the project you deployed with Git or command-line interface.
 - You can only set up cloud functions (including hooks) on the web console. You cannot use other functions of an ordinary Node.js project (like web hosting or routers).
 
-In your app's [Dashboard > LeanEngine > Deploy > Edit Online](/cloud.html?appid={{appid}}#/deploy), you can:
+In your app's [Dashboard > LeanEngine > Deploy > Edit Online](https://console.leancloud.app/cloud.html?appid={{appid}}#/deploy), you can:
 
 - **Create functions** by specifying function types, function names, code in the functions, and comments. Click on **Save** to finish creating a function.
 - **Deploy functions** by specifying the environment and clicking on **Deploy**.
@@ -1986,7 +1986,7 @@ The time restrictions applied to ordinary cloud functions also apply to schedule
 A timer will be disabled if it triggers more than 30 `400` (Bad Request) or `502` (Bad Gateway) errors within the past 24 hours. The system will also send out a reminder email to you regarding the issue. The error log [`timerAction short-circuited and no fallback available`](#error-messages-for-scheduled-tasks) will also be printed out in the web console.
 {% endcall %}
 
-After deploying your program to LeanEngine, go to your app's [Dashboard > LeanEngine > Scheduled Tasks](/cloud.html?appid={{appid}}#/task) and click on **Create a Timer** to create a timer for a cloud function. For example, if we have a function named `logTimer`:
+After deploying your program to LeanEngine, go to your app's [Dashboard > LeanEngine > Scheduled Tasks](https://console.leancloud.app/cloud.html?appid={{appid}}#/task) and click on **Create a Timer** to create a timer for a cloud function. For example, if we have a function named `logTimer`:
 
 {% if platformName === "Node.js" %}
 ```js
@@ -2018,7 +2018,7 @@ public static float logTimer throws Exception {
 ```
 {% endif %}
 
-After a timer is created, the default status of it will be `Disabled`. You need to click on <span class="label label-default">Enable</span> to activate the timer. You can see the logs of the timer in [Dashboard > LeanEngine > App Logs](/cloud.html?appid={{appid}}#/log).
+After a timer is created, the default status of it will be `Disabled`. You need to click on <span class="label label-default">Enable</span> to activate the timer. You can see the logs of the timer in [Dashboard > LeanEngine > App Logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log).
 
 You can set up timers with either [cron expressions](http://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/tutorial-lesson-06.html) or intervals with **seconds** as the unit. For example, to run a function on 8:00 every Monday, use `0 0 8 ? * MON` as the cron expression.
 
@@ -2026,7 +2026,7 @@ You can create up to 6 timers for each of the staging environment and the produc
 
 ### Error Messages for Scheduled Tasks
 
-The error messages of timers will be output to [Dashboard > LeanEngine > App Logs](/cloud.html?appid={{appid}}#/log). Below are some common errors and the reasons causing them:
+The error messages of timers will be output to [Dashboard > LeanEngine > App Logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log). Below are some common errors and the reasons causing them:
 
 - **timerAction timed-out and no fallback available**<br>A function triggered by a timer reached its 15-second time limit for processing. See [Handling Timeouts](#handling-timeouts).
 - **timerAction short-circuited and no fallback available**<br>A timer is disabled due to frequent timeouts happening to the function it is triggering.

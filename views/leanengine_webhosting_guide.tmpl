@@ -91,7 +91,7 @@ lean deploy
 
 ###  Setting up Second-Level Domains
 
-In the "Web Hosting Domain" section of your app's [Dashboard > LeanEngine > Settings](/cloud.html?appid={{appid}}#/conf), you can fill in a custom second-level domain. For example, if you set it to be `myapp`, you can access your website through `http://myapp.avosapps.us`.
+In the "Web Hosting Domain" section of your app's [Dashboard > LeanEngine > Settings](https://console.leancloud.app/cloud.html?appid={{appid}}#/conf), you can fill in a custom second-level domain. For example, if you set it to be `myapp`, you can access your website through `http://myapp.avosapps.us`.
 
 {% call docs.noteWrap() %}
 You may need to wait for a few hours until DNS settings take effect.
@@ -1432,7 +1432,7 @@ If the repository is private, you need to provide an SSH address (<code>git&comm
 
 After this, you will be able to deploy your project on the web console. It will deploy the code of the `master` branch by default, but you can specify a branch name, a label, or a specific commit when deploying.
 
-You can also set up a webhook so that each time you make a push to the Git repository, your project will be deployed from it. To do so, go to your app's [Dashboard > LeanEngine > Settings > Deploying from Repositories](/cloud.html?appid={{appid}}#/conf) and click on **Generate** under **Webhooks**. You will obtain a webhook URL for automatic deployments:
+You can also set up a webhook so that each time you make a push to the Git repository, your project will be deployed from it. To do so, go to your app's [Dashboard > LeanEngine > Settings > Deploying from Repositories](https://console.leancloud.app/cloud.html?appid={{appid}}#/conf) and click on **Generate** under **Webhooks**. You will obtain a webhook URL for automatic deployments:
 
 ```
 https://us.leancloud.cn/1.1/engine/groups/web/productionImage?token=YOUR_TOKEN&gitTag=master
@@ -1577,7 +1577,7 @@ Variable Name | Description
 `LEANCLOUD_APP_GROUP`| The group this instance belongs to. When using the LeanEngine [Group Management](leanengine_plan.html#group-management) feature, this becomes the name of the group.
 `LEANCLOUD_REGION` | The region where the instance is located at.
 
-You can also add custom environment variables in your app's [Dashboard > LeanEngine > Settings > Custom Environment Variables](/cloud.html?appid={{appid}}#/conf). Variable names can only contain letters, numbers, and underscores, and can only begin with a letter. The value must be a string. The updated environment variables will take effect after the next deployment.
+You can also add custom environment variables in your app's [Dashboard > LeanEngine > Settings > Custom Environment Variables](https://console.leancloud.app/cloud.html?appid={{appid}}#/conf). Variable names can only contain letters, numbers, and underscores, and can only begin with a letter. The value must be a string. The updated environment variables will take effect after the next deployment.
 
 A common practice of using environment variables is to store configurations with them. By doing so, the behavior of your project can be changed by updating environment variables only without touching the code. You can also store secrets keys of third-party services as environment variables so that they are not exposed in the code.
 
@@ -1618,7 +1618,7 @@ If the files written are relatively large, we recommend that you delete the file
 
 ### Logs
 
-You can view LeanEngine's deployment and runtime logs at [Dashboard > LeanEngine > App Logs](/cloud.html?appid={{appid}}#/log). The logs can be filtered by levels.
+You can view LeanEngine's deployment and runtime logs at [Dashboard > LeanEngine > App Logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log). The logs can be filtered by levels.
 
 You can also export the logs of the past seven days to local files with the [command-line interface](leanengine_cli.html#viewing-logs).
 
@@ -1677,7 +1677,7 @@ leancloud:request response(0) +220ms 200 {"results":[{"content":"1","createdAt":
 We do not recommend that you enable it in the production environment, as a huge number of logs may be printed.
 {% endif %}
 
-LeanEngine's access logs can be exported at [Dashboard > LeanEngine > Access Logs](/cloud.html?appid={{appid}}#/accesslog).
+LeanEngine's access logs can be exported at [Dashboard > LeanEngine > Access Logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/accesslog).
 
 ### Time Zones
 
@@ -1700,7 +1700,7 @@ When constructing a `Date` object, you should pass an object with time zone (lik
 
 ### Public IP Addresses
 
-If you need to configure IP whitelists on third-party services and need to obtain LeanEngine's public IP addresses, please go to [Dashboard > LeanEngine > Settings > Public IP Addresses](/cloud.html?appid={{appid}}#/conf).
+If you need to configure IP whitelists on third-party services and need to obtain LeanEngine's public IP addresses, please go to [Dashboard > LeanEngine > Settings > Public IP Addresses](https://console.leancloud.app/cloud.html?appid={{appid}}#/conf).
 
 We will try our best to avoid changing public IP addresses, but cannot eliminate the possibility of making changes. In case of IP-related problems, please double check if the public IP addresses are changed.
 

@@ -80,7 +80,7 @@ After logging in, our SDK will ensure that the connection is always alive and wi
 
 When a user starts chatting with someone after logging in, a `Conversation` would be formed. In LeanMessage, a conversation contains all the members belonging to it and holds all the messages sent by them, so whenever a client sends a message, it is always sent into a conversation. Before a client could send messages to others, it has to create or join a conversation first and invite other people into it (optional). Only those who are inside a conversation can have access to the messages in it.
 
-When a conversation is created, a record would be added into the `_Conversation` table which can be found in your app's [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/). Each conversation holds properties like group name, members, as well as custom attributes. The table below shows the relationship between the properties of a conversation and the fields of the `_Conversation` table:
+When a conversation is created, a record would be added into the `_Conversation` table which can be found in your app's [Dashboard > LeanStorage > Data](https://console.leancloud.app/data.html?appid={{appid}}#/). Each conversation holds properties like group name, members, as well as custom attributes. The table below shows the relationship between the properties of a conversation and the fields of the `_Conversation` table:
 
 Property|Table Field|Type|Constraint|Description
 ---|---|---|---|---

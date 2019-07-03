@@ -260,7 +260,7 @@ $ lean deploy
 [INFO] Deleting temporary files
 ```
 
-The default message for deployment is `Creating from the CLI` which will be displayed in your app's [Dashboard > LeanEngine > App Logs](/cloud.html?appid={{appid}}#/log). You can customize this message with `-m`:
+The default message for deployment is `Creating from the CLI` which will be displayed in your app's [Dashboard > LeanEngine > App Logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log). You can customize this message with `-m`:
 
 ```sh
 $ lean deploy -m 'Be more awesome!'
@@ -292,7 +292,7 @@ $ lean deploy -g
 The instructions below only works if you have a [standard instance](leanengine_plan.html#standard-instance).
 {% endcall %}
 
-If you have finished testing your project in the staging environment, you can publish it to the production environment by going to your app's [Dashboard > LeanEngine > Deploy](/cloud.html?appid={{appid}}#/deploy) or by running the following command:
+If you have finished testing your project in the staging environment, you can publish it to the production environment by going to your app's [Dashboard > LeanEngine > Deploy](https://console.leancloud.app/cloud.html?appid={{appid}}#/deploy) or by running the following command:
 
 ```sh
 $ lean publish
