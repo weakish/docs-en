@@ -256,7 +256,7 @@ private void OnMessageReceived(object sender, AVIMMessageEventArgs e)
 
 ### Recalling and Editing Messages
 
-> Before implementing these functions, go to your app's [Dashboard > Messaging > LeanMessage > Settings > LeanMessage Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) and enable **Allow editing messages with SDK** and **Allow recalling messages with SDK**.
+> Before implementing these functions, go to your app's [Dashboard > Messaging > LeanMessage > Settings > LeanMessage Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf) and enable **Allow editing messages with SDK** and **Allow recalling messages with SDK**.
 
 A user has the ability to edit or recall messages they have sent out with `Conversation#updateMessage` or `Conversation#recallMessage` methods. There are no limits on the time within which they can perform these operations. However, users are only allowed to edit or recall the messages they have sent out, not the ones sent by others.
 
@@ -1114,7 +1114,7 @@ The highlight of this feature is that you can **customize the contents of push n
 
 1. Setting up a static message
 
-  You can fill in a global static JSON string in your app's [Dashboard > Messaging > LeanMessage > Settings > Push Notification Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) for delivering push notifications with a static message. For example, if you put:
+  You can fill in a global static JSON string in your app's [Dashboard > Messaging > LeanMessage > Settings > Push Notification Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf) for delivering push notifications with a static message. For example, if you put:
 
   ```json
   { "alert": "New message received", "badge": "Increment" }
@@ -1251,7 +1251,7 @@ Apple doesn't allow a single request to include push notifications sent to devic
 
 `_profile` and `_apns_team_id` will not be included in the actual contents of push notifications.
 
-For the message set up in your app's [Dashboard > Messaging > LeanMessage > Settings > Push Notification Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf), you can include the following variables:
+For the message set up in your app's [Dashboard > Messaging > LeanMessage > Settings > Push Notification Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf), you can include the following variables:
 
 * `${convId}` The ID of the conversation
 * `${timestamp}` The Unix timestamp when the push notification is triggered

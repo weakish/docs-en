@@ -85,7 +85,7 @@ Once the type of a field is solidified, it cannot be changed unless you delete a
 
 ### Data Management
 
-You can manage the data in your application by going to [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/) in your browser. This web console shows all the objects stored in your application in JSON.
+You can manage the data in your application by going to [Dashboard > LeanStorage > Data](https://console.leancloud.app/data.html?appid={{appid}}#/) in your browser. This web console shows all the objects stored in your application in JSON.
 
 Keep in mind that:
 

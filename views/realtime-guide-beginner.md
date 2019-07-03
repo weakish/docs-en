@@ -232,7 +232,7 @@ var tom = await realtime.CreateClientAsync('Tom');
 var conversation = await tom.CreateConversationAsync("Jerry", name:"Tom & Jerry", isUnique:true);
 ```
 
-`createConversation` creates a new conversation and stores it into the `_Conversation` table which can be found in your app's [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/). Below are the interfaces offered by different SDKs for creating conversations:
+`createConversation` creates a new conversation and stores it into the `_Conversation` table which can be found in your app's [Dashboard > LeanStorage > Data](https://console.leancloud.app/data.html?appid={{appid}}#/). Below are the interfaces offered by different SDKs for creating conversations:
 
 ```js
 /**

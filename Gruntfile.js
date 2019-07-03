@@ -392,7 +392,7 @@ grunt.registerMultiTask('docmeta', '增加 Title、文档修改日期、设置�
         // href="#demo"
         // href="./rest_api.html#角色-1"
         // href="realtime_guide-objc.html#duplicate_message_notification" (SKIPPED, custom anchor)
-        // href="/dashboard/cloud.html?appid=#/log" (SKIPPED, dashboard)
+        // href="https://console.leancloud.app/cloud.html?appid=#/log" (SKIPPED, dashboard)
         // href="#tab-docs" data-target="#tab-docs" (SKIPPED, UI functional)
         // href="#tab-docs" escape-hash (SKIPPED, explicitly escape hashing mechanism)
         // href="#" (SKIPPED)

@@ -12,7 +12,7 @@ LeanCloud SMS makes it easy to incorporate SMS functionality into your applicati
 
 <!-- Statistics show that SMS messaging is one of the most effective ways to send urgent or time-sensitive information to your customers. -->
 
-LeanCloud SMS has no upfront costs, and you can pay as you go (see [the pricing](#pricing)). Before you start sending messages, make sure your [account balance](/dashboard/bill.html#/bill/charge/account) is sufficient to cover the cost of the messages.
+LeanCloud SMS has no upfront costs, and you can pay as you go (see [the pricing](#pricing)). Before you start sending messages, make sure your [account balance](https://console.leancloud.app/bill.html#/bill/charge/account) is sufficient to cover the cost of the messages.
 
 <!--for only what you use. Your first **100 SMS messages** are free. Subsequent SMS messages are charged based on [the pricing](#pricing) below.
 and the character limit depends on the encoding scheme. an SMS message can contain: 160 GSM characters, 140 ASCII characters, 70 UCS-2 characters-->
@@ -169,14 +169,14 @@ You use LeanCloud SMS APIs to send SMS messages. Those APIs are part of LeanClou
 
 After you install the dependencies, you must complete the following configuration steps:
 
-1. Go to [LeanCloud web console > App Settings > Security Center](/dashboard/app.html?appid={{appid}}#/security), switch on the **SMS** option. Doing so will let the cloud respond to SMS related requests sending from your app.
-1. Go to your app's [SMS Settings](/dashboard/messaging.html?appid={{appid}}#/message/sms/conf), check the **Enable Verification-code SMS (allow access to   requestSmsCode & verifySmsCode API)** option. *Please note that this option has nothing to do with the [AVUser authentication](#avuser-integration).*
+1. Go to [LeanCloud web console > App Settings > Security Center](https://console.leancloud.app/app.html?appid={{appid}}#/security), switch on the **SMS** option. Doing so will let the cloud respond to SMS related requests sending from your app.
+1. Go to your app's [SMS Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf), check the **Enable Verification-code SMS (allow access to   requestSmsCode & verifySmsCode API)** option. *Please note that this option has nothing to do with the [AVUser authentication](#avuser-integration).*
 
 ### SMS Signature
 
 An SMS Signature is a piece of information about the message sender. It can be the name of your app, your company, or your brand, but should be easy for the recipients to recognize. It will be automatically added to the beginning or the end of the message body, adding up to the total length of the message. The presence of signature is mandatory, any messages without it will be rejected by the telecom carrier.
 
-To create an SMS signature, head over to your app's [Messaging > SMS > Settings](/dashboard/messaging.html?appid={{appid}}#/message/sms/conf) page and click on the **Create SMS Signature** button to add one. Your new SMS signature will be ready for use after passing our review.
+To create an SMS signature, head over to your app's [Messaging > SMS > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf) page and click on the **Create SMS Signature** button to add one. Your new SMS signature will be ready for use after passing our review.
 
 Each LeanCloud app can have up to 50 SMS signatures. If there is more than one signature in an app, you need to make one of them as **the default signature**.
 
@@ -184,7 +184,7 @@ Each LeanCloud app can have up to 50 SMS signatures. If there is more than one s
 
 ### Account Balance Alert
 
-When your account balance goes low, you may not be allowed to send as many SMS messages as you intend to. To prevent it from happening, you may want to set a limit on your LeanCloud account balance so that you will get notified via email and SMS once that limit is reached. This option comes handy especially when you send bulk SMS. The limit setting can be found on your account's [Settings > Alerts](/dashboard/settings.html#/setting/alert) page. You may also want to designate a phone number and an email address for the alert to be sent to, all can be set up in the same place.
+When your account balance goes low, you may not be allowed to send as many SMS messages as you intend to. To prevent it from happening, you may want to set a limit on your LeanCloud account balance so that you will get notified via email and SMS once that limit is reached. This option comes handy especially when you send bulk SMS. The limit setting can be found on your account's [Settings > Alerts](https://console.leancloud.app/settings.html#/setting/alert) page. You may also want to designate a phone number and an email address for the alert to be sent to, all can be set up in the same place.
 
 {% call docs.alertWrap() %}
 Please be warned that your account will be suspended once it runs out of balance. LeanCloud will not respond to any requests coming from the apps under a suspended account and all user data remains invisible until your bill is paid off.
@@ -385,7 +385,7 @@ You can use SMS templates to customize message content for all your purposes. Ho
 
 ### Creating a Template
 
-You can create a new template on your [LeanCloud web console > Messaging > SMS > Settings](/dashboard/messaging.html?appid={{appid}}#/message/sms/conf) page. After specifying the template name and the template type, you submit it for our approval.
+You can create a new template on your [LeanCloud web console > Messaging > SMS > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf) page. After specifying the template name and the template type, you submit it for our approval.
 
 The template type and its content must match. If you include any marketing content, for instance, in a non-promotional SMS template, the template will be rejected and won't be available for use with SMS API.
 
@@ -509,7 +509,7 @@ In step 2 one must enter the content of CAPTCHA correctly in order to get the ve
 
 Basically, integrating LeanCloud CAPTCHA takes the following steps:
 
-1. Go into [LeanCloud web console > Settings > Security Center](/dashboard/app.html?appid={{appid}}#/security) and turn on the **CAPTCHA Service** option prior to your integration.
+1. Go into [LeanCloud web console > Settings > Security Center](https://console.leancloud.app/app.html?appid={{appid}}#/security) and turn on the **CAPTCHA Service** option prior to your integration.
 1. Load the supporting library *LeanStorage* into your project:
   ```
   <script src="//cdn1.lncld.net/static/js/2.3.2/av-min.js"></script>
@@ -579,7 +579,7 @@ Basically, integrating LeanCloud CAPTCHA takes the following steps:
   });
   ```
 
-  > If you'd like the server not to take SMS related requests unless they are pre-authorized by CAPTCHA, go into [LeanCloud web console > Messaging > SMS > Settings](/dashboard/messaging.html?appid={{appid}}#/message/sms/conf), check on the **Force SMS APIs to use CAPTCHA** option. Doing so will require the `validateToken` parameter to be present in all the SMS API calls.
+  > If you'd like the server not to take SMS related requests unless they are pre-authorized by CAPTCHA, go into [LeanCloud web console > Messaging > SMS > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf), check on the **Force SMS APIs to use CAPTCHA** option. Doing so will require the `validateToken` parameter to be present in all the SMS API calls.
 
 Below is the source code of the demo page for you to examine.
 
@@ -699,11 +699,11 @@ Transactional|00:00~23:59|15
 
 **Promotional messages**: Only *Business accounts* are allowed to send promotional messages.
 
-> LeanCloud offers two account types: Business and Individual. There's no difference in the services or payment structure between Individual and Business accounts. After you activate your LeanCloud account as either a business or an individual, you can change your account type in [your Account Profile](/dashboard/settings.html#/setting/info) at any time.
+> LeanCloud offers two account types: Business and Individual. There's no difference in the services or payment structure between Individual and Business accounts. After you activate your LeanCloud account as either a business or an individual, you can change your account type in [your Account Profile](https://console.leancloud.app/settings.html#/setting/info) at any time.
 
 All the above-mentioned limitations apply to the Sandbox Phone Number too.
 
-> A [Sandbox Phone Number](storage-guide-js.html#sandbox-phone-number), once set up in your [SMS Settings](/dashboard/messaging.html?appid={{appid}}#/message/sms/conf), is bound with a fixed verification code which you can use to conveniently test your code without waiting for one to be actually sent through.
+> A [Sandbox Phone Number](storage-guide-js.html#sandbox-phone-number), once set up in your [SMS Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf), is bound with a fixed verification code which you can use to conveniently test your code without waiting for one to be actually sent through.
 
 ## Message Delivery Status
 
