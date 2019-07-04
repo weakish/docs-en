@@ -127,7 +127,7 @@ Trial instances are free.
 
 Standard instances will be billed after midnight of each day. You can view the billing records of your account [here](bill.html#/bill/cost).
 
-The price of your instances will be based on how many basic instances you are using. Assuming that the price of a basic instance is 1 USD per day (see our [website](https://leancloud.cn/pricing/) for the actual price):
+The price of your instances will be based on how many basic instances you are using. Assuming that the price of a basic instance is 1 USD per day (see our [website](https://leancloud.app/pricing/) for the actual price):
 
 - If you have 4 instances with 1 basic instance for each of them, the price will be 4 × 1 USD = 4 USD per day.
 - If you have 2 instances with 2 basic instances for each of them, the price will be (2 × 2) × 1 USD = 4 USD per day.
@@ -146,7 +146,7 @@ If your application has only one group, you won't be charged for group managemen
 
 If your application has 2 or more groups, the price for group management will be the number of basic instances × the price of a basic instance × 20%.
 
-Assuming that the price of a basic instance is 1 USD per day (see our [website](https://leancloud.cn/pricing/) for the actual price):
+Assuming that the price of a basic instance is 1 USD per day (see our [website](https://leancloud.app/pricing/) for the actual price):
 
 - If you have 4 instances with 1 basic instance for each of them, the price will be 4 × 1 USD × 20% = 0.8 USD per day.
 - If you have 2 instances with 2 basic instances for each of them, the price will be (2 × 2) × 1 USD × 20% = 0.8 USD per day.
