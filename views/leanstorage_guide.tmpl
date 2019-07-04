@@ -202,7 +202,7 @@ Or load it with the following `<script>` tag:
 <script src="//cdn.jsdelivr.net/npm/leancloud-storage@{{jssdkversion}}/dist/av-live-query-min.js"></script>
 ```
 
-You also need to go to your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) and check the **Enable LiveQuery** option under the **Others** section before you can expect it to work.
+You also need to go to your app's [Dashboard > LeanStorage > Settings](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf) and check the **Enable LiveQuery** option under the **Others** section before you can expect it to work.
 {% endif %}
 {% if platform_name === "Python" %}
 The easiest way to integrate our SDK in your project is to use `pip`. Run the following command to install it:
@@ -414,7 +414,7 @@ Then specify the permissions needed by the SDK and declare the `MyLeanCloudApp` 
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
-First, obtain your App ID and App Key in your app's [Dashboard > Settings > API keys](/app.html?appid={{appid}}#/key).
+First, obtain your App ID and App Key in your app's [Dashboard > Settings > API keys](https://console.leancloud.app/app.html?appid={{appid}}#/key).
 
 Then add the following line to the top of `AppDelegate.swift`:
 
@@ -438,7 +438,7 @@ do {
 
 ### Debugging
 
-You can easily trace the problems in your project by turning debug logs on during the development phase. Once enabled, details of every request made by the SDK along with errors will be output to IDE, browser console, or your app's [Dashboard > LeanEngine > App logs](/cloud.html?appid={{appid}}#/log).
+You can easily trace the problems in your project by turning debug logs on during the development phase. Once enabled, details of every request made by the SDK along with errors will be output to IDE, browser console, or your app's [Dashboard > LeanEngine > App logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log).
 
 {% if platform_name === "Objective-C" %}
 ```objc
@@ -453,7 +453,7 @@ If you are using Node.js, you can set the environment variable `DEBUG=leancloud*
 DEBUG=leancloud* npm start
 ```
 
-If you are using Node.js with [LeanEngine](leanengine_overview.html), you can set the environment variable by going to [Dashboard > LeanEngine > Settings > Custom environment variables](/cloud.html?appid={{appid}}#/conf), put `DEBUG` in the first field and `leancloud:*` in the second field (make sure to include the colon between `leancloud` and `*`). When debugging locally with [command-line interface](leanengine_cli.html), you can set the environment variable `DEBUG=leancloud:*` to have logs output to your app's [Dashboard > LeanEngine > App logs](/cloud.html?appid={{appid}}#/log):
+If you are using Node.js with [LeanEngine](leanengine_overview.html), you can set the environment variable by going to [Dashboard > LeanEngine > Settings > Custom environment variables](https://console.leancloud.app/cloud.html?appid={{appid}}#/conf), put `DEBUG` in the first field and `leancloud:*` in the second field (make sure to include the colon between `leancloud` and `*`). When debugging locally with [command-line interface](leanengine_cli.html), you can set the environment variable `DEBUG=leancloud:*` to have logs output to your app's [Dashboard > LeanEngine > App logs](/cloud.html?appid={{appid}}#/log):
 
 ```sh
 DEBUG=leancloud:* lean up
@@ -504,7 +504,7 @@ Make sure debug logs are turned off before your app is published. Failure to do 
 {% if platform_name === "JavaScript" %}
 ### Web Security
 
-If you are using our JavaScript SDK in your browser based application, you must configure **whitelist domains** in your app's [Dashboard > Settings > Security](/app.html?appid={{appid}}#/security) before you deploy it to a production environment. Once set up, our backend will only accept requests sent from domains in the whitelist, which prevents unauthorized usage or access to your cloud data on a certain level.
+If you are using our JavaScript SDK in your browser based application, you must configure **whitelist domains** in your app's [Dashboard > Settings > Security](https://console.leancloud.app/app.html?appid={{appid}}#/security) before you deploy it to a production environment. Once set up, our backend will only accept requests sent from domains in the whitelist, which prevents unauthorized usage or access to your cloud data on a certain level.
 
 However, since your app is exposed to the Internet, simply setting up whitelist domains can't totally guarantee the security of your app. LeanCloud offers a variety of ways to help you secure your apps as well as the data stored within them. The following articles give you the necessary information you need to know regarding app security.
 
@@ -685,7 +685,7 @@ We do not recommend storing large pieces of binary data like images or documents
 {% call docs.noteWrap() %}
 Keep in mind that our backend stores dates in UTC format and the SDK will convert them to local times upon retrieval.
 
-The date values displayed in your app's [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/) are also converted to match your operating system's time zone. The only exception is that when you retrieve these date values through our [REST API](rest_api.html), they will remain in UTC format. You can manually convert them using appropriate time zones when necessary.
+The date values displayed in your app's [Dashboard > LeanStorage > Data](https://console.leancloud.app/data.html?appid={{appid}}#/) are also converted to match your operating system's time zone. The only exception is that when you retrieve these date values through our [REST API](rest_api.html), they will remain in UTC format. You can manually convert them using appropriate time zones when necessary.
 {% endcall %}
 
 To learn about how you can protect the data stored on LeanCloud, see [Data and Security](data_security.html).
@@ -887,7 +887,7 @@ do {
 ```
 {% endif %}
 
-To make sure the object is successfully saved, take a look at [Dashboard > LeanStorage > Data > `Todo`](/data.html?appid={{appid}}#/Todo) in your app. You should see a new entry of data with something like this when you click on its `objectId`:
+To make sure the object is successfully saved, take a look at [Dashboard > LeanStorage > Data > `Todo`](https://console.leancloud.app/data.html?appid={{appid}}#/Todo) in your app. You should see a new entry of data with something like this when you click on its `objectId`:
 
 ```json
 {
@@ -906,7 +906,7 @@ To make sure the object is successfully saved, take a look at [Dashboard > LeanS
 ```
 
 {% call docs.noteWrap() %}
-You don't have to create or set up a new class called `Todo` in [Dashboard > LeanStorage > Data](/data.html?appid={{appid}}#/) before running the code above. If the class doesn't exist, it will be automatically created.
+You don't have to create or set up a new class called `Todo` in [Dashboard > LeanStorage > Data](https://console.leancloud.app/data.html?appid={{appid}}#/) before running the code above. If the class doesn't exist, it will be automatically created.
 {% endcall %}
 
 There are several built-in fields that are provided by default which you don't need to specify in your code:
@@ -3791,7 +3791,7 @@ Behind the scene, we use WebSocket connections to have clients and the cloud com
 
 ### Initializing LiveQuery
 
-To use LiveQuery in your app, go to your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) and check the **Enable LiveQuery** option under the **Other** section{% if platform_name === "Objective-C" %}, then add the following pod into the `Podfile` under the project's root directory:{% endif %}{% if platform_name === "JavaScript" %}, then include the following npm module in your project:{% endif %}{% if platform_name === "Java" %}. Make sure the RTM modules are added into `AndroidManifest.xml`:{% endif %}
+To use LiveQuery in your app, go to your app's [Dashboard > LeanStorage > Settings](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf) and check the **Enable LiveQuery** option under the **Other** section{% if platform_name === "Objective-C" %}, then add the following pod into the `Podfile` under the project's root directory:{% endif %}{% if platform_name === "JavaScript" %}, then include the following npm module in your project:{% endif %}{% if platform_name === "Java" %}. Make sure the RTM modules are added into `AndroidManifest.xml`:{% endif %}
 
 {% if platform_name === "Objective-C" %}
 ```ruby
@@ -4813,12 +4813,12 @@ file.delete()
 {% endif %}
 
 {% call docs.alertWrap() %}
-By default, a file is not allowed to be deleted. You can change the setting by going to [Dashboard > LeanStorage > Data > `_File`](/data.html?appid={{appid}}#/_File) and select **Others** > **Permission settings** > **`delete`**.
+By default, a file is not allowed to be deleted. You can change the setting by going to [Dashboard > LeanStorage > Data > `_File`](https://console.leancloud.app/data.html?appid={{appid}}#/_File) and select **Others** > **Permission settings** > **`delete`**.
 {% endcall %}
 
 ### Enabling HTTPS
 
-If you demand that the files in the cloud should be accessed through HTTPS, check on **Enable HTTPS domain** in [Dashboard > LeanStorage > Settings > Custom domain for files](/storage.html?appid={{appid}}#/storage/conf). There is no free quota on using HTTPS for files and you will see the pricing once the function is enabled.
+If you demand that the files in the cloud should be accessed through HTTPS, check on **Enable HTTPS domain** in [Dashboard > LeanStorage > Settings > Custom domain for files](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf). There is no free quota on using HTTPS for files and you will see the pricing once the function is enabled.
 
 {% call docs.alertWrap() %}
 By enabling HTTPS, whether the URLs of the files returned by API use HTTPS or HTTP will be affected. Keep in mind that even the function is not enabled, the clients can still access files with HTTPS URLs which will lead to additional expenditure.
@@ -4862,7 +4862,7 @@ You may also allow all HTTP traffics if you need. See [iOS9AdaptationTips](https
 
 ### Setting up Custom Domain
 
-LeanCloud offers a shared domain for all the apps to access the files stored in the cloud. However, due to the Cyber Security Law of the countries where we offer our services, the shared domain might not be available all the time. We highly recommend that you **set up your custom domains for accessing files** so that your apps will not be affected when the shared domain becomes unavailable. You can set up custom domains at [Dashboard > LeanStorage > Settings > Custom domain for files](/storage.html?appid={{appid}}#/storage/conf).
+LeanCloud offers a shared domain for all the apps to access the files stored in the cloud. However, due to the Cyber Security Law of the countries where we offer our services, the shared domain might not be available all the time. We highly recommend that you **set up your custom domains for accessing files** so that your apps will not be affected when the shared domain becomes unavailable. You can set up custom domains at [Dashboard > LeanStorage > Settings > Custom domain for files](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf).
 
 The setup of custom domains is irreversible. You cannot unbind domains, but you can change the domains at any time.
 
@@ -5704,7 +5704,7 @@ _ = LCUser.logIn(mobilePhoneNumber: "+19490008888", password: "cat!@#123") { res
 {% endif %}
 
 {% call docs.noteWrap() %}
-By default, LeanCloud allows a user to log in to their account as long as the phone number and the password are correct even when the ownership of the phone hasn't been [verified](#verifying-phone-numbers). To make your app more secure, you can choose to allow only those who have their phones verified to log in. The option can be found in [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf).
+By default, LeanCloud allows a user to log in to their account as long as the phone number and the password are correct even when the ownership of the phone hasn't been [verified](#verifying-phone-numbers). To make your app more secure, you can choose to allow only those who have their phones verified to log in. The option can be found in [Dashboard > LeanStorage > Settings](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf).
 {% endcall %}
 
 You may also let a user in with a verification code sent to their phone, which is useful when the user forgets the password and does not want to reset it at the moment. Similar to the steps of [signing a user up with phone numbers](#signing-up-with-phones), ask the user to enter the phone number associated with the account, and call the following method once the user clicks on the "Get Verification Code" button:
@@ -5810,7 +5810,7 @@ _ = LCUser.logIn(mobilePhoneNumber: "+19490008888", verificationCode: "123456") 
 
 During the development of your application, you may need to test the sign-up or log-in related API intensively with your phone. As there are, however, limits to how quickly messages can be sent into the carrier networks, your testing pace can be greatly affected.
 
-To work around it, you can set up a sandbox phone number in [Dashboard > Messaging > SMS > Settings](/messaging.html?appid={{appid}}#/message/sms/conf). LeanCloud will issue a fixed verification code to go with that sandbox phone number. Whenever LeanCloud detects such combination of data, the user will be let right in authenticated without any connections to the carrier networks being made.
+To work around it, you can set up a sandbox phone number in [Dashboard > Messaging > SMS > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf). LeanCloud will issue a fixed verification code to go with that sandbox phone number. Whenever LeanCloud detects such combination of data, the user will be let right in authenticated without any connections to the carrier networks being made.
 
 On a related note, a sandbox phone number also comes in handy for iOS apps that allow users to log in with SMS code. This is because Apple may ask developers to provide a fixed combination of phone number and verification code for them to review the app as a normal user. Failure to do so may result in their app being rejected by App Store.
 
@@ -5832,7 +5832,7 @@ The account will be automatically recovered 15 minutes after the last attempt an
 
 ### Verifying Emails
 
-You can request that your users have their email addresses verified before they can log in or access certain functions in your app. This makes it harder for spam users to abuse your app. By default, each user has an `emailVerified` field which becomes `false` when the user first signs up or has their email address changed. In your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf), you can enable **Send verification emails when users register or change email addresses from clients** so that when a user signs up or changes their email address, an email containing a verification link will be sent out automatically. You can find the option to prevent users with unverified email addresses from logging in on the same page.
+You can request that your users have their email addresses verified before they can log in or access certain functions in your app. This makes it harder for spam users to abuse your app. By default, each user has an `emailVerified` field which becomes `false` when the user first signs up or has their email address changed. In your app's [Dashboard > LeanStorage > Settings](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf), you can enable **Send verification emails when users register or change email addresses from clients** so that when a user signs up or changes their email address, an email containing a verification link will be sent out automatically. You can find the option to prevent users with unverified email addresses from logging in on the same page.
 
 If a user forgets to click on the link and needs to have their account verified later, the following code can be used to send a new email:
 
@@ -5878,7 +5878,7 @@ The `emailVerified` will become `true` after the link is clicked on. This field 
 
 ### Verifying Phone Numbers
 
-Similar to [Verifying Emails](#verifying-emails), you can also request that your users have their phone numbers verified before they can log in or access certain functions in your app. By default, each user has a `mobilePhoneVerified` field which becomes `false` when the user first signs up or has their phone number changed. In your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf), you can enable **Send verification SMS when users register or change phone numbers from clients** so that when a user signs up or changes their phone number, a text message containing a verification code will be sent out automatically. You can find the option to prevent users with unverified phone numbers from logging in on the same page.
+Similar to [Verifying Emails](#verifying-emails), you can also request that your users have their phone numbers verified before they can log in or access certain functions in your app. By default, each user has a `mobilePhoneVerified` field which becomes `false` when the user first signs up or has their phone number changed. In your app's [Dashboard > LeanStorage > Settings](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf), you can enable **Send verification SMS when users register or change phone numbers from clients** so that when a user signs up or changes their phone number, a text message containing a verification code will be sent out automatically. You can find the option to prevent users with unverified phone numbers from logging in on the same page.
 
 You can also initiate a verification request at anytime with the following code:
 
@@ -6177,7 +6177,7 @@ For security reasons, please avoid passing session tokens as a part of URLs in n
 {% endcall %}
 
 {% call docs.noteWrap() %}
-If **Log out the user when password is updated** is checked on in [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf), the session token of a user will be reset in the cloud after this user changes the password and the client needs to prompt the user to log in again, otherwise [`403 (Forbidden)`](error_code.html#_403) will be returned as an error.
+If **Log out the user when password is updated** is checked on in [Dashboard > LeanStorage > Settings](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf), the session token of a user will be reset in the cloud after this user changes the password and the client needs to prompt the user to log in again, otherwise [`403 (Forbidden)`](error_code.html#_403) will be returned as an error.
 {% endcall %}
 
 The code below checks if a session token is valid:
@@ -6298,7 +6298,7 @@ _ = LCUser.requestPasswordReset(email: "tom@leancloud.rocks") { (result) in
 The code above will check if there is a user in the `_User` table that has the `email` to be the same as the one provided, and will send them a password reset email if so. As mentioned previously, you can make the `username` of each user to be the same as their `email`, or collect the email separately and store it in the `email` field.
 
 {% call docs.noteWrap() %}
-The content of the password reset email is fully customizable. You can go to your app's [Dashboard > Settings > Email templates](/app.html?appid={{appid}}#/email) and modify the corresponding template.
+The content of the password reset email is fully customizable. You can go to your app's [Dashboard > Settings > Email templates](https://console.leancloud.app/app.html?appid={{appid}}#/email) and modify the corresponding template.
 {% endcall %}
 
 Alternatively, you can ask for the mobile phone number instead of the email to reset their password:
@@ -6350,7 +6350,7 @@ _ = LCUser.requestPasswordReset(mobilePhoneNumber: "+19490008888") { (result) in
 The code above will check if there is a user in the `_User` table that has the `mobilePhoneNumber` to be the same as the one provided, and will send them a verification code if so.
 
 {% call docs.noteWrap() %}
-By changing the settings in [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf), you can restrict the use of the mobile phone number for the above flow only if the `mobilePhoneVerified` field is `true`.
+By changing the settings in [Dashboard > LeanStorage > Settings](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf), you can restrict the use of the mobile phone number for the above flow only if the `mobilePhoneVerified` field is `true`.
 {% endcall %}
 
 The code below resets the password of a user after they enter the verification code and a new password:
@@ -6838,7 +6838,7 @@ If the `authData` is not linked to any account, you will instead receive the sta
 }
 ```
 
-By default, `authData` cannot be returned to the client unless the record is owned by the current user. To change this behavior, you can go to your app's [Dashboard > LeanStorage > Data > `_User`](/data.html?appid={{appid}}#/_User), click on the arrow icon on the `authData` column header, click on **Edit**, and check off the **Only owners can read and write** option so that anyone can have access to it.
+By default, `authData` cannot be returned to the client unless the record is owned by the current user. To change this behavior, you can go to your app's [Dashboard > LeanStorage > Data > `_User`](https://console.leancloud.app/data.html?appid={{appid}}#/_User), click on the arrow icon on the `authData` column header, click on **Edit**, and check off the **Only owners can read and write** option so that anyone can have access to it.
 
 To ensure that each `{{ userObjectName }}` is linked to each service account only once, a unique index needs to be created for the `authData.<SERVICE_NAME>.uid` key in the `_User` class.
 
@@ -6860,7 +6860,7 @@ A user who has GitHub linked may have the following object as `authData`:
 }
 ```
 
-LeanCloud automatically validates the access tokens for certain services to prevent data forge attack. When the validation fails, LeanCloud will respond with `invalid authData` error and the linking will not be established. For services that are not recognized by LeanCloud, you are responsible for validating access tokens by yourself. You can turn off the **Validate access tokens when logging in with third-party accounts** option in your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) if you prefer not to have LeanCloud validate access tokens for you.
+LeanCloud automatically validates the access tokens for certain services to prevent data forge attack. When the validation fails, LeanCloud will respond with `invalid authData` error and the linking will not be established. For services that are not recognized by LeanCloud, you are responsible for validating access tokens by yourself. You can turn off the **Validate access tokens when logging in with third-party accounts** option in your app's [Dashboard > LeanStorage > Settings](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf) if you prefer not to have LeanCloud validate access tokens for you.
 
 #### Unlinking
 
