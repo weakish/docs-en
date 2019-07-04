@@ -20,7 +20,7 @@ On LeanCloud, LeanMessage is decoupled from the account system offered by LeanSt
 
 The mechanism comes with an authentication server (the so-called "third party") deployed between clients and the cloud. Each time a client wants to make a request involving sensitive operations (like logging in, creating conversations, joining conversations, or inviting users), it has to obtain a signature from the authentication server. The signature gets attached to the request and will be verified by the cloud according to a predefined protocol. Only those requests with valid signatures will be accepted by the cloud.
 
-The signing mechanism is turned off by default. You can turn it on by going to your app's [Dashboard > Messaging > LeanMessage > Settings > LeanMessage Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf):
+The signing mechanism is turned off by default. You can turn it on by going to your app's [Dashboard > Messaging > LeanMessage > Settings > LeanMessage settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf):
 
 - **Verify signatures for logging in**: Verify all the activities of logging in
 - **Verify signatures for conversation operations**: Verify all the activities of creating conversations, joining conversations, inviting users, and removing users
@@ -62,7 +62,7 @@ Parameter | Description
 `timestamp` | The number of **milliseconds** that have elapsed since Unix epoch (UTC).
 `nonce` | A random string.
 
-> Note: The key for signing has to be the **Master Key** of your app. You can find it in your app's [Dashboard > Settings > API Keys](/dashboard/app.html?appid={{appid}}#/key). **Make sure your Master Key is well protected and doesn't get leaked out.**
+> Note: The key for signing has to be the **Master Key** of your app. You can find it in your app's [Dashboard > Settings > API keys](/dashboard/app.html?appid={{appid}}#/key). **Make sure your Master Key is well protected and doesn't get leaked out.**
 
 You may implement your own `SignatureFactory` to retrieve signatures from remote servers. If you don't have your own server, you may use the **web hosting** service provided by LeanEngine. Generating signatures within your mobile app is **extremely dangerous** since your **Master Key** can get exposed.
 
@@ -120,9 +120,9 @@ There are two formats of signatures for two types of blacklist operations:
 
 #### Testing Signatures
 
-You can easily test signatures in your app's dashboard. Simply go to [Messaging > LeanMessage > Clients](/dashboard/messaging.html?appid={{appid}}#/message/realtime/client), search a `clientId`, and click on **Test Signature**.
+You can easily test signatures in your app's dashboard. Simply go to [Messaging > LeanMessage > Clients](/dashboard/messaging.html?appid={{appid}}#/message/realtime/client), search a `clientId`, and click on **Test signature**.
 
-<img src="images/console-im-signature-test.png" width="600" class="img-responsive" alt="A form with title &quot;Test Signature&quot;, containing fields &quot;Operation&quot;, &quot;Client ID&quot;, &quot;Member IDs&quot;, &quot;Timestamp&quot;, and &quot;Nonce&quot;, and a button saying &quot;Generate Signature&quot;.">
+<img src="images/console-im-signature-test.png" width="600" class="img-responsive" alt="A form with title &quot;Test signature&quot;, containing fields &quot;Operation&quot;, &quot;Client ID&quot;, &quot;Member IDs&quot;, &quot;Timestamp&quot;, and &quot;Nonce&quot;, and a button saying &quot;Generate signature&quot;.">
 
 ### Demo for Generating Signatures on LeanEngine
 
@@ -403,7 +403,7 @@ The third-party signing mechanism helps to maintain the general security of your
 
 ### Setting Member Permissions
 
-When permission management is enabled, members in each conversation will be divided into different roles with different permissions. To enable permission management, go to your app's [Dashboard > Messaging > LeanMessage > Settings > LeanMessage Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) and turn on **Enable permission management for conversations**.
+When permission management is enabled, members in each conversation will be divided into different roles with different permissions. To enable permission management, go to your app's [Dashboard > Messaging > LeanMessage > Settings > LeanMessage settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) and turn on **Enable permission management for conversations**.
 
 Here is a table showing the permissions each role has:
 
@@ -640,7 +640,7 @@ There are two types of blacklists available:
 - Conversation to user: The list of users that are blocked by a conversation. Blocked users cannot join the conversation.
 - User to conversation: The list of conversations that are blocked by a user. The user cannot be invited to a blocked conversation.
 
-To enable blacklists, go to your app's [Dashboard > Messaging > LeanMessage > Settings > LeanMessage Settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) and turn on **Enable blacklists**.
+To enable blacklists, go to your app's [Dashboard > Messaging > LeanMessage > Settings > LeanMessage settings](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) and turn on **Enable blacklists**.
 
 `AVIMConversation` offers the following methods related to blacklisting:
 

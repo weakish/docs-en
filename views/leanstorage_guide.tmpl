@@ -202,7 +202,7 @@ Or load it with the following `<script>` tag:
 <script src="//cdn.jsdelivr.net/npm/leancloud-storage@{{jssdkversion}}/dist/av-live-query-min.js"></script>
 ```
 
-You also need to go to your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) and check the **Enable LiveQuery** option under the **Misc** section before you can expect it to work.
+You also need to go to your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) and check the **Enable LiveQuery** option under the **Others** section before you can expect it to work.
 {% endif %}
 {% if platform_name === "Python" %}
 The easiest way to integrate our SDK in your project is to use `pip`. Run the following command to install it:
@@ -414,7 +414,7 @@ Then specify the permissions needed by the SDK and declare the `MyLeanCloudApp` 
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
-First, obtain your App ID and App Key in your app's [Dashboard > Settings > API Keys](/app.html?appid={{appid}}#/key).
+First, obtain your App ID and App Key in your app's [Dashboard > Settings > API keys](/app.html?appid={{appid}}#/key).
 
 Then add the following line to the top of `AppDelegate.swift`:
 
@@ -438,11 +438,11 @@ do {
 
 ### Debugging
 
-You can easily trace the problems in your project by turning debug logs on during the development phase. Once enabled, details of every request made by the SDK along with errors will be output to IDE, browser console, or your app's [Dashboard > LeanEngine > App Logs](/cloud.html?appid={{appid}}#/log).
+You can easily trace the problems in your project by turning debug logs on during the development phase. Once enabled, details of every request made by the SDK along with errors will be output to IDE, browser console, or your app's [Dashboard > LeanEngine > App logs](/cloud.html?appid={{appid}}#/log).
 
 {% if platform_name === "Objective-C" %}
 ```objc
-// Place the line after [AVOSCloud setApplicationId:]
+// Place the line after [AVOSCloud setApplicationId:]; only needs to be called once
 [AVOSCloud setAllLogsEnabled:YES];
 ```
 {% endif %}
@@ -453,7 +453,7 @@ If you are using Node.js, you can set the environment variable `DEBUG=leancloud*
 DEBUG=leancloud* npm start
 ```
 
-If you are using Node.js with [LeanEngine](leanengine_overview.html), you can set the environment variable by going to [Dashboard > LeanEngine > Settings > Custom Environment Variables](/cloud.html?appid={{appid}}#/conf), put `DEBUG` in the first field and `leancloud:*` in the second field (make sure to include the colon between `leancloud` and `*`). When debugging locally with [command-line interface](leanengine_cli.html), you can set the environment variable `DEBUG=leancloud:*` to have logs output to your app's [Dashboard > LeanEngine > App Logs](/cloud.html?appid={{appid}}#/log):
+If you are using Node.js with [LeanEngine](leanengine_overview.html), you can set the environment variable by going to [Dashboard > LeanEngine > Settings > Custom environment variables](/cloud.html?appid={{appid}}#/conf), put `DEBUG` in the first field and `leancloud:*` in the second field (make sure to include the colon between `leancloud` and `*`). When debugging locally with [command-line interface](leanengine_cli.html), you can set the environment variable `DEBUG=leancloud:*` to have logs output to your app's [Dashboard > LeanEngine > App logs](/cloud.html?appid={{appid}}#/log):
 
 ```sh
 DEBUG=leancloud:* lean up
@@ -479,7 +479,7 @@ logging.basicConfig(level=logging.DEBUG)
 {% endif %}
 {% if platform_name === "PHP" %}
 ```php
-// Place the line after Client::initialize()
+// Place the line after Client::initialize(); only needs to be called once
 Client::setDebug(true);
 ```
 {% endif %}
@@ -887,7 +887,7 @@ do {
 ```
 {% endif %}
 
-To make sure the data is successfully saved, take a look at [Dashboard > LeanStorage > Data > `Todo`](/data.html?appid={{appid}}#/Todo) in your app. You should see something like this when you click on the `objectId` of the object:
+To make sure the object is successfully saved, take a look at [Dashboard > LeanStorage > Data > `Todo`](/data.html?appid={{appid}}#/Todo) in your app. You should see a new entry of data with something like this when you click on its `objectId`:
 
 ```json
 {
@@ -1193,7 +1193,6 @@ todo.save()
 LeanCloud automatically figures out which data has changed and only the fields with changes will be sent to the cloud. The fields you didn't update will remain intact.
 
 {% if platform_name === "Objective-C" or platform_name === "JavaScript" or platform_name === "Python" or platform_name === "Java" %}
-
 #### Updating Data Conditionally
 
 By passing in a `query` option when saving, you can specify conditions on the save operation so that the object can be updated atomically only when those conditions are met. If no object matches the conditions, the cloud will return error `305` to indicate that there was no update taking place.
@@ -1239,7 +1238,6 @@ account.save(null, {
   // otherwise only fields with changes will be returned.
   fetchWhenSave: true
 }).then(function (account) {
-  // Object updated
   console.log('Balance: ', account.get('balance'));
 }, function (error) {
   if (error.code === 305) {
@@ -1567,7 +1565,6 @@ var todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
 todo.unset('priority');
 
 // Save the object to the cloud
-// If the object's field is an array, call save after every unset operation.
 todo.save();
 ```
 {% endif %}
@@ -1742,6 +1739,7 @@ forEach ($todos as $todo) {
     // Update value
     $todo->set("isComplete", true);
 }
+// Save all at once
 LeanObject::saveAll($todos);
 ```
 {% endif %}
@@ -2265,7 +2263,7 @@ query.limit = 10
 For performance reasons, the maximum value allowed for `limit` is `1000`, meaning that LeanCloud would only return 1,000 results even it is set to be greater than `1000`.
 {% endcall %}
 
-If you need exactly `1` result, you may use `{% if platform_name === "Objective-C" %}getFirstObject{% endif %}{% if platform_name === "JavaScript" %}first{% endif %}{% if platform_name === "Python" %}first{% endif %}{% if platform_name === "PHP" %}{% endif %}{% if platform_name === "Java" %}getFirst{% endif %}{% if platform_name === "Swift" %}getFirst{% endif %}` for convenience:
+If you need exactly one result, you may use `{% if platform_name === "Objective-C" %}getFirstObject{% endif %}{% if platform_name === "JavaScript" %}first{% endif %}{% if platform_name === "Python" %}first{% endif %}{% if platform_name === "PHP" %}{% endif %}{% if platform_name === "Java" %}getFirst{% endif %}{% if platform_name === "Swift" %}getFirst{% endif %}` for convenience:
 
 {% if platform_name === "Objective-C" %}
 ```objc
@@ -2281,7 +2279,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 var query = new AV.Query('Todo');
 query.equalTo('priority', 2);
 query.first().then(function (todo) {
-  // todo is the first todo satisfying conditions
+  // todo is the first Todo object satisfying conditions
 });
 ```
 {% endif %}
@@ -2582,7 +2580,7 @@ You can use the `matchesKeyInQuery` method to look for objects with values of fi
 
 For example, if you have a `Country` class matching countries with languages and a `Student` class matching students with their nationalities:
 
-country | language
+name | language
 --- | ---
 US | English
 UK | English
@@ -2598,11 +2596,11 @@ The following code looks for all the students who are from English-speaking coun
 
 ```js
 var studentQuery = new AV.Query('Student');
-var countryQuery = new AV.Query('Country')
+var countryQuery = new AV.Query('Country');
 // Get all English-speaking countries
 countryQuery.equalTo('language', 'English');
-// Match Student's nationality with Country's country
-studentQuery.matchesKeyInQuery('nationality', 'country', countryQuery);
+// Match Student's nationality with Country's name
+studentQuery.matchesKeyInQuery('nationality', 'name', countryQuery);
 studentQuery.find().then(function (students) {
   // students contains John Doe and Tom Sawyer
 });
@@ -2691,7 +2689,7 @@ _ = query.getFirst { result in
 {% endif %}
 
 {% if platform_name === "Objective-C" or platform_name === "JavaScript" or platform_name === "Python" or platform_name === "Java" or platform_name === "Swift" %}
-The unselected fields can be fetched later with `{% if platform_name === "Objective-C" %}fetchInBackgroundWithBlock{% endif %}{% if platform_name === "JavaScript" %}fetch{% endif %}{% if platform_name === "Python" %}fetch{% endif %}{% if platform_name === "Java" %}fetchInBackground{% endif %}{% if platform_name === "Swift" %}fetch{% endif %}`. See [Retrieving Objects](#retrieving-objects).
+The unselected fields can be fetched later with `{% if platform_name === "Objective-C" %}fetchInBackgroundWithBlock{% endif %}{% if platform_name === "JavaScript" %}fetch{% endif %}{% if platform_name === "Python" %}fetch{% endif %}{% if platform_name === "Java" %}fetchInBackground{% endif %}{% if platform_name === "Swift" %}fetch{% endif %}`. See [Refreshing Objects](#refreshing-objects).
 {% endif %}
 
 ### Queries on String Values
@@ -3192,14 +3190,14 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 // Retrieve the most recent ones
 [query orderByDescending:@"createdAt"];
 
-// Only retrieve the last ten
+// Only retrieve the last 10
 query.limit = 10;
 
 // Include the related post together with each comment
 [query includeKey:@"post"];
 
 [query findObjectsInBackgroundWithBlock:^(NSArray *comments, NSError *error) {
-    // comments contains the last ten comments including the post associated with each
+    // comments contains the last 10 comments including the post associated with each
     for (AVObject *comment in comments) {
         // This does not require a network access
         AVObject *post = comment[@"post"];
@@ -3214,14 +3212,14 @@ var query = new AV.Query('Comment');
 // Retrieve the most recent ones
 query.descending('createdAt');
 
-// Only retrieve the last ten
+// Only retrieve the last 10
 query.limit(10);
 
 // Include the related post together with each comment
 query.include('post');
 
 query.find().then(function (comments) {
-  // comments contains the last ten comments including the post associated with each
+  // comments contains the last 10 comments including the post associated with each
   comments.forEach(function (comment) {
     // This does not require a network access
     var post = comment.get('post');
@@ -3236,7 +3234,7 @@ query = leancloud.Query('Comment')
 # Retrieve the most recent ones
 query.add_descending('createdAt')
 
-# Only retrieve the last ten
+# Only retrieve the last 10
 query.limit(10)
 
 # Include the related post together with each comment
@@ -3255,7 +3253,7 @@ $query = new Query("Comment");
 // Retrieve the most recent ones
 $query->descend("createdAt");
 
-// Only retrieve the last ten
+// Only retrieve the last 10
 $query->limit(10);
 
 // Include the related post together with each comment
@@ -3275,7 +3273,7 @@ AVQuery<AVObject> query = new AVQuery<>("Comment");
 // Retrieve the most recent ones
 query.orderByDescending("createdAt");
 
-// Only retrieve the last ten
+// Only retrieve the last 10
 query.limit(10);
 
 // Include the related post together with each comment
@@ -3284,7 +3282,7 @@ query.include("post");
 query.findInBackground().subscribe(new Observer<List<AVObject>>() {
     public void onSubscribe(Disposable disposable) {}
     public void onNext(List<AVObject> comments) {
-        // comments contains the last ten comments including the post associated with each
+        // comments contains the last 10 comments including the post associated with each
         for (AVObject comment : comments) {
             // This does not require a network access
             AVObject post = comment.getAVObject("post");
@@ -3302,7 +3300,7 @@ let query = LCQuery(className: "Comment")
 // Retrieve the most recent ones
 query.whereKey("createdAt", .descending)
 
-// Only retrieve the last ten
+// Only retrieve the last 10
 query.limit = 10
 
 // Include the related post together with each comment
@@ -3311,7 +3309,7 @@ query.whereKey("post", .included)
 _ = query.find { result in
     switch result {
     case .success(objects: let comments):
-        // comments contains the last ten comments including the post associated with each
+        // comments contains the last 10 comments including the post associated with each
         for comment in comments {
             // This does not require a network access
             let post = comment.get("post") as? LCObject
@@ -3356,7 +3354,7 @@ query.whereKey("post.author", .included)
 ```
 {% endif %}
 
-Feel free to use `{% if platform_name === "Objective-C" %}includeKey{% endif %}{% if platform_name === "JavaScript" %}include{% endif %}{% if platform_name === "Python" %}include{% endif %}{% if platform_name === "PHP" %}_include{% endif %}{% if platform_name === "Java" %}include{% endif %}{% if platform_name === "Swift" %}.included{% endif %}` as many times as you need for the same query to have multiple fields included. This functionality also works with `{{ baseQueryClassName }}` helpers like `{% if platform_name === "Objective-C" %}getFirstObject{% endif %}{% if platform_name === "JavaScript" %}first{% endif %}{% if platform_name === "Python" %}first{% endif %}{% if platform_name === "PHP" %}{% endif %}{% if platform_name === "Java" %}getFirst{% endif %}{% if platform_name === "Swift" %}getFirst{% endif %}`{% if platform_name === "JavaScript" or platform_name === "Python" or platform_name === "Swift" %} and `get`{% endif %}.
+Feel free to use `{% if platform_name === "Objective-C" %}includeKey{% endif %}{% if platform_name === "JavaScript" %}include{% endif %}{% if platform_name === "Python" %}include{% endif %}{% if platform_name === "PHP" %}_include{% endif %}{% if platform_name === "Java" %}include{% endif %}{% if platform_name === "Swift" %}.included{% endif %}` as many times as you need for the same query to have multiple fields included. Related objects retrieved in this way also works with `{{ baseQueryClassName }}` helpers like `{% if platform_name === "Objective-C" %}getFirstObject{% endif %}{% if platform_name === "JavaScript" %}first{% endif %}{% if platform_name === "Python" %}first{% endif %}{% if platform_name === "PHP" %}{% endif %}{% if platform_name === "Java" %}getFirst{% endif %}{% if platform_name === "Swift" %}getFirst{% endif %}`{% if platform_name === "JavaScript" or platform_name === "Python" or platform_name === "Swift" %} and `get`{% endif %}.
 
 {% call docs.noteWrap() %}
 Multi-level conditions passed into `{% if platform_name === "Objective-C" %}includeKey{% endif %}{% if platform_name === "JavaScript" %}include{% endif %}{% if platform_name === "Python" %}include{% endif %}{% if platform_name === "PHP" %}_include{% endif %}{% if platform_name === "Java" %}include{% endif %}{% if platform_name === "Swift" %}.included{% endif %}` won't work with any `{{ baseObjectName }}` contained in an array field. The furthest level that can be reached is the field itself.
@@ -3397,7 +3395,7 @@ query.whereKey("post.author.firstName", .selected)
 
 #### Caveats about Relational Queries
 
-The backend of LeanCloud is not built on relational databases, which makes it impossible to join tables while querying. For the relational queries mentioned above, what LeanCloud would do is to first perform an inner query (with `100` as default `limit` and `1000` as maximum) and then insert the result from this query into the outer query. If the number of records matching the inner query exceeds the limit and the outer query contains other constraints, the amount of the records returned in the end could be zero or less than your expectation since only the records within the limit would be inserted into the outer query.
+The backend of LeanCloud is not built on relational databases, which makes it impossible to join tables while querying. For the relational queries mentioned above, what LeanCloud would do is to first perform an inner query (with `100` as default `limit` and `1000` as maximum) and then insert the result from this query into the outer query. If the number of records matching the inner query exceeds the `limit` and the outer query contains other constraints, the amount of the records returned in the end could be zero or less than your expectation since only the records within the `limit` would be inserted into the outer query.
 
 The following actions can be taken to solve the problem:
 
@@ -3767,14 +3765,10 @@ let query = createdAtQuery.and(orQuery)
 ```
 {% endif %}
 
-{# ### Aggregate #}
-
-{# ### Distinct #}
-
 {# ### Caching Results #}
 
 ### Optimizing Performance
- 
+
 There are several factors that could lead to potential performance issues when you conduct a query, especially when more than 100,000 records are returned at a time. We are listing some common ones here so you can design your apps accordingly to avoid them:
 
 - Querying with "not equal to" or "not include" (index will not work)
@@ -3784,10 +3778,10 @@ There are several factors that could lead to potential performance issues when y
 - Sorting without index (querying and sorting cannot share a composite index unless the conditions used on them are both covered by the same one)
 - Querying without index (the conditions used on the query cannot share a composite index unless all of them are covered by the same one; additional time will be consumed if excessive data falls under the uncovered conditions)
 
-{% if platform_name === "Objective-C" or platform_name === "JavaScript" or platform_name === "Java" or platform_name === "Swift" %}
-## Live Queries
+{% if platform_name === "Objective-C" or platform_name === "JavaScript" or platform_name === "Java" %}
+## LiveQuery
 
-A live query is, as its name implies, derived from a normal [`{{ baseQueryClassName }}`](#queries) but has enhanced capability. It allows you to automatically synchronize data changes from one client to other clients without writing complex code, making it suitable for apps that need real-time data.
+LiveQuery is, as its name implies, derived from [`{{ baseQueryClassName }}`](#queries) but has enhanced capability. It allows you to automatically synchronize data changes from one client to other clients without writing complex code, making it suitable for apps that need real-time data.
 
 Suppose you are building an app that allows multiple users to edit the same file at the same time. `{{ baseQueryClassName }}` would not be an ideal tool since it is based on a pull model and you cannot know when to query from the cloud to get the updates.
 
@@ -3795,11 +3789,9 @@ To solve this problem, we introduced LiveQuery. This tool allows you to subscrib
 
 Behind the scene, we use WebSocket connections to have clients and the cloud communicate with each other and maintain the subscription status of clients. In most cases, it isn't necessary to deal with the WebSocket connections directly, so we developed a simple API to help you focus on your business logic rather than technical implementations.
 
-LiveQuery has both free and paid plans. See [Pricing](/pricing) to learn about your free quota and upgrade options.
-
 ### Initializing LiveQuery
 
-To use LiveQuery in your app, go to your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) and check the **Enable LiveQuery** option under the **Other** section{% if platform_name === "Objective-C" %}, then add the following pod into the `Podfile` under the project's root directory:{% endif %}{% if platform_name === "JavaScript" %}, then include the following npm module in your project:{% endif %}{% if platform_name === "Java" %}. Make sure the RTM modules are added into `AndroidManifest.xml`:{% endif %}{% if platform_name === "Swift" %}.{% endif %}
+To use LiveQuery in your app, go to your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) and check the **Enable LiveQuery** option under the **Other** section{% if platform_name === "Objective-C" %}, then add the following pod into the `Podfile` under the project's root directory:{% endif %}{% if platform_name === "JavaScript" %}, then include the following npm module in your project:{% endif %}{% if platform_name === "Java" %}. Make sure the RTM modules are added into `AndroidManifest.xml`:{% endif %}
 
 {% if platform_name === "Objective-C" %}
 ```ruby
@@ -3814,7 +3806,7 @@ See [Installing SDK](#installing-sdk) for more details.
 var AV = require('leancloud-storage/live-query');
 ```
 
-Or load it with the following `<script>` tag: 
+Or load it with the following `<script>` tag:
 
 ```html
 <!-- No need to load av-min.js if the following script is present -->
@@ -3838,33 +3830,7 @@ See [Installing SDK](#installing-sdk) for more details.
 See [Initializing Your Project](#initializing-your-project) for more details.
 {% endif %}
 
-{#
-### Demo
-
-The video here shows the effect of using LiveQuery on the web client and the mobile client of the same app:
-
-<div style="border:2px solid #ccc; margin-bottom:1em;">
-  <video src="https://lc-lhzo7z96.cn-n1.lcfile.com/1496988080458" controls autoplay muted preload="auto" width="100%" height="100%" >
-    HTML5 Video is required for this demo, which your browser doesn't support.
-  </video>
-</div>
-
-Feel free to try it by yourself with the following steps:
-
-1. Scan the QR code below with WeChat to open the "LeanTodo" mini program:<br/>
-   <img src="images/leantodo-weapp-qr.png" width="150" height="150"> 
-2. Click on **Settings** > **Account Settings** on the bottom left of the screen, then create an account with a username and a password. You will need the same username and password later.
-3. Visit <https://leancloud.github.io/leantodo-vue/> in your browser and enter the same credentials, then click on **Login**.
-4. Enter some random data on one client and observe how changes are synchronized to other clients.
-
-{% call docs.noteWrap() %}
-Make sure to create your account in the mini program first. If you create your account in the web app, you cannot log in to the same account in the mini program.
-{% endcall %}
-
-{% call docs.noteWrap() %}
-You may also be interested in watching our [LeanCloud Open Course (Chinese)](http://www.bilibili.com/video/av11291992/) to get yourself familiarized with the basics of the tool.
-{% endcall %}
-#}
+{# ### Demo #}
 
 ### Creating a Subscription
 
@@ -3900,18 +3866,6 @@ liveQuery.subscribeInBackground(new AVLiveQuerySubscribeCallback() {
         }
     }
 });
-```
-{% endif %}
-{% if platform_name === "Swift" %}
-```swift
-func subscribe() {
-    let query = AVQuery(className: "Employee")
-    let liveQuery = AVLiveQuery(query: query)
-    liveQuery.delegate = self
-    liveQuery.subscribe { (succeeded, error) in
-        // Query becomes live after getting a subscription
-    }
-}
 ```
 {% endif %}
 
@@ -3966,21 +3920,6 @@ liveQuery.subscribeInBackground(new AVLiveQuerySubscribeCallback() {
 });
 ```
 {% endif %}
-{% if platform_name === "Swift" %}
-```swift
-func subscribe() {
-    let query = AVQuery(className: "Employee")
-    let liveQuery = AVLiveQuery(query: query)
-    liveQuery.delegate = self
-    liveQuery.subscribe { (succeeded, error) in
-        // Query becomes live after getting a subscription
-    }
-}
-func liveQuery(_ liveQuery: AVLiveQuery, objectDidCreate newEmployee: Any) {
-    print(newEmployee.get("firstName")) // Kelly
-}
-```
-{% endif %}
 
 If someone updates this `Employee` by changing its `team` to `Finance`, the following code can get the updated version for you:
 
@@ -4008,13 +3947,6 @@ liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
 });
 ```
 {% endif %}
-{% if platform_name === "Swift" %}
-```swift
-func liveQuery(_ liveQuery: AVLiveQuery, objectDidUpdate updatedEmployee: Any, updatedKeys: [String]) {
-    print(updatedEmployee.get("team")) // Finance
-}
-```
-{% endif %}
 
 ### Event Handling
 
@@ -4029,7 +3961,7 @@ The following types of data changes can be monitored once subscription is set up
 
 #### `create` Event
 
-A `create` event will be triggered when a new `{{ baseObjectName }}` is created and it fulfills the `{{ baseQueryClassName }}` you subscribed. The `object` is the new `{{ baseObjectName }}` being created.
+A `create` event will be triggered when a new `{{ baseObjectName }}` is created and it fulfills the `{{ baseQueryClassName }}` you subscribed. The `object` is the new `{{ baseObjectName }}` being created:
 
 {% if platform_name === "Objective-C" %}
 ```objc
@@ -4057,17 +3989,10 @@ liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
 });
 ```
 {% endif %}
-{% if platform_name === "Swift" %}
-```swift
-func liveQuery(_ liveQuery: AVLiveQuery, objectDidCreate object: Any) {
-    print("Object created.")
-}
-```
-{% endif %}
 
 #### `update` Event
 
-An `update` event will be triggered when an existing `{{ baseObjectName }}` fulfilling the `{{ baseQueryClassName }}` you subscribed is updated. The `object` is the `{{ baseObjectName }}` being updated.
+An `update` event will be triggered when an existing `{{ baseObjectName }}` fulfilling the `{{ baseQueryClassName }}` you subscribed is updated. The `object` is the `{{ baseObjectName }}` being updated:
 
 {% if platform_name === "Objective-C" %}
 ```objc
@@ -4095,17 +4020,10 @@ liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
 });
 ```
 {% endif %}
-{% if platform_name === "Swift" %}
-```swift
-func liveQuery(_ liveQuery: AVLiveQuery, objectDidUpdate object: Any, updatedKeys: [String]) {
-    print("Object updated.")
-}
-```
-{% endif %}
 
 #### `enter` Event
 
-An `enter` event will be triggered when an existing `{{ baseObjectName }}`'s old value does not fulfill the `{{ baseQueryClassName }}` you subscribed but its new value does. The `object` is the `{{ baseObjectName }}` entering the `{{ baseQueryClassName }}` and its content is the latest value of it.
+An `enter` event will be triggered when an existing `{{ baseObjectName }}`'s old value does not fulfill the `{{ baseQueryClassName }}` you subscribed but its new value does. The `object` is the `{{ baseObjectName }}` entering the `{{ baseQueryClassName }}` and its content is the latest value of it:
 
 {% if platform_name === "Objective-C" %}
 ```objc
@@ -4133,13 +4051,6 @@ liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
 });
 ```
 {% endif %}
-{% if platform_name === "Swift" %}
-```swift
-func liveQuery(_ liveQuery: AVLiveQuery, objectDidEnter object: Any, updatedKeys: [String]) {
-    print("Object entered.")
-}
-```
-{% endif %}
 
 {% call docs.noteWrap() %}
 There is a clear distinction between a `create` event and an `enter` event. If an object already exists and later matches the query's conditions, an `enter` event will be triggered. If an object didn't exist already and is later created, a `create` event will be triggered.
@@ -4147,7 +4058,7 @@ There is a clear distinction between a `create` event and an `enter` event. If a
 
 #### `leave` Event
 
-A `leave` event will be triggered when an existing `{{ baseObjectName }}`'s old value fulfills the `{{ baseQueryClassName }}` you subscribed but its new value does not. The `object` is the `{{ baseObjectName }}` leaving the `{{ baseQueryClassName }}` and its content is the latest value of it.
+A `leave` event will be triggered when an existing `{{ baseObjectName }}`'s old value fulfills the `{{ baseQueryClassName }}` you subscribed but its new value does not. The `object` is the `{{ baseObjectName }}` leaving the `{{ baseQueryClassName }}` and its content is the latest value of it:
 
 {% if platform_name === "Objective-C" %}
 ```objc
@@ -4175,17 +4086,10 @@ liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
 });
 ```
 {% endif %}
-{% if platform_name === "Swift" %}
-```swift
-func liveQuery(_ liveQuery: AVLiveQuery, objectDidLeave object: Any, updatedKeys: [String]) {
-    print("Object left.")
-}
-```
-{% endif %}
 
 #### `delete` Event
 
-A `delete` event will be triggered when an existing `{{ baseObjectName }}` fulfilling the `{{ baseQueryClassName }}` you subscribed is deleted. The `object` is the `objectId` of the `{{ baseObjectName }}` being deleted.
+A `delete` event will be triggered when an existing `{{ baseObjectName }}` fulfilling the `{{ baseQueryClassName }}` you subscribed is deleted. The `object` is the `objectId` of the `{{ baseObjectName }}` being deleted:
 
 {% if platform_name === "Objective-C" %}
 ```objc
@@ -4213,17 +4117,10 @@ liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
 });
 ```
 {% endif %}
-{% if platform_name === "Swift" %}
-```swift
-func liveQuery(_ liveQuery: AVLiveQuery, objectDidDelete object: Any) {
-    print("Object deleted.")
-}
-```
-{% endif %}
 
 #### `login` Event
 
-A `login` event will be triggered when a user successfully logs in to your app. The `user` is the `{{ userObjectName }}` logged in.
+A `login` event will be triggered when a user successfully logs in to your app. The `user` is the `{{ userObjectName }}` logged in:
 
 {% if platform_name === "Objective-C" %}
 ```objc
@@ -4249,13 +4146,6 @@ liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
         System.out.println("User logged in.");
     }
 });
-```
-{% endif %}
-{% if platform_name === "Swift" %}
-```swift
-func liveQuery(_ liveQuery: AVLiveQuery, userDidLogin user: LCUser) {
-    print("User logged in.")
-}
 ```
 {% endif %}
 
@@ -4293,21 +4183,21 @@ liveQuery.unsubscribeInBackground(new AVLiveQuerySubscribeCallback() {
 });
 ```
 {% endif %}
-{% if platform_name === "Swift" %}
-```swift
-liveQuery.unsubscribe { (succeeded, error) in
-    if succeeded {
-        // Successfully unsubscribed
-    } else {
-        print(error)
-    }
-}
-```
-{% endif %}
+
+### Losing Connections
+
+There are different scenarios regarding losing connections:
+
+1. The connection to the Internet is lost unexpectedly.
+2. The user performs certain operations outside of the app, like switching the app to the background, turning off the phone, or turning on the flight mode.
+
+For the scenarios above, you don't need to do any extra work. As long as the user switches back to the app, the SDK will automatically re-establish the connection.
+
+There is another scenario when **the user completely kills the app or closes the web page**. In this case, the SDK cannot automatically re-establish the connection. You will have to create subscriptions again by yourself.
 
 ### Caveats about LiveQuery
 
-Given the real-time feature of LiveQuery, developers may find it tempting to use it for instant messaging. As LiveQuery is neither designed nor optimized for completing such tasks, we discourage such use of this tool, let alone there will be additional cost for saving message history and rising challenges of code maintenance. We recommend using [our real-time messaging solution](/rtm) for this scenario.
+Given the real-time feature of LiveQuery, developers may find it tempting to use it for instant messaging. As LiveQuery is neither designed nor optimized for completing such tasks, we discourage such use of this tool, let alone there will be additional cost for saving message history and rising challenges of code maintenance. We recommend using [our real-time messaging solution](realtime_v2.html) for this scenario.
 {% endif %}
 
 ## Files
@@ -4648,7 +4538,7 @@ todo.save()
 {% endif %}
 
 {% if platform_name === "Objective-C" or platform_name === "JavaScript" or platform_name === "Java" %}
-On a related note, if the files are stored as an array of objects and you want to get them within a single query, you need to use the `{% if platform_name === "Objective-C" %}includeKey{% endif %}{% if platform_name === "JavaScript" %}include{% endif %}{% if platform_name === "Java"%}include{% endif %}` method with `{{ baseQueryClassName }}`. For example, if you are retrieving all the todos with the same title `Get Cakes` and you want to retrieve their related attachments at the same time:
+On a related note, if the files are referenced in an array field of `{{ baseObjectName }}` and you want to get them within the same query for `{{ baseObjectName }}`, you need to use the `{% if platform_name === "Objective-C" %}includeKey{% endif %}{% if platform_name === "JavaScript" %}include{% endif %}{% if platform_name === "Java"%}include{% endif %}` method with `{{ baseQueryClassName }}`. For example, if you are retrieving all the todos with the same title `Get Cakes` and you want to retrieve their related attachments at the same time:
 {% endif %}
 
 {% if platform_name === "Objective-C" %}
@@ -4778,6 +4668,7 @@ When uploading a file, you can attach additional properties to it with `metaData
 
 {% if platform_name === "Objective-C" %}
 ```objc
+// Set metadata
 [file.metaData setObject:@"LeanCloud" forKey:@"author"];
 [file uploadWithCompletionHandler:^(BOOL succeeded, NSError *error) {
     // Get all metadata
@@ -4922,12 +4813,12 @@ file.delete()
 {% endif %}
 
 {% call docs.alertWrap() %}
-By default, a file is not allowed to be deleted. You can change the setting by going to [Dashboard > LeanStorage > Data > `_File`](/data.html?appid={{appid}}#/_File) and select **Other** > **Permission Settings** > **`delete`**.
+By default, a file is not allowed to be deleted. You can change the setting by going to [Dashboard > LeanStorage > Data > `_File`](/data.html?appid={{appid}}#/_File) and select **Others** > **Permission settings** > **`delete`**.
 {% endcall %}
 
 ### Enabling HTTPS
 
-If you demand that the files in the cloud should be accessed through HTTPS, check on **Enable HTTPS domain** in [Dashboard > LeanStorage > Settings > Files](/storage.html?appid={{appid}}#/storage/conf). There is no free quota on using HTTPS for files and you will see the pricing once the function is enabled.
+If you demand that the files in the cloud should be accessed through HTTPS, check on **Enable HTTPS domain** in [Dashboard > LeanStorage > Settings > Custom domain for files](/storage.html?appid={{appid}}#/storage/conf). There is no free quota on using HTTPS for files and you will see the pricing once the function is enabled.
 
 {% call docs.alertWrap() %}
 By enabling HTTPS, whether the URLs of the files returned by API use HTTPS or HTTP will be affected. Keep in mind that even the function is not enabled, the clients can still access files with HTTPS URLs which will lead to additional expenditure.
@@ -4935,23 +4826,23 @@ By enabling HTTPS, whether the URLs of the files returned by API use HTTPS or HT
 
 After enabling HTTPS, the URLs of the files previously stored in the `_File` table will be converted to HTTPS. If you disable the function, the URLs being converted will not change back.
 
-LeanCloud RTM stores files sent through messages with `{{ fileObjectName }}` and the URLs of the files will be included in the messages. After HTTPS is enabled, the URLs of the files sent in the past messages will not be automatically converted.
+LeanMessage stores files sent through messages with `{{ fileObjectName }}` and the URLs of the files will be included in the messages. After HTTPS is enabled, the URLs of the files sent in the past messages will not be automatically converted like what happens in `_File`.
 
-{# #### HTTP Support for iOS 9 and Up
+{% if platform_name === "Objective-C" %}
+#### HTTP Support for iOS 9 and Up
 
-Starting iOS 9, Apple requires HTTPS connections for iOS apps and denies HTTP connections by default. All LeanCloud APIs supports HTTPS except for the `getData` method of `AV.File`.
+Starting iOS 9, Apple requires HTTPS connections for iOS apps and denies HTTP connections by default. All LeanCloud APIs support HTTPS except for the `getData` method of `AVFile`.
 
-If your app still needs to make HTTP requests, such as when [accessing files in LeanCloud RTM that still reference to insecure domains](#rtm-http-policy), you should add those insecure domains to your project's `Info.plist`:   
+If your app still needs to make HTTP requests, such as when accessing files in LeanMessage that still reference to insecure domains, you should add those insecure domains to your project's `Info.plist`:
 
-Right-click on `Info.plist`, choose **Opened As** > **Source Code**, append the following text to the nodes **plist** > **dict**:
+Right-click on `Info.plist`, choose **Opened As** > **Source Code**, append the following text to the node **plist** > **dict**:
 
 ```xml
 <key>NSAppTransportSecurity</key>
 <dict>
   <key>NSExceptionDomains</key>
   <dict>
-    <!-- for US node, replace clouddn.com with amazonaws.com -->
-    <key>clouddn.com</key>
+    <key>amazonaws.com</key>
     <dict>
       <key>NSIncludesSubdomains</key>
       <true/>
@@ -4961,24 +4852,33 @@ Right-click on `Info.plist`, choose **Opened As** > **Source Code**, append the 
   </dict>
 </dict>
 ```
-Or go to your project's **Target** panel, open the **Info** tab and modify settings there as illustrated below:
 
-![](../images/ios_qiniu_http.png)
+{# Or go to your project's **Target** panel, open the **Info** tab and modify settings there as illustrated below:
 
-#}
+![](../images/ios_qiniu_http.png) #}
+
+You may also allow all HTTP traffics if you need. See [iOS9AdaptationTips](https://github.com/ChenYilong/iOS9AdaptationTips) for more information.
+{% endif %}
 
 ### Setting up Custom Domain
 
-LeanCloud offers a shared domain for all the apps to access the files stored in the cloud. However, due to the Cyber Security Law of the countries where we offer our services, the shared domain might not be available all the time. We highly recommend that you **set up your custom domains for accessing files** so that your apps will not be affected when the shared domain becomes unavailable. You can set up custom domains at [Dashboard > LeanStorage > Settings > Files](/storage.html?appid={{appid}}#/storage/conf).
+LeanCloud offers a shared domain for all the apps to access the files stored in the cloud. However, due to the Cyber Security Law of the countries where we offer our services, the shared domain might not be available all the time. We highly recommend that you **set up your custom domains for accessing files** so that your apps will not be affected when the shared domain becomes unavailable. You can set up custom domains at [Dashboard > LeanStorage > Settings > Custom domain for files](/storage.html?appid={{appid}}#/storage/conf).
+
+The setup of custom domains is irreversible. You cannot unbind domains, but you can change the domains at any time.
+
+When binding domains, you can choose if you want to enable HTTPS:
+
+- If you don't enable HTTPS, clients can only access files via HTTP.
+- If you enable HTTPS, clients can access files via both HTTPS and HTTP.
 
 ### CDN Support
 
 You can set up your own CDN to improve the speed your users access the files stored on LeanCloud. Take [Amazon CloudFront CDN](https://aws.amazon.com/cloudfront/) as an example:
 
-- Read [Getting Started with CloudFront](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.html).
-- Create an Amazon AWS account, and choose a CloudFront subscription plan that suits your business.
-- LeanCloud has got S3's read permission properly configured, so you can skip [Step 2: Upload your content to Amazon S3 and grant object permissions](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.html#GettingStartedUploadContent) in the guide and proceed with other steps.
-- Take the domain name from the URL of your `{{ fileObjectName }}` and fill it into CloudFront's **Origin Domain Name**. Leave the other settings with defaults.
+1. Read [Getting Started with CloudFront](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.html).
+2. Create an Amazon AWS account, and choose a CloudFront subscription plan that suits your business.
+3. LeanCloud has got S3's read permission properly configured, so you can skip [Step 2: Upload your content to Amazon S3 and grant object permissions](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.html#GettingStartedUploadContent) in the guide and proceed with other steps.
+4. Take the domain name from the URL of your `{{ fileObjectName }}` and fill it into CloudFront's **Origin Domain Name**. Leave the other settings with defaults.
 
 {% if platform_name === "JavaScript" %}
 ## Promises
@@ -4986,12 +4886,12 @@ You can set up your own CDN to improve the speed your users access the files sto
 Each asynchronous method in LeanCloud JavaScript SDK returns a `Promise` which can be used to handle the completion and exception of the method. The example below updates an `AV.Object` after it is being queried:
 
 ```js
-var query = new AV.Query('Todo');
+let query = new AV.Query('Todo');
 query.equalTo('priority', 1);
 // find is asynchronous which gives back a Promise that then can be called on
 query.find().then(function (todos) {
   // Returns a list of objects
-  var todo = todos[0];
+  let todo = todos[0];
   todo.set('notes', 'Needs to be finished today.');
   // save is also asynchronous which gives back a Promise that you can return here and chain another Promise afterwards
   return todo.save();
@@ -5034,7 +4934,7 @@ Promise allows you to elegantly connect asynchronous requests together according
 
 ```js
 // Add contents to the page following the order of chapters
-var chapterIds = [
+let chapterIds = [
   '584e1c408e450a006c676162', // Chapter One
   '584e1c43128fe10058b01cf5', // Chapter Two
   '581aff915bbb500059ca8d0b'  // Chapter Three
@@ -5079,6 +4979,25 @@ new AV.Query('Chapter').get(chapterIds[0]).then(function (chapterOne) {
   // This error handling function will be called, printing out the error message 'Error'
   console.error(error.message);
 });
+```
+
+### `async` and `await`
+
+`async` and `await` allows you to use Promise by writing code in a more synchronous manner:
+
+```js
+async function example() {
+  try {
+    let query = new AV.Query('Todo');
+    query.equalTo('priority', 1);
+    let todos = await query.find();
+    let todo = todos[0];
+    todo.set('notes', 'Needs to be finished today.');
+    return await todo.save();
+  } catch (error) {
+    console.error(error);
+  }
+}
 ```
 
 Further reading on Promises:
@@ -5254,7 +5173,7 @@ _ = query.find { result in
 Additional sorting conditions like `{% if platform_name === "Objective-C" %}orderByAscending{% endif %}{% if platform_name === "JavaScript" %}ascending{% endif %}{% if platform_name === "Python" %}ascending{% endif %}{% if platform_name === "PHP" %}ascend{% endif %}{% if platform_name === "Java" %}orderByAscending{% endif %}{% if platform_name === "Swift" %}.ascending{% endif %}` and `{% if platform_name === "Objective-C" %}orderByDescending{% endif %}{% if platform_name === "JavaScript" %}descending{% endif %}{% if platform_name === "Python" %}descending{% endif %}{% if platform_name === "PHP" %}descend{% endif %}{% if platform_name === "Java" %}orderByDescending{% endif %}{% if platform_name === "Swift" %}.descending{% endif %}` will gain higher priorities than the default order by distance.
 {% endcall %}
 
-To have the results limited within a certain distance, check out {% if platform_name === "Objective-C" %}`withinKilometers`, `withinMiles`, and `withinRadians`{% endif %}{% if platform_name === "JavaScript" %}`withinKilometers`, `withinMiles`, and `withinRadians`{% endif %}{% if platform_name === "Python" %}`within_kilometers`,`within_miles`, and `within_radians`{% endif %}{% if platform_name === "PHP" %}`withinKilometers`, `withinMiles`, and `withinRadians`{% endif %}{% if platform_name === "Java" %}`whereWithinKilometers`, `whereWithinMiles`, and `whereWithinRadians`{% endif %}{% if platform_name === "Swift" %}`.locatedNear`'s `from` and `to` parameters{% endif %} in our API docs.
+To have the results limited within a certain distance, check out {% if platform_name === "Objective-C" %}`withinKilometers`, `withinMiles`, and `withinRadians`{% endif %}{% if platform_name === "JavaScript" %}`withinKilometers`, `withinMiles`, and `withinRadians`{% endif %}{% if platform_name === "Python" %}`within_kilometers`, `within_miles`, and `within_radians`{% endif %}{% if platform_name === "PHP" %}`withinKilometers`, `withinMiles`, and `withinRadians`{% endif %}{% if platform_name === "Java" %}`whereWithinKilometers`, `whereWithinMiles`, and `whereWithinRadians`{% endif %}{% if platform_name === "Swift" %}`.locatedNear`'s `from` and `to` parameters{% endif %} in our API docs.
 
 You can also query for the set of objects that are contained within a rectangular bounding box with {% if platform_name === "Objective-C" %}`withinGeoBoxFromSouthwest` and `toNortheast`{% endif %}{% if platform_name === "JavaScript" %}`withinGeoBox`{% endif %}{% if platform_name === "Python" %}`within_geo_box`{% endif %}{% if platform_name === "PHP" %}`withinBox`{% endif %}{% if platform_name === "Java" %}`whereWithinGeoBox`{% endif %}{% if platform_name === "Swift" %}`.locatedWithin`{% endif %}:
 
@@ -5597,7 +5516,7 @@ The `username` will be the same as `mobilePhoneNumber`. The `password` will be a
 
 #### Phone Number Format
 
-A phone number that `{{ userObjectName }}` accepts should have a leading plus sign (`+`) immediately followed by the country code and the phone number without any dashes, spaces, or other non-numeric characters. For instance, `+8618200008888` is a valid China number (`86` is the country code) and `+19490008888` is a valid US or Canada number (`1` is the country code and `949` is the area code).
+A phone number that `{{ userObjectName }}` accepts should have a leading plus sign (`+`) immediately followed by the country code and the phone number without any dashes, spaces, or other non-numeric characters. For instance, `+8618200008888` is a valid China number (`86` is the country code) and `+19490008888` is a valid US or Canada number (`1` is the country code).
 
 For a list of countries and regions that LeanCloud can reach out through SMS, please refer to the [Pricing](sms-guide.html#pricing) section of the SMS guide.
 
@@ -5913,7 +5832,7 @@ The account will be automatically recovered 15 minutes after the last attempt an
 
 ### Verifying Emails
 
-You can request that your users have their email addresses verified before they can log in or access certain functions in your app. This makes it harder for spam users to abuse your app. By default, each user has an `emailVerified` field which becomes `false` when the user first signs up or has their email address changed. In your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf), you can enable **Send verification emails when users register or change email addresses** so that when a user signs up or changes their email address, an email containing a verification link will be sent out automatically. You can find the option to prevent users with unverified email addresses from logging in on the same page.
+You can request that your users have their email addresses verified before they can log in or access certain functions in your app. This makes it harder for spam users to abuse your app. By default, each user has an `emailVerified` field which becomes `false` when the user first signs up or has their email address changed. In your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf), you can enable **Send verification emails when users register or change email addresses from clients** so that when a user signs up or changes their email address, an email containing a verification link will be sent out automatically. You can find the option to prevent users with unverified email addresses from logging in on the same page.
 
 If a user forgets to click on the link and needs to have their account verified later, the following code can be used to send a new email:
 
@@ -5959,7 +5878,7 @@ The `emailVerified` will become `true` after the link is clicked on. This field 
 
 ### Verifying Phone Numbers
 
-Similar to [Verifying Emails](#verifying-emails), you can also request that your users have their phone numbers verified before they can log in or access certain functions in your app. By default, each user has a `mobilePhoneVerified` field which becomes `false` when the user first signs up or has their phone number changed. In your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf), you can enable **Send verification SMS when users register or change phone numbers** so that when a user signs up or changes their phone number, a text message containing a verification code will be sent out automatically. You can find the option to prevent users with unverified phone numbers from logging in on the same page.
+Similar to [Verifying Emails](#verifying-emails), you can also request that your users have their phone numbers verified before they can log in or access certain functions in your app. By default, each user has a `mobilePhoneVerified` field which becomes `false` when the user first signs up or has their phone number changed. In your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf), you can enable **Send verification SMS when users register or change phone numbers from clients** so that when a user signs up or changes their phone number, a text message containing a verification code will be sent out automatically. You can find the option to prevent users with unverified phone numbers from logging in on the same page.
 
 You can also initiate a verification request at anytime with the following code:
 
@@ -6379,7 +6298,7 @@ _ = LCUser.requestPasswordReset(email: "tom@leancloud.rocks") { (result) in
 The code above will check if there is a user in the `_User` table that has the `email` to be the same as the one provided, and will send them a password reset email if so. As mentioned previously, you can make the `username` of each user to be the same as their `email`, or collect the email separately and store it in the `email` field.
 
 {% call docs.noteWrap() %}
-The content of the password reset email is fully customizable. You can go to your app's [Dashboard > Settings > Email Templates](/app.html?appid={{appid}}#/email) and modify the corresponding template.
+The content of the password reset email is fully customizable. You can go to your app's [Dashboard > Settings > Email templates](/app.html?appid={{appid}}#/email) and modify the corresponding template.
 {% endcall %}
 
 Alternatively, you can ask for the mobile phone number instead of the email to reset their password:
@@ -6497,8 +6416,6 @@ _ = LCUser.resetPassword(mobilePhoneNumber: "+19490008888", verificationCode: "1
 
 {# > Note that the messaging in either of the above flows will reference your app by the name that you specified when you created this app on LeanCloud. #}
 
-{# take a look at our blog article [Customizing password reset and email verification messages](https://blog.leancloud.cn/607/). #}
-
 ### Queries on Users
 
 To query for users, you can simple create a new `{{ baseQueryClassName }}` for `_User`:
@@ -6540,7 +6457,7 @@ See [Security of User Objects](#security-of-user-objects) for other restrictions
 
 ### Associations
 
-Associations involving `{{ userObjectName }}` works in the same way as basic `{{ baseQueryClassName }}`. The code below saves a new book for an author and retrieves all the books written by that author:
+Associations involving `{{ userObjectName }}` works in the same way as basic `{{ baseObjectName }}`. The code below saves a new book for an author and retrieves all the books written by that author:
 
 {% if platform_name === "Objective-C" %}
 ```objc
@@ -6803,7 +6720,7 @@ _ = LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
         try! user.set("username", "Jerry")
         // Password is hashed and an empty string will be returned
         let password = user.get("password")
-        // Saving works since the user was authenticated
+        // This will work since the user is authenticated
         user.save()
 
         // Get the user with a non-authenticated method
@@ -6833,7 +6750,7 @@ _ = LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
 
 The `{{ userObjectName }}` obtained from `{% if platform_name === "Objective-C" %}[AVUser currentUser]{% endif %}{% if platform_name === "JavaScript" %}AV.User.current(){% endif %}{% if platform_name === "Python" %}leancloud.User.get_current(){% endif %}{% if platform_name === "PHP" %}User::getCurrentUser(){% endif %}{% if platform_name === "Java" %}AVUser.getCurrentUser(){% endif %}{% if platform_name === "Swift" %}LCUser.current{% endif %}` will always be authenticated.
 
-To check if `{{ userObjectName }}` is authenticated, you can invoke the `{% if platform_name === "Objective-C" %}{# TODO #}{% endif %}{% if platform_name === "JavaScript" %}isAuthenticated{% endif %}{% if platform_name === "Python" %}is_authenticated{% endif %}{% if platform_name === "PHP" %}isAuthenticated{% endif %}{% if platform_name === "Java" %}{# TODO #}{% endif %}{% if platform_name === "Swift" %}{# TODO #}{% endif %}` method. You do not need to check if `{{ userObjectName }}` is authenticated if it is obtained via an authenticated method.
+To check if `{{ userObjectName }}` is authenticated, you can invoke the `{% if platform_name === "Objective-C" %}isAuthenticatedWithSessionToken{% endif %}{% if platform_name === "JavaScript" %}isAuthenticated{% endif %}{% if platform_name === "Python" %}is_authenticated{% endif %}{% if platform_name === "PHP" %}isAuthenticated{% endif %}{% if platform_name === "Java" %}isAuthenticated{% endif %}{% if platform_name === "Swift" %}{# TODO #}{% endif %}` method. You do not need to check if `{{ userObjectName }}` is authenticated if it is obtained via an authenticated method.
 
 As a reminder, the user's password can be set when signing up but cannot be modified and saved to the cloud afterwards unless the user requests it to be [reset](#resetting-passwords). It will not be cached on the client and will show as `null` when being retrieved from the cloud after the user is logged in.
 
@@ -6896,7 +6813,7 @@ If the `authData` is not linked to any account, you will instead receive the sta
 }
 ```
 
-By default, `authData` cannot be returned to the client unless the record is owned by the current user. To change this behavior, you can go to your app's [Dashboard > LeanStorage > Data > `_User`](/data.html?appid={{appid}}#/_User), click on the arrow icon on the `authData` column header, click on **Edit**, and check off the **Restrict read and write permissions to the owner** option so that anyone can have access to it.
+By default, `authData` cannot be returned to the client unless the record is owned by the current user. To change this behavior, you can go to your app's [Dashboard > LeanStorage > Data > `_User`](/data.html?appid={{appid}}#/_User), click on the arrow icon on the `authData` column header, click on **Edit**, and check off the **Only owners can read and write** option so that anyone can have access to it.
 
 To ensure that each `{{ userObjectName }}` is linked to each service account only once, a unique index needs to be created for the `authData.<SERVICE_NAME>.uid` key in the `_User` class.
 
@@ -6918,9 +6835,9 @@ A user who has GitHub linked may have the following object as `authData`:
 }
 ```
 
-LeanCloud automatically validates the access tokens for certain services to prevent data forge attack. When the validation fails, LeanCloud will respond with `invalid authData` error and the linking will not be established. For services that are not recognized by LeanCloud, you are responsible for validating access tokens by yourself. You can turn off the **Validate the access token for third-party login** option in your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) if you prefer not to have LeanCloud validate access tokens for you.
+LeanCloud automatically validates the access tokens for certain services to prevent data forge attack. When the validation fails, LeanCloud will respond with `invalid authData` error and the linking will not be established. For services that are not recognized by LeanCloud, you are responsible for validating access tokens by yourself. You can turn off the **Validate access tokens when logging in with third-party accounts** option in your app's [Dashboard > LeanStorage > Settings](/storage.html?appid={{appid}}#/storage/conf) if you prefer not to have LeanCloud validate access tokens for you.
 
-#### Unlinking 
+#### Unlinking
 
 You can unlink a service by setting the `authData` for the service to `null`. The code below unlinks a user's GitHub account:
 
@@ -7078,7 +6995,7 @@ In-App Searching offers a better way to search through the information contained
 
 ## In-App Socializing
 
-In-app socializing offers features like following, timeline, status update, interaction, messaging, etc. For more details, see [In-App Socializing Guide](status_system.html#{% if platform_name === "JavaScript" %}javascript-sdk{% endif %}{% if platform_name === "Swift" %}ios-sdk{% endif %}{% if platform_name === "Android" %}android-sdk{% endif %}).
+In-app socializing offers features like following, timeline, status update, interaction, messaging, etc. For more details, see [In-App Socializing Guide](status_system.html).
 
 {% if platform_name === "JavaScript" %}
 ## WebView
@@ -7089,7 +7006,7 @@ LeanStorage JavaScript SDK can be used in a WebView like PhoneGap, Cordova, WeCh
 
 If you are using Android WebView, the following configurations need to be done when creating WebView in you Native code.
 
-1. Our JS SDK uses window.localStorage which means that localStorage of WebView needs to be enabled:
+1. Our JS SDK uses `window.localStorage` which means that `localStorage` of WebView needs to be enabled:
 
    ```java
    yourWebView.getSettings().setDomStorageEnabled(true);
@@ -7105,5 +7022,6 @@ If you are using Android WebView, the following configurations need to be done w
 
    Keep in mind that this method is only supported on Android 4.4 and above.
 3. When developing the UI of your app with WebView, Native makes use of Hybrid for the app running on your phone. We recommend that you first design the UI of your app with Chrome Developer Tools. After the UI is done, start working on data binding with Native during which you can debug WebView on your phone with Remote debugger. This will save you a lot of time on developing and debugging. If you choose to develop UI with Remote debugger as well, you will end up spending more time on it.
+
 4. As a security practice to prevent JavaScript from calling Java functions for accessing the file system of an Android device, Android 4.2 and later versions only allow WebView to access the methods exposed by the annotation [`@JavascriptInterface`](http://developer.android.com/reference/android/webkit/JavascriptInterface.html). If you have users using Android 4.2 or above, make sure the annotation is added or `Uncaught TypeError` might be triggered.
 {% endif %}
