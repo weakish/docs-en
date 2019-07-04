@@ -6763,7 +6763,28 @@ For each given object, you can specify which users are allowed to read it and wh
 LeanCloud allows you to link your users with services like GitHub, Twitter, and Facebook (commonly known as social networking services, or SNS), allowing your users to sign up or log into your application using their existing identities. For example, to sign up or log in with a user's GitHub account, your code will look like this:
 
 {% if platform_name === "Objective-C" %}
-{# TODO #}
+```objc
+NSDictionary *authData = @{
+                            // Required
+                            @"uid":@"UID",
+                            @"access_token":@"ACCESS_TOKEN",
+                            @"expires_in":@7200,
+
+                            // Optional
+                            @"refresh_token":@"REFRESH_TOKEN",
+                            @"scope":@"SCOPE",
+                            };
+AVUser *user = [AVUser user];
+AVUserAuthDataLoginOption *option = [AVUserAuthDataLoginOption new];
+option.platform = LeanCloudSocialPlatformWeiXin;
+[user loginWithAuthData:authData platformId:LeanCloudSocialPlatformWeiXin options:option callback:^(BOOL succeeded, NSError * _Nullable error) {
+    if (succeeded) {
+            NSLog(@"Logged in successfully.");
+        }else{
+            NSLog(@"Failed to log in: %@",error.localizedFailureReason);
+        }
+}];
+```
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
@@ -6777,7 +6798,11 @@ var authData = {
   refresh_token: 'REFRESH_TOKEN',
   scope:         'SCOPE'
 };
-AV.User.signUpOrlogInWithAuthData(authData, 'github');
+AV.User.loginWithAuthData(authData, 'github').then(function (s) {
+  // Logged in successfully
+}, function (error) {
+  // Failed to log in
+});
 ```
 {% endif %}
 {% if platform_name === "Python" %}
@@ -6846,7 +6871,11 @@ You can unlink a service by setting the `authData` for the service to `null`. Th
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-AV.User.signUpOrlogInWithAuthData(null, 'github');
+AV.User.loginWithAuthData(null, 'github').then(function (s) {
+  // Unlinked successfully
+}, function (error) {
+  // Failed to unlink
+});
 ```
 {% endif %}
 {% if platform_name === "Python" %}
