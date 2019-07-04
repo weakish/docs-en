@@ -122,7 +122,7 @@ $ lean login
 
 Follow the prompts to finish the login process.
 
-If you created your LeanCloud account with GitHub and have never set a password, please first [set a password](/login.html#/forgotpass).
+If you created your LeanCloud account with GitHub and have never set a password, please first [set a password](https://console.leancloud.app/login.html#/forgotpass).
 
 ### Switching Accounts
 
@@ -260,7 +260,7 @@ $ lean deploy
 [INFO] Deleting temporary files
 ```
 
-The default message for deployment is `Creating from the CLI` which will be displayed in your app's [Dashboard > LeanEngine > App Logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log). You can customize this message with `-m`:
+The default message for deployment is `Creating from the CLI` which will be displayed in your app's [Dashboard > LeanEngine > App logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log). You can customize this message with `-m`:
 
 ```sh
 $ lean deploy -m 'Be more awesome!'

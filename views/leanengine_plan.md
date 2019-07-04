@@ -8,11 +8,11 @@ In this documentation, you will learn how you can choose the plan that best fits
 
 Each application created on LeanCloud comes with a free trial instance with 0.5 CPU and 256 MB memory. You can use this instance for learning and testing purposes.
 
-A trial instance will stop responding to requests when deployment is in progress. It will also start [sleeping](#sleeping) if no request is made in the past 30 minutes (there will be a delay for processing requests when resuming), and can run at most 18 hours each day.
+A trial instance will stop responding to requests when deployment is in progress. It will also start [hibernating](#hibernating) if no request is made in the past 30 minutes (there will be a delay for processing requests when resuming), and can run at most 18 hours each day.
 
 ## Standard Instances
 
-You can purchase standard instances for projects that demand high availability. A standard instance runs 24 hours a day and will not sleep even there are no requests. A staging environment will also be provided for testing. If you have 2 or more standard instances, you can even enable functions like load balancing and rolling deployment, which further increases the availability of your application.
+You can purchase standard instances for projects that demand high availability. A standard instance runs 24 hours a day and will not hibernate even there are no requests. A staging environment will also be provided for testing. If you have 2 or more standard instances, you can even enable functions like load balancing and rolling deployment, which further increases the availability of your application.
 
 **Staging Environment**<br>A trial instance will be provided in the staging environment so you can test your project before having it published.
 
@@ -28,20 +28,20 @@ If you have only one instance and the server containing that instance runs into 
 
 If you don't want to be billed anymore, please make sure that all the standard instances in the production environment of your application are deleted. You will still have your trial instance available.
 
-## Sleeping
+## Hibernating
 
 {% call docs.noteWrap() %}
-Standard instances will never sleep.
+Standard instances will never hibernate.
 {% endcall %}
 
-Trial instances will **sleep** under certain circumstances.
+Trial instances will **hibernate** under certain circumstances.
 
-- A trial instance will start sleeping if no request is made in the past 30 minutes.
-- A sleeping instance will resume when a request comes in. It may take 2 to 10 seconds for the instance to get back running and have the request processed. The requests made after that will be responded immediately.
-- If a trial instance has run more than 18 hours in the past 24 hours, it will be forced to sleep and incoming requests will receive `503` as the error code. You can view error logs in your app's [Dashboard > LeanEngine > Statistics](https://console.leancloud.app/cloud.html?appid={{appid}}#/stat).
+- A trial instance will start hibernating if no request is made in the past 30 minutes.
+- A hibernating instance will resume when a request comes in. It may take 2 to 10 seconds for the instance to get back running and have the request processed. The requests made after that will be responded immediately.
+- If a trial instance has run more than 18 hours in the past 24 hours, it will be forced to hibernate and incoming requests will receive `503` as the error code. You can view error logs in your app's [Dashboard > LeanEngine > Statistics](https://console.leancloud.app/cloud.html?appid={{appid}}#/stat).
 
 {% call docs.noteWrap() %}
-If you don't want your trial instance in the staging environment to sleep, or need to simulate the production environment where there are multiple instances, you can purchase standard instances for the staging environment.
+If you don't want your trial instance in the staging environment to hibernate, or need to simulate the production environment where there are multiple instances, you can purchase standard instances for the staging environment.
 {% endcall %}
 
 ## Managing Instances
@@ -57,7 +57,7 @@ You can create combinations of basic instances according to your needs. For exam
 
 ### Upgrading to Standard Instances
 
-You can go to your app's [Dashboard > LeanEngine > Instances](https://console.leancloud.app/cloud.html?appid={{appid}}#/leannode) and click on **Upgrade to Standard Instance** to have your trial instance upgraded to standard instance.
+You can go to your app's [Dashboard > LeanEngine > Instances](https://console.leancloud.app/cloud.html?appid={{appid}}#/leannode) and click on **Upgrade to standard** to have your trial instance upgraded to standard instance.
 
 ### Creating and Deleting Instances
 
@@ -113,7 +113,7 @@ See [Pricing for Group Management](#pricing-for-group-management) for pricing in
 
 ### Creating and Managing Groups
 
-You can create, delete, or change primary groups by going to your app's [Dashboard > LeanEngine](https://console.leancloud.app/cloud.html?appid={{appid}}). On the top-left corner, you will see a group selector. Click on it, then click on **Manage Groups**. You will see all the groups you have.
+You can create, delete, or change primary groups by going to your app's [Dashboard > LeanEngine](https://console.leancloud.app/cloud.html?appid={{appid}}). On the top-left corner, you will see a group selector. Click on it, then click on **Group management**. You will see all the groups you have.
 
 After selecting a group, you will be able to change its settings like Git repository, second-level domain, and environment variables. When a group is first created, it has no instances in it and you can only create a standard instance in its production environment. A staging environment will be provided with a free trial instance if you have at least one instance under the production environment, and it will be deleted if you delete all other instances in the group. A group can be deleted only if it has no instances in it.
 
