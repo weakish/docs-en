@@ -32,7 +32,7 @@ Therefore, developers should take prevention of such attacks seriously. At prese
 
 ## Pricing
 
-The table below shows the price of sending each SMS message to a number in a given country. The country list will grow over time. If you can't find what you are looking for, please [let us know](/help) and we will help you out.
+The table below shows the price of sending each SMS message to a number in a given country. The country list will grow over time. If you can't find what you are looking for, please [let us know](https://leancloud.app/help/) and we will help you out.
 <!-- Geography Coverage -->
 
 <script src="custom/js/lib/jquery.dataTables.min.js"></script>
@@ -707,7 +707,7 @@ All the above-mentioned limitations apply to the Sandbox Phone Number too.
 
 ## Message Delivery Status
 
-You can track the status of each message your application sent in [your LeanCloud web console](/messaging.html?appid={{appid}}#/message/sms/create) to understand whether it is queued, sent, delivered successfully, or not delivered by the carrier. The following table lists all possible statuses you may encounter:
+You can track the status of each message your application sent in [your LeanCloud web console](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/create) to understand whether it is queued, sent, delivered successfully, or not delivered by the carrier. The following table lists all possible statuses you may encounter:
 
 <!-- In each case, that means the message was sent correctly by the handset or application, was properly encoded and segmented for the downstream carrier, navigated the global carrier network without incident, and was assembled and displayed correctly on the recipient's handset. If something went wrong along the way, an SMS tracker provides the insight needed to quickly diagnose what happened. It can determine when a delay or failure condition occurred and what part of the communication chain was responsible. -->
 
@@ -734,7 +734,7 @@ Let's take a look at some of the most common causes that messages may not be del
 
 ## Troubleshooting Undelivered Messages
 
-First of all, look into your SMS history in [your LeanCloud web console](/messaging.html?appid={{appid}}#/message/sms/create) for any trace of that problem phone number. If it isn't there, you may try looking for API errors and remedying your code.
+First of all, look into your SMS history in [your LeanCloud web console](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/create) for any trace of that problem phone number. If it isn't there, you may try looking for API errors and remedying your code.
 
 If the phone number exists with an **undelivered** status, it may indicate that number is blacklisted by the telecom carrier because the owner of the phone had previously requested to be unsubscribed from the current SMS channel, or the phone number could be no longer available, or the receiving phone could be turned off.
 

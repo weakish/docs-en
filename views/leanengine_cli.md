@@ -122,7 +122,7 @@ $ lean login
 
 Follow the prompts to finish the login process.
 
-If you created your LeanCloud account with GitHub and have never set a password, please first [set a password](/login.html#/forgotpass).
+If you created your LeanCloud account with GitHub and have never set a password, please first [set a password](https://console.leancloud.app/login.html#/forgotpass).
 
 ### Switching Accounts
 

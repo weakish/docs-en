@@ -226,7 +226,7 @@ You can read [Advanced Messaging Features](realtime-guide-intermediate.html#adva
 ## Restrictions
 
 * In **every minute**, a client can send **at most 60 messages**, query history messages for **at most 120 times**, and perform operations like joining conversations, leaving conversations, logging in, and logging out for **at most 30 times**. Incoming requests will be rejected if the limits are exceeded (the callbacks implemented with SDK will not be triggered). If you are performing these operations with REST API, the limits will not apply.
-* For each app, at most 160,000 messages can be delivered to all the clients in each second. The messages exceeding the limit will be discarded. Please [contact us](/help.html) if your app needs higher quota.
+* For each app, at most 160,000 messages can be delivered to all the clients in each second. The messages exceeding the limit will be discarded. Please [contact us](https://leancloud.app/help/) if your app needs higher quota.
 * At most 50 messages can be sent through API in every second. If there are more than 50 messages, the extra messages will be put into the queue. The queue can hold at most 10,000 messages and those exceeding the limit will be discarded.
 * The size of each message shall be less than or equal to 5 KB.
 * Each conversation can hold at most 500 people. If you add more than 500 IDs into the `m` field with LeanStorage API, only the first 500 IDs will be used.
