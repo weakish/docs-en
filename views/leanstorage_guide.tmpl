@@ -393,8 +393,8 @@ Then specify the permissions needed by the SDK and declare the `MyLeanCloudApp` 
   …
   android:name=".MyLeanCloudApp" >
 
-  <!-- RTM modules and push notifications START -->
-  <!-- Both RTM modules and push notifications need PushService -->
+  <!-- LeanMessage and push notifications START -->
+  <!-- Both LeanMessage and push notifications need PushService -->
   <service android:name="cn.leancloud.push.PushService"/>
   <receiver android:name="cn.leancloud.push.AVBroadcastReceiver">
     <intent-filter>
@@ -403,7 +403,7 @@ Then specify the permissions needed by the SDK and declare the `MyLeanCloudApp` 
       <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
     </intent-filter>
   </receiver>
-  <!-- RTM modules and push notifications END -->
+  <!-- LeanMessage and push notifications END -->
 
   <!-- Feedback START -->
   <activity
@@ -1795,6 +1795,14 @@ _ = query.find { (result) in
 
 Although each function call sends multiple operations in one single network request, saving operations and fetching operations are billed as separate API calls for each object in the collection, while deleting operations are billed as a single API call.
 
+{% if platform_name === "Objective-C" or platform_name === "Java" or platform_name === "Swift" %}
+{# ### 后台运行 #}
+{% endif %}
+
+{% if platform_name === "Objective-C" or platform_name === "Java" %}
+{# ### 离线存储对象 #}
+{% endif %}
+
 ### Data Models
 
 Objects may have relationships with other objects. For example, in a blogging application, a `Post` object may have relationships with many `Comment` objects. LeanCloud supports three kinds of relationships, including one-to-one, one-to-many, and many-to-many.
@@ -1971,6 +1979,14 @@ We recommend you to use join tables if the total amount of objects of any class 
 {% call docs.noteWrap() %}
 Modeling relationships among data could be a tough work. We have written a dedicated article to address [Data Modeling](relation-guide.html) in greater detail, which we highly recommend you reading.
 {% endcall %}
+
+{% if platform_name === "Objective-C" or platform_name === "JavaScript" or platform_name === "Java" or platform_name === "Swift" %}
+{# ### 序列化和反序列化 #}
+{% endif %}
+
+{% if platform_name === "Python" %}
+{# ### 线程安全 #}
+{% endif %}
 
 ## Queries
 
@@ -3765,7 +3781,9 @@ let query = createdAtQuery.and(orQuery)
 ```
 {% endif %}
 
-{# ### Caching Results #}
+{% if platform_name === "Objective-C" %}
+{# ### 缓存查询 #}
+{% endif %}
 
 ### Optimizing Performance
 
@@ -4769,7 +4787,13 @@ _ = file.save { result in
 ```
 {% endif %}
 
-{# ### Retrieving Files #}
+{% if platform_name === "Objective-C" %}
+{# ### 文件下载 #}
+{% endif %}
+
+{% if platform_name === "Objective-C" %}
+{# ### 清除缓存 #}
+{% endif %}
 
 ### Deleting Files
 
@@ -5235,6 +5259,9 @@ There are a couple of things to keep in mind:
 - Each `{{ baseObjectName }}` may only have one field containing `{{ geoPointObjectName }}` object.
 - Points should not exceed the extreme ends of the ranges. Latitude should be between `-90.0` and `90.0`. Longitude should be between `-180.0` and `180.0`. Attempting to set latitude or longitude out of bounds will cause an error.
 {# - Using the `near` constraint will also limit results to within 100 miles. #}
+{% if platform_name === "Objective-C" %}
+{# - iOS 8.0 之后，使用定位服务之前，需要调用 `[locationManager requestWhenInUseAuthorization]` 或 `[locationManager requestAlwaysAuthorization]` 来获取用户的「使用期授权」或「永久授权」，而这两个请求授权需要在 `info.plist` 里面对应添加 `NSLocationWhenInUseUsageDescription` 或 `NSLocationAlwaysUsageDescription` 的键值对，值为开启定位服务原因的描述。SDK 内部默认使用的是「使用期授权」。 #}
+{% endif %}
 
 ## Users
 
@@ -6862,6 +6889,10 @@ A user who has GitHub linked may have the following object as `authData`:
 
 LeanCloud automatically validates the access tokens for certain services to prevent data forge attack. When the validation fails, LeanCloud will respond with `invalid authData` error and the linking will not be established. For services that are not recognized by LeanCloud, you are responsible for validating access tokens by yourself. You can turn off the **Validate access tokens when logging in with third-party accounts** option in your app's [Dashboard > LeanStorage > Settings](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf) if you prefer not to have LeanCloud validate access tokens for you.
 
+{% if platform_name === "Objective-C" or platform_name === "JavaScript" %}
+{# #### 扩展需求 #}
+{% endif %}
+
 #### Unlinking
 
 You can unlink a service by setting the `authData` for the service to `null`. The code below unlinks a user's GitHub account:
@@ -7018,6 +7049,10 @@ If an anonymous user is not converted to a normal user before they log out, they
 
 As your app grows in scope and user-base, you may find yourself needing more coarse-grained control over access to pieces of your data than user-linked ACLs can provide. To address this requirement, LeanCloud supports a form of role-based access control. Check the detailed [ACL Guide](acl-guide.html) to learn how to set it up for your objects.
 
+{% if platform_name === "Objective-C" or platform_name === "Python" or platform_name === "PHP" or platform_name === "Swift" %}
+{# ## 子类化 #}
+{% endif %}
+
 ## In-App Searching
 
 In-App Searching offers a better way to search through the information contained within your apps. It's built with search engine capabilities that you can easily tap into your app. Effective and useful searching functionality in your app is crucial for helping users find what they need. For more details, see [In-App Searching Guide](app_search_guide.html).
@@ -7025,6 +7060,10 @@ In-App Searching offers a better way to search through the information contained
 ## In-App Socializing
 
 In-app socializing offers features like following, timeline, status update, interaction, messaging, etc. For more details, see [In-App Socializing Guide](status_system.html).
+
+{% if platform_name === "JavaScript" %}
+{# ## Push 通知 #}
+{% endif %}
 
 {% if platform_name === "JavaScript" %}
 ## WebView
