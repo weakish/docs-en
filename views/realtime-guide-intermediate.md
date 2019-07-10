@@ -1225,7 +1225,7 @@ If more than one of these methods are implemented at the same time, the push not
 
 If your app is using push notification services together with LeanMessage, when a client is logging in, the SDK will automatically associate the `clientId` with the device information (stored in the `Installation` table) by having the device **subscribe** to the channel with `clientId` as its name. Such association can be seen in the `channels` field of the `_Installation` table. By doing so, when the cloud wants to send a push notification to a client, the client's device can be targeted with the `clientId` associated with it.
 
-Since LeanMessage generates way more push notifications than other sources, the cloud will not keep any records for it, nor can you find them in your app's **Dashboard** > **Messaging** > **Push notifications** > **Push notification history**.
+Since LeanMessage generates way more push notifications than other sources, the cloud will not keep any records for it, nor can you find them in your app's **Dashboard** > **Messaging** > **Push notifications** > **History**.
 
 Each push notification is only valid for 7 days. This means that if a device doesn't connect to the service for more than 7 days, it will not receive the push notification anymore.
 

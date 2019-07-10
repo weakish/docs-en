@@ -61,7 +61,7 @@ You can go to your app's [Dashboard > LeanEngine > Instances](https://console.le
 
 ### Creating and Deleting Instances
 
-After upgrading to standard instance, you can create more instances by clicking on **Create Instance**.
+After upgrading to standard instance, you can create more instances by clicking on **Create instance**.
 
 To delete an instance, click on the gear icon on the top-right corner of the instance and then click on **Delete**. The data in your application will not be affected, but the application's ability to handle concurrent requests will be impaired.
 
@@ -93,7 +93,7 @@ You can view the usage data of your application on your app's [Dashboard > LeanE
 
 - **CPU**<br>The graph shows the application's CPU usage within a period of time. If the CPU usage approaches the limit, the response time of the application may be increased.
 - **Memory**<br>The graph shows the application's memory usage within a period of time. If the memory usage approaches the limit, the thread of the application (like Node.js thread or Python thread) may be restarted due to OOM and the application will become unavailable in this period of time. If you see the line in the graph *frequently approaches the top and suddenly drops to the bottom*, it means that the thread has been restarted due to this reason.
-- **Response Time**<br>If the line approaches the top, it means that the CPU usage is approaching the limit.
+- **Response time**<br>If the line approaches the top, it means that the CPU usage is approaching the limit.
 - **Summary** <span class="text-muted">(in dropdown menu)</span><br>The total usage of all instances.
 - **Details** <span class="text-muted">(in dropdown menu)</span><br>The usage of each instance.
 

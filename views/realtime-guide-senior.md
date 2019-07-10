@@ -1124,7 +1124,7 @@ After a conversation is muted, the current user will not get push notifications 
 
 You might consider filtering cuss words out from the messages sent into group chats by users. LeanMessage offers a built-in component that helps you easily implement such function. It works not only for chat rooms, but also for **basic conversations and system conversations**.
 
-To use it, go to your app's [Dashboard > Messaging > LeanMessage > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf) and enable **Keyword Filtering**. LeanCloud offers a set of keywords by default, but you can also use your own keywords by uploading a file. A keyword appearing in a message will be replaced by `***`.
+To use it, go to your app's [Dashboard > Messaging > LeanMessage > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf) and enable **Keyword filtering**. LeanCloud offers a set of keywords by default, but you can also use your own keywords by uploading a file. A keyword appearing in a message will be replaced by `***`.
 
 If you have more complicated requirements regarding message filtering, we recommend that you make use of [the `_messageReceived` hook of LeanEngine](realtime-guide-systemconv.html#_messageReceived). You can defined your own logic for controlling messages.
 
