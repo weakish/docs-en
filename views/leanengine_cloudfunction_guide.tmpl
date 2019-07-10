@@ -179,7 +179,7 @@ def my_custom_average_start(movie, **params):
 A `Request` will be passed into a cloud function as a parameter. Each `Request` contains the following properties:
 
 - `params: Object`: The parameters sent from the client; might be an `AV.Object` when the function is called with `rpc`.
-- `currentUser?: AV.User`: The user logged in at the client side (according to the header `LC-Session`).
+- `currentUser?: AV.User`: The user logged in at the client side (according to the header `X-LC-Session`).
 - `sessionToken?: String`: The `sessionToken` sent from the client (according to the header `X-LC-Session`).
 - `meta: object`: Other information about the client, including `remoteAddress` which is the IP address of the client.
 
@@ -219,7 +219,7 @@ You can access `engine.current` within a cloud function to get additional inform
 The following parameters can be accessed within a cloud function:
 
 - `$params: array`: The parameters sent from the client.
-- `$user: User`: The user logged in at the client side (according to the header `LC-Session`).
+- `$user: User`: The user logged in at the client side (according to the header `X-LC-Session`).
 - `$meta: array`: Other information about the client, including `$meta['remoteAddress']` which is the IP address of the client.
 {% endif %}
 {% if platformName === "Java" %}
