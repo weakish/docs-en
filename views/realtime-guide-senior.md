@@ -45,11 +45,11 @@ The algorithm used for the signing process is **HMAC-SHA1** and the output would
 
 ### Formats of Signatures
 
-Below we will introduce the formats of signatures for different types of operations.
+Below we will introduce the formats of strings used to obtain signatures for different types of operations.
 
 #### Signatures for Logging in
 
-Below is the format of signatures for logging in. Keep in mind that there are *two colons* between `clientid` and `timestamp`:
+Below is the format of strings for logging in. Keep in mind that there are *two colons* between `clientid` and `timestamp`:
 
 ```
 appid:clientid::timestamp:nonce
@@ -68,7 +68,7 @@ You may implement your own `SignatureFactory` to retrieve signatures from remote
 
 #### Signatures for Creating Conversations
 
-Below is the format of signatures for creating conversations:
+Below is the format of strings for creating conversations:
 
 ```
 appid:clientid:sorted_member_ids:timestamp:nonce
@@ -79,7 +79,7 @@ appid:clientid:sorted_member_ids:timestamp:nonce
 
 #### Signatures for Group Operations
 
-Below is the format of signatures for **joining conversations**, **inviting users**, and **removing users**:
+Below is the format of strings for **joining conversations**, **inviting users**, and **removing users**:
 
 ```
 appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
@@ -99,7 +99,7 @@ The meanings of these parameters are the same as above.
 
 #### Signatures for Blacklist Operations
 
-There are two formats of signatures for two types of blacklist operations:
+There are two formats of strings for two types of blacklist operations:
 
 1. `client` to `conversation`
 
