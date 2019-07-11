@@ -1657,7 +1657,7 @@ public static Map<String, Object> onConversationStarted(Map<String, Object> para
 
 #### `{% if platformName === "Node.js" %}onIMConversationAdd{% endif %}{% if platformName === "Python" %}_conversationAdd{% endif %}{% if platformName === "PHP" %}_conversationAdd{% endif %}{% if platformName === "Java" %}conversationAdd{% endif %}`
 
-You can perform an operation after the signature verification (if enabled) of adding a member into a conversation is completed but before the member is added. This will be triggered both when the member proactively joins the conversation or is added by another member. **Keep in mind that this hook will not be triggered when creating a conversation with client IDs.** For example, to print out a log in LeanEngine:
+You can perform an operation after the signature verification (if enabled) of adding a member into a conversation is completed but before the member is added. This will be triggered both when the member proactively joins the conversation or is added by another member. **Keep in mind that this hook will not be triggered when creating a conversation with `clientId`s.** For example, to print out a log in LeanEngine:
 
 {% if platformName === "Node.js" %}
 ```js
@@ -1739,7 +1739,7 @@ You can perform an operation after the signature verification (if enabled) of re
 AV.Cloud.onIMConversationRemove((request) => {
   let params = request.params;
   console.log('params:', params);
-  console.log('Removed client ID:', params.members[0]);
+  console.log('Removed clientId:', params.members[0]);
 
   // params: {
   //     initBy: 'Tom',
@@ -1747,7 +1747,7 @@ AV.Cloud.onIMConversationRemove((request) => {
   //     convId: '57c8f3ac92509726c3dadaba',
   //     __sign: '1472787372605,abdf92b1c2fc4c9820bc02304f192dab6473cd38'
   // }
-  // Removed client ID: Jerry
+  // Removed clientId: Jerry
 });
 ```
 {% endif %}
@@ -1757,7 +1757,7 @@ AV.Cloud.onIMConversationRemove((request) => {
 def _conversationRemove(**params):
     print('_conversationRemove start')
     print('params:', params)
-    print('Removed client ID:', params['members'][0])
+    print('Removed clientId:', params['members'][0])
     print('_conversationRemove end')
     return {}
 
@@ -1768,7 +1768,7 @@ def _conversationRemove(**params):
 #   'initBy': 'Tom',
 #   'members': ['Jerry']
 # }
-# Removed client ID: Jerry
+# Removed clientId: Jerry
 # _conversationRemove end
 ```
 {% endif %}
@@ -1778,7 +1778,7 @@ Cloud::define('_conversationRemove', function($params, $user) {
 
     error_log('_conversationRemove start');
     error_log('params:' . json_encode($params));
-    error_log('Removed client ID:' . $params['members'][0]);
+    error_log('Removed clientId:' . $params['members'][0]);
     return array();
 
     // _conversationRemove start
@@ -1788,7 +1788,7 @@ Cloud::define('_conversationRemove', function($params, $user) {
     //     convId: '57c8f3ac92509726c3dadaba',
     //     __sign: '1472787372605,abdf92b1c2fc4c9820bc02304f192dab6473cd38'
     // }
-    // Removed client ID: Jerry
+    // Removed clientId: Jerry
 });
 ```
 {% endif %}
