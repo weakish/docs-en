@@ -1499,7 +1499,9 @@ conv.sendMessage(m, new AVIMConversationCallback() {
 });
 ```
 ```cs
-var image = new AVFile("screenshot.png", Path.Combine(Application.persistentDataPath, "screenshot.PNG"));
+var image = new AVFile("screenshot.png", "https://p.ssl.qhimg.com/dmfd/400_300_/t0120b2f23b554b8402.jpg");
+// Save as AVFile object
+await image.SaveAsync();
 var imageMessage = new AVIMImageMessage();
 imageMessage.File = image;
 imageMessage.TextContent = "Sent via Windows.";
