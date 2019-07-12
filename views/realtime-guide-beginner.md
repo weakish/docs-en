@@ -1348,9 +1348,9 @@ All of them are derived from `AVIMMessage`, with the following properties availa
 | --- | --- | --- |
 | `content`                  | `IMMessage.Content`    | The content of the message. Could be `String` or `Data`. |
 | `fromClientID`             | `String`               | The `clientId` of the sender. |
-| `currentClientID`          | `String`               | The `client ID` of the receiver. |
-| `conversationID`           | `String`               | The `conversation ID` of the conversation. |
-| `ID`                       | `String`               | A unique `message ID` for each message. Assigned by the cloud automatically. |
+| `currentClientID`          | `String`               | The `clientId` of the receiver. |
+| `conversationID`           | `String`               | The ID of the conversation. |
+| `ID`                       | `String`               | A unique ID for each message. Assigned by the cloud automatically. |
 | `sentTimestamp`            | `int64_t`              | The time the message is sent. Assigned by the cloud automatically. |
 | `deliveredTimestamp`       | `int64_t`              | The time the message is received. |
 | `readTimestamp`            | `int64_t`              | The time the message is read. |
@@ -1499,7 +1499,9 @@ conv.sendMessage(m, new AVIMConversationCallback() {
 });
 ```
 ```cs
-var image = new AVFile("screenshot.png", Path.Combine(Application.persistentDataPath, "screenshot.PNG"));
+var image = new AVFile("screenshot.png", "https://p.ssl.qhimg.com/dmfd/400_300_/t0120b2f23b554b8402.jpg");
+// Save as AVFile object
+await image.SaveAsync();
 var imageMessage = new AVIMImageMessage();
 imageMessage.File = image;
 imageMessage.TextContent = "Sent via Windows.";
