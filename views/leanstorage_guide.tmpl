@@ -1909,12 +1909,12 @@ comment.save();
 ```swift
 do {
     // Create a post
-    let post = AVObject(className: "Post")
+    let post = LCObject(className: "Post")
     try post.set("title", value: "I am starving!")
     try post.set("content", value: "Hmmm, where should I go for lunch?")
 
     // Create a comment
-    let comment = AVObject(className: "Comment")
+    let comment = LCObject(className: "Comment")
     try comment.set("content", value: "KFC is the best!")
 
     // Add the post as a property of the comment
