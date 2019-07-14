@@ -6134,7 +6134,7 @@ A **session token** will be returned to the client after a user is logged in. It
 
 Below are the situations when you may need to log a user in with session token:
 
-- A session token is already cached on the client which can be used to automatically log the user in (you can use `{% if platform_name === "Objective-C" %}{# TODO #}{% endif %}{% if platform_name === "JavaScript" %}AV.User.current().getSessionToken(){% endif %}{% if platform_name === "Python" %}leancloud.User.get_current().get_session_token(){% endif %}{% if platform_name === "PHP" %}User::getCurrentSessionToken(){% endif %}{% if platform_name === "Java" %}AVUser.getCurrentUser().getSessionToken(){% endif %}{% if platform_name === "Swift" %}{# TODO #}{% endif %}` to get the session token of the current user).
+- A session token is already cached on the client which can be used to automatically log the user in (you can use `{% if platform_name === "Objective-C" %}{# TODO #}{% endif %}{% if platform_name === "JavaScript" %}AV.User.current().getSessionToken(){% endif %}{% if platform_name === "Python" %}leancloud.User.get_current().get_session_token(){% endif %}{% if platform_name === "PHP" %}User::getCurrentSessionToken(){% endif %}{% if platform_name === "Java" %}AVUser.getCurrentUser().getSessionToken(){% endif %}{% if platform_name === "Swift" %}LCApplication.default.currentUser?.sessionToken{% endif %}` to get the session token of the current user).
 - A WebView within the app needs to know the current user.
 - The user is logged in on the server side using your own authentication routines and the server is able to provide the session token to the client.
 
