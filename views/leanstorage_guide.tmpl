@@ -6577,7 +6577,7 @@ book.saveInBackground().subscribe(new Observer<AVObject>() {
 {% if platform_name === "Swift" %}
 ```swift
 let book = LCObject(className: "Book")
-let author = LCUser.current
+let author = LCApplication.default.currentUser
 book.set("title", value: "My Fifth Book")
 book.set("author", value: author)
 _ = book.save { result in
@@ -6775,7 +6775,7 @@ _ = LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
 ```
 {% endif %}
 
-The `{{ userObjectName }}` obtained from `{% if platform_name === "Objective-C" %}[AVUser currentUser]{% endif %}{% if platform_name === "JavaScript" %}AV.User.current(){% endif %}{% if platform_name === "Python" %}leancloud.User.get_current(){% endif %}{% if platform_name === "PHP" %}User::getCurrentUser(){% endif %}{% if platform_name === "Java" %}AVUser.getCurrentUser(){% endif %}{% if platform_name === "Swift" %}LCUser.current{% endif %}` will always be authenticated.
+The `{{ userObjectName }}` obtained from `{% if platform_name === "Objective-C" %}[AVUser currentUser]{% endif %}{% if platform_name === "JavaScript" %}AV.User.current(){% endif %}{% if platform_name === "Python" %}leancloud.User.get_current(){% endif %}{% if platform_name === "PHP" %}User::getCurrentUser(){% endif %}{% if platform_name === "Java" %}AVUser.getCurrentUser(){% endif %}{% if platform_name === "Swift" %}LCApplication.default.currentUser{% endif %}` will always be authenticated.
 
 To check if `{{ userObjectName }}` is authenticated, you can invoke the `{% if platform_name === "Objective-C" %}isAuthenticatedWithSessionToken{% endif %}{% if platform_name === "JavaScript" %}isAuthenticated{% endif %}{% if platform_name === "Python" %}is_authenticated{% endif %}{% if platform_name === "PHP" %}isAuthenticated{% endif %}{% if platform_name === "Java" %}isAuthenticated{% endif %}{% if platform_name === "Swift" %}{# TODO #}{% endif %}` method. You do not need to check if `{{ userObjectName }}` is authenticated if it is obtained via an authenticated method.
 
