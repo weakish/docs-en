@@ -1909,12 +1909,12 @@ comment.save();
 ```swift
 do {
     // Create a post
-    let post = AVObject(className: "Post")
+    let post = LCObject(className: "Post")
     try post.set("title", value: "I am starving!")
     try post.set("content", value: "Hmmm, where should I go for lunch?")
 
     // Create a comment
-    let comment = AVObject(className: "Comment")
+    let comment = LCObject(className: "Comment")
     try comment.set("content", value: "KFC is the best!")
 
     // Add the post as a property of the comment
@@ -6134,7 +6134,7 @@ A **session token** will be returned to the client after a user is logged in. It
 
 Below are the situations when you may need to log a user in with session token:
 
-- A session token is already cached on the client which can be used to automatically log the user in (you can use `{% if platform_name === "Objective-C" %}{# TODO #}{% endif %}{% if platform_name === "JavaScript" %}AV.User.current().getSessionToken(){% endif %}{% if platform_name === "Python" %}leancloud.User.get_current().get_session_token(){% endif %}{% if platform_name === "PHP" %}User::getCurrentSessionToken(){% endif %}{% if platform_name === "Java" %}AVUser.getCurrentUser().getSessionToken(){% endif %}{% if platform_name === "Swift" %}{# TODO #}{% endif %}` to get the session token of the current user).
+- A session token is already cached on the client which can be used to automatically log the user in (you can use `{% if platform_name === "Objective-C" %}{# TODO #}{% endif %}{% if platform_name === "JavaScript" %}AV.User.current().getSessionToken(){% endif %}{% if platform_name === "Python" %}leancloud.User.get_current().get_session_token(){% endif %}{% if platform_name === "PHP" %}User::getCurrentSessionToken(){% endif %}{% if platform_name === "Java" %}AVUser.getCurrentUser().getSessionToken(){% endif %}{% if platform_name === "Swift" %}LCApplication.default.currentUser?.sessionToken{% endif %}` to get the session token of the current user).
 - A WebView within the app needs to know the current user.
 - The user is logged in on the server side using your own authentication routines and the server is able to provide the session token to the client.
 
@@ -6577,7 +6577,7 @@ book.saveInBackground().subscribe(new Observer<AVObject>() {
 {% if platform_name === "Swift" %}
 ```swift
 let book = LCObject(className: "Book")
-let author = LCUser.current
+let author = LCApplication.default.currentUser
 book.set("title", value: "My Fifth Book")
 book.set("author", value: author)
 _ = book.save { result in
@@ -6775,7 +6775,7 @@ _ = LCUser.logIn(username: "Tom", password: "cat!@#123") { result in
 ```
 {% endif %}
 
-The `{{ userObjectName }}` obtained from `{% if platform_name === "Objective-C" %}[AVUser currentUser]{% endif %}{% if platform_name === "JavaScript" %}AV.User.current(){% endif %}{% if platform_name === "Python" %}leancloud.User.get_current(){% endif %}{% if platform_name === "PHP" %}User::getCurrentUser(){% endif %}{% if platform_name === "Java" %}AVUser.getCurrentUser(){% endif %}{% if platform_name === "Swift" %}LCUser.current{% endif %}` will always be authenticated.
+The `{{ userObjectName }}` obtained from `{% if platform_name === "Objective-C" %}[AVUser currentUser]{% endif %}{% if platform_name === "JavaScript" %}AV.User.current(){% endif %}{% if platform_name === "Python" %}leancloud.User.get_current(){% endif %}{% if platform_name === "PHP" %}User::getCurrentUser(){% endif %}{% if platform_name === "Java" %}AVUser.getCurrentUser(){% endif %}{% if platform_name === "Swift" %}LCApplication.default.currentUser{% endif %}` will always be authenticated.
 
 To check if `{{ userObjectName }}` is authenticated, you can invoke the `{% if platform_name === "Objective-C" %}isAuthenticatedWithSessionToken{% endif %}{% if platform_name === "JavaScript" %}isAuthenticated{% endif %}{% if platform_name === "Python" %}is_authenticated{% endif %}{% if platform_name === "PHP" %}isAuthenticated{% endif %}{% if platform_name === "Java" %}isAuthenticated{% endif %}{% if platform_name === "Swift" %}{# TODO #}{% endif %}` method. You do not need to check if `{{ userObjectName }}` is authenticated if it is obtained via an authenticated method.
 
