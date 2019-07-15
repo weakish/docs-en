@@ -187,7 +187,7 @@ Since Tom is already logged in, he can start chatting with other users now. If h
 
 ```js
 // Create a conversation with Jerry
-tom.CreateConversationAsync({ // tom is an IMClient instance
+tom.createConversation({ // tom is an IMClient instance
   // Members of the conversation include Tom (the SDK will automatically add the current user into the conversation) and Jerry
   members: ['Jerry'],
   // Name of the conversation
