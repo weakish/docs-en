@@ -5454,7 +5454,7 @@ leancloud.cloudfunc.request_sms_code('+19490008888')
 {% endif %}
 {% if platform_name === "PHP" %}
 ```php
-User::requestLoginSmsCode("+19490008888");
+SMS::requestSmsCode("+19490008888");
 ```
 {% endif %}
 {% if platform_name === "Java" %}
@@ -5506,7 +5506,7 @@ leancloud.User.signup_or_login_with_mobile_phone('+19490008888', '123456')
 {% endif %}
 {% if platform_name === "PHP" %}
 ```php
-User::logInWithSmsCode("+19490008888", "123456");
+User::signUpOrLoginByMobilePhone("+19490008888", "123456");
 ```
 {% endif %}
 {% if platform_name === "Java" %}
@@ -5753,7 +5753,7 @@ leancloud.User.request_login_sms_code('+19490008888')
 {% endif %}
 {% if platform_name === "PHP" %}
 ```php
-User::requestLoginSmsCode("+19490008888");
+SMS::requestSmsCode("+19490008888");
 ```
 {% endif %}
 {% if platform_name === "Java" %}
@@ -5803,7 +5803,7 @@ leancloud.User.signup_or_login_with_mobile_phone('+19490008888', '123456')
 {% endif %}
 {% if platform_name === "PHP" %}
 ```php
-User::logInWithSmsCode("+19490008888", "123456");
+User::signUpOrLoginByMobilePhone("+19490008888", "123456");
 ```
 {% endif %}
 {% if platform_name === "Java" %}
@@ -6790,28 +6790,7 @@ For each given object, you can specify which users are allowed to read it and wh
 LeanCloud allows you to link your users with services like GitHub, Twitter, and Facebook (commonly known as social networking services, or SNS), allowing your users to sign up or log into your application using their existing identities. For example, to sign up or log in with a user's GitHub account, your code will look like this:
 
 {% if platform_name === "Objective-C" %}
-```objc
-NSDictionary *authData = @{
-                            // Required
-                            @"uid":@"UID",
-                            @"access_token":@"ACCESS_TOKEN",
-                            @"expires_in":@7200,
-
-                            // Optional
-                            @"refresh_token":@"REFRESH_TOKEN",
-                            @"scope":@"SCOPE",
-                            };
-AVUser *user = [AVUser user];
-AVUserAuthDataLoginOption *option = [AVUserAuthDataLoginOption new];
-option.platform = LeanCloudSocialPlatformWeiXin;
-[user loginWithAuthData:authData platformId:LeanCloudSocialPlatformWeiXin options:option callback:^(BOOL succeeded, NSError * _Nullable error) {
-    if (succeeded) {
-            NSLog(@"Logged in successfully.");
-        }else{
-            NSLog(@"Failed to log in: %@",error.localizedFailureReason);
-        }
-}];
-```
+{# TODO #}
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
@@ -6825,7 +6804,7 @@ var authData = {
   refresh_token: 'REFRESH_TOKEN',
   scope:         'SCOPE'
 };
-AV.User.loginWithAuthData(authData, 'github').then(function (s) {
+AV.User.loginWithAuthData(authData, 'github').then(function (user) {
   // Logged in successfully
 }, function (error) {
   // Failed to log in
@@ -6842,7 +6821,27 @@ AV.User.loginWithAuthData(authData, 'github').then(function (s) {
 {# TODO #}
 {% endif %}
 {% if platform_name === "Swift" %}
-{# TODO #}
+```swift
+let authData: [String: Any] = [
+    // Required
+    "uid":           "UID",
+    "access_token":  "ACCESS_TOKEN",
+    "expires_in":    7200,
+
+    // Optional
+    "refresh_token": "REFRESH_TOKEN",
+    "scope":         "SCOPE"
+]
+let user = LCUser()
+user.logIn(authData: authData, platform: .custom("github")) { (result) in
+    switch result {
+    case .success:
+        assert(user.objectId != nil)
+    case .failure(error: let error):
+        print(error)
+    }
+}
+```
 {% endif %}
 
 LeanCloud then verifies that the provided `authData` is valid and checks if a user is already associated with it. If so, it returns the status code `200 OK` along with the details (including a [`sessionToken`](#setting-the-current-user) for the user).
@@ -6889,7 +6888,7 @@ A user who has GitHub linked may have the following object as `authData`:
 
 LeanCloud automatically validates the access tokens for certain services to prevent data forge attack. When the validation fails, LeanCloud will respond with `invalid authData` error and the linking will not be established. For services that are not recognized by LeanCloud, you are responsible for validating access tokens by yourself. You can turn off the **Validate access tokens when logging in with third-party accounts** option in your app's [Dashboard > LeanStorage > Settings](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf) if you prefer not to have LeanCloud validate access tokens for you.
 
-{% if platform_name === "Objective-C" or platform_name === "JavaScript" %}
+{% if platform_name === "Objective-C" or platform_name === "JavaScript" or platform_name === "Swift" %}
 {# #### 扩展需求 #}
 {% endif %}
 
