@@ -1963,6 +1963,15 @@ If you just want to use cloud functions without setting up a complete Node.js pr
 
 - Setting up cloud functions on the web console will override the project you deployed with Git or command-line interface.
 - You can only set up cloud functions (including hooks) on the web console. You cannot use other functions of an ordinary Node.js project (like web hosting or routers).
+- You can only use SDK and some built-in modules (see below for details). You cannot import other modules as dependencies.
+
+Online editing only supports LeanCloud JavaScript SDK (3.x), Node.js SDK (3.x), and the following modules:
+
+- async, bluebird, crypto, debug, ejs
+- jade, lodash, moment, nodemailer
+- qiniu, redis, request, request-promise, superagent
+- underscore, uuid, wechat-api, xml2js
+
 
 In your app's [Dashboard > LeanEngine > Deploy > Edit online](https://console.leancloud.app/cloud.html?appid={{appid}}#/deploy), you can:
 
