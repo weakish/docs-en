@@ -67,7 +67,7 @@ You may also try out these demos to quickly familiarize yourself with our servic
 * iOS messaging apps:
   * [Chat Demo Swift](https://github.com/leancloud/swift-sdk-demo)
 
-See [LeanCloud Demos](https://github.com/leancloud/leancloud-demos) for more information.
+See [LeanCloud Demos](demo.html) for more information.
 
 ## Core Notions
 
