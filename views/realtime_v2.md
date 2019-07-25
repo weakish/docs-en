@@ -62,6 +62,13 @@ We offer SDKs for the following platforms:
 
 Feel free to take a look at their source code on our [GitHub page](https://github.com/leancloud). You are welcome to talk to us if you have any problems or needs.
 
+You may also try out these demos to quickly familiarize yourself with our services:
+
+* iOS messaging apps:
+  * [Chat Demo Swift](https://github.com/leancloud/swift-sdk-demo)
+
+See [LeanCloud Demos](https://github.com/leancloud/leancloud-demos) for more information.
+
 ## Core Notions
 
 The concepts mentioned below will be used frequently in our further documentation. It would be helpful if you could familiarize yourself with them.

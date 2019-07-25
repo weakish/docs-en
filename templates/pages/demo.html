@@ -1,0 +1,40 @@
+--- layout: download.swig ---
+<div ng-controller="DemoCtrl">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="doc-home-title">
+        <h1 class="font-logo">
+          LeanCloud Demos
+        </h1>
+        <h4>
+          Sample projects built with LeanCloud
+        </h4>
+      </div>
+      <!-- .doc-home-title -->
+
+      <div class="btn-group">
+        <a class="btn btn-default " ng-click="setCurrentType('all')" ng-class="{'active':currentSDKType == 'all'}" href="#/all">
+          All
+        </a>
+        <a class="btn btn-default " ng-repeat="k in keys(plats) | filter: hasChildren"  ng-click="setCurrentType(k)" ng-class="{'active':currentSDKType == k}" href="#/{{k}}">
+          {{plats[k]}}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4" ng-repeat ="demo in displayDemos">
+      <div class="demo-card">
+        <h1>
+          {{demo.name}}
+          <span class="pull-right label label-primary"">{{plats[demo.type]}}</span>
+          
+        </h1>
+        <p class="demo-desc">{{demo.desc}}</p>
+        <a href="{{demo.mdPath}}" target="_blank" class="btn btn-default">Details</a>
+      </div>
+      <!-- .demo-card -->
+    </div>
+  </div>
+</div>
