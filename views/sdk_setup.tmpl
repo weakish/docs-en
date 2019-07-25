@@ -1,0 +1,762 @@
+{% import "views/_helper.njk" as docs %}
+
+# How to Install {{platform_name}} SDK
+
+## Installing SDK
+
+{% if platform_name === "Objective-C" or platform_name === "Swift" or platform_name === "Python" or platform_name === "PHP" or platform_name === "Java" %}
+There are several ways for you to install our SDK and the most convenient one is to use a package manager.
+
+### Installing with Package Manager
+
+{% if platform_name === "Objective-C" %}
+The easiest way to integrate our SDK into your project is to use [CocoaPods](https://cocoapods.org). 
+
+Add the following pods into the `Podfile` under the project's root directory:
+
+```ruby
+pod 'AVOSCloud'   # LeanStorage, SMS, In-App Socializing, LeanEngine
+pod 'AVOSCloudIM' # LeanMessage
+```
+
+If you plan to use [LiveQuery](leanstorage_guide-js.html#livequery), add the following pod as well:
+
+```ruby
+pod 'AVOSCloudLiveQuery'
+```
+
+After adding the pods, run `pod install` under the same directory to complete the installation.
+{% endif %}
+{% if platform_name === "Swift" %}
+[CocoaPods](https://cocoapods.org) is a tool used to manage third-party dependencies (pods) used by macOS and iOS apps. It makes it easy for you to manage  the versions of all the third-party libraries your app depends on. See [Using CocoaPods](https://guides.cocoapods.org/using/index.html) for more details.
+
+To get started, make sure you have Ruby installed (macOS comes with Ruby but we recommend you installing Xcode which comes with newer version of it) and run the following command to install cocoapods:
+
+```sh
+$ sudo gem install cocoapods
+```
+
+Now create a `Podfile` (with no extension) under the root directory of your project and add the following content:
+
+```ruby
+target 'YOUR_APP_TARGET' do # Replace YOUR_APP_TARGET with your app's name
+    use_frameworks!
+    inhibit_all_warnings!
+
+    pod 'LeanCloud', '~> SDK_VERSION' # In most cases you can use the latest version for SDK_VERSION; you can find it on https://github.com/leancloud/swift-sdk/releases
+end
+```
+
+Then install the SDK with the following command:
+
+```sh
+$ pod update
+```
+
+Or
+
+```sh
+$ pod install --repo-update
+```
+
+See [official documentation](https://guides.cocoapods.org/using/pod-install-vs-update.html) for the differences between them.
+
+After installing the SDK, you can open your project with `<PROJECT_NAME>.xcworkspace` under the root directory of your project.
+{% endif %}
+{% if platform_name === "Python" %}
+The easiest way to integrate our SDK in your project is to use `pip`. Run the following command to install it:
+
+```sh
+pip install leancloud
+```
+
+You may also install the SDK with `easy_install`:
+
+```sh
+easy_install leancloud
+```
+
+Depending on the environment you're using, you may need to add `sudo` at the beginning of the command.
+{% endif %}
+{% if platform_name === "PHP" %}
+#### composer
+
+The easiest way to integrate our SDK in your project is to use composer. Run the following command to install it:
+
+```sh
+composer require leancloud/leancloud-sdk
+```
+
+Keep in mind that `leancloud-sdk` depends on `curl` extension (you may need to install `php-curl` if you are using Linux).
+{% endif %}
+{% if platform_name === "Java" %}
+You can add our SDK into your project with a package manager of your own choice.
+
+For Maven:
+
+```xml
+<dependency>
+    <groupId>cn.leancoud</groupId>
+    <artifactId>storage-core</artifactId>
+    <version>{{ version.unified }}</version>
+</dependency>
+```
+
+For Ivy:
+
+```xml
+<dependency org="cn.leancloud" name="storage-core" rev="{{ version.unified }}" />
+```
+
+For SBT:
+
+```sbt
+libraryDependencies += "cn.leancloud" %% "storage-core" % "{{ version.unified }}"
+```
+
+For Gradle:
+
+```groovy
+implementation 'cn.leancloud:storage-core:{{ version.unified }}'
+```
+
+If you are building for Android, use the following packages instead:
+
+```groovy
+implementation 'cn.leancloud:storage-android:{{ version.unified }}'
+implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+implementation 'com.alibaba:fastjson:1.1.70.android'
+```
+{% endif %}
+
+### Installing Manually
+
+<a class="btn btn-default" target="_blank" href="sdk_down.html">Download SDK</a>
+
+{% if platform_name === "Objective-C" %}
+#### Downloading Source Code
+
+Clone the repository of the SDK to the root directory of the project:
+
+```sh
+git clone "https://github.com/leancloud/objc-sdk.git" leancloud-objc-sdk
+```
+
+Then checkout the version you wish to use. The versions of the SDK are marked with tags, so you can checkout the latest version with the following command:
+
+```sh
+cd leancloud-objc-sdk
+git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
+```
+
+#### Integrating SDK
+
+The following two ways can be used to add the SDK into your project. You may select **any one of them**:
+
+- Add the `xcodeproj` file of the SDK into the project.
+- Compile the SDK into frameworks and add them into the project.
+
+##### Integrating `xcodeproj`
+
+Drag and drop `AVOS`/`AVOS.xcodeproj` into the project as a subproject:
+
+!["AVOS.xcodeproj" will appear under the root directory of the project.](images/quick_start/ios/subproject.png)
+
+Then set up Build Phases for the project. Add the following contents into **Link Binary With Libraries**:
+
+!["AVOSCloud.framework from 'AVOSCloud-iOS' target in 'AVOS' project" and "AVOSCloudIM.framework from 'AVOSCloudIM-iOS' target in 'AVOS' project" under "Workspace".](images/quick_start/ios/link-binary.png)
+
+Here we chose `AVOSCloud` and `AVOSCloudIM` as examples of frameworks being used. You can make your own selections according to the platform you are building for and the modules you are actually using.
+
+#### Adding System Dependencies
+
+Now add the system frameworks and libraries the SDK depends on:
+
+  * `libz`
+  * `libc++`
+  * `libicucore`
+  * `libsqlite3`
+  * `SystemConfiguration.framework`
+  * `MobileCoreServices.framework`
+  * `CoreTelephony.framework`
+  * `CoreLocation.framework`
+
+Like this:
+
+![The frameworks and libraries mentioned above show up in "Link Binary With Libraries".](images/quick_start/ios/system-dependency.png)
+
+The last step is to add `-ObjC` into **Other Linker Flags**.
+
+You're all set!
+{% endif %}
+{% endif %}
+{% if platform_name === "JavaScript" %}
+Depending on the platform you're using, there are different ways for you to install the SDK.
+
+|[<img src="images/platforms/html5.svg" width="120"/>](#Web)|[<img src="images/platforms/node-js.svg" width="120"/>](#Node.js)|[<img src="images/platforms/react-native.svg" width="120"/>](#React-Native)|[<img src="images/platforms/electron.svg" width="120"/>](#Electron)|
+|:--:|:--:|:--:|:--:|
+|Web|Node.js|React Native|Electron|
+
+### Web
+
+<a id="web" name="web"></a>The following method can be used if your project runs in browser, WebView, or other in-app HTML platforms.
+
+#### Installing and Referencing SDK
+
+##### npm
+
+The easiest way to integrate our SDK in your project is to use npm:
+
+```bash
+# LeanStorage (including push notification services)
+$ npm install leancloud-storage --save
+# LeanMessage
+$ npm install leancloud-realtime --save
+```
+
+Create references to the SDK with `require`:
+
+```js
+// LeanStorage
+var AV = require('leancloud-storage');
+var { Query, User } = AV;
+// LeanMessage
+var { Realtime, TextMessage } = require('leancloud-realtime');
+```
+
+If you plan to use [LiveQuery](leanstorage_guide-js.html#livequery), include the following npm module instead:
+
+```js
+var AV = require('leancloud-storage/live-query');
+// No need to require('leancloud-storage') if this line is present
+```
+
+##### CDN
+
+You can also import the SDK with a `script` tag:
+
+```html
+<!-- LeanStorage -->
+<script src="//cdn.jsdelivr.net/npm/leancloud-storage@{{jssdkversion}}/dist/av-min.js"></script>
+<!-- LeanMessage -->
+<script src="//cdn.jsdelivr.net/npm/leancloud-realtime@{{jsimsdkversion}}/dist/realtime.browser.min.js"></script>
+```
+
+If you plan to use [LiveQuery](leanstorage_guide-js.html#livequery), use the following URL instead:
+
+```html
+<script src="//cdn.jsdelivr.net/npm/leancloud-storage@{{jssdkversion}}/dist/av-live-query-min.js"></script>
+<!-- No need to import av-min.js if this line is present -->
+```
+
+When using this method, you can reference the SDK with the global variable `AV`:
+
+```js
+// LeanStorage
+var { Query, User } = AV;
+AV.init("{{appid}}", "{{appkey}}");
+// LeanMessage
+var { Realtime, TextMessage } = AV;
+```
+
+### Node.js
+
+<a id="node" name="node"></a>JavaScript SDK also works with Node.js. If you plan to use LeanStorage within LeanEngine, you can import `leanengine` into your project by following instructions in [LeanEngine Quick Start](leanengine_quickstart.html).
+
+#### Installing and Referencing SDK
+
+You can use npm to install and reference our SDK for Node.js as well. See [npm](#npm) for more details.
+
+### React Native
+
+<a id="react-native" name="react-native"></a>You can use npm to install and reference our SDK for React Native. See [npm](#npm) for more details.
+
+### Electron
+
+<a id="electron" name="electron"></a>Electron uses npm for managing dependencies. You can install our SDK with the following command:
+
+```bash
+# LeanStorage (including push notification services)
+$ npm install leancloud-storage --save
+# LeanMessage
+$ npm install leancloud-realtime --save
+```
+
+#### Importing SDK as Browser Scripts
+
+You can import the SDK by adding a `script` tag into index.html:
+
+```html
+<!-- LeanStorage -->
+<script src="./node_modules/leancloud-storage/dist/av-min.js"></script>
+<!-- LeanMessage -->
+<script src="./node_modules/leancloud-realtime/dist/realtime.browser.min.js"></script>
+```
+
+If you plan to use [LiveQuery](leanstorage_guide-js.html#livequery), use the following path for LeanStorage:
+
+```html
+<script src="./node_modules/leancloud-storage/dist/av-live-query-min.js"></script>
+```
+
+#### Importing SDK as Node.js Modules
+
+The way of using `script` to import the SDK works in most scenarios. However, if you have the following needs, you can also use `require('leancloud-storage')` to import the SDK as Node.js modules:
+
+- Using the SDK in main process
+- Constructing `AV.File` with `Buffer` or `Stream` provided by Node.js
+
+{{ docs.note("`require` and `script` import two different sets of SDK. Each of them needs to be initialized separately and cannot be used interchangeably.") }}
+{% endif %}
+{% if platform_name === ".NET" %}
+### Unity
+
+- Supports Unity 5.3+.
+<!-- 等升级 Unity 即时通讯的文档后再增加这句话 -->
+<!-- - 支持 .NET 4.x。SDK 在 .NET 3.x 版本下仅做 Bug 维护，不再增加新版本，请大家尽快升级到 4.x 版本。 -->
+
+Supports iOS, Android, UWP, Windows Desktop, and web games built with Unity.
+
+#### Installing LeanStorage
+
+Download the latest version of [Unity Storage](https://releases.leanapp.cn/#/leancloud/unity-sdk/releases), unzip it, and import it into your Unity project.
+
+#### Installing LeanMessage
+
+Download the latest version of [Unity Realtime](https://releases.leanapp.cn/#/leancloud/realtime-SDK-dotNET/releases), unzip it, and import it into your Unity project.
+
+#### Breakdown
+
+You will find the following dependencies after unzipping the files:
+
+Name|Description|Required
+--|---|---
+`AssemblyLister.dll`|LeanCloud dependency detection module. Used to check if dependencies are imported correctly.|Yes
+`LeanCloud.Core.dll`|Core library. Includes definitions and methods for built-in types like `AVObject` and `AVUser`.|Yes
+`LeanCloud.Storage.dll`|LeanStorage library. Includes methods for local caching and HTTP requests.|Yes
+`LeanCloud.Realtime.dll`|LeanMessage library. Includes methods used for LeanMessage services.|No
+
+### .NET Framework & Xamarin
+
+.NET Framework supports the following runtimes:
+
+- Classic Desktop 4.5+
+- Windows 10
+- UWP 4.5+
+- .NET Core 2.0+
+
+When using Xamarin, make sure your project satisfies the following version requirements:
+
+- [Xamarin.Android 4.7+](https://developer.xamarin.com/releases/ios/xamarin.ios_6/xamarin.ios_6.3/)
+- [Xamarin.iOS 6.3](https://developer.xamarin.com/releases/android/xamarin.android_4/xamarin.android_4.7/)
+
+Install nuget in Visual Studio:
+
+```sh
+# LeanStorage (required)
+PM> Install-Package LeanCloud.Storage
+# LiveQuery (optional)
+PM> Install-Package LeanCloud.LiveQuery
+# LeanMessage (optional)
+PM> Install-Package LeanCloud.Realtime
+```
+{% endif %}
+
+## Initializing Your Project
+
+To begin with, get your App ID and App Key from your app's [Dashboard > Settings > App Keys](https://console.leancloud.app/app.html?appid={{appid}}#/key).
+
+{% if platform_name === "Objective-C" %}
+Import the basic modules into `AppDelegate`:
+
+```objc
+#import <AVOSCloud/AVOSCloud.h>
+```
+
+Then paste the following code into the `application:didFinishLaunchingWithOptions:` method:
+
+```objc
+[AVOSCloud setApplicationId:@"{{appid}}" clientKey:@"{{appkey}}"];
+```
+
+{{ docs.alert("Before using the APIs provided by the SDK, make sure you have initialized your application with App ID and App Key.") }}
+{% endif %}
+{% if platform_name === "Swift" %}
+Add the following line to the top of `AppDelegate.swift`:
+
+```swift
+import LeanCloud
+```
+
+Then add the code below into the function `application(_:didFinishLaunchingWithOptions:)`:
+
+```swift
+do {
+    try LCApplication.default.set(
+        id: "{{appid}}",
+        key: "{{appkey}}"
+    )
+} catch {
+    fatalError("\(error)")
+}
+```
+{% endif %}
+{% if platform_name === "JavaScript" %}
+If you are importing the SDK into your web project with CDN, you can call `AV.init` when loading the page to initialize the SDK:
+
+```js
+var APP_ID = '{{appid}}';
+var APP_KEY = '{{appkey}}';
+
+AV.init({
+  appId: APP_ID,
+  appKey: APP_KEY
+});
+```
+
+If you are installing the SDK with npm, you can initialize the SDK with the same way, but make sure to import the SDK with `require`:
+
+```js
+var AV = require('leancloud-storage');
+var { Realtime } = require('leancloud-realtime'); // No need to import if not using LeanMessage
+
+var APP_ID = '{{appid}}';
+var APP_KEY = '{{appkey}}';
+
+AV.init({
+  appId: APP_ID,
+  appKey: APP_KEY
+});
+```
+{% endif %}
+{% if platform_name === "Python" %}
+Then import `leancloud` and call `init` to initialize it:
+
+```python
+import leancloud
+
+leancloud.init("{{appid}}", "{{appkey}}")
+# Or use Master Key
+# leancloud.init("{{appid}}", master_key="{{masterkey}}")
+```
+{% endif %}
+{% if platform_name === "PHP" %}
+Then import `Client` and call `initialize` to initialize it:
+
+```php
+use \LeanCloud\Client;
+// Provide App ID, App Key, and Master Key as parameters
+Client::initialize("{{appid}}", "{{appkey}}", "{{masterkey}}");
+Client::setServerUrl("{{host}}");
+```
+{% endif %}
+{% if platform_name === "Java" %}
+If you are building a basic Java project, add the following lines to the beginning of your code:
+
+```java
+AVOSCloud.initialize("{{appid}}", "{{appkey}}");
+```
+
+If you are building for Android, add the following code into the `onCreate` function of the `Application` class:
+
+```java
+import cn.leancloud.AVOSCloud;
+
+public class MyLeanCloudApp extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        // Provide this, App ID, and App Key as parameters
+        AVOSCloud.initialize(this, "{{appid}}", "{{appkey}}");
+    }
+}
+```
+
+Then specify the permissions needed by the SDK and declare the `MyLeanCloudApp` class in `AndroidManifest.xml`:
+
+```xml
+<!-- Basic modules (required) START -->
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<!-- Basic modules END -->
+
+<application
+  …
+  android:name=".MyLeanCloudApp" >
+
+  <!-- LeanMessage and push notifications START -->
+  <!-- Both LeanMessage and push notifications need PushService -->
+  <service android:name="cn.leancloud.push.PushService"/>
+  <receiver android:name="cn.leancloud.push.AVBroadcastReceiver">
+    <intent-filter>
+      <action android:name="android.intent.action.BOOT_COMPLETED"/>
+      <action android:name="android.intent.action.USER_PRESENT"/>
+      <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+    </intent-filter>
+  </receiver>
+  <!-- LeanMessage and push notifications END -->
+
+  <!-- Feedback START -->
+  <activity
+     android:name="cn.leancloud.feedback.ThreadActivity" >
+  </activity>
+  <!-- Feedback END -->
+</application>
+```
+{% endif %}
+{% if platform_name === ".NET" %}
+Import basic modules:
+
+```cs
+// LeanStorage
+using LeanCloud;
+// LeanMessage (optional)
+using LeanCloud.Realtime;
+```
+
+### Initializing LeanStorage
+
+Run the following code before using LeanStorage:
+
+```cs
+AVClient.Initialize("{{appid}}", "{{appkey}}");
+```
+
+### Initializing LeanMessage
+
+Run the following code before using LeanMessage:
+
+```cs
+var realtime = new AVRealtime("{{appid}}", "{{appkey}}");
+```
+{% endif %}
+
+## Enabling Debug Logs
+
+You can easily trace the problems in your project by turning debug logs on during the development phase. Once enabled, details of every request made by the SDK along with errors will be output to IDE, browser console, or your app's [Dashboard > LeanEngine > App logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log).
+
+{% if platform_name === "Objective-C" %}
+```objc
+// Place the line after [AVOSCloud setApplicationId:]; only needs to be called once
+[AVOSCloud setAllLogsEnabled:YES];
+```
+{% endif %}
+{% if platform_name === "Swift" %}
+```swift
+// Place the line before LCApplication.default.set; only needs to be called once
+LCApplication.logLevel = .all
+```
+{% endif %}
+{% if platform_name === "JavaScript" %}
+If you are using Node.js, you can set the environment variable `DEBUG=leancloud*` when starting the app with npm:
+
+```sh
+DEBUG=leancloud* npm start
+```
+
+If you are using Node.js with [LeanEngine](leanengine_overview.html), you can set the environment variable by going to [Dashboard > LeanEngine > Settings > Custom environment variables](https://console.leancloud.app/cloud.html?appid={{appid}}#/conf), put `DEBUG` in the first field and `leancloud:*` in the second field (make sure to include the colon between `leancloud` and `*`). When debugging locally with [command-line interface](leanengine_cli.html), you can set the environment variable `DEBUG=leancloud:*` to have logs output to your app's [Dashboard > LeanEngine > App logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log):
+
+```sh
+DEBUG=leancloud:* lean up
+```
+
+You can output logs to your browser console by setting `localStorage`:
+
+```js
+localStorage.setItem('debug', 'leancloud*');
+
+// Enable debug logs for LiveQuery
+localStorage.setItem('debug', 'LC*');
+```
+{% endif %}
+{% if platform_name === "Python" %}
+```python
+# Place the code at the beginning of the start-up script
+# If used in LeanEngine, the start-up script is wsgi.py
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+```
+{% endif %}
+{% if platform_name === "PHP" %}
+```php
+// Place the line after Client::initialize(); only needs to be called once
+Client::setDebug(true);
+```
+{% endif %}
+{% if platform_name === "Java" %}
+```java
+// Place the line before AVOSCloud.initialize()
+AVOSCloud.setLogLevel(AVLogger.Level.DEBUG);
+```
+{% endif %}
+{% if platform_name === ".NET" %}
+```cs
+// Enable debug logs for LeanStorage
+AVClient.HttpLog(Debug.Log);
+
+// Enable debug logs for LeanMessage
+AVRealtime.WebSocketLog(Debug.Log);
+```
+{% endif %}
+
+{% call docs.alertWrap() %}
+Make sure debug logs are turned off before your app is published. Failure to do so may lead to the exposure of sensitive data.
+{% endcall %}
+
+## Verifying
+
+First of all, make sure you are able to connect to LeanCloud server. You can test it by running the following command:
+
+```sh
+ping "{{host}}"
+```
+
+If everything goes well, you will see the following response:
+
+```sh
+PING api-ucloud.leancloud.cn (123.59.41.31): 56 data bytes
+64 bytes from 123.59.41.31: icmp_seq=0 ttl=51 time=9.032 ms
+64 bytes from 123.59.41.31: icmp_seq=1 ttl=51 time=7.290 ms
+64 bytes from 123.59.41.31: icmp_seq=2 ttl=51 time=8.131 ms
+64 bytes from 123.59.41.31: icmp_seq=3 ttl=51 time=9.689 ms
+64 bytes from 123.59.41.31: icmp_seq=4 ttl=51 time=6.559 ms
+64 bytes from 123.59.41.31: icmp_seq=5 ttl=51 time=8.665 ms
+64 bytes from 123.59.41.31: icmp_seq=6 ttl=51 time=8.041 ms
+64 bytes from 123.59.41.31: icmp_seq=7 ttl=51 time=8.203 ms
+64 bytes from 123.59.41.31: icmp_seq=8 ttl=51 time=6.288 ms
+64 bytes from 123.59.41.31: icmp_seq=9 ttl=51 time=7.938 ms
+
+--- api-ucloud.leancloud.cn ping statistics ---
+10 packets transmitted, 10 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 6.288/7.984/9.689/0.997 ms
+```
+
+{% if platform_name === "Objective-C" %}
+Now let's try saving an object to the cloud. Add the following code into the `viewDidLoad` method or any other method that will be called when the app starts:
+
+```objc
+AVObject *testObject = [AVObject objectWithClassName:@"TestObject"];
+[testObject setObject:@"Hello world!" forKey:@"words"];
+[testObject save];
+```
+
+Hit `Run` to start debugging. This can be done in either host machine or virtual machine.
+{% endif %}
+{% if platform_name === "Swift" %}
+Then add the following code into your project:
+
+```swift
+do {
+    let testObject = LCObject(className: "TestObject")
+    try testObject.set("words", value: "Hello world!")
+    _ = testObject.save { result in
+        switch result {
+        case .success:
+            break
+        case .failure(let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
+
+Hit `Run` to start debugging. This can be done in either host machine or virtual machine.
+{% endif %}
+{% if platform_name === "JavaScript" %}
+Then add the following code into your project:
+
+```js
+var TestObject = AV.Object.extend('TestObject');
+var testObject = new TestObject();
+testObject.set('words', 'Hello world!');
+testObject.save().then(function (testObject) {
+  console.log('Object saved.')
+})
+```
+
+Save the file and run it.
+{% endif %}
+{% if platform_name === "Python" %}
+Then add the following code into your project:
+
+```python
+TestObject = leancloud.Object.extend('TestObject')
+test_object = TestObject()
+test_object.set('words', "Hello world!")
+test_object.save()
+```
+
+Save the file and run it.
+{% endif %}
+{% if platform_name === "PHP" %}
+Then add the following code into your project:
+
+```php
+$testObject = new LeanObject("TestObject");
+$testObject->set("words", "Hello world!");
+try {
+    $testObject->save();
+    echo "Object saved.";
+} catch (Exception $ex) {
+    echo "An error occurred.";
+}
+```
+
+Save the file and run it.
+{% endif %}
+{% if platform_name === "Java" %}
+Then add the following code into your project:
+
+```java
+AVObject testObject = new AVObject("TestObject");
+testObject.put("words", "Hello world!");
+testObject.saveInBackground().blockingSubscribe();
+```
+
+Save the file and run it.
+{% endif %}
+{% if platform_name === ".NET" %}
+Then add the following code into your project:
+
+```cs
+AVObject testObject = new AVObject("TestObject");
+testObject["words"] = "Hello world!";
+Task saveTask = testObject.SaveAsync();
+await saveTask;
+```
+
+Save the file and run it.
+{% endif %}
+
+Then go to your app's [Dashboard > LeanStorage > Data > `TestObject`](https://console.leancloud.app/data.html?appid={{appid}}#/TestObject). If you see the following content, it means that you have correctly installed the SDK.
+
+![A row shows up in the table with "words" to be "Hello world!".](images/testobject_saved.png)
+
+See [Debugging](#Debugging) if you're not seeing the content.
+
+## Debugging
+
+This guide is written for the latest version of our SDK. If you encounter any error, please first make sure you have the latest version installed.
+
+### `401 Unauthorized`
+
+If you get a `401` error or see the following content in network logs:
+
+```json
+{
+  "code": 401,
+  "error": "Unauthorized."
+}
+```
+
+It means that the App ID or App Key might be incorrect or don't match. If you have multiple apps, you might have used the App ID of one app with the App Key of another one, which will lead to such error.
+
+### Client Cannot Access the Internet
+
+Make sure you have granted enough permissions for your mobile app.
