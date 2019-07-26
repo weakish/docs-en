@@ -22,22 +22,30 @@ angular.module('app').controller('DemoCtrl', ['$http', '$scope', '$rootScope', '
       'android': 'Android',
       'unity': 'Unity',
       'python': 'Python',
-      'winphone': 'Windows Phone',
       'web': 'Web',
       'node': 'Node.js',
       'php': 'PHP',
       'weapp': 'WeChat Mini Program',
-      'reactnative': 'React Native'
+      'reactnative': 'React Native',
+      'typescript': 'TypeScript'
     }
     $scope.demos = {
-      'ios': [],
-      'android': [],
-      'python': [],
-      'web': [],
-      'php': [],
-      'weapp': [],
-      'reactnative': [],
-      'node': []
+      'ios': [{
+        name: 'Chat',
+        desc: 'A messaging app built with Swift.',
+        downPath: '',
+        mdPath: 'https://github.com/leancloud/swift-sdk-demo',
+        type: 'ios',
+        qcloudShow: true
+      }],
+      'php': [{
+        name: 'Todo on LeanEngine',
+        desc: 'A todo app built with Slim.',
+        downPath: '',
+        mdPath: 'https://github.com/leancloud/slim-todo-demo',
+        type: 'php',
+        qcloudShow: true
+      }]
     }
     $scope.$watch('currentSDKType',function(){
       $scope.displayDemos = [];
