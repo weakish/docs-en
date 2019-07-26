@@ -19,8 +19,8 @@ LeanCloud 开发者文档
 **贡献方法及注意事项**：
 
 - `fork` 这个项目
-- `npm install` 安装相关依赖
-- 执行 `grunt serve` 可以本地预览
+- `npm ci` 安装相关依赖
+- 执行 `npm run preview` 可以本地预览
 - 修改 `/views` 目录中的文档
   - `/views` 中是模板文件，会被编译为 `/md` 目录中对应的文档文件。
   - 模板支持嵌套，如 `/views` 中 `a.md` 是可以被嵌套在 `a.tmpl` 中，方法参见下文 [一套模板多份渲染]（#一套模板多份渲染）。
@@ -33,7 +33,7 @@ LeanCloud 开发者文档
   - 如需要，更新文档首页 `templates/pages/index.html` 和顶部导航菜单 `templates/include/header.html`。
 - 修改文中标题或文件名称
   - 确认要修改的标题 h1-h6 或文件名称有没有被 `/views` 和 `/templates` 目录下任何文件所引用，以免产生断链。
-  - 系统自动生成的 h1-h6 标题的 id，将所有空格、中西文标点替换为由数字和减号组成的 hash 值。在编写 Markdown 需要引用这些标题时，要将原文中的连续空白替换成一个减号即可，例如引用标题 `## 使用 SSO 登录` 时，应写为 `请参考 [SSO 登录](#使用-SSO-登录)`，纯数字标题要先在前面加个下划线，比如标题 `### 601` 引用写为 `[错误码 601](#_601)`。
+  - 系统自动生成的 h1-h6 标题的 id，将所有空格、中西文标点替换为由数字和减号组成的 hash 值。在编写 Markdown 需要引用这些标题时，要将原文中的连续空白替换成一个减号即可，例如引用标题 `## 使用 SSO 登录` 时，应写为 `请参考 [SSO 登录](#使用-SSO-登录)`，纯数字标题要先在前面加个下划线，比如标题 `### 601` 引用写为 `[错误码 601](#_601)`。
 - 提交修改并发起 `Pull Request`
 
 ## 内部贡献
@@ -42,7 +42,7 @@ LeanCloud 开发者文档
 
 1. 本地切换到 master 分支并同步至主 repo 的最新版本。
 1. 新建分支 new branch 进行修改
-1. 提交 PR，如有相关的 issue 在注释中增加 `Fixes #???`。问号为 issue 的编号。
+1. 提交 PR，如有相关的 issue 在注释中增加 `close #???`。问号为 issue 的编号。
 
 合并 PR 时，如果 commits 历史不重要，可以选择 Squash and Merge 来合并，合并后删除相关的分支。
 
@@ -84,13 +84,13 @@ $ sudo npm install -g grunt-cli
 安装需要的依赖
 
 ```bash
-$ npm install
+$ npm ci
 ```
 
 本地启动一个 HTTP Server，然后打开浏览器访问 <http://localhost:3000> 即可
 
 ```bash
-$ grunt serve
+$ npm run preview
 ```
 
 ## 版本更新
