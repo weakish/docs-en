@@ -1044,7 +1044,7 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
 >
 > This feature is only available for *chat rooms*. There won't be an effect if you set priorities for messages in basic conversations, since these messages will never get discarded.
 
-### Muting Conversations
+## Muting Conversations
 
 If a user doesn't want to get notifications for new messages in a conversation but still wants to stay in the conversation, they can mute the conversation.
 
@@ -1120,7 +1120,7 @@ After a conversation is muted, the current user will not get push notifications 
 > - Both chat rooms and basic conversations can be muted.
 > - `mute` and `unmute` operations will change the `mu` field in the `_Conversation` class. **Do not change the `mu` field directly in your app's dashboard**, otherwise push notifications may not work properly.
 
-### Keyword Filtering
+## Keyword Filtering
 
 You might consider filtering cuss words out from the messages sent into group chats by users. LeanMessage offers a built-in component that helps you easily implement such function. It works not only for chat rooms, but also for **basic conversations and system conversations**.
 
