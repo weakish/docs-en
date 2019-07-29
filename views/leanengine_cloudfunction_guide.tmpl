@@ -26,9 +26,16 @@ This guide uses {{platformName}} as an example, but LeanEngine supports many oth
 - [PHP](leanengine_cloudfunction_guide-php.html){% if platformName === "PHP" %} <span class="text-muted">(current)</span>{% endif %}
 - [Java](leanengine_cloudfunction_guide-java.html){% if platformName === "Java" %} <span class="text-muted">(current)</span>{% endif %}
 
+{% if platformName === "Python" %}
+{# ## 初始化 #}
+{% endif %}
+{% if platformName === ".NET" %}
+{# ## 安装和初始化 #}
+{% endif %}
+
 ## Switching Environments
 
-LeanEngine offers two environments for each app: production environment and staging environment. When calling cloud functions within LeanEngine instances using SDK, no matter explicitly or implicitly (by triggering hooks), the SDK uses the function defined in the same environment as the instance. For example, if beforeDelete hook is defined and an object is deleted with SDK in the staging environment, the beforeDelete hook in the staging environment will be triggered.
+LeanEngine offers two environments for each app: production environment and staging environment. When calling cloud functions within LeanEngine instances using SDK, no matter explicitly or implicitly (by triggering hooks), the SDK uses the function defined in the same environment as the instance. For example, if `beforeDelete` hook is defined and an object is deleted with SDK in the staging environment, the `beforeDelete` hook in the staging environment will be triggered.
 
 When calling cloud functions outside of LeanEngine instances using SDK, no matter explicitly or implicitly, `X-LC-Prod` is set to be `1` by default, which means that the production environment will be used. For historical reasons, there are some differences between each SDK:
 
