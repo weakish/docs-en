@@ -771,7 +771,7 @@ And on the backend:
 
 ```js
 app.get('/profile', function (req, res) {
-  //  Query the current user based on sessionToken
+  // Query the current user based on sessionToken
   AV.User.become(req.headers['x-lc-session']).then(user => {
     res.send(user);
   }).catch(err => {
