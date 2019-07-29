@@ -185,12 +185,12 @@ A `Request` will be passed into a cloud function as a parameter. Each `Request` 
 - `params: Object`: The parameters sent from the client; might be an `AV.Object` when the function is called with `rpc`.
 - `currentUser?: AV.User`: The user logged in at the client side (according to the header `X-LC-Session`).
 - `sessionToken?: String`: The `sessionToken` sent from the client (according to the header `X-LC-Session`).
-- `meta: object`: Other information about the client, including `remoteAddress` which is the IP address of the client.
+- `meta: Object`: Other information about the client, including `remoteAddress` which is the IP address of the client.
 
 `AV.Cloud.define` also takes in an optional parameter `options` (between the function name and the actual function) which has the following properties:
 
-- `fetchUser: boolean`: Whether to automatically get the user information from the client; defaults to `true`. When set to `false`, `Request` will not have the `currentUser` property.
-- `internal: boolean`: Whether to only allow the function to be called within LeanEngine (using `AV.Cloud.run` without enabling `remote`) or with Master Key (by passing in `useMasterKey` to `AV.Cloud.run`) and prevent it from being called directly by the client; defaults to `false`.
+- `fetchUser: Boolean`: Whether to automatically get the user information from the client; defaults to `true`. When set to `false`, `Request` will not have the `currentUser` property.
+- `internal: Boolean`: Whether to only allow the function to be called within LeanEngine (using `AV.Cloud.run` without enabling `remote`) or with Master Key (by passing in `useMasterKey` to `AV.Cloud.run`) and prevent it from being called directly by the client; defaults to `false`.
 
 For example, if we don't allow a client to call the function above directly and the function does not need the user information, we can rewrite the function in this way:
 
