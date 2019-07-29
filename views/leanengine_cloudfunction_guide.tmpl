@@ -110,6 +110,14 @@ def averageStars(movie, **params):
     result = sum(x.get('stars') for x in reviews)
     return result
 ```
+
+The default name of the cloud function used by the SDK is the same as the function name in Python. If you need a different name for the function, you can have it specified after `engine.define`:
+
+```python
+@engine.define('averageStars')
+def my_custom_average_start(movie, **params):
+    pass
+```
 {% endif %}
 {% if platformName === "PHP" %}
 ```php
@@ -166,16 +174,6 @@ public static float getAverageStars(@EngineFunctionParam("movie") String movie)
   }
   return sum / reviews.size();
 }
-```
-{% endif %}
-
-{% if platformName === "Python" %}
-The default name of the cloud function used by the SDK is the same as the function name in Python. If you need a different name for the function, you can have it specified after `engine.define`:
-
-```python
-@engine.define('averageStars')
-def my_custom_average_start(movie, **params):
-    pass
 ```
 {% endif %}
 
