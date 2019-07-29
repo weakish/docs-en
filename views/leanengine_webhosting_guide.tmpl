@@ -391,7 +391,7 @@ AV.init({
 });
 
 var app = koa();
-app.use(AV.koa2());  // use AV.koa() if you're using version 1.
+app.use(AV.koa());
 app.listen(process.env.LEANCLOUD_APP_PORT);
 ```
 
