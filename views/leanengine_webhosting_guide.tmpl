@@ -89,7 +89,7 @@ Run the following command in your project root directory:
 lean deploy
 ```
 
-###  Setting up Second-Level Domains
+### Setting up Second-Level Domains
 
 In the "Web Hosting Domain" section of your app's [Dashboard > LeanEngine > Settings](https://console.leancloud.app/cloud.html?appid={{appid}}#/conf), you can fill in a custom second-level domain. For example, if you set it to be `myapp`, you can access your website through `http://myapp.avosapps.us`.
 
@@ -391,7 +391,7 @@ AV.init({
 });
 
 var app = koa();
-app.use(AV.koa2());  // use AV.koa() if you're using version 1.
+app.use(AV.koa());
 app.listen(process.env.LEANCLOUD_APP_PORT);
 ```
 
@@ -630,7 +630,7 @@ $app->add($engine);
 If you didn't use [LeanCloud PHP SDK](https://github.com/leancloud/php-sdk), you need to handle the URL by yourself:
 
 ```php
-// Router health monitoring
+// Router for health monitoring
 $app->get('/__engine/1/ping', function($req, $res) {
     // PSR-7 response is immutable
     $response = $res->withHeader("Content-Type", "application/json");
@@ -771,7 +771,7 @@ And on the backend:
 
 ```js
 app.get('/profile', function (req, res) {
-  //  Query the current user based on sessionToken
+  // Query the current user based on sessionToken
   AV.User.become(req.headers['x-lc-session']).then(user => {
     res.send(user);
   }).catch(err => {
