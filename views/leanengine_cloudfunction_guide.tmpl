@@ -847,7 +847,7 @@ The object passed into the function is a temporary object and may be different f
 Dead loops may be triggered if this hook is not defined properly. This may lead to extra API calls or even extra bills. See [Preventing Dead Loops](#preventing-dead-loops) for more details.
 {% endcall %}
 
-You can perform an operation after an object is updated. You will be able to know which fields are updated (same as `beforeUpdate`).
+You can perform an operation after an object is updated. You will be able to know which fields are updated (same as `{% if platformName === "Node.js" %}beforeUpdate{% endif %}{% if platformName === "Python" %}before_update{% endif %}{% if platformName === "PHP" %}beforeUpdate{% endif %}{% if platformName === "Java" %}beforeUpdate{% endif %}`).
 
 {% if platformName === "Node.js" %}
 ```js
@@ -1975,7 +1975,6 @@ Online editing only supports LeanCloud JavaScript SDK (3.x), Node.js SDK (3.x), 
 - jade, lodash, moment, nodemailer
 - qiniu, redis, request, request-promise, superagent
 - underscore, uuid, wechat-api, xml2js
-
 
 In your app's [Dashboard > LeanEngine > Deploy > Edit online](https://console.leancloud.app/cloud.html?appid={{appid}}#/deploy), you can:
 
