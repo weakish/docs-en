@@ -1,4 +1,3 @@
-{% set var_app_domain = "{App Domain}" %}
 {% import "views/_helper.njk" as docs %}
 
 # {{platformName}} Cloud Function Guide
@@ -27,9 +26,16 @@ This guide uses {{platformName}} as an example, but LeanEngine supports many oth
 - [PHP](leanengine_cloudfunction_guide-php.html){% if platformName === "PHP" %} <span class="text-muted">(current)</span>{% endif %}
 - [Java](leanengine_cloudfunction_guide-java.html){% if platformName === "Java" %} <span class="text-muted">(current)</span>{% endif %}
 
+{% if platformName === "Python" %}
+{# ## 初始化 #}
+{% endif %}
+{% if platformName === ".NET" %}
+{# ## 安装和初始化 #}
+{% endif %}
+
 ## Switching Environments
 
-LeanEngine offers two environments for each app: production environment and staging environment. When calling cloud functions within LeanEngine instances using SDK, no matter explicitly or implicitly (by triggering hooks), the SDK uses the function defined in the same environment as the instance. For example, if beforeDelete hook is defined and an object is deleted with SDK in the staging environment, the beforeDelete hook in the staging environment will be triggered.
+LeanEngine offers two environments for each app: production environment and staging environment. When calling cloud functions within LeanEngine instances using SDK, no matter explicitly or implicitly (by triggering hooks), the SDK uses the function defined in the same environment as the instance. For example, if `beforeDelete` hook is defined and an object is deleted with SDK in the staging environment, the `beforeDelete` hook in the staging environment will be triggered.
 
 When calling cloud functions outside of LeanEngine instances using SDK, no matter explicitly or implicitly, `X-LC-Prod` is set to be `1` by default, which means that the production environment will be used. For historical reasons, there are some differences between each SDK:
 
@@ -104,6 +110,14 @@ def averageStars(movie, **params):
     result = sum(x.get('stars') for x in reviews)
     return result
 ```
+
+The default name of the cloud function used by the SDK is the same as the function name in Python. If you need a different name for the function, you can have it specified after `engine.define`:
+
+```python
+@engine.define('averageStars')
+def my_custom_average_start(movie, **params):
+    pass
+```
 {% endif %}
 {% if platformName === "PHP" %}
 ```php
@@ -163,24 +177,14 @@ public static float getAverageStars(@EngineFunctionParam("movie") String movie)
 ```
 {% endif %}
 
-{% if platformName === "Python" %}
-The default name of the cloud function used by the SDK is the same as the function name in Python. If you need a different name for the function, you can have it specified after `engine.define`:
-
-```python
-@engine.define('averageStars')
-def my_custom_average_start(movie, **params):
-    pass
-```
-{% endif %}
-
 ### Parameters and Return Values
 
 {% if platformName === "Node.js" %}
 A `Request` will be passed into a cloud function as a parameter. Each `Request` contains the following properties:
 
-- `params: Object`: The parameters sent from the client; might be an `AV.Object` when the function is called with `rpc`.
+- `params: object`: The parameters sent from the client; might be an `AV.Object` when the function is called with `rpc`.
 - `currentUser?: AV.User`: The user logged in at the client side (according to the header `X-LC-Session`).
-- `sessionToken?: String`: The `sessionToken` sent from the client (according to the header `X-LC-Session`).
+- `sessionToken?: string`: The `sessionToken` sent from the client (according to the header `X-LC-Session`).
 - `meta: object`: Other information about the client, including `remoteAddress` which is the IP address of the client.
 
 `AV.Cloud.define` also takes in an optional parameter `options` (between the function name and the actual function) which has the following properties:
@@ -843,7 +847,7 @@ The object passed into the function is a temporary object and may be different f
 Dead loops may be triggered if this hook is not defined properly. This may lead to extra API calls or even extra bills. See [Preventing Dead Loops](#preventing-dead-loops) for more details.
 {% endcall %}
 
-You can perform an operation after an object is updated. You will be able to know which fields are updated (same as `beforeUpdate`).
+You can perform an operation after an object is updated. You will be able to know which fields are updated (same as `{% if platformName === "Node.js" %}beforeUpdate{% endif %}{% if platformName === "Python" %}before_update{% endif %}{% if platformName === "PHP" %}beforeUpdate{% endif %}{% if platformName === "Java" %}beforeUpdate{% endif %}`).
 
 {% if platformName === "Node.js" %}
 ```js
@@ -1971,7 +1975,6 @@ Online editing only supports LeanCloud JavaScript SDK (3.x), Node.js SDK (3.x), 
 - jade, lodash, moment, nodemailer
 - qiniu, redis, request, request-promise, superagent
 - underscore, uuid, wechat-api, xml2js
-
 
 In your app's [Dashboard > LeanEngine > Deploy > Edit online](https://console.leancloud.app/cloud.html?appid={{appid}}#/deploy), you can:
 
