@@ -6524,7 +6524,7 @@ If the `authData` is not linked to any account, you will instead receive the sta
   "createdAt":    "2018-05-21T09:33:26.406Z",
   "updatedAt":    "2018-05-21T09:33:26.575Z",
   "sessionToken": "…",
-  // By default authData won't show up here
+  // authData won't be returned in most cases
   // See explanations below
   "authData": {
     // …
@@ -6533,7 +6533,7 @@ If the `authData` is not linked to any account, you will instead receive the sta
 }
 ```
 
-By default, `authData` cannot be returned to the client unless the record is owned by the current user. To change this behavior, you can go to your app's [Dashboard > LeanStorage > Data > `_User`](https://console.leancloud.app/data.html?appid={{appid}}#/_User), click on the arrow icon on the `authData` column header, click on **Edit**, and check off the **Only owners can read and write** option so that anyone can have access to it.
+The `authData` field won't be returned to the client unless it is owned by the current user.
 
 To ensure that each `{{ userObjectName }}` is linked to each service account only once, a unique index needs to be created for the `authData.<SERVICE_NAME>.uid` key in the `_User` class.
 
