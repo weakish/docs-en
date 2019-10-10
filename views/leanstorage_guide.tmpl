@@ -3507,7 +3507,7 @@ To make a query **live**, create a normal `{{ baseQueryClassName }}` object, put
 
 {% if platform_name === "Objective-C" %}
 ```objc
-AVQuery *query = [AVQuery queryWithClassName:@"Employee"];
+AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 self.liveQuery = [[AVLiveQuery alloc] initWithQuery:query];
 self.liveQuery.delegate = self;
 [self.liveQuery subscribeWithCallback:^(BOOL succeeded, NSError * _Nonnull error) {
@@ -3517,7 +3517,7 @@ self.liveQuery.delegate = self;
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Employee');
+var query = new AV.Query('Todo');
 query.subscribe().then(function (liveQuery) {
   // Query becomes live after getting a subscription
 });
@@ -3525,7 +3525,7 @@ query.subscribe().then(function (liveQuery) {
 {% endif %}
 {% if platform_name === "Java" %}
 ```java
-AVQuery<AVObject> query = new AVQuery<>("Employee");
+AVQuery<AVObject> query = new AVQuery<>("Todo");
 AVLiveQuery liveQuery = AVLiveQuery.initWithQuery(query);
 liveQuery.subscribeInBackground(new AVLiveQuerySubscribeCallback() {
     @Override
@@ -3542,11 +3542,11 @@ liveQuery.subscribeInBackground(new AVLiveQuerySubscribeCallback() {
 You can't use subqueries or restrict fields being returned when using LiveQuery.
 {% endcall %}
 
-Now you will be able to receive updates related to `{{ baseObjectName }}`. If an `Employee` object is created by another client with `Kelly` as `firstName`, the following code can get the new `Employee` for you:
+Now you will be able to receive updates related to `{{ baseObjectName }}`. If an `Todo` object is created by another client with `Update Portfolio` as `title`, the following code can get the new `Todo` for you:
 
 {% if platform_name === "Objective-C" %}
 ```objc
-AVQuery *query = [AVQuery queryWithClassName:@"Employee"];
+AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 self.liveQuery = [[AVLiveQuery alloc] initWithQuery:query];
 self.liveQuery.delegate = self;
 [self.liveQuery subscribeWithCallback:^(BOOL succeeded, NSError * _Nonnull error) {
@@ -3554,29 +3554,29 @@ self.liveQuery.delegate = self;
 }];
 - (void)liveQuery:(AVLiveQuery *)liveQuery objectDidCreate:(id)object {
     if (liveQuery == self.liveQuery) {
-        NSLog(@"%@", object[@"firstName"]); // Kelly
+        NSLog(@"%@", object[@"title"]); // Update Portfolio
     }
 }
 ```
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Employee');
+var query = new AV.Query('Todo');
 query.subscribe().then(function (liveQuery) {
-  liveQuery.on('create', function (newEmployee) {
-    console.log(newEmployee.get('firstName')); // Kelly
+  liveQuery.on('create', function (newTodo) {
+    console.log(newTodo.get('title')); // Update Portfolio
   });
 });
 ```
 {% endif %}
 {% if platform_name === "Java" %}
 ```java
-AVQuery<AVObject> query = new AVQuery<>("Employee");
+AVQuery<AVObject> query = new AVQuery<>("Todo");
 AVLiveQuery liveQuery = AVLiveQuery.initWithQuery(query);
 liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
     @Override
-    public void onObjectCreated(AVObject newEmployee) {
-        System.out.println(newEmployee.getString("firstName")); // Kelly
+    public void onObjectCreated(AVObject newTodo) {
+        System.out.println(newTodo.getString("title")); // Update Portfolio
     }
 });
 liveQuery.subscribeInBackground(new AVLiveQuerySubscribeCallback() {
@@ -3590,19 +3590,19 @@ liveQuery.subscribeInBackground(new AVLiveQuerySubscribeCallback() {
 ```
 {% endif %}
 
-If someone updates this `Employee` by changing its `team` to `Finance`, the following code can get the updated version for you:
+If someone updates this `Todo` by changing its `content` to `Add my recent paintings`, the following code can get the updated version for you:
 
 {% if platform_name === "Objective-C" %}
 ```objc
-- (void)liveQuery:(AVLiveQuery *)liveQuery objectDidUpdate:(id)updatedEmployee updatedKeys:(NSArray<NSString *> *)updatedKeys {
-    NSLog(@"%@", updatedEmployee[@"team"]); // Finance
+- (void)liveQuery:(AVLiveQuery *)liveQuery objectDidUpdate:(id)updatedTodo updatedKeys:(NSArray<NSString *> *)updatedKeys {
+    NSLog(@"%@", updatedTodo[@"content"]); // Add my recent paintings
 }
 ```
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-liveQuery.on('update', function (updatedEmployee, updatedKeys) {
-  console.log(updatedEmployee.get('team')); // Finance
+liveQuery.on('update', function (updatedTodo, updatedKeys) {
+  console.log(updatedTodo.get('content')); // Add my recent paintings
 });
 ```
 {% endif %}
@@ -3610,8 +3610,8 @@ liveQuery.on('update', function (updatedEmployee, updatedKeys) {
 ```java
 liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
     @Override
-    public void onObjectUpdated(AVObject updatedEmployee, List<String> updatedKeys) {
-        System.out.println(updatedEmployee.getString("team")); // Finance
+    public void onObjectUpdated(AVObject updatedTodo, List<String> updatedKeys) {
+        System.out.println(updatedTodo.getString("content")); // Add my recent paintings
     }
 });
 ```
