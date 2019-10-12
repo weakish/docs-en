@@ -1817,7 +1817,7 @@ public static Map<String, Object> onConversationRemove(Map<String, Object> param
 
 #### `{% if platformName === "Node.js" %}onIMConversationUpdate{% endif %}{% if platformName === "Python" %}_conversationUpdate{% endif %}{% if platformName === "PHP" %}_conversationUpdate{% endif %}{% if platformName === "Java" %}conversationUpdate{% endif %}`
 
-You can perform an operation before the properties of a conversation (including notifications) are updated. For example, to print out a log in LeanEngine:
+You can perform an operation before the name, custom attributes, or mention properties of a conversation (including notifications) are updated. For example, to print out a log in LeanEngine:
 
 {% if platformName === "Node.js" %}
 ```js
