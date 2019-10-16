@@ -12,39 +12,44 @@ There are several ways for you to install our SDK and the most convenient one is
 {% if platform_name === "Objective-C" %}
 The easiest way to integrate our SDK into your project is to use [CocoaPods](https://cocoapods.org). 
 
-Add the following pods into the `Podfile` under the project's root directory:
+Add the following pods into the `target` of `Podfile`:
 
 ```ruby
-pod 'AVOSCloud'   # LeanStorage, SMS, In-App Socializing, LeanEngine
-pod 'AVOSCloudIM' # LeanMessage
+pod 'AVOSCloud'   # (required) LeanStorage, SMS, LeanEngine etc. 
+pod 'AVOSCloudIM' # (optional) LeanMessage
+pod 'AVOSCloudLiveQuery' # (optional) LiveQuery
 ```
 
-If you plan to use [LiveQuery](leanstorage_guide-js.html#livequery), add the following pod as well:
+After adding the pods, run `pod update` or `pod install --repo-update` under the same directory to complete the installation.
 
-```ruby
-pod 'AVOSCloudLiveQuery'
-```
+After installing the SDK, you can open your project with `<PROJECT_NAME>.xcworkspace` under the root directory of your project.
 
-After adding the pods, run `pod install` under the same directory to complete the installation.
 {% endif %}
 {% if platform_name === "Swift" %}
-[CocoaPods](https://cocoapods.org) is a tool used to manage third-party dependencies (pods) used by macOS and iOS apps. It makes it easy for you to manage  the versions of all the third-party libraries your app depends on. See [Using CocoaPods](https://guides.cocoapods.org/using/index.html) for more details.
+You can use [CocoaPods](https://cocoapods.org) or [Swift Package Manager][SPM] to manage your project's dependencies.
 
-To get started, make sure you have Ruby installed (macOS comes with Ruby but we recommend you installing Xcode which comes with newer version of it) and run the following command to install cocoapods:
+[SPM]: https://developer.apple.com/documentation/swift_packages
 
-```sh
-$ sudo gem install cocoapods
-```
+#### Swift Package Manager
 
-Now create a `Podfile` (with no extension) under the root directory of your project and add the following content:
+Just add the [swift-sdk] repository.
+
+[swift-sdk]: https://github.com/leancloud/swift-sdk
+
+#### CocoaPods
+
+Add the following pods into the `target` of `Podfile`:
 
 ```ruby
-target 'YOUR_APP_TARGET' do # Replace YOUR_APP_TARGET with your app's name
-    use_frameworks!
-    inhibit_all_warnings!
+pod 'LeanCloud'
+```
 
-    pod 'LeanCloud', '~> SDK_VERSION' # In most cases you can use the latest version for SDK_VERSION; you can find it on https://github.com/leancloud/swift-sdk/releases
-end
+or use the [Subspecs](https://guides.cocoapods.org/syntax/podspec.html#subspec) way:
+
+```ruby
+pod 'LeanCloud/Foundation' # (required) LeanStorage, SMS, LeanEngine etc. 
+pod 'LeanCloud/RTM' # (optional) LeanMessage, LiveQuery
+# LeanCloud/RTM depends on LeanCloud/Foundation, so their versions must be consistent. 
 ```
 
 Then install the SDK with the following command:
@@ -62,6 +67,7 @@ $ pod install --repo-update
 See [official documentation](https://guides.cocoapods.org/using/pod-install-vs-update.html) for the differences between them.
 
 After installing the SDK, you can open your project with `<PROJECT_NAME>.xcworkspace` under the root directory of your project.
+
 {% endif %}
 {% if platform_name === "Python" %}
 The easiest way to integrate our SDK in your project is to use `pip`. Run the following command to install it:
@@ -653,13 +659,9 @@ Then add the following code into your project:
 do {
     let testObject = LCObject(className: "TestObject")
     try testObject.set("words", value: "Hello world!")
-    _ = testObject.save { result in
-        switch result {
-        case .success:
-            break
-        case .failure(let error):
-            print(error)
-        }
+    let result = testObject.save()
+    if let error = result.error {
+      print(error)
     }
 } catch {
     print(error)
