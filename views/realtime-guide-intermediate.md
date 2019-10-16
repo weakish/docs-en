@@ -1480,7 +1480,48 @@ The reason a device gets logged out will be included in the event so that you ca
 
 Although LeanMessage already support a number of common message types by default, you can still define your own types as you need. For example, if you want your users to send messages containing payments and contacts, you can implement that with custom message types.
 
+### Custom Message Attributes
+
+The following message types are offered by default:
+
+- `TextMessage` Text message
+- `ImageMessage` Image message
+- `AudioMessage` Audio message
+- `VideoMessage` Video message
+- `FileMessage` File message (.txt, .doc, .md, etc.)
+- `LocationMessage` Location message
+
+When composing messages with these types, you can include additional information by attaching custom attributes in the format of key-value pairs. For example, if your are sending an message and need to include city information, you can put it into `attributes` of the message rather than create your own message type.
+
+```js
+var messageWithCity = new TextMessage("It's too cold now.");
+messageWithCity.setAttributes({ city: "Montreal" });
+```
+```swift
+let messageWithCity = IMTextMessage(text: "It's too cold now.")
+messageWithCity.attributes = ["city": "Montreal"];
+```
+```objc
+NSDictionary *attributes = @{ @"city": @"Montreal" };
+AVIMTextMessage *messageWithCity = [AVIMTextMessage messageWithText:@"It's too cold now." attributes:attributes];
+```
+```java
+AVIMTextMessage messageWithCity = new AVIMTextMessage();
+messageWithCity.setText("It's too cold now.");
+HashMap<String,Object> attr = new HashMap<String,Object>();
+attr.put("city", "Montreal");
+messageWithCity.setAttrs(attr);
+```
+```cs
+var messageWithCity = new AVIMTextMessage("It's too cold now.");
+messageWithCity["city"] = "Montreal";
+```
+
+Therefore, we suggest that you create your own message types only when 
+
 ### Creating Your Own Message Types
+
+When built-in types cannot fulfill your requirements at all, you can implement custom message type.
 
 {{ docs.langSpecStart('js') }}
 
@@ -1694,21 +1735,6 @@ void Jerry_OnMessageReceived(object sender, AVIMMessageEventArgs e)
 ```
 
 See [Back to Receiving Messages](realtime-guide-beginner.html#back-to-receiving-messages) in the previous chapter for more details on how to receive messages with custom types.
-
-### When to Use Custom Message Types
-
-The following message types are offered by default:
-
-- `TextMessage` Text message
-- `ImageMessage` Image message
-- `AudioMessage` Audio message
-- `VideoMessage` Video message
-- `FileMessage` File message (.txt, .doc, .md, etc.)
-- `LocationMessage` Location message
-
-When composing messages with these types, you can include additional information by attaching custom attributes in the format of key-value pairs. For example, if your are sending an image message and need to include some location information beside text, you can put it into `attributes` of the message rather than create a new type of message.
-
-Therefore, we suggest that you create your own message types only when your requirements cannot be fulfilled with the built-in types.
 
 ## Continue Reading
 
