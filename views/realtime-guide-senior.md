@@ -1122,9 +1122,17 @@ After a conversation is muted, the current user will not get push notifications 
 
 ### Keyword Filtering
 
-You might consider filtering cuss words out from the messages sent into group chats by users. LeanMessage offers a built-in component that helps you easily implement such function. It works not only for chat rooms, but also for **basic conversations and system conversations**.
+You might consider filtering cuss words out from the messages sent into group chats by users. LeanMessage offers built-in keyword filtering.
+It works not only for chat rooms, but also for **basic conversations and system conversations**.
 
-To use it, go to your app's [Dashboard > Messaging > LeanMessage > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf) and enable **Keyword filtering**. LeanCloud offers a set of keywords by default, but you can also use your own keywords by uploading a file. A keyword appearing in a message will be replaced by `***`.
+Matched keywords will be replaced with `***`.
+
+Keyword filtering is message modification at the system level, so message sender will receive a `MESSAGE_UPDATE` event.
+Application can listen on this event at client side.
+Please refer to [the "Edit a message" section of previous chapter](realtime-guide-intermediate.html#edit-a-message) for code samples.
+
+LeanCloud offers a set of keywords by default.
+Apps with Business Plans can customize filtering keywords. To do so, go to your app's [Dashboard > Messaging > LeanMessage > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf) and enable **Custom keyword filtering**. Then upload your own keywords file to replace the default list. 
 
 If you have more complicated requirements regarding message filtering, we recommend that you make use of [the `_messageReceived` hook of LeanEngine](realtime-guide-systemconv.html#_messageReceived). You can defined your own logic for controlling messages.
 
