@@ -169,7 +169,22 @@ realtime.createIMClient('Tom', {
 });
 ```
 ```swift
-// Not supported yet
+class SignatureDelegator: IMSignatureDelegate {
+  func getClientOpenSignature(completion: (IMSignature) -> Void) {
+    // Refer to the section "Demo for Generating Signatures on LeanEngine" for details.
+  }
+
+  func client(_ client: IMClient, action: IMSignature.Action, signatureHandler: @escaping (IMClient, IMSignature?) -> Void) {
+    switch action {
+      case .open:
+        self.getClientOpenSignature { (signature) in
+          signatureHandler(client, signature)
+        }
+      default:
+        signatureHandler(client, nil)
+    }
+  }
+}
 ```
 ```objc
 // Methods offered by AVIMSignatureDataSource
