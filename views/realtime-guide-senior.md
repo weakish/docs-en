@@ -187,22 +187,21 @@ class SignatureDelegator: IMSignatureDelegate {
 }
 ```
 ```objc
-// Methods offered by AVIMSignatureDataSource
-/*!
- Create signature for an operation in background
- @param clientId - The ID of the operator
- @param conversationId － The ID of the conversation
- @param action － @see AVIMSignatureAction
- @param clientIds － A list of member IDs
- @return An AVIMSignature object
- */
-- (AVIMSignature *)signatureWithClientId:(NSString *)clientId
-                          conversationId:(NSString * _Nullable)conversationId
-                                  action:(AVIMSignatureAction)action
-                       actionOnClientIds:(NSArray<NSString *> * _Nullable)clientIds;
-
-
 // Implement AVIMSignatureDataSource and bind it to an AVIMClient instance
+- (AVIMSignature *)signatureWithClientId:(NSString *)clientId
+                          conversationId:(NSString *)conversationId
+                                  action:(AVIMSignatureAction)action
+                       actionOnClientIds:(NSArray<NSString *> *)clientIds
+{
+  if (action == AVIMSignatureActionOpen) {
+    AVIMSignature *signature;
+    /* Refer to the section "Demo for Generating Signatures on LeanEngine" for details. */
+    return signature;
+  } else {
+    return nil;
+  }
+}
+
 AVIMClient *imClient = [[AVIMClient alloc] initWithClientId:@"Tom"];
 imClient.delegate = self;
 imClient.signatureDataSource = signatureDelegate;
