@@ -315,7 +315,7 @@ var newMessage = new AVIMTextMessage("The new message.");
 await conversation.UpdateAsync(oldMessage, newMessage);
 ```
 
-If the modification succeed, other members in the conversation will receive a `MESSAGE_UPDATE` event:
+If the modification succeeded, other members in the conversation will receive a `MESSAGE_UPDATE` event:
 
 ```js
 var { Event } = require('leancloud-realtime');
@@ -379,7 +379,7 @@ If a message is modified by the system (for example, due to keyword filtering or
 
 ### Recall a Message
 
-Besides modifying an sent message, a user can also recall a message they sent.
+Besides modifying a sent message, a user can also recall a message they sent.
 Similarly, app developers need to enable this in application dashboard ([Dashboard > Messaging > LeanMessage > Settings > LeanMessage settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf) **Allow recalling messages with SDK**).
 Also, there are no limits on the time within which they can perform this operation,
 and users are only allowed to recall messages they sent, not the ones sent by others.
@@ -431,7 +431,7 @@ conversation.recallMessage(message, new AVIMMessageRecalledCallback() {
 await conversation.RecallAsync(message);
 ```
 
-Once recalling a message succeed, other members in the conversation will receive the `MESSAGE_RECALL` event:
+Once recalling a message succeeded, other members in the conversation will receive the `MESSAGE_RECALL` event:
 
 ```js
 var { Event } = require('leancloud-realtime');
