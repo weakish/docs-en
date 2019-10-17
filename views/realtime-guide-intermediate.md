@@ -1491,7 +1491,7 @@ The following message types are offered by default:
 - `FileMessage` File message (.txt, .doc, .md, etc.)
 - `LocationMessage` Location message
 
-When composing messages with these types, you can include additional information by attaching custom attributes in the format of key-value pairs. For example, if your are sending an message and need to include city information, you can put it into `attributes` of the message rather than create your own message type.
+When composing messages with these types, you can include additional information by attaching custom attributes in the format of key-value pairs. For example, if your are sending a message and need to include city information, you can put it into `attributes` of the message rather than create your own message type.
 
 ```js
 var messageWithCity = new TextMessage("It's too cold now.");
@@ -1516,8 +1516,6 @@ messageWithCity.setAttrs(attr);
 var messageWithCity = new AVIMTextMessage("It's too cold now.");
 messageWithCity["city"] = "Montreal";
 ```
-
-Therefore, we suggest that you create your own message types only when 
 
 ### Creating Your Own Message Types
 
