@@ -254,117 +254,14 @@ private void OnMessageReceived(object sender, AVIMMessageEventArgs e)
 }
 ```
 
-### Recalling and Editing Messages
+### Modify a Message
 
-> Before implementing these functions, go to your app's [Dashboard > Messaging > LeanMessage > Settings > LeanMessage settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf) and enable **Allow editing messages with SDK** and **Allow recalling messages with SDK**.
+To allow a user to edit messages they sent, app developers have to enable **Allow editing messages with SDK** in [Dashboard > Messaging > LeanMessage > Settings > LeanMessage settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf).
 
-A user has the ability to edit or recall messages they have sent out with `Conversation#updateMessage` or `Conversation#recallMessage` methods. There are no limits on the time within which they can perform these operations. However, users are only allowed to edit or recall the messages they have sent out, not the ones sent by others.
+There are no limits on the time within which they can perform this operation.
+However, users are only allowed to edit messages they sent, not the ones sent by others.
 
-The code below lets Tom **recall a message he has sent out**:
-
-```js
-conversation.recall(oldMessage).then(function(recalledMessage) {
-  // The message is recalled
-  // recalledMessage is a RecalledMessage
-}).catch(function(error) {
-  // Handle error
-});
-```
-```swift
-do {
-    try conversation.recall(message: oldMessage, completion: { (result) in
-        switch result {
-        case .success(value: let recalledMessage):
-            print(recalledMessage)
-        case .failure(error: let error):
-            print(error)
-        }
-    })
-} catch {
-    print(error)
-}
-```
-```objc
-AVIMMessage *oldMessage = <#MessageYouWantToRecall#>;
-
-[conversation recallMessage:oldMessage callback:^(BOOL succeeded, NSError * _Nullable error, AVIMRecalledMessage * _Nullable recalledMessage) {
-    if (succeeded) {
-        NSLog(@"The message is recalled.");
-    }
-}];
-```
-```java
-conversation.recallMessage(message, new AVIMMessageRecalledCallback() {
-    @Override
-    public void done(AVIMRecalledMessage recalledMessage, AVException e) {
-        if (null == e) {
-            // The message is recalled; the UI may be updated now
-        }
-    }
-});
-```
-```cs
-await conversation.RecallAsync(message);
-```
-
-After Tom calls `recallMessage`, other members in the conversation will receive the `MESSAGE_RECALL` event:
-
-```js
-var { Event } = require('leancloud-realtime');
-conversation.on(Event.MESSAGE_RECALL, function(recalledMessage, reason) {
-  // recalledMessage is the message being recalled
-  // Look for the original message with its ID and replace it with recalledMessage
-  // reason (optional) is the reason the message is recalled; see the part for editing messages for more details
-});
-```
-```swift
-func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
-    switch event {
-    case .message(event: let messageEvent):
-        switch messageEvent {
-        case let .updated(updatedMessage: updatedMessage, reason: _):
-            if let recalledMessage = updatedMessage as? IMRecalledMessage {
-                print(recalledMessage)
-            }
-        default:
-            break
-        }
-    default:
-        break
-    }
-}
-```
-```objc
-/* A delegate method for handling events of editing and recalling messages */
-- (void)conversation:(AVIMConversation *)conversation messageHasBeenUpdated:(AVIMMessage *)message {
-    /* A message is updated or recalled */
-
-    switch (message.mediaType) {
-    case kAVIMMessageMediaTypeRecalled:
-        NSLog(@"message is a message being recalled.");
-        break;
-    default:
-        NSLog(@"message is a message being updated.");
-        break;
-    }
-}
-```
-```java
-void onMessageRecalled(AVIMClient client, AVIMConversation conversation, AVIMMessage message) {
-  // message is the message being recalled
-}
-```
-```cs
-tom.OnMessageRecalled += Tom_OnMessageRecalled;
-private void Tom_OnMessageRecalled(object sender, AVIMMessagePatchEventArgs e)
-{
-    // e.Messages contains the messages being edited; it is a collection of messages since the SDK may combine multiple operations into a single request
-}
-```
-
-For Android and iOS SDKs, if caching is enabled (enabled by default), the SDKs will first delete the recalled message from the cache and then trigger an event to the app. This ensures the consistency of data internally. When you receive such event, simply refresh the chatting page to reflect the latest collection of messages. Based on your implementation, either the total amount of messages would become less or a message indicating message being recalled would be displayed.
-
-Beside recalling the message, Tom can also **edit the message directly**. When this happens, what you would do is not to update the original message instance, but to create a new one and call `Conversation#updateMessage(oldMessage, newMessage)` to submit the request to the cloud. Here is a code example:
+To modify a message, what you would do is not to update the original message instance, but to create a new one and call `Conversation#updateMessage(oldMessage, newMessage)` to submit the request to the cloud. Here is a code example:
 
 ```js
 var newMessage = new TextMessage('The new message.');
@@ -418,7 +315,7 @@ var newMessage = new AVIMTextMessage("The new message.");
 await conversation.UpdateAsync(oldMessage, newMessage);
 ```
 
-After Tom updates the message, other members in the conversation will receive the `MESSAGE_UPDATE` event:
+If the modification succeeded, other members in the conversation will receive a `MESSAGE_UPDATE` event:
 
 ```js
 var { Event } = require('leancloud-realtime');
@@ -476,9 +373,120 @@ tom.OnMessageUpdated += (sender, e) => {
 };
 ```
 
-For Android and iOS SDKs, if caching is enabled (enabled by default), the SDKs will first update the edited message in the cache and then trigger an event to the app. When you receive such event, simply refresh the chatting page to reflect the latest collection of messages.
+For Android and iOS SDKs, if caching is enabled (enabled by default), the SDKs will first update the modified message in the cache and then trigger an event to the app. When you receive such event, simply refresh the chatting page to reflect the latest collection of messages.
 
-If a message is edited by the system (for example, due to keyword filtering or by a hook on LeanEngine), all the members in the conversation (including the sender) will receive a `MESSAGE_UPDATE` event.
+If a message is modified by the system (for example, due to keyword filtering or by a hook on LeanEngine), the sender will receive a `MESSAGE_UPDATE` event, and other members in the conversation will receive the modified message.
+
+### Recall a Message
+
+Besides modifying a sent message, a user can also recall a message they sent.
+Similarly, app developers need to enable this in application dashboard ([Dashboard > Messaging > LeanMessage > Settings > LeanMessage settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf) **Allow recalling messages with SDK**).
+Also, there are no limits on the time within which they can perform this operation,
+and users are only allowed to recall messages they sent, not the ones sent by others.
+
+To recall a message, invoke the `Conversation#recallMessage` method:
+
+```js
+conversation.recall(oldMessage).then(function(recalledMessage) {
+  // The message is recalled
+  // recalledMessage is a RecalledMessage
+}).catch(function(error) {
+  // Handle error
+});
+```
+```swift
+do {
+    try conversation.recall(message: oldMessage, completion: { (result) in
+        switch result {
+        case .success(value: let recalledMessage):
+            print(recalledMessage)
+        case .failure(error: let error):
+            print(error)
+        }
+    })
+} catch {
+    print(error)
+}
+```
+```objc
+AVIMMessage *oldMessage = <#MessageYouWantToRecall#>;
+
+[conversation recallMessage:oldMessage callback:^(BOOL succeeded, NSError * _Nullable error, AVIMRecalledMessage * _Nullable recalledMessage) {
+    if (succeeded) {
+        NSLog(@"The message is recalled.");
+    }
+}];
+```
+```java
+conversation.recallMessage(message, new AVIMMessageRecalledCallback() {
+    @Override
+    public void done(AVIMRecalledMessage recalledMessage, AVException e) {
+        if (null == e) {
+            // The message is recalled; the UI may be updated now
+        }
+    }
+});
+```
+```cs
+await conversation.RecallAsync(message);
+```
+
+Once recalling a message succeeded, other members in the conversation will receive the `MESSAGE_RECALL` event:
+
+```js
+var { Event } = require('leancloud-realtime');
+conversation.on(Event.MESSAGE_RECALL, function(recalledMessage, reason) {
+  // recalledMessage is the message being recalled
+  // Look for the original message with its ID and replace it with recalledMessage
+  // reason (optional) is the reason the message is recalled; see the part for editing messages for more details
+});
+```
+```swift
+func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
+    switch event {
+    case .message(event: let messageEvent):
+        switch messageEvent {
+        case let .updated(updatedMessage: updatedMessage, reason: _):
+            if let recalledMessage = updatedMessage as? IMRecalledMessage {
+                print(recalledMessage)
+            }
+        default:
+            break
+        }
+    default:
+        break
+    }
+}
+```
+```objc
+/* A delegate method for handling events of editing and recalling messages */
+- (void)conversation:(AVIMConversation *)conversation messageHasBeenUpdated:(AVIMMessage *)message {
+    /* A message is updated or recalled */
+
+    switch (message.mediaType) {
+    case kAVIMMessageMediaTypeRecalled:
+        NSLog(@"message is a message being recalled.");
+        break;
+    default:
+        NSLog(@"message is a message being updated.");
+        break;
+    }
+}
+```
+```java
+void onMessageRecalled(AVIMClient client, AVIMConversation conversation, AVIMMessage message) {
+  // message is the message being recalled
+}
+```
+```cs
+tom.OnMessageRecalled += Tom_OnMessageRecalled;
+private void Tom_OnMessageRecalled(object sender, AVIMMessagePatchEventArgs e)
+{
+    // e.Messages contains the messages being edited; it is a collection of messages since the SDK may combine multiple operations into a single request
+}
+```
+
+For Android and iOS SDKs, if caching is enabled (enabled by default), the SDKs will first delete the recalled message from the cache and then trigger an event to the app. This ensures the consistency of data internally. When you receive such event, simply refresh the chatting page to reflect the latest collection of messages. Based on your implementation, either the total amount of messages would become less or a message indicating message being recalled would be displayed.
 
 ### Transient Messages
 
