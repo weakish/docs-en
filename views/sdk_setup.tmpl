@@ -557,10 +557,13 @@ LCApplication.logLevel = .all
 ```
 {% endif %}
 {% if platform_name === "JavaScript" %}
-If you are using Node.js, you can set the environment variable `DEBUG=leancloud*` when starting the app with npm:
+If you are using Node.js, you can set the environment variable `DEBUG=leancloud*` (LeanStorage) or `DEBUG=LC*` (LeanMessage) when starting the app with npm:
 
 ```sh
+// LeanStorage
 DEBUG=leancloud* npm start
+// LeanMessage
+DEBUG=LC* npm start
 ```
 
 If you are using Node.js with [LeanEngine](leanengine_overview.html), you can set the environment variable by going to [Dashboard > LeanEngine > Settings > Custom environment variables](https://console.leancloud.app/cloud.html?appid={{appid}}#/conf), put `DEBUG` in the first field and `leancloud:*` in the second field (make sure to include the colon between `leancloud` and `*`). When debugging locally with [command-line interface](leanengine_cli.html), you can set the environment variable `DEBUG=leancloud:*` to have logs output to your app's [Dashboard > LeanEngine > App logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log):
@@ -574,9 +577,27 @@ You can output logs to your browser console by setting `localStorage`:
 ```js
 localStorage.setItem('debug', 'leancloud*');
 
-// Enable debug logs for LiveQuery
+// Enable debug logs for LeanMessage and LiveQuery
 localStorage.setItem('debug', 'LC*');
 ```
+
+Recent versions of SDK also support enabling and disabling debug mode within the code.
+
+To enable/disable debug mode for LeanStorage (javascript-sdk `>= v3.14.0`):
+
+```js
+AV.debug.enable();
+AV.debug.disable();
+```
+
+To enable/disable debug mode for LeanMessage (js-realtime-sdk `>= v5.0.0-alpha.1`):
+
+```js
+const { debug } = require('leancloud-realtime');
+debug.enable();
+debug.disable();
+```
+
 {% endif %}
 {% if platform_name === "Python" %}
 ```python
