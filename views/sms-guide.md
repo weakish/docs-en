@@ -427,7 +427,7 @@ Now you can use this template in your code like so:
 AV.Cloud.requestSmsCode({
   mobilePhoneNumber: '$MOBILE_PHONE_NUMBER',
   template:          'delivery_notice_en_US',
-  sign:              'general'
+  sign:              'general',
   order_id:          '7623432424540'
 }).then(function(){
   // message sent successfully
