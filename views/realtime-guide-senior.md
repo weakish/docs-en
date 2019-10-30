@@ -790,7 +790,7 @@ do {
 }];
 ```
 ```java
-tom.createChatRoom(null, "Chat Room", null,
+tom.createChatRoom("Chat Room", null,
     new AVIMConversationCreatedCallback() {
         @Override
         public void done(AVIMConversation conv, AVIMException e) {
