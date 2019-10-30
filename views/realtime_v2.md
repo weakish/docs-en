@@ -244,7 +244,7 @@ You can read [Advanced Messaging Features](realtime-guide-intermediate.html#adva
 
 ### Lifespan of Conversations
 
-If no message is sent to a conversation (basic conversation, chat room, or system conversation) in the past one year through either SDK or REST API, or none of its fields in the `_Conversation` table are updated, the conversation will be considered as **inactive** and will be deleted automatically. Keep in mind that querying messages does not update the `_Conversation` table, so a conversation that only gets queried will also be seen as inactive.
+If no message is sent to a conversation (basic conversation, chat room, or system conversation) in the past six months through either SDK or REST API, or none of its fields in the `_Conversation` table are updated, the conversation will be considered as **inactive** and will be deleted automatically. Keep in mind that querying messages does not update the `_Conversation` table, so a conversation that only gets queried will also be seen as inactive.
 
 If you attempt to send a message to a deleted conversation through either SDK or REST API, the error `4401 INVALID_MESSAGING_TARGET` will be returned which means that the conversation does not exist anymore. The messages associated with deleted conversations will also be gone.
 
