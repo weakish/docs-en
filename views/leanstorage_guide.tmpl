@@ -4134,7 +4134,9 @@ file.saveInBackground().subscribe(new Observer<AVFile>() {
 _ = file.save { result in
     switch result {
     case .success:
-        print("File uploaded. objectId: " + file.objectId)
+        if let value = file.objectId?.value {
+            print("File uploaded. objectId: " + value)
+        }
     case .failure(error: let error):
         // The file either could not be read or could not be saved to LeanCloud
         print(error)
@@ -4948,7 +4950,7 @@ user.password = @"cat!@#123";
 
 // Optional
 user.email = @"tom@leancloud.rocks";
-user.phoneNumber = @"+19490008888";
+user.mobilePhoneNumber = @"+19490008888";
 
 // Other fields can be set in the same way as AVObject
 [user setObject:@"secret" forKey:@"gender"];
