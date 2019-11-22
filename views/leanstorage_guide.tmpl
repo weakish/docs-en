@@ -4493,18 +4493,6 @@ file.delete()
 By default, a file is not allowed to be deleted. You can change the setting by going to [Dashboard > LeanStorage > Data > `_File`](https://console.leancloud.app/data.html?appid={{appid}}#/_File) and select **Others** > **Permission settings** > **`delete`**.
 {% endcall %}
 
-### Enabling HTTPS
-
-If you demand that the files in the cloud should be accessed through HTTPS, check on **Enable HTTPS domain** in [Dashboard > LeanStorage > Settings > Custom domain for files](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf). There is no free quota on using HTTPS for files and you will see the pricing once the function is enabled.
-
-{% call docs.alertWrap() %}
-By enabling HTTPS, whether the URLs of the files returned by API use HTTPS or HTTP will be affected. Keep in mind that even the function is not enabled, the clients can still access files with HTTPS URLs which will lead to additional expenditure.
-{% endcall %}
-
-After enabling HTTPS, the URLs of the files previously stored in the `_File` table will be converted to HTTPS. If you disable the function, the URLs being converted will not change back.
-
-LeanMessage stores files sent through messages with `{{ fileObjectName }}` and the URLs of the files will be included in the messages. After HTTPS is enabled, the URLs of the files sent in the past messages will not be automatically converted like what happens in `_File`.
-
 {% if platform_name === "Objective-C" %}
 #### HTTP Support for iOS 9 and Up
 
@@ -4536,17 +4524,6 @@ Right-click on `Info.plist`, choose **Opened As** > **Source Code**, append the 
 
 You may also allow all HTTP traffics if you need. See [iOS9AdaptationTips](https://github.com/ChenYilong/iOS9AdaptationTips) for more information.
 {% endif %}
-
-### Setting up Custom Domain
-
-LeanCloud offers a shared domain for all the apps to access the files stored in the cloud. However, due to the Cyber Security Law of the countries where we offer our services, the shared domain might not be available all the time. We highly recommend that you **set up your custom domains for accessing files** so that your apps will not be affected when the shared domain becomes unavailable. You can set up custom domains at [Dashboard > LeanStorage > Settings > Custom domain for files](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf).
-
-The setup of custom domains is irreversible. You cannot unbind domains, but you can change the domains at any time.
-
-When binding domains, you can choose if you want to enable HTTPS:
-
-- If you don't enable HTTPS, clients can only access files via HTTP.
-- If you enable HTTPS, clients can access files via both HTTPS and HTTP.
 
 ### CDN Support
 
