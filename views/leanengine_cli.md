@@ -50,7 +50,6 @@ Otherwise, refer to the instructions mentioned earlier to download the latest ve
 After installing the CLI, run `$ lean help` in terminal to see the help information:
 
 ```sh
-$ lean help
  _                        ______ _                 _
 | |                      / _____) |               | |
 | |      ____ ____ ____ | /     | | ___  _   _  _ | |
@@ -64,7 +63,7 @@ USAGE:
    lean [global options] command [command options] [arguments...]
 
 VERSION:
-   0.20.1
+   0.21.0
 
 COMMANDS:
      login    Log in to LeanCloud
@@ -81,8 +80,7 @@ COMMANDS:
      env      Output environment variables used by the current project
      cache    LeanCache shell
      cql      Start CQL interactive mode
-     search   Search development docs
-     help, h  Show all commands
+     help, h  Show all commands or help info for one command
 
 GLOBAL OPTIONS:
    --version, -v  print the version
@@ -92,7 +90,7 @@ You can check the version of the CLI installed with `--version` option:
 
 ```sh
 $ lean --version
-lean version 0.20.0
+lean version 0.21.0
 ```
 
 To look up help information for a specific command, run `lean command -h`. For example:
@@ -121,8 +119,6 @@ $ lean login
 ```
 
 Follow the prompts to finish the login process.
-
-If you created your LeanCloud account with GitHub and have never set a password, please first [set a password](https://console.leancloud.app/login.html#/forgotpass).
 
 ### Switching Accounts
 
@@ -322,16 +318,17 @@ You can view the latest logs of LeanEngine with `logs`:
 
 ```sh
 $ lean logs
-2016-05-16 16:03:53 [PROD] [INFO]
-2016-05-16 16:03:53 [PROD] [INFO] > playground@1.0.0 start /home/leanengine/app
-2016-05-16 16:03:53 [PROD] [INFO] > node server.js
-2016-05-16 16:03:53 [PROD] [INFO]
-2016-05-16 16:03:54 [PROD] [INFO] Node app is running, port: 3000
-2016-05-16 16:03:54 [PROD] [INFO] connected to redis server
-2016-05-16 16:03:54 [PROD] [INFO] 实例启动成功：{"runtime":"nodejs-v4.4.3","version":"0.4.0"}
-2016-05-16 16:03:54 [PROD] [INFO] 正在统一切换新旧实例 ...
-2016-05-16 16:03:55 [PROD] [INFO] 正在更新云函数信息 ...
-2016-05-16 16:03:55 [PROD] [INFO] 部署完成：2 个实例部署成功
+      2019-11-20 17:17:12  Deploying 20191120-171431 to web1
+      2019-11-20 17:17:12  Creating new instance ...
+      2019-11-20 17:17:22  Starting new instance ...
+web1  2019-11-20 17:17:22  
+web1  2019-11-20 17:17:22  > node-js-getting-started@1.0.0 start /home/leanengine/app
+web1  2019-11-20 17:17:22  > node server.js
+web1  2019-11-20 17:17:22  
+web1  2019-11-20 17:17:23  Node app is running on port: 3000
+      2019-11-20 17:17:23  Instance started: {"runtime":"nodejs-v12.13.1","version":"3.4.0"}
+      2019-11-20 17:17:23  Updating cloud functions metadata ...
+      2019-11-20 17:17:23  Deploy finished: 1 instances deployed
 ```
 
 The command will return 30 entities by default, with the latest ones on the bottom.
@@ -354,11 +351,19 @@ If you want to fetch the logs generated within a certain period of time, you can
 $ lean logs --from=2017-07-01 --to=2017-07-07
 ```
 
+If you want to fetch the logs for a single day, you can just use `--from`:
+
+```sh
+$ lean logs --from=2017-07-01
+```
+
 If you prefer viewing logs with a different tool in your computer, you can export the logs into a file in the format of JSON:
 
 ```sh
 $ lean logs --from=2017-07-01 --to=2017-07-07 --format=json > leanengine.logs
 ```
+
+`--from` and `--to` uses local timezone (the timezone on the machine executing `lean-cli`).
 
 ## Viewing LeanStorage Status Reports
 
