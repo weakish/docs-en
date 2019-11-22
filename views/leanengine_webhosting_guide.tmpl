@@ -1586,7 +1586,8 @@ Variable Name | Description
 `LEANCLOUD_API_SERVER` | The URL used to access LeanStorage (looks like `https://api.leancloud.cn`). It is based on the location of the data center used to host the project and may change overtime. You can use it when making requests to LeanStorage or other LeanCloud services with our REST API. Please **do not** use `https://api.leancloud.cn` directly in LeanEngine.
 `LEANCLOUD_AVAILABLE_CPUS` | The number of CPUs available to the LeanEngine instance. It is based on the size of your instance and should be larger than 1 for large instances (like those with 2 CPUs and 1024 MB memory). Please **do not** use the number of CPUs of the operating system directly, or your project may be terminated if excessive threads are opened up.
 `LEANCLOUD_APP_GROUP`| The group this instance belongs to. When using the LeanEngine [Group Management](leanengine_plan.html#group-management) feature, this becomes the name of the group.
-`LEANCLOUD_REGION` | The region where the instance is located at.
+`LEANCLOUD_REGION` | The region where the instance is located at. For LeanCloud International version, the value is `US`.
+`LEANCLOUD_VERSION_TAG` | The instance deployment version.
 
 You can also add custom environment variables in your app's [Dashboard > LeanEngine > Settings > Custom environment variables](https://console.leancloud.app/cloud.html?appid={{appid}}#/conf). Variable names can only contain letters, numbers, and underscores, and can only begin with a letter. The value must be a string. The updated environment variables will take effect after the next deployment.
 
