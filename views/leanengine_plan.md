@@ -156,3 +156,11 @@ If you don't want to be billed anymore, please make sure you only have one group
 {% call docs.noteWrap() %}
 Groups with no instances in it will also count into the total number of groups, so please make sure to delete the groups you are not using.
 {% endcall %}
+
+### Pricing for Extra Bandwidth
+
+Every application has a daily free quota for LeanEngine bandwidth: `max(n, 1)` GB, where `n` is the number of standard instances of all groups of that application.
+
+Extra bandwidth will be billed for 0.1 USD / GB.
+
+LeanEngine is not suitable for scenarios such as distributing big files. We recommend developers to use [file service](leanstorage_guide-js.html#Files) instead.
