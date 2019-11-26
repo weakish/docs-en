@@ -490,10 +490,15 @@ The client will receive `{ "code": 123, "error": "Custom error message." }` from
 
 The time limit for a cloud function to be processed is 15 seconds. If the cloud function does not make a response after this, HTTP error `503` will be triggered with error message `The request timed out on the server`. {% if platformName === "Node.js" %}An error log like `LeanEngine: /1.1/functions/<cloudFunc>: function timeout (15000ms)` will be printed on the server side. Keep in mind that even after the client already receives the error message, the function may still be running, but the return value of the function will not be able to be sent to the client and an error log like `Can't set headers after they are sent` will be printed.{% endif %}{% if platformName === "Python" %}{# TODO #}{% endif %}{% if platformName === "PHP" %}An error log like `WARNING: [pool www] child ... exited on signal 9 (SIGKILL) after ... seconds from start` will be printed on the server side.{% endif %}{% if platformName === "Java" %}{# TODO #}{% endif %}
 
-{% if platformName === "Node.js" %}
+{# The best programming language does not have a good async solution.#}
+{% if platformName !== "PHP" %}
 #### Handling Timeouts
 
-We recommend that you have your application handle tasks asynchronously to avoid timeouts. You may:
+We recommend that you have your application handle tasks asynchronously to avoid timeouts.
+{% endif %}
+
+{% if platformName === "Node.js" %}
+You may:
 
 1. Create a new class in LeanStorage with a field named `status`.
 2. For each new task, create an object with this class and mark `status` to be `ongoing`. End the request by sending the `id` of this task back to the client:
@@ -505,10 +510,9 @@ We recommend that you have your application handle tasks asynchronously to avoid
 3. After the task is completed, change its `status` to be `completed` or `failed`.
 4. You can check the status of a task at any time with its `id`.
 {% endif %}
-{% if platformName === "Python" %}
-#### Handling Timeouts
 
-We recommend that you have your application handle tasks asynchronously to avoid timeouts. LeanEngine Python makes use of `gevent` to create an event loop. You can create your own `greenlet` with `gevent.spawn`:
+{% if platformName === "Python" %}
+LeanEngine Python makes use of `gevent` to create an event loop. You can create your own `greenlet` with `gevent.spawn`:
 
 ```python
 def handle(req):
@@ -521,6 +525,49 @@ def handle(req):
 
     return # The function above will run asynchronously and this parent function will return immediately
 ```
+{% endif %}
+
+{% if platformName === "Java" %}
+```java
+@EngineFunction("hello")
+public static String hello(@EngineFunctionParam("name") String name) {
+  new Thread(() -> {
+    doSomeTimeConsumingThings();
+  }).start();
+  if (name == null) {
+    return "Hello World!";
+  }
+  return String.format("Hello %s!", name);
+}
+```
+{% endif %}
+
+{% if platformName === ".NET" %}
+```cs
+private async static void TimeConsumingTask()
+{
+  await Task.Delay(20 * 1000);
+  Console.WriteLine("task done");
+}
+[EngineFunction("hello")]
+public static string Hello()
+{
+  Task.Run(() => TimeConsumingTask());
+  return "Hello World!";
+}
+```
+{% endif %}
+
+{% if platformName !== "PHP" %}
+However, this usually does not make sense for before hooks.
+Although asynchronous before hooks will not trigger timeout errors,
+they also cannot interrupt the operation.
+If you cannot optimize execuation time for before hooks,
+you have to use after hooks instead.
+For example, to filter fake comments, one `beforeSave` hook needs to call a time-consuming third party NLP API,
+which may cause timeout.
+As a workaround, you can use an `afterSave` hook to call the third party after the comment is saved.
+If that comment turns out to be a fake one, then delete it afterwards. 
 {% endif %}
 
 {% if platformName === "Python" %}
