@@ -564,7 +564,7 @@ Although asynchronous before hooks will not trigger timeout errors,
 they also cannot interrupt the operation.
 If you cannot optimize execuation time for before hooks,
 you have to use after hooks instead.
-For example, to filter fake comments, one `beforeSave` hook need to call a time-consuming third party NLP API,
+For example, to filter fake comments, one `beforeSave` hook needs to call a time-consuming third party NLP API,
 which may cause timeout.
 As a workaround, you can use an `afterSave` hook to call the third party after the comment is saved.
 If that comment turns out to be a fake one, then delete it afterwards. 
