@@ -313,13 +313,15 @@ testObject.save();
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
+// All LC data types satisfies `LCValue` protocol.
+
 let number       : LCNumber       = 42
 let bool         : LCBool         = true
 let string       : LCString       = "foo"
 let dictionary   : LCDictionary   = LCDictionary(["name": string, "count": number])
 let array        : LCArray        = LCArray([number, bool, string])
-let data         : LCData         = LCData()
-let date         : LCDate         = LCDate()
+let emptyData    : LCData         = LCData(Data())
+let currentDate  : LCDate         = LCDate(Date())
 let null         : LCNull         = LCNull()
 let geoPoint     : LCGeoPoint     = LCGeoPoint(latitude: 45, longitude: -45)
 let acl          : LCACL          = LCACL()
@@ -328,6 +330,43 @@ let relation     : LCRelation     = object.relationForKey("elements")
 let user         : LCUser         = LCUser()
 let file         : LCFile         = LCFile()
 let installation : LCInstallation = LCInstallation()
+
+// Convert LC data types to Swift standard types:
+let swiftInt:        Int?              = number.intValue
+let swiftDouble:     Double            = number.value
+let swiftBool:       Bool              = bool.value
+let swiftString:     String            = string.value
+let swiftDictionary: [String: LCValue] = dictionary.value
+let swiftArray:      [LCValue]         = array.value
+
+// Construct LC data types:
+let object       : LCObject       = LCObject()
+let relation     : LCRelation     = object.relationForKey("elements") // LCRelation does not imherit LCObject.
+let user         : LCUser         = LCUser()
+let file         : LCFile         = LCFile()
+let installation : LCInstallation = LCInstallation()
+
+/* Setters for LC data types: */
+
+// 1. `set(_:value:)`, this form will check if `value` is valid
+do {
+    try object.set("number", value: 42)
+    try object.set("number", value: LCNumber(42))
+} catch {
+    print(error)
+}
+
+// 2. subscript, this form will not check if `value` is valid
+object["number"] = 42.lcValue
+object["number"] = LCNumber(42)
+
+/* Getters for LC data types */
+
+// 1. `get(_:)`
+let getNumber1: LCNumber? = object.get("number") as? LCNumber
+
+// 2. subscript
+let getNumber2: LCNumber? = object["number"] as? LCNumber
 ```
 {% endif %}
 
@@ -845,8 +884,20 @@ todo.save();
 {% if platform_name === "Swift" %}
 ```swift
 let todo = LCObject(className: "Todo", objectId: "582570f38ac247004f39c24b")
-todo.set("content", value: "Weekly meeting has been rescheduled to Wed 3pm for this week.")
-todo.save()
+do {
+    let todo = LCObject(className: "Todo", objectId: "582570f38ac247004f39c24b")
+    try todo.set("content", value: "Weekly meeting has been rescheduled to Wed 3pm for this week.")
+    todo.save { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
 ```
 {% endif %}
 
@@ -1031,12 +1082,12 @@ There are several operations that can be used to atomically update an array asso
 - `removeAll()`<br/>removes all instances of the given object from an array.
 {% endif %}
 {% if platform_name === "Swift" %}
-- `append(String, element: LCType)`<br/>appends the given object to the end of an array.
-- `append(String, element: LCType, unique: Bool)`<br/>appends the given object to the end of an array. A `bool` can be specified for `unique` to ensure that the object only appears once within the array.
-- `append(String, elements: [LCType])`<br/>appends the given array of objects to the end of an array.
-- `append(String, elements: [LCType], unique: Bool)`<br/>appends the given array of objects to the end of an array. A `bool` can be specified for `unique` to ensure that each object only appears once within the array.
-- `remove(String, element: LCType)`<br/>removes all instances of the given object from an array.
-- `remove(String, elements: [LCType])`<br/>removes all instances of the given array of objects from an array.
+- `append(String, element: LCValue)`<br/>appends the given object to the end of an array.
+- `append(String, element: LCValue, unique: Bool)`<br/>appends the given object to the end of an array. A `bool` can be specified for `unique` to ensure that the object only appears once within the array.
+- `append(String, elements: [LCValue])`<br/>appends the given array of objects to the end of an array.
+- `append(String, elements: [LCValue], unique: Bool)`<br/>appends the given array of objects to the end of an array. A `bool` can be specified for `unique` to ensure that each object only appears once within the array.
+- `remove(String, element: LCValue)`<br/>removes all instances of the given object from an array.
+- `remove(String, elements: [LCValue])`<br/>removes all instances of the given array of objects from an array.
 {% endif %}
 
 For example, `Todo` has a field named `alarms` for keeping track of times at which a user wants to be alerted. The following code adds the times to the alarms field:
@@ -4211,9 +4262,22 @@ todo.save();
 ```swift
 let todo = LCObject(className: "Todo")
 todo.set("title", value: "Get Cakes")
-// attachments is an Array field
-todo.append("attachments", element: file)
-todo.save()
+do {
+    if let _ = file.objectId?.value {
+        let todo = LCObject(className: "Todo")
+        try todo.set("attachments", value: file)
+        todo.save { (result) in
+            switch result {
+            case .success:
+                break
+            case .failure(error: let error):
+                print(error)
+            }
+        }
+    }
+} catch {
+    print(error)
+}
 ```
 {% endif %}
 
@@ -5044,21 +5108,33 @@ user.signUpInBackground().subscribe(new Observer<AVUser>() {
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-// Create an instance
-let user = LCUser()
+do {
+    let user = LCUser()
 
-// Same as user.set("username", value: "Tom")
-user.username = LCString("Tom")
-user.password = LCString("cat!@#123")
+    // Same as user.set("username", value: "Tom")
+    user.username = LCString("Tom")
+    user.password = LCString("cat!@#123")
 
-// Optional
-user.set("email", value: "tom@leancloud.rocks")
-user.set("mobilePhoneNumber", value: "+19490008888")
+    // Optional
+    user.set("email", value: "tom@leancloud.rocks")
+    user.set("mobilePhoneNumber", value: "+19490008888")
 
-// Other fields can be set in the same way as LCObject
-user.set("gender", value: "secret")
+    // Other fields can be set in the same way as LCObject
+    user.set("gender", value: "secret")
 
-assert(user.signUp().isSuccess)
+    try user.set("gender", value: "secret")
+
+    _ = user.signUp { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
 ```
 {% endif %}
 
@@ -6215,28 +6291,35 @@ book.saveInBackground().subscribe(new Observer<AVObject>() {
 {% endif %}
 {% if platform_name === "Swift" %}
 ```swift
-let book = LCObject(className: "Book")
-let author = LCApplication.default.currentUser
-book.set("title", value: "My Fifth Book")
-book.set("author", value: author)
-_ = book.save { result in
-    switch result {
-    case .success:
-        // Find all the books by the same author
-        let query = LCQuery(className: "Book")
-        query.whereKey("author", .equalTo(author))
-        _ = query.find { result in
-            switch result {
-            case .success(objects: let books):
-                // books is an array of Book objects by the same author
-                break
-            case .failure(error: let error):
-                print(error)
-            }
-        }
-    case .failure(error: let error):
-        print(error)
+do {
+    guard let author = LCApplication.default.currentUser else {
+        return
     }
+    let book = LCObject(className: "Book")
+    let author = LCApplication.default.currentUser
+    try book.set("title", value: "My Fifth Book")
+    try book.set("author", value: author)
+    _ = book.save { result in
+        switch result {
+        case .success:
+            // Find all the books by the same author
+            let query = LCQuery(className: "Book")
+            query.whereKey("author", .equalTo(author))
+            _ = query.find { result in
+                switch result {
+                case .success(objects: let books):
+                    // books is an array of Book objects by the same author
+                    break
+                case .failure(error: let error):
+                    print(error)
+                }
+            }
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
 }
 ```
 {% endif %}
