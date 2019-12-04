@@ -1567,7 +1567,7 @@ By inheriting from `AVIMTypedMessage`, you can define your own types of messages
 * Implement the new message type inherited from `AVIMTypedMessage`. Make sure to:
   * Add the `@AVIMMessageType(type=123)` annotation to the class<br/>The value assigned to the type (`123` here) can be defined by yourself. Negative numbers are for types offered by default and positive numbers are for those defined by you.
   * Add the `@AVIMMessageField(name="")` annotation when declaring custom fields<br/>`name` is optional. Custom fields need to have their getters and setters.
-  * **Include an empty constructor and a Creator** (see the sample below), otherwise there will be an error with type conversion.
+  * **Include an empty constructor** (see the sample below), otherwise there will be an error with type conversion.
 * Call `AVIMMessageManager.registerAVIMMessageType()` to register the class.
 * Call `AVIMMessageManager.registerMessageHandler()` to register the handler for messages.
 
@@ -1691,8 +1691,6 @@ public class AVIMTextMessage extends AVIMTypedMessage {
   public void setAttrs(Map<String, Object> attr) {
     this.attrs = attr;
   }
-  // Creator has to be present
-  public static final Creator<AVIMTextMessage> CREATOR = new AVIMMessageCreator<AVIMTextMessage>(AVIMTextMessage.class);
 }
 ```
 ```cs
