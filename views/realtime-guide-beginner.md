@@ -520,6 +520,7 @@ jerry.on(Event.MESSAGE, function(message, conversation) {
 });
 ```
 ```swift
+let delegator: Delegator = Delegator()
 jerry.delegate = delegator
 
 func client(_ client: IMClient, conversation: IMConversation, event: IMConversationEvent) {
@@ -538,6 +539,8 @@ func client(_ client: IMClient, conversation: IMConversation, event: IMConversat
 ```
 ```objc
 // Objective-C SDK responds to notifications with AVIMClientDelegate
+// For those unfamiliar with the delegation concept, please refer to:
+// https://developer.apple.com/library/archive/documentation/General/Conceptual/CocoaEncyclopedia/DelegatesandDataSources/DelegatesandDataSources.html
 jerry.delegate = delegator;
 
 /*!
