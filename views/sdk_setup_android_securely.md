@@ -2,7 +2,7 @@
 
 # Use Android SDK without appKey
 
-Since 6.1.0, Leancloud Android SDK supports initialization without appKey,
+Since 6.1.0, LeanCloud Android SDK supports initialization without appKey,
 if you prefer to avoid exposing appKey in client side. 
 
 ## Prerequirements
@@ -122,18 +122,18 @@ Now you can start developing your application as usual.
 
 ## LeanEngine Runtime SDK
 
-If your android application will invoke [Cloud Function](leanengine_cloudfunction_guide-node.html),
+If your Android application will invoke [Cloud Function](leanengine_cloudfunction_guide-node.html),
 you need to make sure the LeanEngine runtime SDK you use supports this feature.
 
 Currently, the following LeanEngine runtime SDK versions support android initialization without appKey:
 
-- Python SDK：2.3.0 and later
-- Node.js SDK：3.5.0 and later
-- Java SDK (engine-core)：6.1.0 and later
+- Python SDK: 2.3.0 and later
+- Node.js SDK: 3.5.0 and later
+- Java SDK (engine-core): 6.1.0 and later
 
 ## Afterword
 
-This new way of android SDK initialization just avoids exposing appKey at the client side.
+This new way of Android SDK initialization just avoids exposing appKey at the client side.
 To fully ensure data security, you still need to utilize ACL to restrict data access permission.
 
 ## FAQ
@@ -146,20 +146,20 @@ and you do not need to add native library to your project.
 
 #### Why the application crashes after switching to the new way?
 
-Probably because you do not add native library to your project.
+Probably because you did not add native library to your project.
 Please refer to section [JNI Native Library](#jni-native-library) above.
 
 #### Why all requests return `{"code":401,"error":"Unauthorized."}` error?
 
-Probably because your apk does not properly configure signing.
+Probably because your apk did not have signing properly configured.
 Please refer to section [Initialization](#initialization) above.
 
-#### Will switching to the new way affect old versions of my android application?
+#### Will switching to the new way affect old versions of my Android application?
 
 No.
 
-#### What if I have multiple android applications sharing one LeanCloud application as their backend?
+#### What if I have multiple Android applications sharing one LeanCloud application as their backend?
 
 Currently we do not support configuring multiple pairs of package name and fingerprint for one LeanCloud application.
-Therefore, if you have multiple android applications connected to one LeanCloud application as their backend,
-only one android application can utilize the new way.
+Therefore, if you have multiple Android applications connected to one LeanCloud application as their backend,
+only one Android application can utilize the new way.
