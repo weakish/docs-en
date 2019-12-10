@@ -852,6 +852,22 @@ todo.save()
 
 LeanCloud automatically figures out which data has changed and only the fields with changes will be sent to the cloud. The fields you didn't update will remain intact.
 
+{% if platform_name === "JavaScript" %}
+To view which attributes have unsaved changes, you can invoke the `dirtyKeys` method:
+
+```js
+todo.dirtyKeys() // ['content'] 
+```
+
+To revert unsaved changes, you can invoke the `revert` method.
+Invoking `revert()` without passing any parameter will revoke all unsaved changes.
+To specify attributes to be revoked, pass an array as parameter:
+
+```js
+todo.revert(['content'])
+```
+{% endif %}
+
 {% if platform_name === "Objective-C" or platform_name === "JavaScript" or platform_name === "Python" or platform_name === "Java" %}
 #### Updating Data Conditionally
 
