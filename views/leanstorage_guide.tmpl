@@ -683,7 +683,7 @@ let _ = query.get("582570f38ac247004f39c24b") { (result) in
 After retrieving an object, you can use the `get` method to acquire the data stored in its fields. Be aware that `objectId`, `updatedAt`, and `createdAt` are 3 special properties that cannot be retrieved using the `get` method or modified with the `set` method. Each of these fields is filled in by the cloud only, so they don't exist on `{{ baseObjectName }}` until a save operation has been completed.
 {% endif %}
 
-If you try to access a field or property that doesn't exist, the SDK will not raise an error. Instead, it will return `{% if platform_name in ["Objective-C", "Swift"] %}nil{% endif %}{% if platform_name === "JavaScript" %}undefined{% endif %}{% if platform_name === "Python" %}None{% endif %}{% if platform_name in ["Java", "PHP"] %}null{% endif %}.
+If you try to access a field or property that doesn't exist, the SDK will not raise an error. Instead, it will return `{% if platform_name in ["Objective-C", "Swift"] %}nil{% endif %}{% if platform_name === "JavaScript" %}undefined{% endif %}{% if platform_name === "Python" %}None{% endif %}{% if platform_name in ["Java", "PHP"] %}null{% endif %}`.
 
 {% if platform_name === "JavaScript" %}
 Sometimes you may want to get all the fields back at one time without calling `get` on each field of the object. This could be helpful when you implement data binding. To do so, call `toJSON` on `AV.Object`:
