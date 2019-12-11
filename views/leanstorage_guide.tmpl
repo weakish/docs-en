@@ -3892,6 +3892,16 @@ There is another scenario when **the user completely kills the app or closes the
 ### Caveats about LiveQuery
 
 Given the real-time feature of LiveQuery, developers may find it tempting to use it for instant messaging. As LiveQuery is neither designed nor optimized for completing such tasks, we discourage such use of this tool, let alone there will be additional cost for saving message history and rising challenges of code maintenance. We recommend using [our real-time messaging solution](realtime_v2.html) for this scenario.
+
+{% if platform_name === "Android / Java" %}
+Applications that use LiveQuery without using LeanMessage and other push services,
+can invoke the static method `startIfRequired` of `PushService` to create WebSocket connections:
+
+```java
+PushService.startIfRequired(android.content.Context context);
+```
+{% endif %}
+
 {% endif %}
 
 ## Files
