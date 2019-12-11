@@ -4174,6 +4174,20 @@ _ = file.save { result in
 A file successfully uploaded can be found in the `_File` class and cannot be modified later. If you need to change the file, you have to upload the modified file again and a new `objectId` and URL will be generated.
 {% endcall %}
 
+{% if platform_name === "JavaScript" %}
+To preserve original file name in the resulting url, pass the `keepFileName` parameter to the `save` method:
+
+```js
+var data = [0x4c, 0x65, 0x61, 0x6e, 0x43, 0x6c, 0x6f, 0x75, 0x64];
+var file = new AV.File('resume.txt', data);
+file.save({ keepFileName: true }).then(function (file) {
+  console.log(file.url); // https://your-file-domain/5112b94e0536e995741c/resume.txt
+}, function (error) {
+  console.error(error);
+});
+```
+{% endif %}
+
 You can associate a file with `{{ baseObjectName }}` after it is saved:
 
 {% if platform_name === "Objective-C" %}
