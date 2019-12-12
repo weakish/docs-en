@@ -230,7 +230,12 @@ LeanEngine automatically sets `-Xmx` to be 70% of the size of the instance. The 
 If an unsuitable [instance size](leanengine_plan.html#instance-size) is picked, the deployment process may fail due to OOM error. The project may also restart frequently later on due to the same reason.
 {% endcall %}
 
-LeanEngine Java supports JRE 1.8.
+LeanEngine Java uses JRE 8 by default.
+If you want to use other versions, you can specify `java.runtime.version` in `system.properties` file at the root of the project directory:
+
+```
+java.runtime.version=11
+```
 
 ### WAR Projects
 
