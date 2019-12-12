@@ -389,7 +389,7 @@ Although SDKs for different languages/platforms share different interfaces, they
 4. `unique`/`isUnique` or `AVIMConversationOptionUnique`: Marks if the conversation is unique; optional.
    - If true, the cloud will perform a query on conversations with the list of members specified. If an existing conversation contains the same members, the conversation will be returned, otherwise a new conversation will be created.
    - If false, a new conversation will be created each time `createConversation` is called.
-   - If not specified, it defaults to true for Java SDK and false for others (will be changed to true in the future).
+   - If not specified, it defaults to true for JavaScript, Java, Swift, and C# SDKs and false for Objective-C and Python SDKs (for compatibility).
    - In general, it is more reasonable that there is only one conversation existing for the same composition of members, otherwise it could be messy since multiple sets of message histories are available for the same group of people. We **strongly recommend that you set `unique` to be `true`** when creating conversations.
 5. Other parameters specifying the type of the conversation; optional. For example, `transient`/`isTransient` specifies if it is a chat room, and `tempConv`/`tempConvTTL` or `AVIMConversationOptionTemporary` specifies if it is a temporary conversation. If nothing is specified, it will be a basic conversation. We will talk more about them later.
 
