@@ -5146,11 +5146,11 @@ AVSMS.requestSMSCodeInBackground("+19490008888", option).subscribe(new Observer<
     }
     @Override
     public void onNext(AVNull avNull) {
-        Log.d("TAG","Result: succeed to request SMSCode.");
+        Log.d("TAG","Result: Successfully requested SMSCode.");
     }
     @Override
     public void onError(Throwable throwable) {
-        Log.d("TAG","Result: failed to request SMSCode. cause:" + throwable.getMessage()）;
+        Log.d("TAG","Result: Failed to request SMSCode. Reason: " + throwable.getMessage()）;
     }
     @Override
     public void onComplete() {
