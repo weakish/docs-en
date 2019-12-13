@@ -5138,7 +5138,24 @@ SMS::requestSmsCode("+19490008888");
 {% endif %}
 {% if platform_name === "Java" %}
 ```java
-AVUser.requestLoginSmsCodeInBackground("+19490008888").blockingSubscribe();
+AVSMSOption option = new AVSMSOption();
+option.setSignatureName("sign_name");
+AVSMS.requestSMSCodeInBackground("+19490008888", option).subscribe(new Observer<AVNull>() {
+    @Override
+    public void onSubscribe(Disposable disposable) {
+    }
+    @Override
+    public void onNext(AVNull avNull) {
+        Log.d("TAG","Result: Successfully requested SMSCode.");
+    }
+    @Override
+    public void onError(Throwable throwable) {
+        Log.d("TAG","Result: Failed to request SMSCode. Reason: " + throwable.getMessage()）;
+    }
+    @Override
+    public void onComplete() {
+    }
+});
 ```
 {% endif %}
 {% if platform_name === "Swift" %}
