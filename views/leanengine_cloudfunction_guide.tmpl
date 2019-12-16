@@ -1198,14 +1198,22 @@ Cloud::onVerifed("sms", function($user, $meta) {
 {% endif %}
 {% if platformName === "Java" %}
 ```java
-@EngineHook(className = "_User", type = EngineHookType.onVerified)
+@EngineHook(className = "_User", type = EngineHookType.onVerifiedSMS)
 public static void userOnVerifiedHook(AVUser user) throws Exception {
-  LogUtil.avlog.d("User " + user.getObjectId() + " is verified by SMS.");
+  LOGGER.d("User " + user.getObjectId() + " is verified by SMS.");
+}
+
+@EngineHook(className = "_User", type = EngineHookType.onVerifiedEmail)
+public static void userOnVerifiedHook(AVUser user) throws Exception {
+  LOGGER.d("User " + user.getObjectId() + " is verified by Email.");
 }
 ```
 {% endif %}
 
-The first parameter is the type of verification (`sms` for phone number and `email` for email). Keep in mind that you don't have to update fields like `emailVerified` with this hook since the system automatically updates them.
+{% if platformName !== "Java" %}
+The first parameter is the type of verification (`sms` for phone number and `email` for email).
+{% endif %}
+Keep in mind that you don't have to update fields like `emailVerified` with this hook since the system automatically updates them.
 
 ### `{% if platformName === "Node.js" %}onLogin{% endif %}{% if platformName === "Python" %}on_login{% endif %}{% if platformName === "PHP" %}onLogin{% endif %}{% if platformName === "Java" %}onLogin{% endif %}`
 
