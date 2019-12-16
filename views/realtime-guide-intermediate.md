@@ -1184,7 +1184,11 @@ The highlight of this feature is that you can **customize the contents of push n
   msg.setText("Hey Jerry, me and Kate are going to a bar to watch a game tonight. Do you wanna come?");
 
   AVIMMessageOption messageOption = new AVIMMessageOption();
-  messageOption.setPushData("Custom message for push notification.");
+  String pushMessage = "{\"alert\":\"New message received\", \"category\":\"Message\","
+                        + "\"badge\":1,\"sound\":\"message.mp3\","
+                        + "\"custom-key\":\"This is a custom attribute. "
+                        + "custom-key is just an example. You can use your own names for keys.\"}";
+  messageOption.setPushData(pushMessage);
   conv.sendMessage(msg, messageOption, new AVIMConversationCallback() {
       @Override
       public void done(AVIMException e) {
