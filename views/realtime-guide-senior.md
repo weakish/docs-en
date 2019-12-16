@@ -1149,7 +1149,7 @@ Application can listen on this event at client side.
 Please refer to [the "Edit a message" section of previous chapter](realtime-guide-intermediate.html#edit-a-message) for code samples.
 
 LeanCloud offers a set of keywords by default.
-Apps with Business Plans can customize filtering keywords. To do so, go to your app's [Dashboard > Messaging > LeanMessage > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf) and enable **Custom keyword filtering**. Then upload your own keywords file to replace the default list. 
+Apps with Business Plans can customize filtering keywords. To do so, go to your app's [Dashboard > Messaging > LeanMessage > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/realtime/conf) and upload your own keywords file to replace the default list. 
 
 If you have more complicated requirements regarding message filtering, we recommend that you make use of [the `_messageReceived` hook of LeanEngine](realtime-guide-systemconv.html#_messageReceived). You can defined your own logic for controlling messages.
 
