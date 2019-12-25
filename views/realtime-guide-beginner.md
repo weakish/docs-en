@@ -3425,7 +3425,7 @@ do {
 ```objc
 // Retrieve the last 10 messages;
 // limit could be any number from 1 to 100.
-// Specifying 0 means use the default value at backend (20).
+// Specifying 0 means to use the default value at backend (20).
 [conversation queryMessagesWithLimit:10 callback:^(NSArray *objects, NSError *error) {
     NSLog(@"Messages Retrieved!");
 }];
