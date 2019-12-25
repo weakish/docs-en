@@ -3403,7 +3403,7 @@ The most common way to retrieve messages is to fetch them from new to old with t
 
 ```js
 conversation.queryMessages({
-  limit: 10, // limit could be any number from 1 to 1000 (defaults to 100)
+  limit: 10, // limit could be any number from 1 to 100 (defaults to 20)
 }).then(function(messages) {
   // The last 10 messages ordered from old to new
 }).catch(console.error.bind(console));
@@ -3423,14 +3423,18 @@ do {
 }
 ```
 ```objc
-// Retrieve the last 10 messages; limit could be any number from 1 to 1000 (defaults to 100)
+// Retrieve the last 10 messages;
+// limit could be any number from 1 to 100.
+// Specifying 0 means use the default value at backend (20).
 [conversation queryMessagesWithLimit:10 callback:^(NSArray *objects, NSError *error) {
     NSLog(@"Messages Retrieved!");
 }];
 ```
 ```java
-// limit could be any number from 1 to 1000 (defaults to 100)
-conv.queryMessages(10, new AVIMMessagesQueryCallback() {
+// limit could be any number from 1 to 100.
+// Invoking queryMessages without the limit parameter will retrieve 20 messages.
+int limit = 10;
+conv.queryMessages(limit, new AVIMMessagesQueryCallback() {
   @Override
   public void done(List<AVIMMessage> messages, AVIMException e) {
     if (e == null) {
@@ -3440,7 +3444,7 @@ conv.queryMessages(10, new AVIMMessagesQueryCallback() {
 });
 ```
 ```cs
-// limit could be any number from 1 to 1000 (defaults to 100)
+// limit could be any number from 1 to 100 (defaults to 20)
 var messages = await conversation.QueryMessageAsync(limit: 10);
 foreach (var message in messages)
 {
