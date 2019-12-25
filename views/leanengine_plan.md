@@ -28,6 +28,10 @@ If you have only one instance and the server containing that instance runs into 
 
 If you don't want to be billed anymore, please make sure that all the standard instances in the production environment of your application are deleted. You will still have your trial instance available.
 
+Instances use isolated RAM and file system.
+Thus data written to global variable or file system will not be accessible from other instances.
+To share data between instances, you can use LeanCache.
+
 ## Hibernating
 
 {% call docs.noteWrap() %}
