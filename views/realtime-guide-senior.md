@@ -100,6 +100,9 @@ appid:client_id:convid:nonce:timestamp
 
 The meanings of these parameters are the same as above.
 
+This signature is only used in REST API.
+It is not applicable to client side SDKs.
+
 #### Signatures for Blacklist Operations
 
 There are two formats of strings for two types of blacklist operations:
