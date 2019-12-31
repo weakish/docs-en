@@ -32,3 +32,194 @@ Postman also supports automatically generate snippets of code in various languag
 
 ![click the link under the blue Send button](images/postman-generate-code.png)
 
+### Objects
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP Method</th>
+      <th>Functionality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/1.1/classes/&lt;className&gt;</td>
+      <td>POST</td>
+      <td>create an object</td>
+    </tr>
+    <tr>
+      <td>/1.1/classes/&lt;className&gt;/&lt;objectId&gt;</td>
+      <td>GET</td>
+      <td>retrieve an object</td>
+    </tr>
+    <tr>
+      <td>/1.1/classes/&lt;className&gt;/&lt;objectId&gt;</td>
+      <td>PUT</td>
+      <td>update an object</td>
+    </tr>
+    <tr>
+      <td>/1.1/classes/&lt;className&gt;</td>
+      <td>GET</td>
+      <td>query objects</td>
+    </tr>
+    <tr>
+      <td>/1.1/classes/&lt;className&gt;/&lt;objectId&gt;</td>
+      <td>DELETE</td>
+      <td>delete an Object</td>
+    </tr>
+    <tr>
+      <td>/1.1/scan/classes/&lt;className&gt;</td>
+      <td>GET</td>
+      <td>iterate over objects</td>
+    </tr>
+  </tbody>
+</table>
+
+### Users
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP Method</th>
+      <th>Functionality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/1.1/users</td>
+      <td>POST</td>
+      <td>register</td>
+    </tr>
+    <tr>
+      <td>/1.1/usersByMobilePhone</td>
+      <td>POST</td>
+      <td>register or login via mobile phone</td>
+    </tr>
+    <tr>
+      <td>/1.1/login</td>
+      <td>POST</td>
+      <td>login</td>
+    </tr>
+    <tr>
+      <td>/1.1/users/&lt;objectId&gt;</td>
+      <td>GET</td>
+      <td>retrieve a user</td>
+    </tr>
+    <tr>
+      <td>/1.1/users/me</td>
+      <td>GET</td>
+      <td>retrieve a user via session token</td>
+    </tr>
+    <tr>
+      <td>/1.1/users/&lt;objectId&gt;/refreshSessionToken</td>
+      <td>PUT</td>
+      <td>reset session token</td>
+    </tr>
+    <tr>
+      <td>/1.1/users/&lt;objectId&gt;/updatePassword</td>
+      <td>PUT</td>
+      <td>reset password via email</td>
+    </tr>
+    <tr>
+      <td>/1.1/users/&lt;objectId&gt;</td>
+      <td>PUT</td>
+      <td>update user info</td>
+    </tr>
+    <tr>
+      <td>/1.1/users</td>
+      <td>GET</td>
+      <td>query users</td>
+    </tr>
+    <tr>
+      <td>/1.1/users/&lt;objectId&gt;</td>
+      <td>DELETE</td>
+      <td>delete a user</td>
+    </tr>
+    <tr>
+      <td>/1.1/requestPasswordReset</td>
+      <td>POST</td>
+      <td>request to reset password via email</td>
+    </tr>
+    <tr>
+      <td>/1.1/requestEmailVerify</td>
+      <td>POST</td>
+      <td>request to verify email</td>
+    </tr>
+    <tr>
+      <td>/1.1/requestMobilePhoneVerify</td>
+      <td>POST</td>
+      <td>request to verify mobile phone</td>
+    </tr>
+    <tr>
+      <td>/1.1/verifyMobilePhone/&lt;code&gt;</td>
+      <td>POST</td>
+      <td>verify mobile phone number</td>
+    </tr>
+    <tr>
+      <td>/1.1/requestChangePhoneNumber</td>
+      <td>POST</td>
+      <td>request to change mobile phone number</td>
+    </tr>
+    <tr>
+      <td>/1.1/changePhoneNumber</td>
+      <td>POST</td>
+      <td>change mobile phone number</td>
+    </tr>
+    <tr>
+      <td>/1.1/requestLoginSmsCode</td>
+      <td>POST</td>
+      <td>request to send an SMS for logging in</td>
+    </tr>
+    <tr>
+      <td>/1.1/requestPasswordResetBySmsCode</td>
+      <td>POST</td>
+      <td>request to reset password via SMS</td>
+    </tr>
+    <tr>
+      <td>/1.1/resetPasswordBySmsCode/&lt;code&gt;</td>
+      <td>PUT</td>
+      <td>reset password via SMS</td>
+    </tr>
+  </tbody>
+</table>
+
+### Roles
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP Method</th>
+      <th>Functionality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/1.1/roles</td>
+      <td>POST</td>
+      <td>create a role</td>
+    </tr>
+    <tr>
+      <td>/1.1/roles/&lt;objectId&gt;</td>
+      <td>GET</td>
+      <td>retrieve a role</td>
+    </tr>
+    <tr>
+      <td>/1.1/roles/&lt;objectId&gt;</td>
+      <td>PUT</td>
+      <td>update a role</td>
+    </tr>
+    <tr>
+      <td>/1.1/roles</td>
+      <td>GET</td>
+      <td>query roles</td>
+    </tr>
+    <tr>
+      <td>/1.1/roles/&lt;objectId&gt;</td>
+      <td>DELETE</td>
+      <td>delete a role</td>
+    </tr>
+  </tbody>
+</table>
