@@ -518,3 +518,23 @@ Requests may trigger [hooks](leanengine_cloudfunction_guide-node.html#Hooking), 
 
 If you do not specify the `X-LC-Prod` http header, LeanCloud will invoke the hook in production environment.
 
+### Response Format
+
+The response body is a JSON object.
+
+HTTP status code is used to indicate whether a request succeeded or failed.
+A 2xx status code indicates success, and a 4xx/5xx status code indicates an error is encountered.
+When an error is encountered, the response body is a JSON object with two fields: `code` and `error`,
+where `code` is the error code (integer) and `error` is a brief error message (string).
+The `code` may be identical to the http status code,
+but usually it is a customized error code more specific than the http status code.
+For example, if you try to save an object with an invalid key name:
+
+```json
+{
+  "code":105,
+  "error":"Invalid key name. Keys are case-sensitive and 'a-zA-Z0-9_' are the only valid characters. The column is: 'invalid?'."}
+```
+
+{# TODO 错误代码请看 [错误代码详解](./error_code.html)。#}
+
