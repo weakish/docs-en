@@ -223,3 +223,193 @@ Postman also supports automatically generate snippets of code in various languag
     </tr>
   </tbody>
 </table>
+
+### Push Notifications
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP</th>
+      <th>Functionality</th> 
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/1.1/push</td>
+      <td>POST</td>
+      <td>Push notifications</td>
+    </tr>
+    <tr>
+      <td>/1.1/notifications</td>
+      <td>GET</td>
+      <td>Query push records</td>
+    </tr>
+    <tr>
+      <td>/1.1/notifications/:notification_id</td>
+      <td>GET</td>
+      <td>Query a push record via ID</td>
+    </tr>
+    <tr>
+      <td>/1.1/notifications/:notification_id</td>
+      <td>DELETE</td>
+      <td>Delete a push record</td>
+    </tr>
+    <tr>
+      <td>/1.1/scheduledPushMessages</td>
+      <td>GET</td>
+      <td>Query all scheduled push notifications</td>
+    </tr>
+    <tr>
+      <td>/1.1/scheduledPushMessages/:id</td>
+      <td>DELETE</td>
+      <td>Delete an scheduled push notification</td>
+    </tr>
+  </tbody>
+</table>
+
+### Installations
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP</th>
+      <th>Functionality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/1.1/installations</td>
+      <td>POST</td>
+      <td>Upload installation data</td>
+    </tr>
+    <tr>
+      <td>/1.1/installations/&lt;objectId&gt;</td>
+      <td>GET</td>
+      <td>Retrieve installation data</td>
+    </tr>
+    <tr>
+      <td>/1.1/installations/&lt;objectId&gt;</td>
+      <td>PUT</td>
+      <td>Update installation data</td>
+    </tr>
+    <tr>
+      <td>/1.1/installations</td>
+      <td>GET</td>
+      <td>Query installation data</td>
+    </tr>
+    <tr>
+      <td>/1.1/installations/&lt;objectId&gt;</td>
+      <td>DELETE</td>
+      <td>Delete installation data</td>
+    </tr>
+  </tbody>
+</table>
+
+### Data Schema
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP</th>
+      <th>Functionality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/1.1/schemas</td>
+      <td>GET</td>
+      <td>Retrieve all schemas</td>
+    </tr>
+    <tr>
+      <td>/1.1/schemas/&lt;className&gt;</td>
+      <td>POST</td>
+      <td>Retrieve specified class schema</td>
+    </tr>
+  </tbody>
+</table>
+
+### Cloud Functions
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP</th>
+      <th>Functionality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/1.1/functions/&lt;functionName&gt;</td>
+      <td>POST</td>
+      <td>Invoke a cloud function</td>
+    </tr>
+    <tr>
+      <td>/1.1/call/&lt;functionName&gt;</td>
+      <td>POST</td>
+      <td>Call a cloud function with AVObjects as parameters and return values</td>
+    </tr>
+  </tbody>
+</table>
+
+### LeanMessage
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP</th>
+      <th>Functionality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/1.1/rtm/messages/logs</td>
+      <td>GET</td>
+      <td>Retrieve chat history</td>
+    </tr>
+    <tr>
+      <td>/1.1/rtm/messages</td>
+      <td>POST</td>
+      <td>Send a message</td>
+    </tr>
+    <tr>
+      <td>/1.1/rtm/transient_group/onlines</td>
+      <td>GET</td>
+      <td>Count online members of a transient conversation</td>
+    </tr>
+  </tbody>
+</table>
+
+### Other
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP</th>
+      <th>Functionality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/1.1/date</td>
+      <td>GET</td>
+      <td>Retrieve date and time at server side</td>
+    </tr>
+    <tr>
+      <td>/1.1/exportData</td>
+      <td>POST</td>
+      <td>Request to export data</td>
+    </tr>
+    <tr>
+      <td>/1.1/exportData/&lt;id&gt;</td>
+      <td>GET</td>
+      <td>Retrieve status and result of export data job</td>
+    </tr>
+  </tbody>
+</table>
+
