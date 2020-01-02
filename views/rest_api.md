@@ -413,3 +413,108 @@ Postman also supports automatically generate snippets of code in various languag
   </tbody>
 </table>
 
+### Request Format
+
+The request body should be JSON, and the `Content-Type` should be `application/json` accordingly.
+
+`X-LC-Id` and `X-LC-Key` http headers are used for authentication.
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "update blog post"}' \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
+
+`X-LC-Id` is App ID.
+`X-LC-Key` is App Key or Master Key.
+A `,master` postfix is used to distinguish Master Key and App Key, e.g.:
+
+```
+X-LC-Key: {{masterkey}},master
+```
+
+Cross-origin resource sharing is supported, so you can use these headers with XMLHttpRequest in JavaScript.
+
+#### X-LC-Sign
+
+You may also authenticate requests via `X-LC-Sign` instead of `X-LC-Key`:
+
+```
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Sign: d5bcbb897e19b2f6633c716dfdfaf9be,1453014943466" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "reduce risk of App Key exposure"}' \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
+
+The value of `X-LC-Sign` is a string `sign,timestamp[,master]`:
+
+| Name       | Optionality   | Description                                       |
+| --------- | ---- | ---------------------------------------- |
+| sign      | required   | concat timestamp and App Key (Master Key), then calculate its MD5 hash value |
+| timestamp | required   | unix timestamp of current request, accurate to **milliseconds**  |
+| master    | optional   | use this postfix to indicate Master Key is used |
+
+For example, given the following application:
+
+<table class="noheading">
+  <tbody>
+    <tr>
+      <td scope="row">App Id</td>
+      <td><code>FFnN2hso42Wego3pWq4X5qlu</code></td>
+    </tr>
+    <tr>
+      <td scope="row">App Key</td>
+      <td><code>UtOCzqb67d3sN12Kts4URwy8</code></td>
+    </tr>
+    <tr>
+      <td scope="row">Master Key</td>
+      <td><code>DyJegPlemooo4X1tg94gQkw1</code></td>
+    </tr>
+    <tr>
+      <td scope="row">Request date</td>
+      <td>2016-01-17 7:15:43.466 UTC</td>
+    </tr>
+    <tr>
+      <td scope="row">timestamp</td>
+      <td><code>1453014943466</code></td>
+    </tr>
+  </tbody>
+</table>
+
+**Calculate sign with App Key**
+
+>md5( timestamp + App Key ) <br/>
+>= md5( <code><u>1453014943466</u>UtOCzqb67d3sN12Kts4URwy8</code> )<br/>= d5bcbb897e19b2f6633c716dfdfaf9be
+
+```sh
+  -H "X-LC-Sign: d5bcbb897e19b2f6633c716dfdfaf9be,1453014943466" \
+```
+
+**Calculate sign with Master Key**
+
+>md5( timestamp + Master Key )<br/>
+>= md5( <code><u>1453014943466</u>DyJegPlemooo4X1tg94gQkw1</code> ) <br>
+>= e074720658078c898aa0d4b1b82bdf4b
+
+```sh
+  -H "X-LC-Sign: e074720658078c898aa0d4b1b82bdf4b,1453014943466,master" \
+```
+
+<div class="callout callout-danger">Using master key will bypass all permission validations. Make sure you do not leak the master key and only use it in restrained environments.</div>
+
+#### Specify hook invocation environment
+
+Requests may trigger [hooks](leanengine_cloudfunction_guide-node.html#Hooking), and you can use `X-LC-Prod` http header to specify the invocation environment:
+
+| X-LC-Prod Value | Environment |
+| - | - |
+| 0 | stage |
+| 1 | production |
+
+If you do not specify the `X-LC-Prod` http header, LeanCloud will invoke the hook in production environment.
+
