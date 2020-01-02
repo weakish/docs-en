@@ -23,14 +23,14 @@ Therefore, we recommend you to use [Postman] for testing.
 
 [Postman]: https://www.getpostman.com/
 
-Postman can import curl commands directly.
+Postman can [import curl commands][import-curl] directly and automatically [generate code snippets][generate-snippets] in various languages and frameworks.
+
+[import-curl]: https://learning.getpostman.com/docs/postman/collections/data-formats/#importing-curl
+[generate-snippets]: https://learning.getpostman.com/docs/postman/sending-api-requests/generate-code-snippets/
 
 
-![Postman: click Import button, paste curl command in "Paste Raw Text" tab](images/postman-import-curl.png)
+Postman also supports 
 
-Postman also supports automatically generate snippets of code in various languages and frameworks.
-
-![click the link under the blue Send button](images/postman-generate-code.png)
 
 ### Objects
 
