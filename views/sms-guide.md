@@ -123,7 +123,7 @@ Then go to [Dashboard > Messaging > SMS > Settings > SMS settings](https://conso
 
 ### Setting up Default Signatures
 
-A signature helps your users identify the sender of the messages they received. Before you start sending your first message, you need to go to your app's [Dashboard > Messaging > SMS > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf) and set up a default signature (the first signature becomes the default one):
+A signature helps your users identify the sender of the messages they received. Before you start sending your first message, you need to go to your app's [Dashboard > Messaging > SMS > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf) and set up a default signature (the first signature you created automatically becomes the default one):
 
 ![The "New signature" button under "Signatures".](images/sms_create_signature.png)
 
@@ -133,7 +133,7 @@ Simply enter a name for yourself along with the content:
 <img src="images/sms_signature_edit.png" width="600" class="img-responsive" alt="在「短信签名」对话框中填入「名称」和「签名」。">
 #}
 
-Now you will be able to call LeanCloud APIs to send text messages. We've seen at the beginning that there is a concept called "template". This is not required and we will [discuss this later](#templates).
+After creating a signature, you will be able to call LeanCloud APIs to send text messages. We've seen at the beginning that there is a concept called "template". This is not required and we will [discuss this later](#templates).
 
 ## Using SMS for Verification
 
