@@ -6,7 +6,7 @@ You can access LeanCloud from any devices supporting HTTP requests with REST API
 
 - You can manipulate data on LeanCloud with any programming language.
 - If you want to migrate from LeanCloud to other services, you can export all your data.
-- Your mobile site can fetch data from LeanCloud via JavaScript directly if you think importing LeanCloud JavaScript SDK brings is overkill.
+- Your mobile site can fetch data from LeanCloud via JavaScript directly if you regard importing LeanCloud JavaScript SDK as overkill.
 - You can add new data in batch, to be consumed by mobile applications later.
 - You can export recent data for offline analysis or additional incremental backup.
 
@@ -19,7 +19,7 @@ The current API version is `1.1`.
 This guide provides curl command line examples.
 You may need to modify some syntax if using cmd.exe on Windows.
 For example, `\` in curl examples means to be continued on next line, but cmd.exe will consider it as path seperator.
-Therefore, we recommend you to use [Postman] for testing.
+Therefore, we recommend you to use [Postman] for testing on Windows.
 
 [Postman]: https://www.getpostman.com/
 
@@ -27,10 +27,6 @@ Postman can [import curl commands][import-curl] directly and automatically [gene
 
 [import-curl]: https://learning.getpostman.com/docs/postman/collections/data-formats/#importing-curl
 [generate-snippets]: https://learning.getpostman.com/docs/postman/sending-api-requests/generate-code-snippets/
-
-
-Postman also supports 
-
 
 ### Objects
 
@@ -66,7 +62,7 @@ Postman also supports
     <tr>
       <td>/1.1/classes/&lt;className&gt;/&lt;objectId&gt;</td>
       <td>DELETE</td>
-      <td>delete an Object</td>
+      <td>delete an object</td>
     </tr>
     <tr>
       <td>/1.1/scan/classes/&lt;className&gt;</td>
@@ -238,32 +234,32 @@ Postman also supports
     <tr>
       <td>/1.1/push</td>
       <td>POST</td>
-      <td>Push notifications</td>
+      <td>push notifications</td>
     </tr>
     <tr>
       <td>/1.1/notifications</td>
       <td>GET</td>
-      <td>Query push records</td>
+      <td>query push records</td>
     </tr>
     <tr>
       <td>/1.1/notifications/:notification_id</td>
       <td>GET</td>
-      <td>Query a push record via ID</td>
+      <td>query a push record via ID</td>
     </tr>
     <tr>
       <td>/1.1/notifications/:notification_id</td>
       <td>DELETE</td>
-      <td>Delete a push record</td>
+      <td>delete a push record</td>
     </tr>
     <tr>
       <td>/1.1/scheduledPushMessages</td>
       <td>GET</td>
-      <td>Query all scheduled push notifications</td>
+      <td>query all scheduled push notifications</td>
     </tr>
     <tr>
       <td>/1.1/scheduledPushMessages/:id</td>
       <td>DELETE</td>
-      <td>Delete an scheduled push notification</td>
+      <td>delete an scheduled push notification</td>
     </tr>
   </tbody>
 </table>
@@ -282,27 +278,27 @@ Postman also supports
     <tr>
       <td>/1.1/installations</td>
       <td>POST</td>
-      <td>Upload installation data</td>
+      <td>upload installation data</td>
     </tr>
     <tr>
       <td>/1.1/installations/&lt;objectId&gt;</td>
       <td>GET</td>
-      <td>Retrieve installation data</td>
+      <td>retrieve installation data</td>
     </tr>
     <tr>
       <td>/1.1/installations/&lt;objectId&gt;</td>
       <td>PUT</td>
-      <td>Update installation data</td>
+      <td>update installation data</td>
     </tr>
     <tr>
       <td>/1.1/installations</td>
       <td>GET</td>
-      <td>Query installation data</td>
+      <td>query installation data</td>
     </tr>
     <tr>
       <td>/1.1/installations/&lt;objectId&gt;</td>
       <td>DELETE</td>
-      <td>Delete installation data</td>
+      <td>delete installation data</td>
     </tr>
   </tbody>
 </table>
@@ -321,12 +317,12 @@ Postman also supports
     <tr>
       <td>/1.1/schemas</td>
       <td>GET</td>
-      <td>Retrieve all schemas</td>
+      <td>retrieve all schemas</td>
     </tr>
     <tr>
       <td>/1.1/schemas/&lt;className&gt;</td>
       <td>POST</td>
-      <td>Retrieve specified class schema</td>
+      <td>retrieve specified class schema</td>
     </tr>
   </tbody>
 </table>
@@ -345,12 +341,12 @@ Postman also supports
     <tr>
       <td>/1.1/functions/&lt;functionName&gt;</td>
       <td>POST</td>
-      <td>Invoke a cloud function</td>
+      <td>invoke a cloud function</td>
     </tr>
     <tr>
       <td>/1.1/call/&lt;functionName&gt;</td>
       <td>POST</td>
-      <td>Call a cloud function with AVObjects as parameters and return values</td>
+      <td>call a cloud function with AVObjects as parameters and return values</td>
     </tr>
   </tbody>
 </table>
@@ -369,17 +365,17 @@ Postman also supports
     <tr>
       <td>/1.1/rtm/messages/logs</td>
       <td>GET</td>
-      <td>Retrieve chat history</td>
+      <td>retrieve chat history</td>
     </tr>
     <tr>
       <td>/1.1/rtm/messages</td>
       <td>POST</td>
-      <td>Send a message</td>
+      <td>send a message</td>
     </tr>
     <tr>
       <td>/1.1/rtm/transient_group/onlines</td>
       <td>GET</td>
-      <td>Count online members of a transient conversation</td>
+      <td>count online members of a transient conversation</td>
     </tr>
   </tbody>
 </table>
@@ -398,17 +394,17 @@ Postman also supports
     <tr>
       <td>/1.1/date</td>
       <td>GET</td>
-      <td>Retrieve date and time at server side</td>
+      <td>retrieve date and time at server side</td>
     </tr>
     <tr>
       <td>/1.1/exportData</td>
       <td>POST</td>
-      <td>Request to export data</td>
+      <td>request to export data</td>
     </tr>
     <tr>
       <td>/1.1/exportData/&lt;id&gt;</td>
       <td>GET</td>
-      <td>Retrieve status and result of export data job</td>
+      <td>retrieve status and result of export data job</td>
     </tr>
   </tbody>
 </table>
@@ -455,7 +451,7 @@ The value of `X-LC-Sign` is a string `sign,timestamp[,master]`:
 
 | Name       | Optionality   | Description                                       |
 | --------- | ---- | ---------------------------------------- |
-| sign      | required   | concat timestamp and App Key (Master Key), then calculate its MD5 hash value |
+| sign      | required   | concat timestamp and App Key (or Master Key), then calculate its MD5 hash value |
 | timestamp | required   | unix timestamp of current request, accurate to **milliseconds**  |
 | master    | optional   | use this postfix to indicate Master Key is used |
 
