@@ -139,103 +139,103 @@ After creating a signature, you will be able to call LeanCloud APIs to send text
 
 It is becoming quite common that apps rely on SMS for signing up, logging in, and performing verification for sensitive operations. Here we use a shopping app as an example to explain how you can use LeanCloud's SMS to complete a verification:
 
-1. **The user places an order**
+1. **The user places an order**  
   A sensitive operation is initiated.
   
-2. **Call API to send text message**
+2. **Call API to send text message**  
   Keep in mind that we are assuming that you have already completed the setup process mentioned earlier.
 
-```objc
-AVShortMessageRequestOptions *options = [[AVShortMessageRequestOptions alloc] init];
-options.TTL = 10;                      // Make verification code valid for 10 minutes
-options.applicationName = @"App Name"; // The name of the app
-options.operation = @"some operation"; // The name of the operation
-[AVSMS requestShortMessageForPhoneNumber:@"+19490008888"
-                                 options:options
-                                callback:^(BOOL succeeded, NSError * _Nullable error) {
-                                    if (succeeded) {
-                                        /* Request completed */
-                                    } else {
-                                        /* An error occurred */
-                                    }
-                                }];
-```
-```swift
-let variables: LCDictionary = [
-    "ttl": LCNumber(10),             // Make verification code valid for 10 minutes
-    "name": LCString("App Name"),    // The name of the app
-    "op": LCString("some operation") // The name of the operation
-]
+  ```objc
+  AVShortMessageRequestOptions *options = [[AVShortMessageRequestOptions alloc] init];
+  options.TTL = 10;                      // Make verification code valid for 10 minutes
+  options.applicationName = @"App Name"; // The name of the app
+  options.operation = @"some operation"; // The name of the operation
+  [AVSMS requestShortMessageForPhoneNumber:@"+19490008888"
+                                  options:options
+                                  callback:^(BOOL succeeded, NSError * _Nullable error) {
+                                      if (succeeded) {
+                                          /* Request completed */
+                                      } else {
+                                          /* An error occurred */
+                                      }
+                                  }];
+  ```
+  ```swift
+  let variables: LCDictionary = [
+      "ttl": LCNumber(10),             // Make verification code valid for 10 minutes
+      "name": LCString("App Name"),    // The name of the app
+      "op": LCString("some operation") // The name of the operation
+  ]
 
-_ = LCSMSClient.requestShortMessage(mobilePhoneNumber: "+19490008888", variables: variables) { (result) in
-    switch result {
-    case .success:
-        break
-    case .failure(error: let error):
-        print(error)
-    }
-}
-```
-```java
-AVSMSOption option = new AVSMSOption();
-option.setTtl(10);
-option.setApplicationName("App Name");
-option.setOperation("some operation");
-AVSMS.requestSMSCodeInBackground("+19490008888", option).subscribe(new Observer<AVNull>() {
-    @Override
-    public void onSubscribe(Disposable disposable) {
-    }
-    @Override
-    public void onNext(AVNull avNull) {
-        Log.d("TAG","Result: Successfully sent verification code.");
-    }
-    @Override
-    public void onError(Throwable throwable) {
-        Log.d("TAG","Result: Failed to send verification code. Reason: " + throwable.getMessage());
-    }
-    @Override
-    public void onComplete() {
-    }
-});
-```
-```javascript
-AV.Cloud.requestSmsCode({
-    mobilePhoneNumber: '+19490008888',
-    name: 'App Name',
-    op: 'some operation',
-    ttl: 10 // Make verification code valid for 10 minutes
-}).then(function(){
-    // Request completed
-}, function(err){
-    // An error occurred
-});
-```
-```cs
-// Here 10 means to make verification code valid for 10 minutes
-AVCloud.RequestSMSCodeAsync("+19490008888","App Name","some operation",10).ContinueWith(t =>
-{
-    if(!t.Result)
-    {
-        // Request completed
-    }
-});
-```
-```php
-$options = [
-  "name" => "App Name",
-  "op" => "some operation",
-  "ttl" => 10, // Make verification code valid for 10 minutes
-];
-SMS::requestSMSCode("+19490008888", $options);
-```
-```python
-from leancloud import cloud
-options = {
-  "op": "some operation",
-  "ttl": 10  # Make verification code valid for 10 minutes
-}
-cloud.request_sms_code("+19490008888", sign="App Name", params=options)
-```
+  _ = LCSMSClient.requestShortMessage(mobilePhoneNumber: "+19490008888", variables: variables) { (result) in
+      switch result {
+      case .success:
+          break
+      case .failure(error: let error):
+          print(error)
+      }
+  }
+  ```
+  ```java
+  AVSMSOption option = new AVSMSOption();
+  option.setTtl(10);
+  option.setApplicationName("App Name");
+  option.setOperation("some operation");
+  AVSMS.requestSMSCodeInBackground("+19490008888", option).subscribe(new Observer<AVNull>() {
+      @Override
+      public void onSubscribe(Disposable disposable) {
+      }
+      @Override
+      public void onNext(AVNull avNull) {
+          Log.d("TAG","Result: Successfully sent verification code.");
+      }
+      @Override
+      public void onError(Throwable throwable) {
+          Log.d("TAG","Result: Failed to send verification code. Reason: " + throwable.getMessage());
+      }
+      @Override
+      public void onComplete() {
+      }
+  });
+  ```
+  ```javascript
+  AV.Cloud.requestSmsCode({
+      mobilePhoneNumber: '+19490008888',
+      name: 'App Name',
+      op: 'some operation',
+      ttl: 10 // Make verification code valid for 10 minutes
+  }).then(function(){
+      // Request completed
+  }, function(err){
+      // An error occurred
+  });
+  ```
+  ```cs
+  // Here 10 means to make verification code valid for 10 minutes
+  AVCloud.RequestSMSCodeAsync("+19490008888","App Name","some operation",10).ContinueWith(t =>
+  {
+      if(!t.Result)
+      {
+          // Request completed
+      }
+  });
+  ```
+  ```php
+  $options = [
+    "name" => "App Name",
+    "op" => "some operation",
+    "ttl" => 10, // Make verification code valid for 10 minutes
+  ];
+  SMS::requestSMSCode("+19490008888", $options);
+  ```
+  ```python
+  from leancloud import cloud
+  options = {
+    "op": "some operation",
+    "ttl": 10  # Make verification code valid for 10 minutes
+  }
+  cloud.request_sms_code("+19490008888", sign="App Name", params=options)
+  ```
 
 3. **The user receives the text message and enters the code**  
   Before continuing, we suggest that you implement verification on the client side to check if the code entered is valid (has valid length and does not contain invalid characters). This helps your app avoid making unnecessary requests to the server and could potentially enhance the user experience.
@@ -243,65 +243,65 @@ cloud.request_sms_code("+19490008888", sign="App Name", params=options)
 4. **Call API to check if the code is valid**  
   Please pay attention to the sequence of the parameters being passed into the function. Here we assume the verification code is "123456":
 
-```objc
-[AVOSCloud verifySmsCode:@"123456" mobilePhoneNumber:@"+19490008888" callback:^(BOOL succeeded, NSError *error) {
-    if(succeeded){
-        // Successfully verified
-    }
-}];
-```
-```swift
-_ = LCSMSClient.verifyMobilePhoneNumber("+19490008888", verificationCode: "123456") { (result) in
-    switch result {
-    case .success:
-        break
-    case .failure(error: let error):
-        print(error)
-    }
-}
-```
-```java 
-AVSMS.verifySMSCodeInBackground("123456","+19490008888").subscribe(new Observer<AVNull>() {
-    @Override
-    public void onSubscribe(Disposable d) {
-    }
-    @Override
-    public void onNext(AVNull avNull) {
-        Log.d("TAG","Result: Successfully verified the number.");
-    }
-    @Override
-    public void onError(Throwable throwable) {
-        Log.d("TAG","Result: Failed to verify the number. Reason: " + throwable.getMessage());
-    }
-    @Override
-    public void onComplete() {
-    }
-});
-```
-```javascript
-AV.Cloud.verifySmsCode('123456', '+19490008888').then(function(){
-    // Successfully verified
-}, function(err){
-    // Failed to verify
-});
-```
-```cs
-AVCloud.VerifySmsCodeAsync("123456","+19490008888").ContinueWith(t =>{
-    if(t.Result) 
-    {
-        // Successfully verified
-    }
-});
-```
-```php
-// Note that the sequence of the parameters for PHP SDK is different than that of many other SDKs. Here verification code goes after phone number.
-SMS::verifySmsCode('+19490008888', '123456');
-```
-```python
-from leancloud import cloud
-# Note that the sequence of the parameters for Python SDK is different than that of many other SDKs. Here verification code goes after phone number.
-cloud.verify_sms_code('+19490008888', '123456')
-```
+  ```objc
+  [AVOSCloud verifySmsCode:@"123456" mobilePhoneNumber:@"+19490008888" callback:^(BOOL succeeded, NSError *error) {
+      if(succeeded){
+          // Successfully verified
+      }
+  }];
+  ```
+  ```swift
+  _ = LCSMSClient.verifyMobilePhoneNumber("+19490008888", verificationCode: "123456") { (result) in
+      switch result {
+      case .success:
+          break
+      case .failure(error: let error):
+          print(error)
+      }
+  }
+  ```
+  ```java 
+  AVSMS.verifySMSCodeInBackground("123456","+19490008888").subscribe(new Observer<AVNull>() {
+      @Override
+      public void onSubscribe(Disposable d) {
+      }
+      @Override
+      public void onNext(AVNull avNull) {
+          Log.d("TAG","Result: Successfully verified the number.");
+      }
+      @Override
+      public void onError(Throwable throwable) {
+          Log.d("TAG","Result: Failed to verify the number. Reason: " + throwable.getMessage());
+      }
+      @Override
+      public void onComplete() {
+      }
+  });
+  ```
+  ```javascript
+  AV.Cloud.verifySmsCode('123456', '+19490008888').then(function(){
+      // Successfully verified
+  }, function(err){
+      // Failed to verify
+  });
+  ```
+  ```cs
+  AVCloud.VerifySmsCodeAsync("123456","+19490008888").ContinueWith(t =>{
+      if(t.Result) 
+      {
+          // Successfully verified
+      }
+  });
+  ```
+  ```php
+  // Note that the sequence of the parameters for PHP SDK is different than that of many other SDKs. Here verification code goes after phone number.
+  SMS::verifySmsCode('+19490008888', '123456');
+  ```
+  ```python
+  from leancloud import cloud
+  # Note that the sequence of the parameters for Python SDK is different than that of many other SDKs. Here verification code goes after phone number.
+  cloud.verify_sms_code('+19490008888', '123456')
+  ```
 
 The same verification logic can be applied to other scenarios like logging in at unusual locations or updating sensitive information. You would call the same API and follow the same steps. The only thing you need to do is to design a UI that fits your requirements.
 
