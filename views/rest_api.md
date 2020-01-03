@@ -548,7 +548,7 @@ For example, if you are implementing a Twitter-like social App, and a tweet may 
 
 ```json
 {
-  "content": "We are focusing on providing state-of-the-art tools, platform and services to developers.",
+  "content": "Serverless cloud for lightning-fast development.",
   "pubUser": "LeanCloud",
   "pubTimestamp": 1435541999
 }
@@ -568,7 +568,7 @@ For example, the AVObject above could look like this when retrieved:
 
 ```json
 {
-  "content": "We are focusing on providing state-of-the-art tools, platform and services to developers.",
+  "content": "Serverless cloud for lightning-fast development.",
   "pubUser": "LeanCloud",
   "pubTimestamp": 1435541999,
   "createdAt": "2015-06-29T01:39:35.931Z",
@@ -600,4 +600,119 @@ For example:
 ```
 https://{{host}}/1.1/classes/Post/<objectId>
 ```
+
+### Creating Objects
+
+To create a new object:
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "Serverless cloud for lightning-fast development.","pubUser": "LeanCloud","pubTimestamp": 1435541999}' \
+  https://{{host}}/1.1/classes/Post
+```
+
+If succeed, you will receive `201 Created` with a `Location` header point to the url of the object just created:
+
+```sh
+Status: 201 Created
+Location: https://{{host}}/1.1/classes/Post/558e20cbe4b060308e3eb36c
+```
+
+And the response body is a JSON object with `objectedId` and `createdAt` key-value pairs:
+
+```json
+{
+  "createdAt": "2015-06-29T01:39:35.931Z",
+  "objectId": "558e20cbe4b060308e3eb36c"
+}
+```
+
+To tell LeanCloud to return full data, set the `fetchWhenSave` parameter to `true`:
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "Serverless cloud for lightning-fast development.","pubUser": "LeanCloud","pubTimestamp": 1435541999}' \
+  https://{{host}}/1.1/classes/Post?fetchWhenSave=true
+```
+
+Class names can only contain letters, numbers, and underscores.
+Every application can contain up to 500 classes, and there is no limit on objects in each class.
+
+### Retrieving Objects
+
+To fetch the object we just created:
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  https://{{host}}/1.1/classes/Post/558e20cbe4b060308e3eb36c
+```
+
+The response body is a JSON object containing all attributes you specify above, and three built-in attributes `objectId`, `createdAt`, and `updatedAt`:
+
+```json
+{
+  "content": "Serverless cloud for lightning-fast development.",
+  "pubUser": "LeanCloud",
+  "pubTimestamp": 1435541999,
+  "createdAt": "2015-06-29T01:39:35.931Z",
+  "updatedAt": "2015-06-29T01:39:35.931Z",
+  "objectId": "558e20cbe4b060308e3eb36c"
+}
+```
+
+To fetch other objects this object points to, specify them in `include` parameter:
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -G \
+  --data-urlencode 'include=author' \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
+
+If the class does not exist, you will receive a `404 Not Found` error:
+
+```json
+{
+  "code": 101,
+  "error": "Class or object doesn't exists."
+}
+```
+
+If LeanCloud cannot find the object according to the  `objectId` you have specified, you will receive an empty object (`200 OK`）:
+
+```json
+{}
+```
+
+Some built-in classes (class names with leading underscore) may return different result when object does not exist.
+For example:
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  https://{{host}}/1.1/classes/_User/<NonexistObjectId>
+```
+
+will return:
+
+```json
+{
+  "code": 211,
+  "error": "Could not find user."
+}
+```
+
+BTW, we recommend using `GET /users/<objectId>` to fetch user information, instead of directly querying the `_User` class.
+See also [Retrieving Users](#Retrieving_Users).
 
