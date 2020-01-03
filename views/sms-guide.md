@@ -6,8 +6,8 @@
 
 There are plenty of scenarios in which your app may need to send text messages to your users:
 
-- User verification: When user attempts to log in or change password, a text message containing verification code can be sent to the user to ensure the security of the account.
-- Operation verification: For apps demanding high security levels (like banking apps), when user performs sensitive operations like transferring money or making payments, a verification code can be helpful to confirm if the user themself is performing the operation.
+- User verification: When a user attempts to log in or change password, a text message containing verification code can be sent to the user to ensure the security of the account.
+- Operation verification: For apps demanding high security levels (like banking apps), when a user performs sensitive operations like transferring money or making payments, a verification code can be helpful to confirm if the user themself is performing the operation.
 - Notifications and marketing: Merchants may send users notifications containing status updates regarding their orders, or campaigns regarding new products and promotions.
 
 After enabling SMS in your app's dashboard (see [Enabling SMS](#enabling-sms)), you will be able to send text messages to your users through your app:
@@ -118,8 +118,8 @@ To start using SMS, make sure you already have an app created, then go to the ap
 Then go to [Dashboard > Messaging > SMS > Settings > SMS settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf) and ensure the following option is enabled:
 
 {{ include.checkbox(true) }}**Enable SMS verification code (open up `requestSmsCode` and `verifySmsCode`)**
-- Enabled: The app is able to incorporate features related to SMS, including verification when user is performing sensitive operations, logging in at unusual locations, and making payments.
-- Disabled: {# TODO: 请求发送验证短信以及验证短信验证码都会被服务端拒绝，但是请注意，跟用户相关的验证与该选项无关。 #}
+- Enabled: The app is able to incorporate features related to SMS, including verification when there are users performing sensitive operations, logging in at unusual locations, making payments, etc.
+- Disabled: Requests for sending and verifying verification codes will be rejected. Note that this won't affect verification for user accounts.
 
 ### Setting up Default Signatures
 
@@ -238,7 +238,7 @@ It is becoming quite common that apps rely on SMS for signing up, logging in, an
   ```
 
 3. **The user receives the text message and enters the code**  
-  Before continuing, we suggest that you implement verification on the client side to check if the code entered is valid (has valid length and does not contain invalid characters). This helps your app avoid making unnecessary requests to the server and could potentially enhance the user experience.
+  Before continuing, we suggest that you implement verification on the client side to check if the code entered is in valid format (has valid length and does not contain invalid characters). This helps your app avoid making unnecessary requests to the server and could potentially enhance the user experience.
   
 4. **Call API to check if the code is valid**  
   Please pay attention to the sequence of the parameters being passed into the function. Here we assume the verification code is "123456":
@@ -621,7 +621,7 @@ App server->User (browser): 12. Return result of operation
 
 To enable CAPTCHA for SMS verification codes, go to your app's [Dashboard > Settings > Security](https://console.leancloud.app/app.html?appid={{appid}}#/security) and turn on **CAPTCHA**.
 
-If you wish CAPTCHA to be enabled for all types of text messages sent out from your app, go to [Dashboard > Messaging > SMS > Settings > SMS Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf) and enable **Require CAPTCHA before sending messages**. Once enabled, any request for sending text message without going through CAPTCHA will receive any error.
+If you wish CAPTCHA to be enabled for all types of text messages sent out from your app, go to [Dashboard > Messaging > SMS > Settings > SMS Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf) and enable **Require CAPTCHA before sending messages**. Once enabled, any request for sending text message without going through CAPTCHA will receive an error.
 
 LeanCloud's CAPTCHA service can only provide a minimum level of abuse prevention. You are free to add third-party CAPTCHA services to your website.
 
