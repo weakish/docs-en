@@ -534,3 +534,70 @@ For example, if you try to save an object with an invalid key name:
 
 {# TODO 错误代码请看 [错误代码详解](./error_code.html)。#}
 
+## Object
+
+### Object Format
+
+LeanStorage is built around AVObjects.
+Each AVObject is consist of several key-value pairs,
+where values are in a JSON compatible format.
+AVObjects are schemaless, thus you do not need to allocate keys at the beginning.
+You only need to set key-value pairs as you wish and when needed,
+
+For example, if you are implementing a Twitter-like social App, and a tweet may contain the following attributes (key-value pairs):
+
+```json
+{
+  "content": "We are focusing on providing state-of-the-art tools, platform and services to developers.",
+  "pubUser": "LeanCloud",
+  "pubTimestamp": 1435541999
+}
+```
+
+Keys can only contain letters, numbers, and underscores.
+Values can be anything encoded in JSON.
+
+Each AVObject belongs to a Class (table in traditional database terms).
+We recommend to use `CapitalizedWords` to name your classes, and `mixedCases` to name your attributes.
+This naming style helps to improve code readability.
+
+Each time when an AVObjects is saved to the cloud, a unique `objectId` will be assigned to it.
+`createdAt` and `updatedAt` will also be filled in by the cloud which indicate the time the object is created and updated.
+These attributes are preserved, and you cannot modify them yourself.
+For example, the AVObject above could look like this when retrieved:
+
+```json
+{
+  "content": "We are focusing on providing state-of-the-art tools, platform and services to developers.",
+  "pubUser": "LeanCloud",
+  "pubTimestamp": 1435541999,
+  "createdAt": "2015-06-29T01:39:35.931Z",
+  "updatedAt": "2015-06-29T01:39:35.931Z",
+  "objectId": "558e20cbe4b060308e3eb36c"
+}
+```
+
+`createdAt` and `updatedAt` are strings whose content is a UTC timestamps in ISO 8601 format with millisecond precision: `YYYY-MM-DDTHH:MM:SS.MMMZ`.
+`objectId` is a string unique in the class,
+like the primary key of a relational database.
+
+In LeanCloud's REST API, class-level operations use the class name as its endpoint.
+For example:
+
+```
+https://{{host}}/1.1/classes/Post
+```
+
+AVUsers (the built-in `_User` class) have a special endpoint:
+
+```
+https://{{host}}/1.1/users
+```
+
+AVObject specific operations use nested urls under the class.
+For example:
+
+```
+https://{{host}}/1.1/classes/Post/<objectId>
+```
+
