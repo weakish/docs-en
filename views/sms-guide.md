@@ -737,7 +737,7 @@ Here is the full code for our demo:
 
 ### CAPTCHA APIs
 
-#### Getting CAPTCHA
+#### Getting Images
 
 ```objc
 AVCaptchaRequestOptions *options = [[AVCaptchaRequestOptions alloc] init];
@@ -780,7 +780,7 @@ AVCaptcha.requestCaptchaInBackground(option).subscribe(new Observer<AVCaptchaDig
     }
     @Override
     public void onError(Throwable throwable) {
-        Log.d("TAG","Result: Failed to request CAPTCHA. Reason: " + throwable.getMessage());
+        Log.d("TAG","Result: Failed to request CAPTCHA image. Reason: " + throwable.getMessage());
     }
     @Override
     public void onComplete() {
@@ -799,7 +799,7 @@ AV.Captcha.request({
 AVCloud.RequestCaptchaAsync(width:85, height:30).ContinueWith(t =>{
   var captchaData = t.Result;
   var url = captchaData.Url; // The URL of the image used to display the image
-  var captchaToken = captchaData.captchaToken;// The server tells the CAPTCHA being used based on this token
+  var captchaToken = captchaData.captchaToken; // The server tells the CAPTCHA being used based on this token
 });
 ```
 ```php
@@ -810,7 +810,7 @@ from leancloud import cloud
 captcha = cloud.request_captcha(width=100, height=50)
 ```
 
-#### Verifying CAPTCHA
+#### Verifying User Inputs
 
 After obtaining a CAPTCHA, you can display the image on your page (for non-web platforms like iOS and Android, use an image component to display the image). After the user enters the text into the input box, use the method below to verify the input:
 
@@ -868,7 +868,7 @@ AVCloud.VerifyCaptchaAsync("Plug user input here, for example: AM8N",'Plug captc
 validate_token = captcha.verify("Plug user input here, for example: AM8N")
 ```
 
-#### Sending SMS Verification Code with `validate_token`
+#### Sending SMS Verification Codes with `validate_token`
 
 If the input is correct, continue to send SMS verification code with the `validate_token` obtained:
 
