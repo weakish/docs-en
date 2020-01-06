@@ -538,11 +538,11 @@ For example, if you try to save an object with an invalid key name:
 
 ### Object Format
 
-LeanStorage is built around AVObjects.
-Each AVObject is consist of several key-value pairs,
+LeanStorage is built around objects.
+Each object is consist of several key-value pairs,
 where values are in a JSON compatible format.
-AVObjects are schemaless, thus you do not need to allocate keys at the beginning.
-You only need to set key-value pairs as you wish and when needed,
+Objects are schemaless, thus you do not need to allocate keys at the beginning.
+You only need to set key-value pairs as you wish and when needed.
 
 For example, if you are implementing a Twitter-like social App, and a tweet may contain the following attributes (key-value pairs):
 
@@ -557,14 +557,14 @@ For example, if you are implementing a Twitter-like social App, and a tweet may 
 Keys can only contain letters, numbers, and underscores.
 Values can be anything encoded in JSON.
 
-Each AVObject belongs to a Class (table in traditional database terms).
+Each object belongs to a class (table in traditional database terms).
 We recommend to use `CapitalizedWords` to name your classes, and `mixedCases` to name your attributes.
 This naming style helps to improve code readability.
 
-Each time when an AVObjects is saved to the cloud, a unique `objectId` will be assigned to it.
+Each time when an objects is saved to the cloud, a unique `objectId` will be assigned to it.
 `createdAt` and `updatedAt` will also be filled in by the cloud which indicate the time the object is created and updated.
 These attributes are preserved, and you cannot modify them yourself.
-For example, the AVObject above could look like this when retrieved:
+For example, the object above could look like this when retrieved:
 
 ```json
 {
@@ -577,7 +577,7 @@ For example, the AVObject above could look like this when retrieved:
 }
 ```
 
-`createdAt` and `updatedAt` are strings whose content is a UTC timestamps in ISO 8601 format with millisecond precision: `YYYY-MM-DDTHH:MM:SS.MMMZ`.
+`createdAt` and `updatedAt` are strings whose content is a UTC timestamps in ISO 8601 format with millisecond precision `YYYY-MM-DDTHH:MM:SS.MMMZ`.
 `objectId` is a string unique in the class,
 like the primary key of a relational database.
 
@@ -588,13 +588,13 @@ For example:
 https://{{host}}/1.1/classes/Post
 ```
 
-AVUsers (the built-in `_User` class) have a special endpoint:
+Users (the built-in `_User` class) have a special endpoint:
 
 ```
 https://{{host}}/1.1/users
 ```
 
-AVObject specific operations use nested URLs under the class.
+Object specific operations use nested URLs under the class.
 For example:
 
 ```
@@ -655,7 +655,7 @@ curl -X GET \
   https://{{host}}/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
-The response body is a JSON object containing all attributes you specify above, and three built-in attributes `objectId`, `createdAt`, and `updatedAt`:
+The response body is a JSON object containing all attributes you specified above, and three preserved attributes `objectId`, `createdAt`, and `updatedAt`:
 
 ```json
 {
@@ -688,7 +688,7 @@ If the class does not exist, you will receive a `404 Not Found` error:
 }
 ```
 
-If LeanCloud cannot find the object according to the  `objectId` you have specified, you will receive an empty object (`200 OK`）:
+If LeanCloud cannot find the object according to the  `objectId` you specified, you will receive an empty object (`200 OK`）:
 
 ```json
 {}
@@ -781,7 +781,7 @@ curl -X PUT \
 LeanCloud provides three atomic operators for arrays:
 
 * `Add` extends an array attribute by appending elements from the given array.
-* `AddUnique**` is similar to `Add`, but only appending elements not already contained in the array attribute.
+* `AddUnique` is similar to `Add`, but only appending elements not already contained in the array attribute.
 * `Remove` removes all occurrences of elements specified in the given array.
 
 The given array mentioned above is passed in as the value of the `objects` key.
@@ -873,7 +873,7 @@ Again, if the condition is not met, the update will not be performed, and you wi
 For classes with moderate amount of objects, we can iterate over all objects in the class via queries (with `skip` and `limit`).
 However, for classes with large amount of objects, `skip` is inefficient.
 Thus LeanCloud provides an `scan` endpoint to iterate over objects of a class efficiently.
-By default `scan` returns 100 results order by `objectId` (ascending).
+By default `scan` returns 100 results in ascending order by `objectId`.
 You can ask LeanCloud to return up to 1000 results via specifying the `limit` parameter.
 
 ```sh
@@ -917,7 +917,7 @@ curl -X GET \
 ```
 
 Each `cursor` must be consumed in 10 minutes.
-After 10 minutes it become invalid.
+After 10 minutes it becomes invalid.
 
 You can also specify `where` conditions for filtering:
 
@@ -931,7 +931,7 @@ curl -X GET \
    https://{{host}}/1.1/scan/classes/Article
 ```
 
-As mentioned above, by default the results are order by `objectId` (ascending).
+As mentioned above, by default the results are in ascending order by `objectId`.
 To return results ordered by other attribute,
 pass that attribute as the `scan_key` parameter.
 
@@ -984,11 +984,11 @@ curl -X POST \
 Currently there is no limit on wrapped requests number,
 but LeanCloud has a 20 MB size limit on request body for all API requests.
 
-The wrapped requests will be performed according to the order given in the `requests` array.
+The wrapped operations will be performed according to the order given in the `requests` array.
 And the response body will also be an array,
 with corresponding length and order.
-Each member of the results array will be a JSON object with one and only one key, and the key will be either `success` or `error`.
-The value of `success` or `error` will be the response to the corresponding single request on success or failure.  
+Each member of the results array will be a JSON object with one and only one key, and that key will be either `success` or `error`.
+The value of `success` or `error` will be the response to the corresponding single request on success or failure respectively.  
 
 ```
 [
@@ -1043,7 +1043,7 @@ Batch requests can also be used to replaces requests with very long URLs (usuall
 Besides standard JSON values, LeanCloud also supports advanced data types like Date and Files.
 These advanced data types are encoded as a JSON object with a `__type` key.
 
-**Date** contains an `iso` key, whose value is a UTC timestamp string in ISO 8601 format with millisecond precision `YYYY-MM-DDTHH:MM:SS.MMMZ`:
+**Date** contains an `iso` key, whose value is a UTC timestamp string in ISO 8601 format with millisecond precision `YYYY-MM-DDTHH:MM:SS.MMMZ`.
 
 
 ```json
