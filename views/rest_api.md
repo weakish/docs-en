@@ -594,7 +594,7 @@ AVUsers (the built-in `_User` class) have a special endpoint:
 https://{{host}}/1.1/users
 ```
 
-AVObject specific operations use nested urls under the class.
+AVObject specific operations use nested URLs under the class.
 For example:
 
 ```
@@ -614,7 +614,7 @@ curl -X POST \
   https://{{host}}/1.1/classes/Post
 ```
 
-If succeed, you will receive `201 Created` with a `Location` header point to the url of the object just created:
+If succeed, you will receive `201 Created` with a `Location` header point to the URL of the object just created:
 
 ```sh
 Status: 201 Created
