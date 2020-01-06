@@ -1038,3 +1038,63 @@ curl -X POST \
 
 Batch requests can also be used to replaces requests with very long URLs (usually constructed via very complex queries or conditions), to bypass the limit on URL length enforced by service side or client side.
 
+### Advanced Data Types
+
+Besides standard JSON values, LeanCloud also supports advanced data types like Date and Files.
+These advanced data types are encoded as a JSON object with a `__type` key.
+
+**Date** contains an `iso` key, whose value is a UTC timestamp string in ISO 8601 format with millisecond precision `YYYY-MM-DDTHH:MM:SS.MMMZ`:
+
+
+```json
+{
+  "__type": "Date",
+  "iso": "2015-06-21T18:02:52.249Z"
+}
+```
+
+As mentioned above, built-in date attributes `createdAt` and `updatedAt` are UTC timestamp strings, not enclosed in an JSON object.
+
+**Byte** contains a `base64` key, whose value is a MIME base64 string (no whitespace characters).
+
+```json
+{
+  "__type": "Bytes",
+  "base64": "5b6I5aSa55So5oi36KGo56S65b6I5Zac5qyi5oiR5Lus55qE5paH5qGj6aOO5qC877yM5oiR5Lus5bey5bCGIExlYW5DbG91ZCDmiYDmnInmlofmoaPnmoQgTWFya2Rvd24g5qC85byP55qE5rqQ56CB5byA5pS+5Ye65p2l44CC"
+}
+```
+
+**Pointer** contains a `className` key and an `objectId` key, whose values are the corresponding class name and objectId of the pointed value.
+
+```json
+{
+  "__type": "Pointer",
+  "className": "Post",
+  "objectId": "55a39634e4b0ed48f0c1845c"
+}
+```
+
+Pointers to users contains a `className` of `_User`.
+The leading underscore indicates the `_User` class is built-in.
+Similar, pointers to roles and installations contain a `className` of `_Role` or `_Installation` respectively.
+However, a pointer to a file is special:
+
+```json
+{
+  "id": "543cbaede4b07db196f50f3c",
+  "__type": "File"
+}
+```
+
+**GeoPoint** contains `latitude` and `longitude` of the location:
+
+```json
+{
+  "__type": "GeoPoint",
+  "latitude": 39.9,
+  "longitude": 116.4
+}
+```
+
+We may add more advanced data types in future, thus you should not use the `__type` on your own JSON objects.
+
