@@ -867,3 +867,174 @@ Again, if the condition is not met, the update will not be performed, and you wi
   "error": "No effect on updating/deleting a document."
 }
 ```
+
+### Iterate over Objects
+
+For classes with moderate amount of objects, we can iterate over all objects in the class via queries (with `skip` and `limit`).
+However, for classes with large amount of objects, `skip` is inefficient.
+Thus LeanCloud provides an `scan` endpoint to iterate over objects of a class efficiently.
+By default `scan` returns 100 results order by `objectId` (ascending).
+You can ask LeanCloud to return up to 1000 results via specifying the `limit` parameter.
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \ # requires master key
+   -G \
+   --data-urlencode 'limit=10' \
+   https://{{host}}/1.1/scan/classes/Article
+```
+
+LeanCloud will return an `results` array and a `cursor`.
+
+```json
+{
+  "results":
+   [
+      {
+        "tags"     :  ["clojure","\u7b97\u6cd5"],
+        "createdAt":  "2016-07-07T08:54:13.250Z",
+        "updatedAt":  "2016-07-07T08:54:50.268Z",
+        "title"    :  "clojure persistent vector",
+        "objectId" :  "577e18b50a2b580057469a5e"
+       },
+       ...
+    ],
+    "cursor": "pQRhIrac3AEpLzCA"}
+```
+
+The `cursor` will be `null` if there are no more results.
+When `cursor` is not `null`, you can pass the `cursor` value to continue the iteration:
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   -G \
+   --data-urlencode 'limit=10' \
+   --data-urlencode 'cursor=pQRhIrac3AEpLzCA' \
+   https://{{host}}/1.1/scan/classes/Article
+```
+
+Each `cursor` must be consumed in 10 minutes.
+After 10 minutes it become invalid.
+
+You can also specify `where` conditions for filtering:
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   -G \
+   --data-urlencode 'limit=10' \
+   --data-urlencode 'where={"score": 100}' \
+   https://{{host}}/1.1/scan/classes/Article
+```
+
+As mentioned above, by default the results are order by `objectId` (ascending).
+To return results ordered by other attribute,
+pass that attribute as the `scan_key` parameter.
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   -G \
+   --data-urlencode 'limit=10' \
+   --data-urlencode 'scan_key=score' \
+   https://{{host}}/1.1/scan/classes/Article
+```
+
+To return results in descending order, prefix a minus sign (`-`) to the value of the `scan_key`, e.g. `-score`.
+
+The value of the `scan_key` passed must be strictly monotonous, and it cannot be used in where conditions.
+
+### Batch Operations
+
+To reduce network interactions, you can wrap create, update, and delete operations on multiple objects in one request.
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "requests": [
+          {
+            "method": "POST",
+            "path": "/1.1/classes/Post",
+            "body": {
+              "content": "Most Internet-based applications are data-driven and share a very similar architecture...",
+              "pubUser": "LeanCloud"
+            }
+          },
+          {
+            "method": "POST",
+            "path": "/1.1/classes/Post",
+            "body": {
+              "content": "LeanMessage is designed with the following goals:...",
+              "pubUser": "LeanCloud"
+            }
+          }
+        ]
+      }' \
+  https://{{host}}/1.1/batch
+```
+
+Currently there is no limit on wrapped requests number,
+but LeanCloud has a 20 MB size limit on request body for all API requests.
+
+The wrapped requests will be performed according to the order given in the `requests` array.
+And the response body will also be an array,
+with corresponding length and order.
+Each member of the results array will be a JSON object with one and only one key, and the key will be either `success` or `error`.
+The value of `success` or `error` will be the response to the corresponding single request on success or failure.  
+
+```
+[
+  {
+    "error": {
+      "code": 1,
+      "error": "Could not find object by id '558e20cbe4b060308e3eb36c' for class 'Post'."
+    }
+  },
+  {
+    "success": {
+      "updatedAt": "2017-02-22T06:35:29.419Z",
+      "objectId": "58ad2e850ce463006b217888"
+    }
+  }
+]
+```
+
+Be aware that the http status `200` returned by a batch request only means LeanCloud had received and performed the operations.
+It does not mean all operations within the batch request succeeded.
+
+Besides `POST` requests in the above example,
+you can also wrap `PUT` and `DELETE` requests in a batch request:
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "requests": [
+          {
+            "method": "PUT",
+            "path": "/1.1/classes/Post/55a39634e4b0ed48f0c1845b",
+            "body": {
+              "upvotes": 2
+            }
+          },
+          {
+            "method": "DELETE",
+            "path": "/1.1/classes/Post/55a39634e4b0ed48f0c1845c"
+          }
+        ]
+      }' \
+  https://{{host}}/1.1/batch
+```
+
+Batch requests can also be used to replaces requests with very long URLs (usually constructed via very complex queries or conditions), to bypass the limit on URL length enforced by service side or client side.
+
