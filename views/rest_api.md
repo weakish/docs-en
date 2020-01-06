@@ -716,3 +716,154 @@ will return:
 BTW, we recommend using `GET /users/<objectId>` to fetch user information, instead of directly querying the `_User` class.
 See also [Retrieving Users](#Retrieving_Users).
 
+### Updating Objects
+
+To update an object, you can send a PUT request to the object URL.
+LeanCloud will only update attributes you explicitly specified in the request (except for `updatedAt`).
+For example, just update the content of a post:
+
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "Serverless cloud for lightning-fast development. https://leancloud.app"}' \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
+
+If update succeed, `updatedAt` will be returned:
+
+```json
+{
+  "updatedAt": "2015-06-30T18:02:52.248Z"
+}
+```
+
+You can also pass the `fetchWhenSave` parameter,
+which will return all updated attributes.
+
+#### Counter
+
+LeanCloud provides an `Increment` atomic operator to increase a counter like attribute.
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"upvotes":{"__op":"Increment","amount":1}}' \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
+
+There is also an `Decrement` operator.
+`Decrement` a positive number is equivalent to `Increment` a negative number.
+
+#### Bitwise Operators
+
+LeanCloud provides three bitwise operators for integers:
+
+* `BitAnd`: bitwise `and`
+* `BitOr`: bitwise `or`
+* `BitXor`: bitwise `xor`
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"flags":{"__op":"BitOr","value": 0x0000000000000004}}' \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
+
+#### Arrays
+
+LeanCloud provides three atomic operators for arrays:
+
+* `Add` extends an array attribute by appending elements from the given array.
+* `AddUnique**` is similar to `Add`, but only appending elements not already contained in the array attribute.
+* `Remove` removes all occurrences of elements specified in the given array.
+
+The given array mentioned above is passed in as the value of the `objects` key.
+
+For example, to add some tags to the post:
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"tags":{"__op":"AddUnique","objects":["Frontend","JavaScript"]}}' \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
+
+#### Conditional Updates
+
+Suppose we are going to deduct some money from an `Account`, and we want to make sure this deduction will not result in a negative balance.
+Then we can use conditional updates.
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"balance":{"__op":"Decrement","amount": 30}}' \
+  "https://{{host}}/1.1/classes/Account/558e20cbe4b060308e3eb36c?where=%7B%22balance%22%3A%7B%22%24gte%22%3A%2030%7D%7D"
+```
+
+Here `%7B%22balance%22%3A%7B%22%24gte%22%3A%2030%7D%7D` is the URL-encoded condition `{"balance":{"$gte": 30}}`.
+Refer to [Queries](#Queries) for more examples.
+
+If the condition is not met, the update will not be performed, and you will receive an `305` error:
+
+```json
+{
+  "code" : 305,
+  "error": "No effect on updating/deleting a document."
+}
+```
+
+**Note: `where` must be passed in as the query parameter of URL.**
+
+### Deleting Objects
+
+To delete an object, send a `DELETE` request:
+
+```sh
+curl -X DELETE \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
+
+To delete an attribute from an object, send a `PUT` request with the `Delete` operator:
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"downvotes":{"__op":"Delete"}}' \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
+
+#### Conditional Delete
+
+Similar to conditional updates, we pass an URL-encoded `where` parameter to the `DELETE` request.
+
+```sh
+curl -X DELETE \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  "https://{{host}}/1.1/classes/Post/<objectId>?where=%7B%22clicks%22%3A%200%7D" # {"clicks": 0}
+```
+
+Again, if the condition is not met, the update will not be performed, and you will receive an `305` error: 
+
+```json
+{
+  "code" : 305,
+  "error": "No effect on updating/deleting a document."
+}
+```
