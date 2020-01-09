@@ -1168,7 +1168,7 @@ Other operators available in the `where` parameter:
 | `$regex`      | match a regular expression            |
 | `$in`         | contain                               |
 | `$nin`        | not contain                           |
-| `$all`        | contain all                           |
+| `$all`        | contain all (for array type)          |
 | `$exists`     | the given key exists                  |
 | `$select`     | match the result of another query     |
 | `$dontSelect` | not match the result of another query |
@@ -1336,4 +1336,125 @@ curl -X GET \
 ```
 
 The parameters mentioned above can be combined with each other.
+
+### Regex Queries
+
+To query posts whose title begins with `WTO`:
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -G \
+  --data-urlencode 'where={"title":{"$regex":"^WTO.*","$options":"i"}}' \
+  https://{{host}}/1.1/classes/Post
+```
+
+The above example specifies `i` in `options`.
+Thus it is a case-insensitive search.
+
+Available options (flags):
+
+Options | Description | Notes
+- | - | -
+`i` | case-insensitive search | same as in JavaScript 
+`m` | multi-line search | same as in JavaScript
+`s` | allow `.` to match newline characters | added in ES2018
+`x` | free-spacing and line comments | same as in Perl
+
+Options can be combined, for example `"$options":"sixm"`.
+
+### Array Queries
+
+Queries on keys with an array type overloads some operators mentioned above:
+
+Operators | Example | k is not an array | k is an array
+- | - | - | -
+n/a | `where={"k":2}` | `k == 2` | `k` contains 2
+`in` | `where={"k":{"$in":[2,3]}}` | `k` is 2 or 3 | `k` contains 2 or 3
+`all` | `where={"arrayKey":{"$all":[2,3]}}` | n/a | `k` contains 2 and 3
+
+### Pointer Queries
+
+To query a Pointer type attribute:
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -G \
+  --data-urlencode 'where={"post":{"__type":"Pointer","className":"Post","objectId":"558e20cbe4b060308e3eb36c"}}' \
+  https://{{host}}/1.1/classes/Comment
+```
+
+To query objects with pointers according to another query on the pointed object, you can use the `$inQuery` operator.
+
+For example, to query comments on posts with attached images:
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -G \
+  --data-urlencode 'where={"post":{"$inQuery":{"where":{"image":{"$exists":true}},"className":"Post"}}}' \
+  https://{{host}}/1.1/classes/Comment
+```
+
+Be aware that the `limit` parameter (default 100, max 1000) also applies to inner queries.
+Thus you may need to deliberately construct queries to get expected result.
+Refer to [Caveats about Inner Queries](leanstorage_guide-js.html#Caveats_about_Inner_Queries) for more details.
+
+To include pointed objects in one query, ues `include` parameter.
+For example, to query most recent 10 comments with the posts commented on:
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -G \
+  --data-urlencode 'order=-createdAt' \
+  --data-urlencode 'limit=10' \
+  --data-urlencode 'include=post' \
+  https://{{host}}/1.1/classes/Comment
+```
+
+Without the `include` parameter, the post attribute of returned comments will look like this:
+
+```json
+{
+  "__type": "Pointer",
+  "className": "Post",
+  "objectId": "51e3a359e4b015ead4d95ddc"
+}
+```
+
+With the `include=post` parameter, the post attribute will be dereferenced:
+
+```json
+{
+  "__type": "Object",
+  "className": "Post",
+  "objectId": "51e3a359e4b015ead4d95ddc",
+  "createdAt": "2015-06-29T09:31:20.371Z",
+  "updatedAt": "2015-06-29T09:31:20.371Z",
+  "content": "this is a post",
+  "author": "LeanCloud"
+}
+```
+
+You can use dot (`.`) for multi-level dereference:
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -G \
+  --data-urlencode 'order=-createdAt' \
+  --data-urlencode 'limit=10' \
+  --data-urlencode 'include=post.author' \
+  https://{{host}}/1.1/classes/Comment
+```
+
+And you can use comma (`,`) to separate multiple pointers to `include`.
 
