@@ -1458,3 +1458,52 @@ curl -X GET \
 
 And you can use comma (`,`) to separate multiple pointers to `include`.
 
+### Counting Results
+
+You can pass `count=1` parameter to retrieve the count of matched results.
+For example, if you just need to know a specific user have posted how many posts:
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -G \
+  --data-urlencode 'where={"pubUser":"LeanCloud"}' \
+  --data-urlencode 'count=1' \
+  --data-urlencode 'limit=0' \
+  https://{{host}}/1.1/classes/Post
+```
+
+Since `limt=0`, LeanCloud will only return the count, and the results array will be empty.
+
+```json
+{
+  "results": [
+
+  ],
+  "count": 7
+}
+```
+
+Given a nonzero `limit` parameter, LeanCloud will also return results together with the count.
+
+### Compound Queries
+
+You can use `$or` operator to query objects matching any one of several queries.
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -G \
+  --data-urlencode 'where={"$or":[{"priority":{"$gt":2}},{"isComplete":true}]}' \
+  https://{{host}}/1.1/classes/Todo
+```
+
+Similarly, you can use `$and` operator to query objects matching all subqueries.
+
+```
+--data-urlencode 'where={"$and":[{"price": {"$ne":0}},{"price":{"$exists":true}}]}' \
+```
+
+Be aware that non-filtering constrains such as `limit`, `skip`, `order`, `include` are not allowed in subqueries of a compound query.
