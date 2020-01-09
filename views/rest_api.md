@@ -1173,7 +1173,7 @@ Other operators available in the `where` parameter:
 | `$select`     | match the result of another query     |
 | `$dontSelect` | not match the result of another query |
 
-To query posts published on **2015-06-29**：
+To query posts published on 2015-06-29 ：
 
 ```sh
 curl -X GET \
@@ -1478,9 +1478,7 @@ Since `limt=0`, LeanCloud will only return the count, and the results array will
 
 ```json
 {
-  "results": [
-
-  ],
+  "results": [],
   "count": 7
 }
 ```
