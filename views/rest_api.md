@@ -18,7 +18,7 @@ The current API version is `1.1`.
 
 This guide provides curl command line examples.
 You may need to modify some syntax if using cmd.exe on Windows.
-For example, `\` in curl examples means to be continued on next line, but cmd.exe will consider it as path seperator.
+For example, `\` in curl examples means to be continued on next line, but cmd.exe will consider it as path separator.
 Therefore, we recommend you to use [Postman] for testing on Windows.
 
 [Postman]: https://www.getpostman.com/
@@ -1233,7 +1233,7 @@ curl -X GET \
   https://{{host}}/1.1/classes/Post
 ```
 
-Suppose we ues `_Followee` and `_Follower` classes for following relationship, then we can query posts published by someone followed by current user like this:
+Suppose we use `_Followee` and `_Follower` classes for following relationship, then we can query posts published by someone followed by current user like this:
 
 ```sh
 curl -X GET \
@@ -1405,7 +1405,7 @@ Be aware that the `limit` parameter (default 100, max 1000) also applies to inne
 Thus you may need to deliberately construct queries to get expected result.
 Refer to [Caveats about Inner Queries](leanstorage_guide-js.html#Caveats_about_Inner_Queries) for more details.
 
-To include pointed objects in one query, ues `include` parameter.
+To include pointed objects in one query, use `include` parameter.
 For example, to query most recent 10 comments with the posts commented on:
 
 ```sh
@@ -1474,7 +1474,7 @@ curl -X GET \
   https://{{host}}/1.1/classes/Post
 ```
 
-Since `limt=0`, LeanCloud will only return the count, and the results array will be empty.
+Since `limit=0`, LeanCloud will only return the count, and the results array will be empty.
 
 ```json
 {
