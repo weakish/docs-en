@@ -1505,3 +1505,214 @@ Similarly, you can use `$and` operator to query objects matching all subqueries.
 ```
 
 Be aware that non-filtering constrains such as `limit`, `skip`, `order`, `include` are not allowed in subqueries of a compound query.
+
+## Users
+
+With users API, you can build an account system for your application quickly and conveniently.
+
+Basically, users (the `_User` class) are similar to other classes, for example, `_User` is also schema free.
+However, all user objects must have `username` and `password` attributes. `password` will be encrypted automatically and `username` and `email` (if available) attributes must be unique (case sensitive). 
+
+### Signing Up
+
+To create a new user:
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"hjiang","password":"f32@ds*@&dsa","region": "China"}' \
+  https://{{host}}/1.1/users
+```
+
+As mentioned above, `username` and `password` are required,
+and `password` will be stored in encrypted form and LeanCloud will never return its value to client side.
+
+`region` is a custom attributes.
+You may add any extra custom attributes.
+
+If the registration succeeded, LeanCloud will return `201 Created` and the `Location` will contain the URL for that user:
+
+```sh
+Status: 201 Created
+Location: https://{{host}}/1.1/users/55a47496e4b05001a7732c5f
+```
+
+The response body is a JSON object containing three attributes:
+
+```json
+{
+  "sessionToken":"qmdj8pdidnmyzp0c7yqil91oc",
+  "createdAt":"2015-07-14T02:31:50.100Z",
+  "objectId":"55a47496e4b05001a7732c5f"
+}
+```
+
+`sessionToken` can be used to authenticate subsequent requests as that user.
+It never changes, unless:
+
+- the user forgets the password and resets it via email;
+- the user modifies the password, and the developer enabled "Log out the user when password is updated" in dashboard;
+- the `refreshSessionToken` api is invoked.
+
+Logged in users will encounter a `403 Forbidden` permission error when invoking related APIs after the `sessionToken` refreshed.
+
+LeanCloud can verify user's email address automatically.
+To enable this feature, access "Dashboard > LeanStorage > User > Setting", and select "Send verification emails when users register or change email addresses from clients".
+
+The `emailVerified` of `_User` will be set to `true` once the new user clicked the verification link in the email.
+
+You can also enable "Do not allow users with unverified phone numbers to log in" in the dashboard.
+
+### Logging In
+
+To log in a user with username and password:
+
+```sh
+curl -X POST \
+-H "Content-Type: application/json" \
+-H "X-LC-Id: {{appid}}" \
+-H "X-LC-Key: {{appkey}}" \
+-d '{"username":"hjiang","password":"f32@ds*@&dsa"}' \
+https://{{host}}/1.1/login
+```
+
+The response body is a JSON object containing all the attributes of that user, except `password`:
+
+```json
+{
+  "sessionToken":"qmdj8pdidnmyzp0c7yqil91oc",
+  "updatedAt":"2015-07-14T02:31:50.100Z",
+  "phone":"18612340000",
+  "objectId":"55a47496e4b05001a7732c5f",
+  "username":"hjiang",
+  "createdAt":"2015-07-14T02:31:50.100Z",
+  "emailVerified":false,
+  "mobilePhoneVerified":false
+}
+```
+
+To log in a user with email and password, just replace `username` with `email`:
+
+```json
+{"email":"hjiang@example.com","password":"f32@ds*@&dsa"}
+```
+
+### Retrieving Current User
+
+To retrieve current user via `sessionToken` stored in client side:
+
+```
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
+  https://{{host}}/1.1/users/me
+```
+
+The returned JSON object is the same as [`/login`](#Logging_In)
+
+### Refresh sessionToken
+
+To refresh a user's `sessionToken`:
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
+  https://{{host}}/1.1/users/57e3bcca67f35600577c3063/refreshSessionToken
+```
+
+`X-LC-Session` can be omitted when using Master Key.
+
+If succeed, new `sessionToken` will be returned, with user information:
+
+```json
+{
+ "sessionToken":"5frlikqlwzx1nh3wzsdtfr4q7",
+ "updatedAt":"2016-10-20T03:10:57.926Z",
+ "objectId":"57e3bcca67f35600577c3063",
+ "username":"leancloud",
+ "createdAt":"2016-09-22T11:13:14.842Z",
+ "emailVerified":false,
+ "mobilePhoneVerified":false
+}
+```
+
+#### Locking Users
+
+Seven failed login attempts for a user within 15 minutes will trigger a lock.
+After that LeanCloud will return the following error:
+
+```json
+{
+  "code":219,
+  "error":"Tried too many times to signin."
+}
+```
+
+LeanCloud will release this lock automatically in 15 minutes after last login failure.
+Developers cannot adjust this behavior via SDK or REST API.
+During the locking period, the user is not allowed to login,
+even if they provide correct password.
+This restriction also applies to SDK and LeanEngine.
+
+{# TODO
+### 使用手机号码注册或登录
+
+请参考 [短信服务 REST API 详解 &middot; 使用手机号码注册或登录](rest_sms_api.html#使用手机号码注册或登录)。
+#}
+
+### Verifying Email Address
+
+As mentioned above, once a user clicked the verification link in the email, their `emailVerified` will be set to `true`.
+
+`emailVerified` is a Boolean:
+
+1. `true`: the user has verified their email address via clicking the link in the verification mail.
+2. `false`: when a user's `email` attribute is set or modified, LeanCloud will set their `emailVerified` to `false` and send a verification email to the user. After the user clicks the verification link in the email, LeanCloud will set `emailVerified` to `true`. 
+3. `null`: The user does not have an `email`, or the user object is created when the verify new user's email address option is disabled. 
+
+{# TODO 关于自定义邮件模板和验证链接 https://github.com/leancloud/docs/pull/3408 #}
+
+The verification link expires in one week.
+To resend the verification email:
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"hang@leancloud.rocks"}' \
+  https://{{host}}/1.1/requestEmailVerify
+```
+
+### Resetting a Password
+
+A user can reset their password via email:
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"hang@leancloud.rocks"}' \
+  https://{{host}}/1.1/requestPasswordReset
+```
+
+If succeed, the response body will be an empty JSON object:
+
+```json
+{}
+```
+
+{# TODO 关于自定义邮件模板和验证链接 https://github.com/leancloud/docs/pull/3408 #}
+
+{# TODO
+### 手机号码验证
+
+请参考 [短信服务 REST API 详解 - 用户账户与手机号码验证](rest_sms_api.html#用户账户与手机号码验证)。
+#}
+
