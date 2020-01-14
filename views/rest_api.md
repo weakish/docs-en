@@ -1797,3 +1797,77 @@ curl -X DELETE \
 
 The `X-LC-Session` HTTP header is used for authenticate this request.
 
+### Linking Users
+
+To support users to use third party accounts to log in your application, you can use the `authData` attribute of user.
+
+`authData` is a JSON object, whose schema may be different for different services.
+
+The simplest form of `authData` is as following:
+
+```json
+{
+  "anonymous": {
+    "id": "random UUID with lowercase hexadecimal digits"
+    // other optional keys 
+  }
+}
+```
+
+This is used for anonymous users,
+for example, to provide a "try without signing up" or "guest login" feature for your application.
+
+The `authData` for an arbitrary platform:
+
+```json
+{
+    "platform_name":
+    {
+      "uid": "unique user id on that platfrom (string)",
+      "access_token": "access token for the user"
+      // other optional keys 
+    }
+}
+```
+
+`authData` can have other additional keys, but it must contain both `uid` and `access_token`.
+Often you need to verify `authData` yourself (except for certain platforms, see below).
+Also, to avoid binding a third party account to multiple users, you need to create a unique index for `authData.platform_name.uid` in Dashboard (LeanStorage > _User).
+
+LeanCloud has built-in support for some popular social networks in China, such as [Weibo](http://weibo.com/), [WeChat](https://www.wechat.com/en), and [QQ](https://imqq.com/English1033.html):
+
+```json
+{
+  "authData": {
+    "weibo": {
+      "uid": "123456789",
+      "access_token": "2.00vs3XtCI5FevCff4981adb5jj1lXE",
+      "expiration_in": "36000"
+    }
+  }
+}
+
+{
+  "authData": {
+    "weixin": {
+      "openid": "0395BA18A5CD6255E5BA185E7BEBA242",
+      "access_token": "12345678-SaMpLeTuo3m2avZxh5cjJmIrAfx4ZYyamdofM7IjU",
+      "expires_in": 1382686496
+    }
+  }
+}
+
+{
+  "authData": {
+    "qq": {
+      "openid": "0395BA18A5CD6255E5BA185E7BEBA242",
+      "access_token": "12345678-SaMpLeTuo3m2avZxh5cjJmIrAfx4ZYyamdofM7IjU",
+      "expires_in": 1382686496
+    }
+  }
+}
+```
+
+LeanCloud will automatically verify access token for these platforms, and will also create unique index for these platforms.
+
+
