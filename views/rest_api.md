@@ -1599,20 +1599,6 @@ To log in a user with email and password, just replace `username` with `email`:
 {"email":"hjiang@example.com","password":"f32@ds*@&dsa"}
 ```
 
-### Retrieving Current User
-
-To retrieve current user via `sessionToken` stored in client side:
-
-```
-curl -X GET \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
-  https://{{host}}/1.1/users/me
-```
-
-The returned JSON object is the same as [`/login`](#Logging_In)
-
 ### Refresh sessionToken
 
 To refresh a user's `sessionToken`:
@@ -1715,4 +1701,99 @@ If succeed, the response body will be an empty JSON object:
 
 请参考 [短信服务 REST API 详解 - 用户账户与手机号码验证](rest_sms_api.html#用户账户与手机号码验证)。
 #}
+
+### Retrieving Users
+
+To retrieve a user, you can send a GET request to user URL (as in the `Location` header returned on [successful signing up](#Signing_Up)).
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  https://{{host}}/1.1/users/55a47496e4b05001a7732c5f
+```
+
+Alternatively, you can retrieve a user via their `sessionToken`:
+
+```
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
+  https://{{host}}/1.1/users/me
+```
+
+The returned JSON object is the same as in [`/login`](#Logging_In)
+
+If the user does not exist, a `400 Bad Request` will be returned:
+
+```json
+{
+  "code": 211,
+  "error": "Could not find user."
+}
+```
+
+### Updating Users
+
+Similar to [Updating Objects](#Updating_Objects), you can send a `PUT` request to the user URL to update a user's data.
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
+  -H "Content-Type: application/json" \
+  -d '{"phone":"18600001234"}' \
+  https://{{host}}/1.1/users/55a47496e4b05001a7732c5f
+```
+
+The `X-LC-Session` HTTP header is to authenticate the modification,
+whose value is the user's `sessionToken`.
+
+If update succeed, `updatedAt` will be returned.
+This is the same as [Updating Objects](#Updating_Objects). 
+
+```json
+{
+  "updatedAt": "2015-07-14T02:35:50.100Z"
+}
+```
+
+If you want to update `username`, then you have to ensure that the new value of `username` must not be conflict with other existing users.
+
+If you want to update `password` after verifying the old password,
+then you can use `PUT /1.1/users/:objectId/updatePassword` instead.
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
+  -H "Content-Type: application/json" \
+  -d '{"old_password":"the_old_password", "new_password":"the_new_password"}' \
+  https://{{host}}/1.1/users/55a47496e4b05001a7732c5f/updatePassword
+```
+
+Note this API still requires the `X-LC-Session` header.
+
+### Querying Users
+
+You can query users like [querying regular objects](#Queries), just send `GET` requests to `/1.1/users`.
+
+However, for security concerns, all queries on users will be rejected by LeanCloud, unless you use master key or have properly configured `_User` class ACL settings (in Dashboard > LeanStorage > _User > Permission).
+
+### Deleting Users
+
+Just like delete an object, send a `DELETE` request to delete a user.
+
+```sh
+curl -X DELETE \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
+  https://{{host}}/1.1/users/55a47496e4b05001a7732c5f
+```
+
+The `X-LC-Session` HTTP header is used for authenticate this request.
 
