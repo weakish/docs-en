@@ -1834,7 +1834,7 @@ The `authData` for an arbitrary platform:
 Often you need to verify `authData` yourself (except for certain platforms, see below).
 Also, to avoid binding a third party account to multiple users, you need to create a unique index for `authData.platform_name.uid` in Dashboard (LeanStorage > _User).
 
-LeanCloud has built-in support for some popular social networks in China, such as [Weibo](http://weibo.com/), [WeChat](https://www.wechat.com/en), and [QQ](https://imqq.com/English1033.html):
+LeanCloud has built-in support for some popular social networks in China, such as [Weibo](http://weibo.com/), [WeChat](https://www.wechat.com/en) (*weixin* in Chinese pinyin), and [QQ](https://imqq.com/English1033.html):
 
 ```json
 {
@@ -1870,4 +1870,159 @@ LeanCloud has built-in support for some popular social networks in China, such a
 
 LeanCloud will automatically verify access token for these platforms, and will also create unique index for these platforms.
 
+In Weibo, WeChat, and QQ, a user's `openid` will be different for different applications.
+If you have multiple applications, you may want to link them across all your applications.
+To fulfill this requirement, you can utilize the UnionID function offered by Weibo, WeChat, and QQ.
+For details, see the [UnionID](#UnionID) section below.
 
+#### Signing Up and Login
+
+To sign up or log in via third party account, you also Send a POST request with the `authData`.
+For example, to use QQ account to login:
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{
+     "authData": {
+       "qq": {
+         "openid": "0395BA18A5CD6255E5BA185E7BEBA242",
+         "access_token": "12345678-SaMpLeTuo3m2avZxh5cjJmIrAfx4ZYyamdofM7IjU",
+         "expires_in": 1382686496
+         }
+    }
+    }' \
+  https://{{host}}/1.1/users
+```
+
+As mentioned above, LeanCloud will verify `access_token` for QQ accounts.
+If the verification succeed, LeanCloud will return `200 OK` or `201 Created` depending on if there is an existing user linking this QQ account.
+In both cases the user URL will also be returned, in the `Location` HTTP header.
+
+The response body will be a JSON object, whose content is similar to the one returned when creating or logging in a regular user.
+For new users, LeanCloud will automatically assign a random username, e.g. `ec9m07bo32cko6soqtvn6bko5`.
+
+#### UnionID
+
+As mentioned above, we can utilize the UnionID mechanism offered by Weibo, WeChat, and QQ to link users across multiple applications.
+
+To do so, you need to use a specific schema of `authData`, with the following keys::
+
+- `unionid`: the user's UnionID
+- `main_account`: set to `true`, indicating we will use UnionID
+- `plat_form`: `weibo`,t`weixn`, or `qq`
+
+Let's look at an example of WeChat UnionID.he  
+
+Suppose you have a WeChat mini program named `foo`.
+Then to sign up or log in a user with UnionID:
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: zbOycL3cTIr3gOTgFAyQYiop-gzGzoHsz" \
+  -H "X-LC-Key: pp4T5TmSR8mscQONix0xFXpT" \
+  -H "Content-Type: application/json" \
+  -d '{
+     "authData": {
+       "foo": {
+         "openid": "oTY851cqL0gk3DqW3xINqG1Q4PTc",
+         "access_token": "12_b6mz7ujXbTY4vpbqCRaKVa_y0Ij3N9grCeVtM8VJT8KFd4qnQ9lXtBsZVxG6x9c9Nay_oNgvbKK7KYKbn8R2P7uEgA0EhsXMHmxkx-xU-Tk",
+         "expires_in": 7200,
+         "refresh_token": "12_71UYUnqHDuIfekimsJsYjBDfY67ilo30fDqrYkqlwZtxNgcBhMmQgDVhT6mJWkRg0mngvX9kXeCGP8kmBWdvUtc5ngRiN5LDTWAau4du838",
+         "scope": "snsapi_userinfo",
+         "unionid": "ox7NLs-e-32ZyHg2URi_F2iPEI2U",
+         "platform": "weixin",
+         "main_account":"true"
+        }
+      }
+    }' \
+   https://{{host}}/1.1/users
+```
+
+And to sign up or log in a user for your another WeChat mini program `bar`:
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: zbOycL3cTIr3gOTgFAyQYiop-gzGzoHsz" \
+  -H "X-LC-Key: pp4T5TmSR8mscQONix0xFXpT" \
+  -H "Content-Type: application/json" \
+  -d '{
+     "authData": {
+       "bar": {
+         "openid": "ohxoK3ldpsGDGGSaniEEexxx",
+         "access_token": "10_QfDeXVp8fUKMBYC_d4PKujpuLo3sBV_pxxxxIZivS77JojQPLrZ7OgP9PC9ZvFCXxIa9G6BcBn45wSBebsv9Pih7Xdr4-hzr5hYpUoSA",
+    "unionid": "ox7NLs06ZGfdxxxxxe0F1po78qE",
+         "expires_in": 7200,
+         "refresh_token": "10_RZXedP8Ia9G6B_Xxoxjxpu1o4DBV_hzr5hYpUoSAd87JojQPLrZ7OgP10e9ZvFCXxcon54wSfaero_CBebsd20h5ddr3-4PKuIZivS",
+         "scope": "snsapi_userinfo",
+         "unionid": "ox7NLs-e-32ZyHg2URi_F2iPEI2U",
+         "platform": "weixin",
+         "main_account":"true"
+        }
+      }
+    }' \
+   https://{{host}}/1.1/users
+```
+
+Note that `openid` is different but `unionid` is the same.
+
+And the `authData` stored on LeanCloud will be something like:
+
+```json
+{
+  "foo": {
+    // ...
+  },
+  "_weixin_unionid": {
+    "uid": "ox7NLs-e-32ZyHg2URi_F2iPEI2U"
+  },
+  "bar": {
+    // ...
+  }
+}
+```
+
+The `_weixin_unionid` key is automatically created by LeanCloud.
+
+#### Linking a Third Party Account
+
+To link a third party account to an existing user,
+just update this user's `authData` attribute.
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "authData": {
+          "weixin": {
+            "uid": "123456789",
+            "access_token": "2.00vs3XtCI5FevCff4981adb5jj1lXE",
+            "expiration_in": "36000"
+            ...
+          }
+        }
+      }' \
+  https://{{host}}/1.1/users/55a47496e4b05001a7732c5f
+```
+
+This user can be authenticated via matching `authData` afterwards.
+
+#### Unlinking a Third Party Account
+
+Similarly, to unlink a user from a third party account,
+just delete the platform in their `authData` attribute.
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: 6fehqhr2t2na5mv1aq2om7jgz" \
+  -H "Content-Type: application/json" \
+  -d '{"authData.weixin":{"__op":"Delete"}}' \
+  https://{{host}}/1.1/users/5b7e53a767f356005fb374f6
+```
