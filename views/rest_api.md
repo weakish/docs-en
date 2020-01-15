@@ -1511,7 +1511,8 @@ Be aware that non-filtering constrains such as `limit`, `skip`, `order`, `includ
 With users API, you can build an account system for your application quickly and conveniently.
 
 Basically, users (the `_User` class) are similar to other classes, for example, `_User` is also schema free.
-However, all user objects must have `username` and `password` attributes. `password` will be encrypted automatically and `username` and `email` (if available) attributes must be unique (case sensitive). 
+However, all user objects must have `username` and `password` attributes. `password` will be encrypted automatically.
+`username` and `email` (if available) attributes must be unique (case sensitive).
 
 ### Signing Up
 
@@ -1529,10 +1530,10 @@ curl -X POST \
 As mentioned above, `username` and `password` are required,
 and `password` will be stored in encrypted form and LeanCloud will never return its value to client side.
 
-`region` is a custom attributes.
 You may add any extra custom attributes.
+`region` in the above is just an example.
 
-If the registration succeeded, LeanCloud will return `201 Created` and the `Location` will contain the URL for that user:
+If the registration succeed, LeanCloud will return `201 Created` and the `Location` will contain the URL for that user:
 
 ```sh
 Status: 201 Created
@@ -1629,7 +1630,7 @@ If succeed, new `sessionToken` will be returned, with user information:
 
 #### Locking Users
 
-Seven failed login attempts for a user within 15 minutes will trigger a lock.
+Seven consecutive failed login attempts for a user within 15 minutes will trigger a lock.
 After that LeanCloud will return the following error:
 
 ```json
@@ -1659,7 +1660,7 @@ As mentioned above, once a user clicked the verification link in the email, thei
 
 1. `true`: the user has verified their email address via clicking the link in the verification mail.
 2. `false`: when a user's `email` attribute is set or modified, LeanCloud will set their `emailVerified` to `false` and send a verification email to the user. After the user clicks the verification link in the email, LeanCloud will set `emailVerified` to `true`. 
-3. `null`: The user does not have an `email`, or the user object is created when the verify new user's email address option is disabled. 
+3. `null`: The user does not have an `email`, or the user object is created when the verifying new user's email address option is disabled. 
 
 {# TODO 关于自定义邮件模板和验证链接 https://github.com/leancloud/docs/pull/3408 #}
 
@@ -1704,7 +1705,7 @@ If succeed, the response body will be an empty JSON object:
 
 ### Retrieving Users
 
-To retrieve a user, you can send a GET request to user URL (as in the `Location` header returned on [successful signing up](#Signing_Up)).
+To retrieve a user, you can send a GET request to the user URL (as in the `Location` header returned on [successful signing up](#Signing_Up)).
 
 ```sh
 curl -X GET \
@@ -1723,7 +1724,7 @@ curl -X GET \
   https://{{host}}/1.1/users/me
 ```
 
-The returned JSON object is the same as in [`/login`](#Logging_In)
+The returned JSON object is the same as in [`/login`](#Logging_In).
 
 If the user does not exist, a `400 Bad Request` will be returned:
 
@@ -1751,14 +1752,8 @@ curl -X PUT \
 The `X-LC-Session` HTTP header is to authenticate the modification,
 whose value is the user's `sessionToken`.
 
-If update succeed, `updatedAt` will be returned.
-This is the same as [Updating Objects](#Updating_Objects). 
-
-```json
-{
-  "updatedAt": "2015-07-14T02:35:50.100Z"
-}
-```
+If succeed, `updatedAt` will be returned.
+This is the same as [Updating Objects](#Updating_Objects).
 
 If you want to update `username`, then you have to ensure that the new value of `username` must not be conflict with other existing users.
 
@@ -1781,7 +1776,7 @@ Note this API still requires the `X-LC-Session` header.
 
 You can query users like [querying regular objects](#Queries), just send `GET` requests to `/1.1/users`.
 
-However, for security concerns, all queries on users will be rejected by LeanCloud, unless you use master key or have properly configured `_User` class ACL settings (in Dashboard > LeanStorage > _User > Permission).
+However, for security concerns, all queries on users will be rejected by LeanCloud, unless you use master key or have properly configured the `_User` class's ACL settings (in Dashboard > LeanStorage > _User > Permission).
 
 ### Deleting Users
 
@@ -1815,7 +1810,7 @@ The simplest form of `authData` is as following:
 ```
 
 This is used for anonymous users,
-for example, to provide a "try without signing up" or "guest login" feature for your application.
+for example, to provide a "try it before signing up" or "guest login" feature for your application.
 
 The `authData` for an arbitrary platform:
 
@@ -1832,7 +1827,7 @@ The `authData` for an arbitrary platform:
 
 `authData` can have other additional keys, but it must contain both `uid` and `access_token`.
 Often you need to verify `authData` yourself (except for certain platforms, see below).
-Also, to avoid binding a third party account to multiple users, you need to create a unique index for `authData.platform_name.uid` in Dashboard (LeanStorage > _User).
+Also, to avoid binding a third party account to multiple users, you need to create a unique index for `authData.platform_name.uid` in Dashboard (LeanStorage > `_User`).
 
 LeanCloud has built-in support for some popular social networks in China, such as [Weibo](http://weibo.com/), [WeChat](https://www.wechat.com/en) (*weixin* in Chinese pinyin), and [QQ](https://imqq.com/English1033.html):
 
@@ -1877,8 +1872,8 @@ For details, see the [UnionID](#UnionID) section below.
 
 #### Signing Up and Login
 
-To sign up or log in via third party account, you also Send a POST request with the `authData`.
-For example, to use QQ account to login:
+To sign up or log in via a third party account, you also send a POST request with the `authData`.
+For example, to use a QQ account to login:
 
 ```sh
 curl -X POST \
@@ -1899,7 +1894,7 @@ curl -X POST \
 
 As mentioned above, LeanCloud will verify `access_token` for QQ accounts.
 If the verification succeed, LeanCloud will return `200 OK` or `201 Created` depending on if there is an existing user linking this QQ account.
-In both cases the user URL will also be returned, in the `Location` HTTP header.
+In both cases the user URL will also be returned in the `Location` HTTP header.
 
 The response body will be a JSON object, whose content is similar to the one returned when creating or logging in a regular user.
 For new users, LeanCloud will automatically assign a random username, e.g. `ec9m07bo32cko6soqtvn6bko5`.
@@ -1908,13 +1903,13 @@ For new users, LeanCloud will automatically assign a random username, e.g. `ec9m
 
 As mentioned above, we can utilize the UnionID mechanism offered by Weibo, WeChat, and QQ to link users across multiple applications.
 
-To do so, you need to use a specific schema of `authData`, with the following keys::
+To do so, you need to use a specific schema of `authData`, with the following keys:
 
-- `unionid`: the user's UnionID
-- `main_account`: set to `true`, indicating we will use UnionID
-- `plat_form`: `weibo`,t`weixn`, or `qq`
+- `unionid`: the user's UnionID;
+- `main_account`: `true`, indicating we will use UnionID;
+- `plat_form`: `weibo`, `weixn`, or `qq`.
 
-Let's look at an example of WeChat UnionID.he  
+Let's look at an example of WeChat UnionID.
 
 Suppose you have a WeChat mini program named `foo`.
 Then to sign up or log in a user with UnionID:
@@ -2003,7 +1998,7 @@ curl -X PUT \
             "uid": "123456789",
             "access_token": "2.00vs3XtCI5FevCff4981adb5jj1lXE",
             "expiration_in": "36000"
-            ...
+            // ...
           }
         }
       }' \
