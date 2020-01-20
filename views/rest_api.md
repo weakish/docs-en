@@ -1818,7 +1818,7 @@ The `authData` for an arbitrary platform:
 {
     "platform_name":
     {
-      "uid": "unique user id on that platfrom (string)",
+      "uid": "unique user id on that platform (string)",
       "access_token": "access token for the user"
       // other optional keys 
     }
