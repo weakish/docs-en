@@ -1505,3 +1505,46 @@ Similarly, you can use `$and` operator to query objects matching all subqueries.
 ```
 
 Be aware that non-filtering constrains such as `limit`, `skip`, `order`, `include` are not allowed in subqueries of a compound query.
+
+## Schema
+
+You can use REST API to fetch data schema of your application.
+For security concerns, master key is required to fetch data schema.
+
+To fetch the schema of all classes:
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   https://{{host}}/1.1/schemas
+```
+
+Result:
+
+```json
+{
+  "_User":{
+    "username"     : {"type":"String"},
+    "password"     : {"type":"String"},
+    "objectId"     : {"type":"String"},
+    "emailVerified": {"type":"Boolean"},
+    "email"        : {"type":"String"},
+    "createdAt"    : {"type":"Date"},
+    "updatedAt"    : {"type":"Date"},
+    "authData"     : {"type":"Object"}
+  }
+  // other classes
+}
+```
+
+You can also fetch a single class's schema:
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   https://{{host}}/1.1/schemas/_User
+```
+
+Data schema can be used with tools such as code generation, and internal management interface.
