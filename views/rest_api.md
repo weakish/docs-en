@@ -1458,11 +1458,11 @@ curl -X GET \
 
 And you can use comma (`,`) to separate multiple pointers to `include`.
 
-## GeoPoint Queries
+### GeoPoint Queries
 
 We have briefly described GeoPoint in the [Advanced Data Types](#Advanced_Data_Types) section above.
 
-Currently there are one limit on GeoPoint: every class can only contain one GeoPoint attribute.
+Currently there are one limit on GeoPoints: every class can only contain one GeoPoint attribute.
 Also, be aware that the range of `latitude` is `[-90.0, 90.0]`, and the range of `longitude` is `[-180.0, 180.0]`.
 
 To query near objects, you can use the `$nearSphere` operator.
@@ -1485,7 +1485,7 @@ curl -X GET \
   https://{{host}}/1.1/classes/Post
 ```
 
-Returned results will be ordered by distances.
+Returned results will be ordered by distance.
 The first result is the post published at the nearest location.
 This order can be overwritten by the `order` parameter.  
 
