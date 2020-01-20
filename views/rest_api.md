@@ -2339,6 +2339,40 @@ curl -X PUT \
   https://{{host}}/1.1/roles/<ModeratorsRoleObjectId>
 ```
 
+## Files
+
+### Associating with Objects
+
+As mentioned above, files can be considered as a special form of pointer.
+To associate a file object with an object, we just pass the file object `{"id": "objectId of the file", "__type": "File"}` to an attribute of that file.
+For example, to create a `Staff` object with a photo:
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+   -H "Content-Type: application/json" \
+  -d '{
+        "name": "hjiang",
+        "picture": {
+          "id": "543cbaede4b07db196f50f3c",
+          "__type": "File"
+        }
+      }' \
+  https://{{host}}/1.1/classes/Staff
+```
+
+### Deleting Files
+
+Deleting files is similar to deleting objects:
+
+```sh
+curl -X DELETE \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  https://{{host}}/1.1/files/543cbaede4b07db196f50f3c
+```
+
 ## Schema
 
 You can use REST API to fetch data schema of your application.
