@@ -1870,7 +1870,7 @@ If you have multiple applications, you may want to link them across all your app
 To fulfill this requirement, you can utilize the UnionID function offered by Weibo, WeChat, and QQ.
 For details, see the [UnionID](#UnionID) section below.
 
-#### Signing Up and Login
+#### Third-Party Signing Up and Login
 
 To sign up or log in via a third party account, you also send a POST request with the `authData`.
 For example, to use a QQ account to login:
