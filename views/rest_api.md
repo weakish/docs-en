@@ -2338,3 +2338,46 @@ curl -X PUT \
       }' \
   https://{{host}}/1.1/roles/<ModeratorsRoleObjectId>
 ```
+
+## Schema
+
+You can use REST API to fetch data schema of your application.
+For security concerns, master key is required to fetch data schema.
+
+To fetch the schema of all classes:
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   https://{{host}}/1.1/schemas
+```
+
+Result:
+
+```json
+{
+  "_User":{
+    "username"     : {"type":"String"},
+    "password"     : {"type":"String"},
+    "objectId"     : {"type":"String"},
+    "emailVerified": {"type":"Boolean"},
+    "email"        : {"type":"String"},
+    "createdAt"    : {"type":"Date"},
+    "updatedAt"    : {"type":"Date"},
+    "authData"     : {"type":"Object"}
+  }
+  // other classes
+}
+```
+
+You can also fetch a single class's schema:
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   https://{{host}}/1.1/schemas/_User
+```
+
+Data schema can be used with tools such as code generation, and internal management interface.
