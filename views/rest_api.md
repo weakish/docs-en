@@ -2101,6 +2101,244 @@ curl -X PUT \
   https://{{host}}/1.1/users/5b7e53a767f356005fb374f6
 ```
 
+## Roles
+
+Role is an abstraction to control data access based on ACL.
+Roles are objects containing users and other roles.
+For example, moderators and administrators are common roles in application.
+
+LeanCloud has a preserved class `_Role` for roles.
+Roles have some specific attributes:
+
+- `name`: Required. The name of the role, which can only be set on creation. The name can only contain alphanumeric characters, spaces, dashes, and underscores.
+- `users`: A relation to a set of users.
+- `roles`: A relation to a set of child roles.
+
+For security concerns, roles are typically created and managed manually or via a separate management interface, not directly in your applications.
+
+### Creating Roles
+
+Creating a role is similar to creating an object, except that you must specify the `name` and `ACL` attributes. To prevent allowing wrong users to modify a role accidentally, you should set a restrictive and rigid `ACL`.
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "name": "Manager",
+        "ACL": {
+          "*": {
+            "read": true
+          }
+        }
+      }' \
+  https://{{host}}/1.1/roles
+```
+
+The response is the same as creating an object.
+
+To create a role with existing child roles and users:
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "name": "CLevel",
+        "ACL": {
+          "*": {
+            "read": true
+          }
+        },
+        "roles": {
+          "__op": "AddRelation",
+          "objects": [
+            {
+              "__type": "Pointer",
+              "className": "_Role",
+              "objectId": "55a48351e4b05001a774a89f"
+            }
+          ]
+        },
+        "users": {
+          "__op": "AddRelation",
+          "objects": [
+            {
+              "__type": "Pointer",
+              "className": "_User",
+              "objectId": "55a47496e4b05001a7732c5f"
+            }
+          ]
+        }
+      }' \
+  https://{{host}}/1.1/roles
+```
+
+You may noticed that there is a new operator `AddRelation` we have not seen before.
+This operator adds a relation to an object.
+The actual implementation of relation is quite complex for performance issues.
+But conceptually you can consider them as arrays of pointers, and they are only used in roles.
+
+### Retrieving Roles
+
+Retrieving a role is similar to retrieving an object:
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  https://{{host}}/1.1/roles/55a483f0e4b05001a774b837
+```
+
+The response body will be a JSON object:
+
+```json
+{
+  "name":"CLevel",
+  "createdAt":"2015-07-14T03:37:20.992Z",
+  "updatedAt":"2015-07-14T03:37:20.994Z",
+  "objectId":"55a483f0e4b05001a774b837",
+  "users":{
+    "__type":"Relation",
+    "className":"_User"
+  },
+  "roles":{
+    "__type":"Relation",
+    "className":"_Role"
+  }
+}
+```
+
+To query for the specific users and roles in a role, you need to send another query using the `$relatedTo` operator:
+
+```sh
+where={
+  "$relatedTo":{
+    "object":{
+      "__type":"Pointer",
+      "className":"_Role",
+      "objectId":"objectId of a role"
+  },
+  "key":"users"}
+}
+```
+
+### Updating Roles
+
+Updating roles are similar to update objects, except that `name` cannot be modified, as mentioned above.
+To add or remove users and child roles, you can use `AddRelation` and `RemoveRelation` operators.
+
+Suppose we have a `Manager` role with objectId `55a48351e4b05001a774a89f`, we can add a user to it as below:
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "users": {
+          "__op": "AddRelation",
+          "objects": [
+            {
+              "__type": "Pointer",
+              "className": "_User",
+              "objectId": "55a4800fe4b05001a7745c41"
+            }
+          ]
+        }
+      }' \
+  https://{{host}}/1.1/roles/55a48351e4b05001a774a89f
+```
+
+Similarly, to remove a child role:
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "roles": {
+          "__op": "RemoveRelation",
+          "objects": [
+            {
+              "__type": "Pointer",
+              "className": "_Role",
+              "objectId": "55a483f0e4b05001a774b837"
+            }
+          ]
+        }
+      }' \
+  https://{{host}}/1.1/roles/55a48351e4b05001a774a89f
+```
+
+### Deleting Roles
+
+Deleting roles are similar to delete objects.
+It is authenticated with the `X-LC-Session` HTTP header.
+The session token passed in must belong to a user who has the permission to delete the specified role.
+
+```sh
+curl -X DELETE \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
+  https://{{host}}/1.1/roles/55a483f0e4b05001a774b837
+```
+
+### Roles and ACL
+
+As demonstrated above, accessing LeanCloud data via REST API is also restricted by ACL, just as SDKs.
+
+Roles make maintaining ACL easier.
+For example, to set an ACL of an object with the following permissions:
+
+- It can be read by `Staff`s.
+- It can only be write by `Manager`s and its creator.
+
+```json
+{
+  "55a4800fe4b05001a7745c41": {
+    "write": true
+  },
+  "role:Staff": {
+    "read": true
+  },
+  "role:Manager": {
+    "write": true
+  }
+}
+```
+
+The creator belongs to the `Staff` role, and the `Manager` role is a child role of the `Staff` role.
+Therefore, since they will inherit read permissions, we did not grant them the read permission manually.
+
+Let's look at anther example of permission inherence among roles.
+In UGC applications such as forums, `Administrators` typically have all the permissions of `Moderators`.
+Thus `Administrators` should be a child role of `Moderators`.
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "roles": {
+          "__op": "AddRelation",
+          "objects": [
+            {
+              "__type": "Pointer",
+              "className": "_Role",
+              "objectId": "<AdministratorsRoleObjectId>"
+            }
+          ]
+        }
+      }' \
+  https://{{host}}/1.1/roles/<ModeratorsRoleObjectId>
+```
+
 ## Schema
 
 You can use REST API to fetch data schema of your application.
