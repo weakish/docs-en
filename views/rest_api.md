@@ -2506,3 +2506,25 @@ If the job status is `done`, the download url will also be returned:
 ```
 
 If the job status is still `running`, you can query it again later.
+
+## Other
+
+### Server Time
+
+To retrieve LeanCloud server's current time:
+
+```
+curl -i -X GET \
+    -H "X-LC-Id: {{appid}}" \
+    -H "X-LC-Key: {{appkey}}" \
+    https://{{host}}/1.1/date
+```
+
+Returned date is in UTC:
+
+```json
+{
+  "iso": "2015-08-27T07:38:33.643Z",
+  "__type": "Date"
+}
+```
