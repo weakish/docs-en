@@ -6497,9 +6497,7 @@ var authData = {
   access_token:  'ACCESS_TOKEN',
 
   // Optional
-  expires_in:    7200,
-  refresh_token: 'REFRESH_TOKEN',
-  scope:         'SCOPE'
+  extra_key: 'content'
 };
 AV.User.loginWithAuthData(authData, 'github').then(function (user) {
   // Logged in successfully
