@@ -2528,3 +2528,50 @@ Returned date is in UTC:
   "__type": "Date"
 }
 ```
+
+## CORS Workarounds
+
+LeanCloud supports wrapping GET, PUT, and DELETE requests in a POST request:
+
+- Specify the intended HTTP method in the `_method` parameter.
+- Specify `appid` and `appkey` in `_ApplicationId` and `_ApplicationKey` parameters.
+
+This is a workaround for certain platforms.
+It is recommended to follow HTML CORS standard instead.
+
+### GET
+
+```
+  curl -i -X POST \
+  -H "Content-Type: text/plain" \
+  -d \
+  '{"_method":"GET",
+    "_ApplicationId":"{{appid}}",
+    "_ApplicationKey":"{{appkey}}"}' \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
+
+### PUT
+
+```
+curl -i -X POST \
+  -H "Content-Type: text/plain" \
+  -d \
+  '{"_method":"PUT",
+    "_ApplicationId":"{{appid}}",
+    "_ApplicationKey":"{{appkey}}",
+    "upvotes":99}' \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
+
+### DELETE
+
+```
+curl -i -X POST \
+  -H "Content-Type: text/plain" \
+  -d \
+  '{"_method":  "DELETE",
+    "_ApplicationId":"{{appid}}",
+    "_ApplicationKey":"{{appkey}}"}' \
+  https://{{host}}/1.1/classes/Post/<objectId>
+```
