@@ -2414,3 +2414,95 @@ curl -X GET \
 ```
 
 Data schema can be used with tools such as code generators and internal management interfaces.
+
+## Exporting Your Data
+
+For security concerns, master key is required to export your data:
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{}' \
+  https://{{host}}/1.1/exportData
+```
+
+To specify date range (`updatedAt`) of data to export:
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"from_date":"2015-09-20", "to_date":"2015-09-25"}' \
+  https://{{host}}/1.1/exportData
+```
+
+To specify classes of data to export:
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"classes":"_User,GameScore,Post"}' \
+  https://{{host}}/1.1/exportData
+```
+
+Just export the schema (no data will be exported):
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"only-schema":"true"}' \
+  https://{{host}}/1.1/exportData
+```
+
+Exported schema file can be imported to other applications via the import data function in dashboard.
+
+After the data exported, LeanCloud will send an email to the application creator, containing the url to download the data.
+You can also specify the address to receive this email:
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"username@exmaple.com"}' \
+  https://{{host}}/1.1/exportData
+```
+
+The export data job id will be returned:
+
+```json
+{
+  "status":"running",
+  "id":"1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2",
+  "app_id":"{{appid}}"
+}
+```
+
+You can also query the export data job status via the id returned previously:
+
+```
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  https://{{host}}/1.1/exportData/1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2
+```
+
+If the job status is `done`, the download url will also be returned:
+
+```json
+{
+  "status":"done",
+  "download_url": "https://download.leancloud.cn/export/example.tar.gz",
+  "id":"1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2",
+  "app_id":"{{appid}}"
+}
+```
+
+If the job status is still `running`, you can query it again later.
