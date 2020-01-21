@@ -1458,6 +1458,85 @@ curl -X GET \
 
 And you can use comma (`,`) to separate multiple pointers to `include`.
 
+### GeoPoint Queries
+
+We have briefly described GeoPoint in the [Advanced Data Types](#Advanced_Data_Types) section above.
+
+Currently there are one limit on GeoPoints: every class can only contain one GeoPoint attribute.
+Also, be aware that the range of `latitude` is `[-90.0, 90.0]`, and the range of `longitude` is `[-180.0, 180.0]`.
+
+To query near objects, you can use the `$nearSphere` operator.
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -G \
+  --data-urlencode 'limit=10' \
+  --data-urlencode 'where={
+        "location": {
+          "$nearSphere": {
+            "__type": "GeoPoint",
+            "latitude": 39.9,
+            "longitude": 116.4
+          }
+        }
+      }' \
+  https://{{host}}/1.1/classes/Post
+```
+
+Returned results will be ordered by distance.
+The first result is the post published at the nearest location.
+This order can be overwritten by the `order` parameter.  
+
+To limit the maximum distance, you can use `$maxDistanceInMiles`, `$maxDistanceInKilometers`, or `$maxDistanceInRadians`.
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -G \
+  --data-urlencode 'where={
+        "location": {
+          "$nearSphere": {
+            "__type": "GeoPoint",
+            "latitude": 39.9,
+            "longitude": 116.4
+          },
+          "$maxDistanceInMiles": 10.0
+        }
+      }' \
+  https://{{host}}/1.1/classes/Post
+```
+
+To query for objects within a rectangular area:
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -G \
+  --data-urlencode 'where={
+        "location": {
+          "$within": {
+            "$box": [
+              { // southwestGeoPoint
+                "__type": "GeoPoint",
+                "latitude": 39.97,
+                "longitude": 116.33
+              },
+              { // northeastGeoPoint
+                "__type": "GeoPoint",
+                "latitude": 39.99,
+                "longitude": 116.37
+              }
+            ]
+          }
+        }
+      }' \
+  https://{{host}}/1.1/classes/Post
+```
+
 ### Counting Results
 
 You can pass `count=1` parameter to retrieve the count of matched results.
