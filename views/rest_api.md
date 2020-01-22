@@ -1374,6 +1374,7 @@ Operators | Example | k is not an array | k is an array
 n/a | `where={"k":2}` | `k == 2` | `k` contains 2
 `in` | `where={"k":{"$in":[2,3]}}` | `k` is 2 or 3 | `k` contains 2 or 3
 `all` | `where={"arrayKey":{"$all":[2,3]}}` | n/a | `k` contains 2 and 3
+`size` | `where={"arrayKey":{"$size": 3}}` | n/a | `k` has a length of 3 
 
 ### Pointer Queries
 
