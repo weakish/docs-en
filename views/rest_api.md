@@ -2461,7 +2461,7 @@ curl -X POST \
   https://{{host}}/1.1/exportData
 ```
 
-Exported schema file can be imported to other applications via the import data function in dashboard.
+Exported schema file can be imported into other applications via the import data function in dashboard.
 
 After the data exported, LeanCloud will send an email to the application creator, containing the url to download the data.
 You can also specify the address to receive this email:
