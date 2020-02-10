@@ -2176,10 +2176,10 @@ After a timer is created, the default status of it will be `Disabled`. You need 
 
 You can specify the times a task gets triggered using one of the following expressions:
 
-- Cron expression
+- CRON expression
 - Interval in seconds
 
-Take Cron expression as an example. To send push notifications to users at 8am every Monday, first define a cloud function:
+Take CRON expression as an example. To send push notifications to users at 8am every Monday, first define a cloud function:
 
 {% if platformName === "Node.js" %}
 ```js
@@ -2214,11 +2214,11 @@ Cloud::define("pushTimer", function($params, $user) {
 {# TODO #}
 {% endif %}
 
-Then create a timer for the function using **Cron expression** and enter `0 0 8 ? * MON` for it.
+Then create a timer for the function using **CRON expression** and enter `0 0 8 ? * MON` for it.
 
-### Cron Expressions
+### CRON Expressions
 
-The basic syntax of a Cron expression is:
+The basic syntax of a CRON expression is:
 
 ```
 <seconds> <minutes> <hours> <day-of-month> <month> <day-of-week>
@@ -2254,7 +2254,7 @@ Expression|Explanation
 <code style="white-space:nowrap;">0 30 10-13 ? * WED,FRI</code>|Run a task at the 10:30am, 11:30am, 12:30am, and 1:30pm of every Wednesday and Friday.
 `0 */30 8-9 5,20 * ?`|Run a task every 30 minutes between 8am and 10am (8:00am, 8:30am, 9:00am, and 9:30am) on the 5th and 20th of every month.
 
-The timezone of cron expressions is `UTC+0`.
+The time zone followed by CRON expressions is `UTC+0`.
 
 ### Maximum Amounts of Timers
 
