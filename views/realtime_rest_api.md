@@ -1,4 +1,4 @@
-# Realtime Message REST API User Guide (UNDER REVIEW)
+# Realtime Message REST API User Guide
 
 ## Request Format
 
