@@ -2254,6 +2254,8 @@ Expression|Explanation
 <code style="white-space:nowrap;">0 30 10-13 ? * WED,FRI</code>|Run a task at the 10:30am, 11:30am, 12:30am, and 1:30pm of every Wednesday and Friday.
 `0 */30 8-9 5,20 * ?`|Run a task every 30 minutes between 8am and 10am (8:00am, 8:30am, 9:00am, and 9:30am) on the 5th and 20th of every month.
 
+The timezone of cron expressions is `UTC+0`.
+
 ### Maximum Amounts of Timers
 
 You can create up to 6 timers for each of the staging environment and the production environment, which means that you can create 12 timers in total.
