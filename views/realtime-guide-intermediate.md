@@ -1322,7 +1322,10 @@ The SDK will maintain an `unreadMessagesCount` field on each `AVIMConversation` 
 
 When the client goes online, the cloud will drop in a series of `<Conversation, UnreadMessageCount, LastMessage>` in the format of events indicating updates on the numbers of unread messages. Each of them matches a conversation containing new messages and serves as the initial value of a `<Conversation, UnreadMessageCount>` maintained on the client side. After this, whenever a message is received by the SDK, the corresponding `unreadMessageCount` will be automatically increased. When the number of unread messages of a conversation is cleared, both `<Conversation, UnreadMessageCount>` on the cloud and maintained by the SDK will be reset.
 
-> If the count of unread messages is enabled, it will keep increasing even though a message is received when the client is online. Make sure to reset the count whenever needed.
+> If the count of unread messages is enabled, it will keep increasing unless the developer explicitly reset it.
+> For example, unread messages count will not be reset if the client goes offline again.
+> Even if a message is received when the client is online, it will still increase the unread count.
+> Make sure to reset the count via marking them as read whenever needed.
 
 When the number of `<Conversation, UnreadMessageCount>` changes, the SDK will send an `UNREAD_MESSAGES_COUNT_UPDATE` event to the app through `IMClient`. You can listen to this event and make corresponding changes to the number of unread messages on the UI. However, since this event gets triggered very frequently and there are often other events coming together with it, there is **no need for you to implement anything else in response to it**.
 
