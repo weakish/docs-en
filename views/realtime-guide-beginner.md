@@ -156,21 +156,25 @@ AV.User.logIn('username', 'password').then(function(user) {
 ```
 ```java
 // Log in to LeanMessage with the username and password of an AVUser
-AVUser.logInInBackground("username", "password", new LogInCallback<AVUser>() {
-    @Override
-    public void done(AVUser user, AVException e) {
-        if (null != e) {
-          return;
-        }
-        // Connect to the server
+AVUser.logIn("Tom", "cat!@#123").subscribe(new Observer<AVUser>() {
+    public void onSubscribe(Disposable disposable) {}
+    public void onNext(AVUser user) {
+        // login successfully
         AVIMClient client = AVIMClient.getInstance(user);
         client.open(new AVIMClientCallback() {
-          @Override
-          public void done(final AVIMClient avimClient, AVIMException e) {
-            // Do something as you need
-          }
-       });
+            @Override
+            public void done(final AVIMClient avimClient, AVIMException e) {
+                // do something you like
+            }
+        });
+    }    
+    public void done(final AVIMClient avimClient, AVIMException e) {
+        // do other things
     }
+    public void onError(Throwable throwable) {
+        // login failure
+    }
+    public void onComplete() {}
 });
 ```
 ```cs
