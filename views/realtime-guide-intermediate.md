@@ -1663,6 +1663,8 @@ func client(_ client: IMClient, conversation: IMConversation, event: IMConversat
 - (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
     if (message.mediaType == 123) {
         CustomMessage *imageMessage = (CustomMessage *)message;
+        [imageMessage setObject:@"value" forKey:@"customKey"];
+        NSString *value = [imageMessage objectForKey:@"customKey"];
         // Handle custom message
     }
 }
