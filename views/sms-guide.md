@@ -962,13 +962,13 @@ cloud.request_sms_code("+19490008888",
 
 For a list of countries and regions that LeanCloud can reach out through SMS, please refer to the [Pricing](https://leancloud.app/pricing/) page on our website.
 
-Note that Chinese networks have very strict rules about SMS traffic.
-Messages sent to Chinese mobile phones may be delayed or not delivered at all.
-If you want to send messages to Chinese mobile phones,
-we recommend you create [an application at LeanCloud China](https://www.leancloud.cn/),
-and send theses messages there instead.
-Templates created at LeanCloud China will be registered with Chinese networks.
-After templates get approved manually, they will be whitelisted.
+Note that Chinese networks have very strict rules applied to SMS traffic.
+Messages sent to China numbers may be delayed or not delivered at all.
+If you want to send messages to China numbers,
+we recommend you create [an application at LeanCloud China](https://www.leancloud.cn/)
+and send these messages there instead.
+Templates created at LeanCloud China will go through a review process and get registered with Chinese networks in the end.
+Only approved templates can be used for sending messages.
 
 ## Integrating with LeanCloud User System
 
