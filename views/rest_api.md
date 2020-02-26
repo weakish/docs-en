@@ -434,6 +434,8 @@ X-LC-Key: {{masterkey}},master
 
 Cross-origin resource sharing is supported so that you can use these headers with XMLHttpRequest in JavaScript.
 
+You can also use `Accept-Encoding` HTTP header to enable compression (`gzip` or `brotli`).
+
 #### X-LC-Sign
 
 You may also authenticate requests via `X-LC-Sign` instead of `X-LC-Key`:
