@@ -121,6 +121,8 @@ Then go to [Dashboard > Messaging > SMS > Settings > SMS settings](https://conso
 - Enabled: The app is able to incorporate features related to SMS, including verification when there are users performing sensitive operations, logging in at unusual locations, making payments, etc.
 - Disabled: Requests for sending and verifying verification codes will be rejected. Note that this won't affect verification for user accounts.
 
+{{ include.checkbox(true) }}**Allow international numbers**
+
 ### Setting up Default Signatures
 
 A signature helps your users identify the sender of the messages they received. Before you start sending your first message, you need to go to your app's [Dashboard > Messaging > SMS > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf) and set up a default signature (the first signature you created automatically becomes the default one):
@@ -958,9 +960,15 @@ cloud.request_sms_code("+19490008888",
 
 ## International Text Messages
 
-To send text messages to international users, simply add the country code at the beginning of the number. For example, `+1` is for the US or Canada. Make sure to turn on **Allow international numbers** in your app's [SMS Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf). If no country code is provided, `+86` (China) will be used by default.
-
 For a list of countries and regions that LeanCloud can reach out through SMS, please refer to the [Pricing](https://leancloud.app/pricing/) page on our website.
+
+Note that Chinese networks have very strict rules about SMS traffic.
+Messages sent to Chinese mobile phones may be delayed or not delivered at all.
+If you want to send messages to Chinese mobile phones,
+we recommend you create [an application at LeanCloud China](https://www.leancloud.cn/),
+and send theses messages there instead.
+Templates created at LeanCloud China will be registered with Chinese networks.
+After templates get approved manually, they will be whitelisted.
 
 ## Integrating with LeanCloud User System
 
