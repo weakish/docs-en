@@ -127,12 +127,6 @@ A signature helps your users identify the sender of the messages they received. 
 
 ![The "New signature" button under "Signatures".](images/sms_create_signature.png)
 
-{#
-Simply enter a name for yourself along with the content:
-
-<img src="images/sms_signature_edit.png" width="600" class="img-responsive" alt="在「短信签名」对话框中填入「名称」和「签名」。">
-#}
-
 After creating a signature, you will be able to call LeanCloud APIs to send text messages. You might have noticed that there is a "template" appearing in the sample code, but since it is not required by all types of text messages, we will [discuss it later](#templates).
 
 ## Using SMS for Verification
@@ -440,7 +434,8 @@ The method verifies if the code entered is correct.
 
 ## Templates
 
-If you anticipate the text messages sent out from your app to follow fixed formats, you can store these formats as templates on the cloud so that when calling LeanCloud's API to send messages, you only need to plug in the variables used in these templates rather than to pass in the entire text message as a string.
+Except for verification messages, to send text messages, you need to create a template beforehand.
+Once a template is created, when calling LeanCloud's API to send messages, you only need to plug in the variables used in these templates rather than to pass in the entire text message as a string.
 
 {{ sms.signature("### Signatures") }}
 
