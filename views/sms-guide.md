@@ -121,17 +121,13 @@ Then go to [Dashboard > Messaging > SMS > Settings > SMS settings](https://conso
 - Enabled: The app is able to incorporate features related to SMS, including verification when there are users performing sensitive operations, logging in at unusual locations, making payments, etc.
 - Disabled: Requests for sending and verifying verification codes will be rejected. Note that this won't affect verification for user accounts.
 
+{{ include.checkbox(true) }}**Allow international numbers**
+
 ### Setting up Default Signatures
 
 A signature helps your users identify the sender of the messages they received. Before you start sending your first message, you need to go to your app's [Dashboard > Messaging > SMS > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf) and set up a default signature (the first signature you created automatically becomes the default one):
 
 ![The "New signature" button under "Signatures".](images/sms_create_signature.png)
-
-{#
-Simply enter a name for yourself along with the content:
-
-<img src="images/sms_signature_edit.png" width="600" class="img-responsive" alt="在「短信签名」对话框中填入「名称」和「签名」。">
-#}
 
 After creating a signature, you will be able to call LeanCloud APIs to send text messages. You might have noticed that there is a "template" appearing in the sample code, but since it is not required by all types of text messages, we will [discuss it later](#templates).
 
@@ -440,7 +436,8 @@ The method verifies if the code entered is correct.
 
 ## Templates
 
-If you anticipate the text messages sent out from your app to follow fixed formats, you can store these formats as templates on the cloud so that when calling LeanCloud's API to send messages, you only need to plug in the variables used in these templates rather than to pass in the entire text message as a string.
+Except for verification messages, to send text messages, you need to create a template beforehand.
+Once a template is created, when calling LeanCloud's API to send messages, you only need to plug in the variables used in these templates rather than to pass in the entire text message as a string.
 
 {{ sms.signature("### Signatures") }}
 
@@ -963,9 +960,15 @@ cloud.request_sms_code("+19490008888",
 
 ## International Text Messages
 
-To send text messages to international users, simply add the country code at the beginning of the number. For example, `+1` is for the US or Canada. Make sure to turn on **Allow international numbers** in your app's [SMS Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf). If no country code is provided, `+86` (China) will be used by default.
-
 For a list of countries and regions that LeanCloud can reach out through SMS, please refer to the [Pricing](https://leancloud.app/pricing/) page on our website.
+
+Note that Chinese networks have very strict rules applied to SMS traffic.
+Messages sent to China numbers may be delayed or not delivered at all.
+If you want to send messages to China numbers,
+we recommend you create [an application at LeanCloud China](https://www.leancloud.cn/)
+and send these messages there instead.
+Templates created at LeanCloud China will go through a review process and get registered with Chinese networks in the end.
+Only approved templates can be used for sending messages.
 
 ## Integrating with LeanCloud User System
 
