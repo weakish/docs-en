@@ -1491,6 +1491,60 @@ private void Tom_OnSessionClosed(object sender, AVIMSessionClosedEventArgs e)
 
 The reason a device gets logged out will be included in the event so that you can display a message to the user with that.
 
+All "logins" mentioned above refer to users' explicit logins.
+If the user has already logged in, when the application restarts or reconnects, the SDK will relogin automatically.
+Under these scenarios, if a login conflict is encountered, the cloud will not logout earlier devices.
+The device trying to relogin will receive an error instead.
+
+Similarly, if the application developer wants an explicit login to receive an error when encountering a conflict,
+they can pass a special parameter on login:
+
+```js
+realtime.createIMClient('Tom', { tag: 'Mobile', isReconnect: true }).then(function(tom) {
+  console.log('a conflict will cause a login failure, instead of kicking off earlier devices');
+});
+```
+```swift
+do {
+    let client = try IMClient(ID: "CLIENT_ID", tag: "Mobile")
+    client.open([.reconnect]) { (result) in
+        switch result {
+        case .success:
+            break
+        case .failure(error: let error):
+            print(error)
+        }
+    }
+} catch {
+    print(error)
+}
+```
+```objc
+AVIMClient *currentClient = [[AVIMClient alloc] initWithClientId:@"Tom" tag:@"Mobile"];
+[currentClient openWithOption:AVIMClientOpenOptionReopen callback:^(BOOL succeeded, NSError *error) {
+    if (succeeded) {
+        // connected to cloud
+    }
+}];
+```
+```java
+AVIMClientOpenOption openOption = new AVIMClientOpenOption();
+openOption.setReconnect(true);
+AVIMClient currentClient = AVIMClient.getInstance(clientId, "Mobile");
+currentClient.open(openOption, new AVIMClientCallback() {
+  @Override
+  public void done(AVIMClient avimClient, AVIMException e) {
+    if(e == null){
+      // connected to cloud
+    }
+  }
+});
+```
+```cs
+// Not supported yet
+```
+
+
 ## Custom Message Types
 
 Although LeanMessage already support a number of common message types by default, you can still define your own types as you need. For example, if you want your users to send messages containing payments and contacts, you can implement that with custom message types.
