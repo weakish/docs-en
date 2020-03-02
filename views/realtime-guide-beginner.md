@@ -3283,7 +3283,7 @@ do {
     print(error)
 }
 
-// Preparetion for Local Storage of IM Client
+// Preparation for Local Storage of IM Client
 do {
     try client.prepareLocalStorage { (result) in
         switch result {
@@ -3325,6 +3325,11 @@ do {
     print(error)
 }
 ```
+
+Be aware that:
+
+- Chat rooms and temporary conversations are not cached.
+- Conversations have both in-memory cache and persistent (disk) cache. Messages only have in-memory cache, and only message query results are cached. (But if a message query has less than 3 results, it will not be cached.)
 
 {{ docs.langSpecEnd('swift') }}
 
