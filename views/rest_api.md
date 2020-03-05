@@ -1681,6 +1681,15 @@ To log in a user with email and password, just replace `username` with `email`:
 {"email":"hjiang@example.com","password":"f32@ds*@&dsa"}
 ```
 
+Similarly, replace `username` with `mobilePhoneNumber` to log in a user with mobile phone and password:
+
+```json
+{"mobilePhoneNumber":"+1xxxxxxxxxx","password":"f32@ds*@&dsa"}
+```
+
+LeanCloud also supports signing up or logging in a user via SMS.
+Please refer to the [SMS REST API Guide](rest_sms_api.html#user-verification-api) for details.
+
 ### Refresh sessionToken
 
 To refresh a user's `sessionToken`:
@@ -1727,12 +1736,6 @@ During the locking period, the user is not allowed to log in,
 even if they provide the correct password.
 This restriction also applies to SDK and LeanEngine.
 
-{# TODO
-### 使用手机号码注册或登录
-
-请参考 [短信服务 REST API 详解 &middot; 使用手机号码注册或登录](rest_sms_api.html#使用手机号码注册或登录)。
-#}
-
 ### Verifying Email Address
 
 As mentioned above, once a user clicked the verification link in the email, their `emailVerified` will be set to `true`.
@@ -1777,12 +1780,6 @@ If succeed, the response body will be an empty JSON object:
 ```
 
 {# TODO 关于自定义邮件模板和验证链接 https://github.com/leancloud/docs/pull/3408 #}
-
-{# TODO
-### 手机号码验证
-
-请参考 [短信服务 REST API 详解 - 用户账户与手机号码验证](rest_sms_api.html#用户账户与手机号码验证)。
-#}
 
 ### Retrieving Users
 
