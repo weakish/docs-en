@@ -7,7 +7,7 @@
 The current API version is `1.1`.
 For request format and response format, please refer to the [Request Format section](rest_api.html#Request-Format) and [Response Format section](rest_api.html#Response-Format) of REST API Guide.
 
-Sending SMS code verification code involves three parties: client side, cloud side (LeanCloud), and mobile network operator:
+Sending SMS verification code involves three parties: client side, cloud side (LeanCloud), and mobile network operator:
 
 ```seq
 Client->LeanCloud: 1. provide mobile number
@@ -88,7 +88,7 @@ If succeed, an empty json object `{}` will be returned.
 
 You can specify the value of `smsType` parameter as `voice` to send the verification code via phone call.
 The phone call will only tell the verification code to the user.
-You cannot send other information to users this way.
+You cannot send other information to users in this way.
 
 ```sh
 curl -X POST \
@@ -156,7 +156,7 @@ If succeed, the response body will be something like:
 ```
 
 If the above call will create a new user account,
-then LeanCloud will set `mobilePhoneVerified` to `true`, set `username` to the mobile phone number, and generate a null password.
+LeanCloud will set `mobilePhoneVerified` to `true`, set `username` to the mobile phone number, and generate a null password.
 A null password indicates the user cannot log in via password.
 
 To specify a username other than the mobile phone number, you can pass an additional `username` parameter.
@@ -173,12 +173,12 @@ curl -X POST \
 ```
 
 `username` and `password` parameters only have effects when a new user will be created.
-They will be ignored on logging in an existing user.
+They will be ignored when logging in an existing user.
 
 ### Verifying Mobile Phone
 
 As mentioned above, registering a new user with mobile phone will set `mobilePhoneVerified` to `true`.
-If the user is registered with other methods, you can also ask the user to verify their phone:
+If the user is registered with another method, you can also ask the user to verify their phone:
 
 ```sh
 curl -X POST \
@@ -236,7 +236,7 @@ curl -X POST \
 ```
 
 `"ttl": 10` means the verification code will be valid for 10 minutes.
-It is an optional (defaults to 6 minutes).
+It is optional (defaults to 6 minutes).
 
 ### Logging in with Phones
 
@@ -252,7 +252,7 @@ curl -X POST \
 ```
 
 If succeed, the response body will be an empty json object (`{}`).
-Then this user can use their mobile phone number and verification code to log in:
+Now this user can use their mobile phone number and verification code to log in:
 
 ```sh
 curl -X POST \
@@ -263,8 +263,8 @@ curl -X POST \
 https://{{host}}/1.1/login
 ```
 
-As mentioned above, calling `POST /requestSmsCode` then `POST /usersByMobilePhone` can also log in an existing user.
-However, `POST /requestLoginSmsCode` then `POST /login` is preferred if you do not want to create a new user when the user does not exist.
+As mentioned above, calling `POST /requestSmsCode` and then `POST /usersByMobilePhone` can also log in an existing user.
+However, calling `POST /requestLoginSmsCode` and then `POST /login` is preferred if you do not want to create a new user when the user does not exist.
 This helps to prevent issues such as a user mistakenly inputs a wrong mobile phone number.
 
 ### Password Reset with Phone
@@ -302,7 +302,7 @@ LeanCloud provides [CAPTCHA service](sms-guide.html#preventing-abuse-with-captch
 |/1.1/requestCaptcha|GET|get CAPTCHA image|
 |/1.1/verifyCaptcha|POST|get token after verified|
 
-After enable CAPTCHA service on dashboard (refer to [SMS Guide](sms-guide.html#Preventing-Abuse-with-CAPTCHA) for instructions), you can request a CAPTCHA image as below:
+After enabling CAPTCHA service on dashboard (refer to [SMS Guide](sms-guide.html#Preventing-Abuse-with-CAPTCHA) for instructions), you can request a CAPTCHA image as below:
 
 ```sh
 curl -X GET \
