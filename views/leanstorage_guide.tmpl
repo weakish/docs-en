@@ -5636,7 +5636,7 @@ The `emailVerified` will become `true` after the link is clicked on. This field 
 
 ### Verifying Phone Numbers
 
-Similar to [Verifying Emails](#verifying-emails), you can also request that your users have their phone numbers verified before they can log in or access certain functions in your app. By default, each user has a `mobilePhoneVerified` field which becomes `false` when the user first signs up or has their phone number changed. In your app's [Dashboard > LeanStorage > Settings](https://console.leancloud.app/storage.html?appid={{appid}}#/storage/conf), you can enable **Send verification SMS when users register or change phone numbers from clients** so that when a user signs up or changes their phone number, a text message containing a verification code will be sent out automatically. You can find the option to prevent users with unverified phone numbers from logging in on the same page.
+Similar to [Verifying Emails](#verifying-emails), you can also request that your users have their phone numbers verified before they can log in or access certain functions in your app. By default, each user has a `mobilePhoneVerified` field which becomes `false` when the user first signs up or has their phone number changed. In your app's Dashboard > LeanStorage > User > Setting, you can enable **Send verification SMS when users register or change phone numbers from clients** so that when a user signs up or changes their phone number, a text message containing a verification code will be sent out automatically. You can find the option to prevent users with unverified phone numbers from logging in on the same page.
 
 You can also initiate a verification request at anytime with the following code:
 
