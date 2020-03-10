@@ -1374,14 +1374,16 @@ The only way to clear the number of unread messages is to mark the messages as r
 - The user opens a conversation
 - The user is already in a conversation and a new message comes in
 
-> Implementation details on unread message counts with SDKs for mobile devices:
-
-> iOS SDKs (Objective-C and Swift) will fetch all `UNREAD_MESSAGES_COUNT_UPDATE` events provided by the cloud side on login,
-> while Android SDK only fetches new events after previous fetch (Android SDK remembers last fetch timestamp).
-
-> Thus both Android developers and iOS developers need to cache the unread events at the application level, otherwise some conversations may have inaccurate unread counts.
-> For Android SDK, unread events of some conversations were fetched on previous logins, not on this login.
-> For iOS SDKs, unread events are only available for 50 most recent conversations only, since the cloud side tracks at most 50 conversations. 
+> Implementation details on unread message counts for iOS and Android SDKs:
+>
+> iOS SDKs (Objective-C and Swift) will fetch all `UNREAD_MESSAGES_COUNT_UPDATE` events provided by the cloud on login,
+> while Android SDK only fetches the latest events generated after the previous fetch (Android SDK remembers the timestamp of the last fetch).
+>
+> Therefore, Android developers need to cache the events for unread messages at the application level,
+> because the events of some conversations have been fetched on previous logins, but not the current one.
+> For iOS developers, they need to do the same thing because the cloud tracks at most 50 conversations containing unread messages,
+> and the events for unread messages are only available for those conversations.
+> If the events for unread messages are not cached, some conversations may have inaccurate counts of unread messages.
 
 ## Multi Device Sign-on and Single Device Sign-on
 
