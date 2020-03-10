@@ -1327,7 +1327,8 @@ When the client goes online, the cloud will drop in a series of `<Conversation, 
 > Even if a message is received when the client is online, the count will still increase.
 > Make sure to reset the count by marking conversations as read whenever needed.
 
-When the number of `<Conversation, UnreadMessageCount>` changes, the SDK will send an `UNREAD_MESSAGES_COUNT_UPDATE` event to the app through `IMClient`. You can listen to this event and make corresponding changes to the number of unread messages on the UI. However, since this event gets triggered very frequently and there are often other events coming together with it, there is **no need for you to implement anything else in response to it**.
+When the number of `<Conversation, UnreadMessageCount>` changes, the SDK will send an `UNREAD_MESSAGES_COUNT_UPDATE` event to the app through `IMClient`. You can listen to this event and make corresponding changes to the number of unread messages on the UI.
+We recommend developers to cache unread counts at the application level.
 
 ```js
 var { Event } = require('leancloud-realtime');
@@ -1372,6 +1373,15 @@ The only way to clear the number of unread messages is to mark the messages as r
 
 - The user opens a conversation
 - The user is already in a conversation and a new message comes in
+
+> Implementation details on unread message counts with SDKs for mobile devices:
+
+> iOS SDKs (Objective-C and Swift) will fetch all `UNREAD_MESSAGES_COUNT_UPDATE` events provided by the cloud side on login,
+> while Android SDK only fetches new events after previous fetch (Android SDK remembers last fetch timestamp).
+
+> Thus both Android developers and iOS developers need to cache the unread events at the application level, otherwise some conversations may have inaccurate unread counts.
+> For Android SDK, unread events of some conversations were fetched on previous logins, not on this login.
+> For iOS SDKs, unread events are only available for 50 most recent conversations only, since the cloud side tracks at most 50 conversations. 
 
 ## Multi Device Sign-on and Single Device Sign-on
 
