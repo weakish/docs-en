@@ -2186,16 +2186,16 @@ When creating a timer, two optional options are available:
 - **Retry Policy**: retry or cancel the task when it fails due to a cloud function timeout
 
 After the timer is created, the dashboard will display **Last executed** and **Next execution time**.
-**Last executed** will display the time and result of last execution.
-Click on the **details** button will reveal more information about the task:
+**Last executed** is the time and result of the last execution.
+Clicking on the **details** button will reveal more information about the task:
 
-- `status` task status, `success` or `failed`
-- `uniqueId` task unique ID
-- `finishedAt` the exact time when the task finished (for successful tasks only)
-- `statusCode` the HTTP status returned by the cloud function (for successful tasks only)
-- `result` the response body returned by the cloud function (for successful tasks only)
-- `error` error message (for failed tasks only)
-- `retryAt` retry time (for failed tasks only)
+- `status`: the status of the task; could be `success` or `failed`
+- `uniqueId`: a unique ID for the task
+- `finishedAt`: the exact time when the task finished (for successful tasks only)
+- `statusCode`: the HTTP status returned by the cloud function (for successful tasks only)
+- `result`: the response body returned by the cloud function (for successful tasks only)
+- `error`: error message (for failed tasks only)
+- `retryAt`: the time when the cloud will try to rerun the task (for failed tasks only)
 
 You can see the logs of the timer in [Dashboard > LeanEngine > App logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log).
 For example:
@@ -2204,9 +2204,9 @@ For example:
 CloudQueue execution failure 24e1b480-aeb5-4222-ab7d-7d4b8ee170b9: hello !! {"error":"Error: ESOCKETTIMEDOUT"}
 ```
 
-If you want to temporarily suspend a timer, say, for debug purpose, you can click on the **Disabale** button in the **Status** column.
+If you want to suspend a timer temporarily, say, for debug purpose, you can click on the **Disable** button in the **Status** column.
 Correspondingly, clicking on the **Enable** button will reactivate a suspended task.
-And if you want to modify or delete a task, you click on the **Edit** and **Delete** button in the **Operation** column respectively.
+If you want to modify or delete a task, you can click on the **Edit** or **Delete** button in the **Operation** column.
 
 ### CRON Expressions
 
