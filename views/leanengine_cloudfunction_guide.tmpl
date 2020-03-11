@@ -291,6 +291,28 @@ AVCloud.callFunctionInBackground("averageStars", dicParameters, new FunctionCall
         }
     }
 });
+
+// Java SDK also supports caching results returned by cloud function, similar to AVQuery.
+// For example, the following calls will use cached results if available,
+// and the cached results will expire in 30 seconds (30000 ms).
+AVCloud.callFunctionWithCacheInBackground("averageStars", dicParameters, AVQuery.CachePolicy.CACHE_ELSE_NETWORK, 30000)
+.subscribe(new Observer<Object>() {
+  @Override
+  public void onSubscribe(Disposable disposable) {}
+
+  @Override
+  public void onNext(Object object) {
+    // succeed.
+  }
+
+  @Override
+  public void onError(Throwable throwable) {
+    // failed.
+  }
+
+  @Override
+  public void onComplete() {}
+});
 ```
 
 ### Calling Cloud Functions with REST API
@@ -409,7 +431,28 @@ AVCloud.rpcFunctionInBackground("averageStars", dicParameters,
     }
   }
 );
+
+// cached version (see "Calling Cloud Functions with SDK" section above)
+AVCloud.callRPCWithCacheInBackground("averageStars", dicParameters, AVQuery.CachePolicy.CACHE_ELSE_NETWORK, 30000)
+.subscribe(new Observer<AVObject>() {
+  @Override
+  public void onSubscribe(Disposable disposable) {}
+
+  @Override
+  public void onNext(AVObject avObject) {
+    // succeed.
+  }
+
+  @Override
+  public void onError(Throwable throwable) {
+    // failed
+  }
+
+  @Override
+  public void onComplete() {}
+});
 ```
+
 
 ### Error Codes
 
