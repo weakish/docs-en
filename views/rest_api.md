@@ -1269,7 +1269,7 @@ Parameter | Description
 - | -
 order | Order by. Prefix `-` for descending.
 limit | The number of returned objects. Defaults to 100 and the max is 1000.
-skip | Used for pagination.
+skip | Skipped results. Used for pagination.
 keys | Only return specified keys. Prefix `-` for not including.
 
 To query posts ordered by creation time:
