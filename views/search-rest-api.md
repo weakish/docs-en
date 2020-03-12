@@ -105,10 +105,6 @@ For example, to sort players near a GeoPoint (`[39.9, 116.4]`):
 }
 ```
 
-## Word Segmentation
-
-{# TODO translate dashboard #}
-
 ## More Like This Query
 
 To search for similar objects, you can send a `GET` request to `/search/mlt`.
