@@ -17,9 +17,19 @@ URL | HTTP Method | Functionality
 The current API version is `1.1`.
 For request format and response format, please refer to the [Request Format section](rest_api.html#Request-Format) and [Response Format section](rest_api.html#Response-Format) of REST API Guide.
 
-## Enable Search Index
+## Enable Search Indexes
 
-{# TODO translate dashboard #}
+Before using search APIs, you must first enable search indexes for classes.
+To do so, access Dashboard > LeanStorage > In-app searching, and click on the `Add Class` button.
+
+Be aware the following limitations:
+
+- Applications with a Developer/Business plan can enable search indexes for at most 5/10 classes.
+
+- Applications with a Developer/Business plan can enable search indexes for at most 5/10 columns for each search-enabled classes.
+  However, `objectId`, `createdAt`, and `updatedAt` are always enabled for search-enabled classes, and they do not count against the column limit.
+
+- If LeanCloud does not receive any full text search API requests within two weeks after you enabled search indexes for a class, the search indexes of this class will be disabled.
 
 ## Full-text Search
 
