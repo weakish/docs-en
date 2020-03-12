@@ -39,17 +39,18 @@ Parameter|Required|Description
 ---|---|---
 `q`|required|[Elasticsearch query string]
 `skip`|Optional|Skipped results. Used for pagination.
-`limit`|Optional|The number of returned objects. Defaults to 100 and the max is 1000.
+`limit`|Optional|The number of returned objects. Its default value is 100 and its maximum value is 1000.
 `sid`|Optional|Elasticsearch [scroll id]. Returned by previous search. Used for pagination.
 `fields`|Optional|逗号隔开的字段列表，查询的字段列表
-`highlights`|Optional|Highlighted keywords. It can be comma separated string or wildcard `*`.
+`highlights`|Optional|Highlighted keywords. It can be a comma-separated string or wildcard `*`.
 `clazz`|Optional|Class name. If not specified, all search enabled classes will be searched.
 `include`|Optional|Also search for Pointers. Example: `user,comment`.
 `order`|Optional|Order by. Prefix `-` for descending. Example: `-score,createdAt`.
-`sort`|Optional|See the [Advanced Sorting](#advanced_sorting) section below. 
+`sort`|Optional|Refer to [Elasticsearch sort] documentation and the [GeoPoints sorting](#geopoints-sorting) section below for details. 
 
-[elasticsearch query string]: https://www.elasticsearch.org/guide/en/elasticsearch/reference/6.5/query-dsl-query-string-query.html#query-string-syntax
+[Elasticsearch query string]: https://www.elasticsearch.org/guide/en/elasticsearch/reference/6.5/query-dsl-query-string-query.html#query-string-syntax
 [scroll id]: https://www.elastic.co/guide/en/elasticsearch/reference/6.5/search-request-scroll.html
+[Elasticsearch sort]: https://www.elastic.co/guide/en/elasticsearch/reference/6.5/search-request-sort.html
 
 The response will be something like:
 
@@ -78,13 +79,26 @@ In the above response body:
 - `hits`： Total number of matched results.
 - `_highlight`: Highlighted search results, keywords are wrapped in `em` tags. If you did not pass the `highlights` query parameter, `null` will be returned.
 
-### Advanced Sorting
+## GeoPoints Sorting
 
-{# TODO #}
+GeoPoints can be sorted in distances.
+For example, to sort players near a GeoPoint (`[39.9, 116.4]`):
 
+```json
+{
+  "_geo_distance" : {
+                "location" : [39.9, 116.4],
+                "order" : "asc",
+                "unit" : "km",
+                "mode" : "min",
+   }
+}
+```
 
 ## Word Segmentation
 
 {# TODO translate dashboard #}
 
 ## More Like This Query
+
+{# TODO #}
