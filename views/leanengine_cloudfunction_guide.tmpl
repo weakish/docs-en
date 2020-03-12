@@ -291,6 +291,28 @@ AVCloud.callFunctionInBackground("averageStars", dicParameters, new FunctionCall
         }
     }
 });
+
+// Java SDK also supports caching results returned by cloud function, similar to AVQuery.
+// For example, the following calls will use cached results if available,
+// and the cached results will expire in 30 seconds (30000 ms).
+AVCloud.callFunctionWithCacheInBackground("averageStars", dicParameters, AVQuery.CachePolicy.CACHE_ELSE_NETWORK, 30000)
+.subscribe(new Observer<Object>() {
+  @Override
+  public void onSubscribe(Disposable disposable) {}
+
+  @Override
+  public void onNext(Object object) {
+    // succeed.
+  }
+
+  @Override
+  public void onError(Throwable throwable) {
+    // failed.
+  }
+
+  @Override
+  public void onComplete() {}
+});
 ```
 
 ### Calling Cloud Functions with REST API
@@ -409,7 +431,28 @@ AVCloud.rpcFunctionInBackground("averageStars", dicParameters,
     }
   }
 );
+
+// cached version (see "Calling Cloud Functions with SDK" section above)
+AVCloud.callRPCWithCacheInBackground("averageStars", dicParameters, AVQuery.CachePolicy.CACHE_ELSE_NETWORK, 30000)
+.subscribe(new Observer<AVObject>() {
+  @Override
+  public void onSubscribe(Disposable disposable) {}
+
+  @Override
+  public void onNext(AVObject avObject) {
+    // succeed.
+  }
+
+  @Override
+  public void onError(Throwable throwable) {
+    // failed
+  }
+
+  @Override
+  public void onComplete() {}
+});
 ```
+
 
 ### Error Codes
 
@@ -567,7 +610,7 @@ you have to use after hooks instead.
 For example, to filter fake comments, one `beforeSave` hook needs to call a time-consuming third-party NLP API,
 which may cause a timeout.
 As a workaround, you can use an `afterSave` hook to call the third party after the comment is saved.
-If that comment turns out to be a fake one, then delete it afterward. 
+If that comment turns out to be a fake one, then delete it afterward.
 {% endif %}
 
 {% if platformName === "Python" %}
@@ -1293,7 +1336,7 @@ AV.Cloud.onLogin(function (request) {
     }
   }).on('error', (e) => {
     console.error(e);
-    throw new AV.Cloud.Error('Failed to verify Example platform token'); 
+    throw new AV.Cloud.Error('Failed to verify Example platform token');
   });
 });
 ```
@@ -2172,49 +2215,41 @@ public static float logTimer throws Exception {
 ```
 {% endif %}
 
-After a timer is created, the default status of it will be `Disabled`. You need to click on <span class="label label-default">Enable</span> to activate the timer. You can see the logs of the timer in [Dashboard > LeanEngine > App logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log).
-
 You can specify the times a task gets triggered using one of the following expressions:
 
 - CRON expression
 - Interval in seconds
 
-Take CRON expression as an example. To send push notifications to users at 8am every Monday, first define a cloud function:
+Take CRON expression as an example.
+To print logs at 8am every Monday, create a timer for the function `logTimer` using **CRON expression** and enter `0 0 8 ? * MON` for it.
 
-{% if platformName === "Node.js" %}
-```js
-AV.Cloud.define('pushTimer', function(request){
-  return AV.Push.send({
-    channels: ['Public'],
-    data: {
-      alert: 'Public message'
-    }
-  });
-});
+When creating a timer, two optional options are available:
+
+- **Execute Parameters**: the parameters passed to the cloud function in a JSON object
+- **Retry Policy**: retry or cancel the task when it fails due to a cloud function timeout
+
+After the timer is created, the dashboard will display **Last executed** and **Next execution time**.
+**Last executed** is the time and result of the last execution.
+Clicking on the **details** button will reveal more information about the task:
+
+- `status`: the status of the task; could be `success` or `failed`
+- `uniqueId`: a unique ID for the task
+- `finishedAt`: the exact time when the task finished (for successful tasks only)
+- `statusCode`: the HTTP status returned by the cloud function (for successful tasks only)
+- `result`: the response body returned by the cloud function (for successful tasks only)
+- `error`: error message (for failed tasks only)
+- `retryAt`: the time when the cloud will try to rerun the task (for failed tasks only)
+
+You can see the logs of the timer in [Dashboard > LeanEngine > App logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log).
+For example:
+
 ```
-{% endif %}
-{% if platformName === "Python" %}
-{# TODO #}
-{% endif %}
-{% if platformName === "PHP" %}
-```php
-use \LeanCloud\Push;
-
-Cloud::define("pushTimer", function($params, $user) {
-    $push = new Push(array("alert" => "Public message"));
-    $push->setChannels(array("Public"));
-    $push->send();
-});
+CloudQueue execution failure 24e1b480-aeb5-4222-ab7d-7d4b8ee170b9: hello !! {"error":"Error: ESOCKETTIMEDOUT"}
 ```
-{% endif %}
-{% if platformName === "Java" %}
-{# TODO #}
-{% endif %}
-{% if platformName === ".NET" %}
-{# TODO #}
-{% endif %}
 
-Then create a timer for the function using **CRON expression** and enter `0 0 8 ? * MON` for it.
+If you want to suspend a timer temporarily, say, for debug purpose, you can click on the **Disable** button in the **Status** column.
+Correspondingly, clicking on the **Enable** button will reactivate a suspended task.
+If you want to modify or delete a task, you can click on the **Edit** or **Delete** button in the **Operation** column.
 
 ### CRON Expressions
 
@@ -2255,17 +2290,6 @@ Expression|Explanation
 `0 */30 8-9 5,20 * ?`|Run a task every 30 minutes between 8am and 10am (8:00am, 8:30am, 9:00am, and 9:30am) on the 5th and 20th of every month.
 
 The time zone followed by CRON expressions is `UTC+0`.
-
-### Maximum Amounts of Timers
-
-You can create up to 6 timers for each of the staging environment and the production environment, which means that you can create 12 timers in total.
-
-### Error Messages for Scheduled Tasks
-
-The error messages of timers will be output to [Dashboard > LeanEngine > App logs](https://console.leancloud.app/cloud.html?appid={{appid}}#/log). Below are some common errors and the reasons causing them:
-
-- **timerAction timed-out and no fallback available**<br>A function triggered by a timer reached its 15-second time limit for processing. See [Handling Timeouts](#handling-timeouts).
-- **timerAction short-circuited and no fallback available**<br>A timer is disabled due to frequent timeouts happening to the function it is triggering.
 
 ## Using Master Key
 

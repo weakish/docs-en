@@ -1327,7 +1327,8 @@ When the client goes online, the cloud will drop in a series of `<Conversation, 
 > Even if a message is received when the client is online, the count will still increase.
 > Make sure to reset the count by marking conversations as read whenever needed.
 
-When the number of `<Conversation, UnreadMessageCount>` changes, the SDK will send an `UNREAD_MESSAGES_COUNT_UPDATE` event to the app through `IMClient`. You can listen to this event and make corresponding changes to the number of unread messages on the UI. However, since this event gets triggered very frequently and there are often other events coming together with it, there is **no need for you to implement anything else in response to it**.
+When the number of `<Conversation, UnreadMessageCount>` changes, the SDK will send an `UNREAD_MESSAGES_COUNT_UPDATE` event to the app through `IMClient`. You can listen to this event and make corresponding changes to the number of unread messages on the UI.
+We recommend developers to cache unread counts at the application level.
 
 ```js
 var { Event } = require('leancloud-realtime');
@@ -1372,6 +1373,17 @@ The only way to clear the number of unread messages is to mark the messages as r
 
 - The user opens a conversation
 - The user is already in a conversation and a new message comes in
+
+> Implementation details on unread message counts for iOS and Android SDKs:
+>
+> iOS SDKs (Objective-C and Swift) will fetch all `UNREAD_MESSAGES_COUNT_UPDATE` events provided by the cloud on login,
+> while Android SDK only fetches the latest events generated after the previous fetch (Android SDK remembers the timestamp of the last fetch).
+>
+> Therefore, Android developers need to cache the events for unread messages at the application level,
+> because the events of some conversations have been fetched on previous logins, but not the current one.
+> For iOS developers, they need to do the same thing because the cloud tracks at most 50 conversations containing unread messages,
+> and the events for unread messages are only available for those conversations.
+> If the events for unread messages are not cached, some conversations may have inaccurate counts of unread messages.
 
 ## Multi Device Sign-on and Single Device Sign-on
 
