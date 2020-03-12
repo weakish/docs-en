@@ -1,9 +1,9 @@
-# Full-text Search REST API Guide
+# Full-Text Search REST API Guide
 
-Full-text search is a common feature for applications.
-Although it is possible to implement full-text search via [`$regex` queries](rest_api.html#regex-queries),
-this approach does not scale.
-Thus LeanCloud provides dedicated REST APIs for full-text search powered by [the Elasticsearch engine][elastic].
+Full-text search is a common feature used by a lot of modern applications.
+You might already know that it is possible to implement full-text search with [`$regex` queries](rest_api.html#regex-queries),
+but this approach will not work efficiently when there are massive objects or fields in a class.
+To solve the problem, LeanCloud provides dedicated REST APIs for full-text search powered by [the Elasticsearch engine][elastic].
 
 [elastic]: https://www.elastic.co/elasticsearch/
 
@@ -12,7 +12,7 @@ Thus LeanCloud provides dedicated REST APIs for full-text search powered by [the
 URL | HTTP Method | Functionality
 - | - | -
 /search/select | GET | full-text search
-/search/mlt | GET | more like this query, find similar documents
+/search/mlt | GET | "more like this" query; used to find similar documents
 
 The current API version is `1.1`.
 For request format and response format, please refer to the [Request Format section](rest_api.html#Request-Format) and [Response Format section](rest_api.html#Response-Format) of REST API Guide.
@@ -20,21 +20,21 @@ For request format and response format, please refer to the [Request Format sect
 ## Enable Search Indexes
 
 Before using search APIs, you must first enable search indexes for classes.
-To do so, access Dashboard > LeanStorage > In-app searching, and click on the `Add Class` button.
+To do so, go to your app's Dashboard > LeanStorage > In-app searching, and click on the `Add Class` button.
 
-Be aware the following limitations:
+Be aware of the following limitations:
 
 - Applications with a Developer/Business plan can enable search indexes for at most 5/10 classes.
-- Applications with a Developer/Business plan can enable search indexes for at most 5/10 columns for each search-enabled classes.
-  However, `objectId`, `createdAt`, and `updatedAt` are always enabled for search-enabled class, and they do not count against the column limit.
-- If LeanCloud has not received any full text search API requests within two weeks after you enabled search indexes for a class, the search indexes of this class will be disabled.
+- Applications with a Developer/Business plan can enable search indexes for at most 5/10 columns for each search-enabled class.
+  However, `objectId`, `createdAt`, and `updatedAt` are always enabled for a search-enabled class, and they do not count into the column limit.
+- If LeanCloud has not received any full-text search API requests within two weeks after you enabled search indexes for a class, the search indexes of this class will be disabled.
 
-## Full-text Search
+## Full-Text Search
 
 To search for objects, you need to send a `GET` request to `/search/select`.
 For example, to search for `dennis` in `GameScore` class:
 
-``` sh
+```sh
 curl -X GET \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{appkey}}" \
@@ -47,12 +47,12 @@ Parameter|Required|Description
 ---|---|---
 `q`|Required|[Elasticsearch query string]
 `skip`|Optional|Skipped results. Used for pagination.
-`limit`|Optional|The number of returned objects. Its default value is 100 and its maximum value is 1000.
+`limit`|Optional|The number of returned objects. The default value is 100 and the maximum value is 1000.
 `sid`|Optional|Elasticsearch [scroll id]. Returned by a previous search. Used for pagination.
 `fields`|Optional|Comma-seperated column list.
 `highlights`|Optional|Highlighted keywords. It can be a comma-separated string or wildcard `*`.
 `clazz`|Optional|Class name. If not specified, all search enabled classes will be searched.
-`include`|Optional|Also search for Pointers. Example: `user,comment`.
+`include`|Optional|Include objects referenced by Pointers. Example: `user,comment`.
 `order`|Optional|Order by. Prefix `-` for descending. Example: `-score,createdAt`.
 `sort`|Optional|Refer to [Elasticsearch sort] documentation and the [GeoPoints sorting](#geopoints-sorting) section below for details. 
 
@@ -84,12 +84,12 @@ The response will be something like:
 
 In the above response body:
 
-- `hits`： Total number of matched results.
-- `_highlight`: Highlighted search results, keywords are wrapped in `em` tags. If you did not pass the `highlights` query parameter, `null` will be returned.
+- `hits`: Total number of matched results.
+- `_highlight`: Highlighted search results with keywords wrapped in `em` tags. If you did not pass the `highlights` query parameter, `null` will be returned.
 
 ## GeoPoints Sorting
 
-GeoPoints can be sorted in distances.
+GeoPoints can be sorted by their distances to a given GeoPoint.
 For example, to sort players near a GeoPoint (`[39.9, 116.4]`):
 
 ```json
@@ -136,13 +136,13 @@ The response body will be something like:
      "className":"Article",
      "title":"clojure persistent vector"
   },
-  // ……
+  // …
 ],
 "sid": null
 }
 ```
 
-You can use the `likeObjectIds` parameter instead of `like`, to search for posts with similar tags:
+You can use the `likeObjectIds` parameter instead of `like` to search for posts with similar tags:
 
 ```sh
 curl -X GET \
@@ -151,7 +151,7 @@ curl -X GET \
   "https://{{host}}/1.1/search/mlt?likeObjectIds=577e18b50a2b580057469a5e&clazz=Post&fields=tags"
 ```
 
-All query parameters available:
+Below are all the query parameters available:
 
 Parameter|Required|Description
 ---|---|---
@@ -162,12 +162,11 @@ Parameter|Required|Description
 `min_doc_freq`|Optional|The minimum document frequency below which the terms will be ignored from the input document. Defaults to 5.
 `max_doc_freq`|Optional|The maximum document frequency above which the terms will be ignored from the input document. This could be useful to ignore highly frequent words such as stop words. Defaults to 0.
 `skip`|Optional|Skipped results. Used for pagination.
-`limit`|Optional|The number of returned objects. Its default value is 100 and its maximum value is 1000.
+`limit`|Optional|The number of returned objects. The default value is 100 and the maximum value is 1000.
 `fields`|Optional|Comma-seperated column list.
 `highlights`|Optional|Highlighted keywords. It can be a comma-separated string or wildcard `*`.
-`include`|Optional|Also search for Pointers. Example: `user,comment`.
+`include`|Optional|Include objects referenced by Pointers. Example: `user,comment`.
 
 You can also refer to the [Elasticsearch documentation][elastic-more-like-this] for more information.
 
 [elastic-more-like-this]: https://www.elastic.co/guide/en/elasticsearch/reference/6.5/query-dsl-mlt-query.html
-
