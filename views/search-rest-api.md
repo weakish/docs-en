@@ -3,7 +3,7 @@
 Full-text search is a common feature for applications.
 Although it is possible to implement full-text search via [`$regex` queries](rest_api.html#regex-queries),
 this approach does not scale.
-Thus LeanCloud provides dedicated REST API for full-text search powered by [the Elasticsearch engine][elastic].
+Thus LeanCloud provides dedicated REST APIs for full-text search powered by [the Elasticsearch engine][elastic].
 
 [elastic]: https://www.elastic.co/elasticsearch/
 
@@ -12,7 +12,7 @@ Thus LeanCloud provides dedicated REST API for full-text search powered by [the 
 URL | HTTP Method | Functionality
 - | - | -
 /search/select | GET | full-text search
-/search/mlt | GET | more like this, find similar documents
+/search/mlt | GET | more like this query, find similar documents
 
 The current API version is `1.1`.
 For request format and response format, please refer to the [Request Format section](rest_api.html#Request-Format) and [Response Format section](rest_api.html#Response-Format) of REST API Guide.
@@ -25,11 +25,9 @@ To do so, access Dashboard > LeanStorage > In-app searching, and click on the `A
 Be aware the following limitations:
 
 - Applications with a Developer/Business plan can enable search indexes for at most 5/10 classes.
-
 - Applications with a Developer/Business plan can enable search indexes for at most 5/10 columns for each search-enabled classes.
-  However, `objectId`, `createdAt`, and `updatedAt` are always enabled for search-enabled classes, and they do not count against the column limit.
-
-- If LeanCloud does not receive any full text search API requests within two weeks after you enabled search indexes for a class, the search indexes of this class will be disabled.
+  However, `objectId`, `createdAt`, and `updatedAt` are always enabled for search-enabled class, and they do not count against the column limit.
+- If LeanCloud has not received any full text search API requests within two weeks after you enabled search indexes for a class, the search indexes of this class will be disabled.
 
 ## Full-text Search
 
@@ -47,10 +45,10 @@ The following query parameters are available:
 
 Parameter|Required|Description
 ---|---|---
-`q`|required|[Elasticsearch query string]
+`q`|Required|[Elasticsearch query string]
 `skip`|Optional|Skipped results. Used for pagination.
 `limit`|Optional|The number of returned objects. Its default value is 100 and its maximum value is 1000.
-`sid`|Optional|Elasticsearch [scroll id]. Returned by previous search. Used for pagination.
+`sid`|Optional|Elasticsearch [scroll id]. Returned by a previous search. Used for pagination.
 `fields`|Optional|Comma-seperated column list.
 `highlights`|Optional|Highlighted keywords. It can be a comma-separated string or wildcard `*`.
 `clazz`|Optional|Class name. If not specified, all search enabled classes will be searched.
@@ -58,7 +56,7 @@ Parameter|Required|Description
 `order`|Optional|Order by. Prefix `-` for descending. Example: `-score,createdAt`.
 `sort`|Optional|Refer to [Elasticsearch sort] documentation and the [GeoPoints sorting](#geopoints-sorting) section below for details. 
 
-[Elasticsearch query string]: https://www.elasticsearch.org/guide/en/elasticsearch/reference/6.5/query-dsl-query-string-query.html#query-string-syntax
+[Elasticsearch query string]: https://www.elastic.co/guide/en/elasticsearch/reference/6.5/query-dsl-query-string-query.html#query-string-syntax
 [scroll id]: https://www.elastic.co/guide/en/elasticsearch/reference/6.5/search-request-scroll.html
 [Elasticsearch sort]: https://www.elastic.co/guide/en/elasticsearch/reference/6.5/search-request-sort.html
 
@@ -160,8 +158,8 @@ Parameter|Required|Description
 `clazz`|Required|Class name.
 `like`|Optional|Keywords. **You need to specify either this parameter or the `likeObjectIds` parameter.**
 `likeObjectIds`|Optional|Comma-seperated objectId list. **You need to specify either this parameter or the `like` parameter.**
-`min_term_freq`|Optional|The minimum term frequency below which the terms will be ignored. Defaults to 2.
-`min_doc_freq`|Optional|The minimum document frequency below which the terms will be ignored. Defaults to 5.
+`min_term_freq`|Optional|The minimum term frequency below which the terms will be ignored from the input document. Defaults to 2.
+`min_doc_freq`|Optional|The minimum document frequency below which the terms will be ignored from the input document. Defaults to 5.
 `max_doc_freq`|Optional|The maximum document frequency above which the terms will be ignored from the input document. This could be useful to ignore highly frequent words such as stop words. Defaults to 0.
 `skip`|Optional|Skipped results. Used for pagination.
 `limit`|Optional|The number of returned objects. Its default value is 100 and its maximum value is 1000.
