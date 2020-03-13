@@ -24,8 +24,8 @@ To do so, go to your app's Dashboard > LeanStorage > In-app searching, and click
 
 Be aware of the following limitations:
 
-- Applications with a Developer/Business plan can enable search indexes for at most 5/10 classes.
-- Applications with a Developer/Business plan can enable search indexes for at most 5/10 columns for each search-enabled class.
+- An application with a Developer/Business Plan can enable search indexes for at most 5/10 classes.
+- An application with a Developer/Business Plan can enable search indexes for at most 5/10 columns for each search-enabled class.
   However, `objectId`, `createdAt`, and `updatedAt` are always enabled for a search-enabled class, and they do not count into the column limit.
 - If LeanCloud has not received any full-text search API requests within two weeks after you enabled search indexes for a class, the search indexes of this class will be disabled.
 
