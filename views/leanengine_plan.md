@@ -23,7 +23,7 @@ If you have only one instance and the server containing that instance runs into 
 
 **Rolling Deployment**<br>When deploying your project (including other internal operations), the system will run both the instance of the new version and the instance of the old version simultaneously for a while, then it will shut down the ones of the old version. This mechanism can avoid service interruption.
 
-**Group Management**<br>You can create multiple groups of instances with different domains assigned to each of them. You can bind a seperated custom domain to each group. See [Group Management](#group-management).
+**Group Management**<br>You can create multiple groups of instances with different domains assigned to each of them. You can bind a separated custom domain to each group. See [Group Management](#group-management).
 
 ## Trial Instances
 
@@ -57,7 +57,7 @@ Four kinds of standard instances are available, with different RAM resources:
 | standard-2048 | 2048 MB | 1 Core |
 | standard-4096 | 4096 MB | 1 Core |
 
-To avoid resources of instances exhausted, it is recommended that:
+To avoid the resources of instances exhausted, it is recommended that:
 
 - If daily **RAM** average usage exceeds **70%** of resources available (for example, 717 MB in a standard-1024 instance), upgrade to an instance with more RAM.
 - If daily **CPU** average usage exceeds **30%** of resources available (for example, 30% CPU in a standard-1024 instance), add more instances.
@@ -66,35 +66,24 @@ See [Usage Data][#usage-data] to learn about how you can view the stress of your
 
 You can have at most 12 instances for each application. Please contact us at support@leancloud.rocks if you need more.
 
-{# TODO translate dashboard LeanEngine resources
+### Change Instance Quota
 
-### Upgrading to Standard Instances
+Go to your app's [Dashboard > LeanEngine > Resources](https://console.leancloud.app/cloud.html?appid={{appid}}#/leannode) and click on the **Change** button in the **Instance quota** section, then choose the quota you want.
 
-You can go to your app's [Dashboard > LeanEngine > Instances](https://console.leancloud.app/cloud.html?appid={{appid}}#/leannode) and click on **Upgrade to standard** to have your trial instance upgraded to a standard instance.
+If you are ugrading to standard mode from trial mode, you also need to choose the number of standard instances to purphase.
 
 ### Creating and Deleting Instances
 
+Go to your app's [Dashboard > LeanEngine > Resources](https://console.leancloud.app/cloud.html?appid={{appid}}#/leannode) and click on the **Change** button in the **Production** or **Staging** environment section, then choose the number you want.
 
-### Resizing Instances
+### Downgrade to Trial Mode
 
-A standard instance has 0.5 CPU and 256 MB memory by default. You can change the size of all instances (including trial instances in the staging environment) by clicking on **Resize**.
-
-We recommend that you increase the sizes of your instances when:
-
-- The usage of **CPU** constantly goes above **30%**.
-- The usage of **memory** constantly goes above **70%**.
-
-See [Usage Data](#usage-data) to learn about how you can view the usage of your application.
-
-{% call docs.noteWrap() %}
-**Utilizing Large-Size Instances**<br>For a Node.js application, a thread can make use of at most 100% CPU and 1.5 GB memory by default. If an instance has a size way larger than this, the instance may not be fully utilized. You may consider implementing [multithreading](leanengine_webhosting_guide-node.html#multithreading) with `cluster`.
-{% endcall %}
-
-#}
+To downgrade to the trial mode, you need to change instance quota in all groups to **Trial mode**.
+Then all standard instances will be deleted, and there will be a free trial instance with 0.5 CPU and 256 MB memory in the last group.
 
 ### Multiple Instances Running
 
-Multiple instances running means there are more than one instance running per enviroment per group.
+Multiple instances running means there are more than one instances running per environment per group.
 It includes two conditions:
 
 1. Persistent multiple instances running. You have purchased multiple instances for an environment of a group.
