@@ -131,7 +131,7 @@ Trial instances are free.
 Standard instances will be billed daily.
 You can view the billing records of your account [here](bill.html#/bill/cost).
 
-The cost is calculated based on the **maximum usage**, and it will deducted after midnight of each day.
+The cost is calculated based on the **maximum usage**, and it will be deducted after midnight of each day.
 
 Suppose in one day (from 0:00 to 24:00):
 
@@ -145,7 +145,7 @@ The cost on that day is calculated against four `standard-1024` instances.
 
 If your application has only one group, you won't be charged for group management.
 
-If your application has 2 or more groups, instances will be billed for 20% more as group management fee.
+If your application has 2 or more groups, instances will be billed for 20% more as a group management fee.
 
 If you don't want to be billed anymore, please make sure you only have one group in your application.
 
