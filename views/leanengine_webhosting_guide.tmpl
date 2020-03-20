@@ -1369,45 +1369,6 @@ LeanEngine.setHttpsRedirectEnabled(true);
 
 After your site is deployed to the production environment, all users accessing your website's second-level domain through HTTP will be redirected to HTTPS-enabled URLs.
 
-{% if platformName === "Node.js" %}
-### Multithreading
-
-Node.js itself is single-threaded, so if you have LeanEngine instances with 2 or more CPUs, you need to set up multithreading with [`cluster`](https://nodejs.org/api/cluster.html).
-
-To do so, create `server-cluster.js`:
-
-```js
-var cluster = require('cluster');
-
-var workers = process.env.LEANCLOUD_AVAILABLE_CPUS || 1;
-
-if (cluster.isMaster) {
-  for (var i = 0; i < workers; i++) {
-    cluster.fork();
-  }
-
-  cluster.on('exit', (worker, code, signal) => {
-    console.log('Worker %s died, restarting…', worker.process.pid);
-    cluster.fork();
-  });
-} else {
-  require('./server.js');
-}
-```
-
-Then go to `package.json` and change `scripts.start` to be `node server-cluster.js`:
-
-```json
-"scripts": {
-  "start": "node server-cluster.js"
-}
-```
-
-{% call docs.noteWrap() %}
-Multithreading requires that your program does not maintain global states (such as locks) in memory. We recommend that you perform sufficient tests when switching to a multi-thread or multi-instance structure for the first time.
-{% endcall %}
-{% endif %}
-
 ## Deploying and Publishing
 
 ### Deploying with Command-Line Interface
