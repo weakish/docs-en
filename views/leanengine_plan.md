@@ -4,8 +4,8 @@
 
 In this documentation, you will learn how you can choose the plan that best fits your needs, as well as how you can manage your instances and use the group management function.
 
-LeanEngine is billed independently with the [Developer / Business plan](https://leancloud.app/pricing/).
-Upgrading to the Business plan or degrading to the Developer plan will not affect your LeanEngine cost.
+LeanEngine is billed independently regardless of whether you are using the [Developer or Business Plan](https://leancloud.app/pricing/).
+Upgrading to the Business Plan or degrading to the Developer Plan will not affect your LeanEngine cost.
 
 ## Standard Instances
 
@@ -13,7 +13,7 @@ You can purchase standard instances for projects that demand high availability. 
 
 **Staging Environment**<br>A trial instance will be provided in the staging environment so you can test your project before having it published.
 
-**Load Balancing**<br>LeanEngine's gateway will distribute requests to each instance. Therefore you can simply add more instances to scale up.
+**Load Balancing**<br>LeanEngine's gateway will distribute requests among all instances evenly. Therefore, you can scale up at any time by simply adding more instances.
 
 **Failover**<br>Using 2 or more instances not only increases the computing power of your application but also enables failover. If one of these instances runs into errors, failover will be performed automatically so that further requests will be diverted to other instances.
 
@@ -21,16 +21,16 @@ You can purchase standard instances for projects that demand high availability. 
 If you have only one instance and the server containing that instance runs into an error, we will still migrate your instance to another server within several minutes. However, your application will not be able to process requests while the migration is in process. {{ docs.alertInline("If your application demands high availability, we recommend that you enable 2 or more instances for it.") }}
 {% endcall %}
 
-**Rolling Deployment**<br>When deploying your project (including other internal operations), the system will run both the instance of the new version and the instance of the old version simultaneously for a while, then it will shut down the ones of the old version. This mechanism can avoid service interruption.
+**Rolling Deployment**<br>When deploying your project or performing other internal operations, the system will run the instances of the new version and those of the old version simultaneously for a while, then it will shut down the ones of the old version. This mechanism prevents the services provided by your app from being interrupted.
 
-**Group Management**<br>You can create multiple groups of instances with different domains assigned to each of them. You can bind a separated custom domain to each group. See [Group Management](#group-management).
+**Group Management**<br>You can create multiple groups of instances with different domains assigned to each of them. You can also bind a separate custom domain to each group. See [Group Management](#group-management).
 
 ## Trial Instances
 
 Each application created on LeanCloud comes with a free trial instance with 0.5 CPU and 256 MB memory. You can use this instance for learning and testing purposes.
 
-For every groud with standard instances, LeanEngine also offers a trial instance in the staging environment for free.
-Therefore you can test your project before having it published.
+For every group with standard instances, LeanEngine also offers a trial instance in the staging environment for free.
+Therefore, you can test your project before having it published.
 
 A trial instance will stop responding to requests when deployment is in progress. It will also start [hibernating](#hibernating) if no request is made in the past 30 minutes (there will be a delay for processing requests when resuming), and can run at most 18 hours each day.
 
@@ -39,7 +39,7 @@ A trial instance will stop responding to requests when deployment is in progress
 Trial instances will **hibernate** under certain circumstances.
 
 - A trial instance will start hibernating if no request is made in the past 30 minutes.
-- A hibernating instance will resume when a request comes in. It may take 5 to 30 seconds (depending on the instance start up time) for the instance to get back running and have the request processed. The requests made after that will be responded immediately.
+- A hibernated instance will resume when a request comes in. It may take 5 to 30 seconds (depending on the instance start-up time) for the instance to get back running and have the request processed. The requests made after that will be responded immediately.
 - If a trial instance has run more than 18 hours in the past 24 hours, it will be forced to hibernate and incoming requests will receive `503` as the error code. You can view error logs in your app's [Dashboard > LeanEngine > Statistics](https://console.leancloud.app/cloud.html?appid={{appid}}#/stat).
 
 {% call docs.noteWrap() %}
@@ -57,10 +57,10 @@ Four kinds of standard instances are available, with different RAM resources:
 | standard-2048 | 2048 MB | 1 Core |
 | standard-4096 | 4096 MB | 1 Core |
 
-To avoid the resources of instances exhausted, it is recommended that:
+To avoid the resources of instances being exhausted, it is recommended that:
 
-- If daily **RAM** average usage exceeds **70%** of resources available (for example, 717 MB in a standard-1024 instance), upgrade to an instance with more RAM.
-- If daily **CPU** average usage exceeds **30%** of resources available (for example, 30% CPU in a standard-1024 instance), add more instances.
+- If daily average **RAM** usage exceeds **70%** of resources available (for example, 717 MB in a standard-1024 instance), upgrade to an instance with more RAM.
+- If daily average **CPU** usage exceeds **30%** of resources available (for example, 30% CPU in a standard-1024 instance), add more instances.
 
 See [Usage Data][#usage-data] to learn about how you can view the stress of your application.
 
@@ -70,7 +70,7 @@ You can have at most 12 instances for each application. Please contact us at sup
 
 Go to your app's [Dashboard > LeanEngine > Resources](https://console.leancloud.app/cloud.html?appid={{appid}}#/leannode) and click on the **Change** button in the **Instance quota** section, then choose the quota you want.
 
-If you are ugrading to standard mode from trial mode, you also need to choose the number of standard instances to purphase.
+If you are upgrading to the standard mode from the trial mode, you also need to choose the number of standard instances.
 
 ### Creating and Deleting Instances
 
@@ -79,15 +79,15 @@ Go to your app's [Dashboard > LeanEngine > Resources](https://console.leancloud.
 ### Downgrade to Trial Mode
 
 To downgrade to the trial mode, you need to change instance quota in all groups to **Trial mode**.
-Then all standard instances will be deleted, and there will be a free trial instance with 0.5 CPU and 256 MB memory in the last group.
+All standard instances will be deleted after that, and there will be a free trial instance with 0.5 CPU and 256 MB memory remaining in the last group.
 
-### Multiple Instances Running
+### Multi-Instance Mode
 
-Multiple instances running means there are more than one instances running per environment per group.
+Multi-instance mode means there are more than one instances running per environment per group.
 It includes two conditions:
 
-1. Persistent multiple instances running. You have purchased multiple instances for an environment of a group.
-2. Temporary multiple instances running for rolling deployment.
+1. Persistent multi-instance mode, which occurs when you have purchased multiple instances for an environment of a group.
+2. Temporary multi-instance mode, which occurs during rolling deployment.
 
 Each instance has its own RAM and file system.
 Therefore, data stored in the global variables or the file system of a single instance will not be accessible from other instances.
@@ -98,7 +98,7 @@ To share data among instances, you can use LeanCache.
 You can view the usage data of your application on your app's [Dashboard > LeanEngine > Statistics](https://console.leancloud.app/cloud.html?appid={{appid}}#/stat).
 
 - **CPU**<br>The graph shows the application's CPU usage within a period. If the CPU usage approaches the limit, the response time of the application may be increased.
-- **Memory**<br>The graph shows the application's memory usage within a period. If the memory usage approaches the limit, the thread of the application (like Node.js thread or Python thread) may be restarted due to OOM and the application will become unavailable in this period. If you see the line in the graph *frequently approaches the top and suddenly drops to the bottom*, it means that the thread has been restarted due to this reason.
+- **Memory**<br>The graph shows the application's memory usage within a period. If the memory usage approaches the limit, the thread of the application (like Node.js thread or Python thread) may be restarted due to OOM, and the application will become unavailable in this period. If you see the line in the graph *frequently approaches the top and suddenly drops to the bottom*, it means that the thread has been restarted due to this reason.
 - **Response time**<br>If the line approaches the top, it means that the CPU usage is approaching the limit.
 - **Details** <span class="text-muted">checkbox</span><br>The usage of each instance.
 
@@ -110,7 +110,7 @@ You can create multiple groups of instances with different domains assigned to e
 - Having edge systems separated from the main system so that the problems occurring on edge systems won't affect the main system.
 - Having cloud functions and the main website written in different languages. For example, you can write cloud functions in Node.js and the main website in PHP.
 
-Each application will have a primary group that handles cloud functions, hooks, and scheduled tasks. Other groups will be treated as secondary groups which **do not support defining cloud functions (including hooks and scheduled tasks) and can only offer web hosting with second-level domains or custom domains bound**. You can change the primary group at any time through the web console.
+Each application will have a primary group that handles cloud functions, hooks, and scheduled tasks. Other groups will be treated as secondary groups that **do not support defining cloud functions (including hooks and scheduled tasks) and can only offer web hosting with second-level domains or custom domains bound**. You can change the primary group at any time through the web console.
 
 Each group has its own staging environment and can be bound to different custom domains. Configurations like environment variables and Git repositories are also independent. You can deploy your project to a group without affecting the other ones. The methods introduced in [Managing Instances](#managing-instances) can be used to manage instances inside each group as well. If a group doesn't have any instances in it, it won't be able to handle requests. If a group has multiple instances, it will also gain the ability of load balancing and have its availability increased.
 
@@ -131,7 +131,7 @@ Trial instances are free.
 Standard instances will be billed daily.
 You can view the billing records of your account [here](bill.html#/bill/cost).
 
-The cost is calculated based on the **maximum usage**, and it will be deducted after midnight of each day.
+The cost is calculated based on the **maximum usage**, and it will be deducted after the midnight of each day.
 
 Suppose in one day (from 0:00 to 24:00):
 
