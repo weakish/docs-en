@@ -3967,6 +3967,16 @@ You can also create a file from an array of byte values:
 var data = [0x4c, 0x65, 0x61, 0x6e, 0x43, 0x6c, 0x6f, 0x75, 0x64];
 var file = new AV.File('resume.txt', data);
 ```
+
+What's more, you can also create a file from a Blob (in Browser), and Buffer or Stream (in Node.js).
+
+For React Native applications, you can create a file from a local path:
+
+```js
+var data = { blob: { uri: localFileUri } }
+var file = new AV.File('resume.txt', data)
+```
+
 {% endif %}
 {% if platform_name === "Python" %}
 You can create a file from a string:
