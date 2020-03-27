@@ -34,7 +34,7 @@ To initialize SDK without appKey, you need to use LeanCloud native library.
 Download [leancloud-jniLibs.zip] and extract it,
 then copy the `jniLibs` directory to `src/main`:
 
-[leancloud-jniLibs.zip]: http://lc-lhzo7z96.cn-n1.lcfile.com/84af049f980dd5e2d4c8/leancloud-jniLibs.zip 
+[leancloud-jniLibs.zip]: http://lc-lhzo7z96.cn-n1.lcfile.com/4facc18ba5c5a2ad0baf/leancloud-jniLibs-v2.zip
 
 ```
 src/
