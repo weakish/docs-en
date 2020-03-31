@@ -62,9 +62,10 @@ curl -X POST \
 | ttl               | Optional | verification code valid time in minutes (default value: `10`) |
 | name              | Optional | application name |
 | op                | Optional | operation name, e.g. payment |
-| template          | Optional | template name, see [Templates section](#Templates) below |
-| sign              | Optional | signature name, see [Templates section](#Templates) below |
+| template          | Optional | template name, see [Templates section](#templates) below |
+| sign              | Optional | signature name, see [Templates section](#templates) below |
 | validate_token    | Optional | see [CAPTCHA section](#CAPTCHA) below | 
+| other_variable    | Optional | [template variable](#templates), `other_variable` is just an example variable name |
 
 If succeed, an empty json object `{}` will be returned.
 
