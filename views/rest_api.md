@@ -1337,6 +1337,9 @@ curl -X GET \
   https://{{host}}/1.1/classes/Post
 ```
 
+The inverted selection applies to preserved attributes, e.g. `keys=-createdAt,-updatedAt,-objectId`, too.
+You can also use it with dot notation, e.g. `keys=-pubUser.createdAt,-pubUser.updatedAt`.
+
 The parameters mentioned above can be combined.
 
 ### Regex Queries
