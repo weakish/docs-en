@@ -93,7 +93,7 @@ The easiest way to integrate our SDK into your project is to use composer. Run t
 composer require leancloud/leancloud-sdk
 ```
 
-Keep in mind that `leancloud-sdk` depends on `curl` extension (you may need to install `php-curl` if you are using Linux).
+Keep in mind that `leancloud-sdk` depends on the `curl` extension (you may need to install `php-curl` if you are using Linux).
 {% endif %}
 {% if platform_name === "Java" %}
 You can add our SDK into your project with a package manager of your own choice.
@@ -242,15 +242,15 @@ var { Realtime, TextMessage } = require('leancloud-realtime');
 ```LeanMessage(RichMediaMessage)
 var AV = require('leancloud-storage');
 var { Realtime, TextMessage } = require('leancloud-realtime');
-// For a list of all members exposed by Rich Media Message Plugin, refer to its api doc: https://leancloud.github.io/js-realtime-sdk/plugins/typed-messages/docs/module-leancloud-realtime-plugin-typed-messages.html
+// For a list of all members exposed by Rich Media Message Plugin, refer to its API doc: https://leancloud.github.io/js-realtime-sdk/plugins/typed-messages/docs/module-leancloud-realtime-plugin-typed-messages.html
 var { TypedMessagesPlugin, ImageMessage } = require('leancloud-realtime-plugin-typed-messages');
 ```
 
 {{ docs.langSpecStart('LeanMessage LeanMessage(RichMediaMessage)') }}
 To avoid compatibility issues, the JavaScript SDK has been distributing ES5 code with all the polyfills (e.g. Promise) bundled.
 Since v5.0.0-rc.2, the JavaScript LeanMessage SDK also offers a version targeted to the latest version of ECMAScript, which has a smaller size and better runtime optimization for use in scenarios that only need compatibility with latest browsers.
-If your application uses `@babel/preset-env` or something similar, you can also use the latest ECMAScript version of LeanCloud SDK, and let babel or other tools to compile to the specific ECMAScript version you needed.
-Since the latest version of ECMAScript changes every year, and the goal of this version is to provide code that is aligned with the latest standards, so introducing new features from newer version of ECMASCript will not be considered as a breaking change.
+If your application uses `@babel/preset-env` or something similar, you can also use the latest ECMAScript version of LeanCloud SDK, and let Babel or other tools to compile your code to the specific ECMAScript version you need.
+Since the latest version of ECMAScript changes every year, and the goal of that version is to provide code that is aligned with the latest standards, introducing new features from newer versions of ECMAScript will not be considered as a breaking change.
 The current version of ECMAScript is 2020.
 
 If you want to try out this version:
@@ -317,7 +317,7 @@ You can use npm to install and reference our SDK for Node.js as well. See [npm](
 ### React Native
 
 You can use npm to install and reference our SDK for React Native.
-React Native support is provided by a seperated adapter library (`@leancloud/platform-adapters-react-native`).
+React Native support is provided by a separate adapter library (`@leancloud/platform-adapters-react-native`).
 
 Installing:
 
@@ -409,7 +409,7 @@ The way of using `script` to import the SDK works in most scenarios. However, if
 
 The JavaScript SDK provides platform-independent versions to support other platforms.
 All platform-related APIs are abstracted into configurable adapters, which need to be configured for the target platform after introducing the SDK core.
-Assuming there is an adapters package (`platform-adapters-xyz`) for a platform (xyz) on npm, you can configure the JavaScript SDK as follows:
+Assuming there is an adapter package (`platform-adapters-xyz`) for a platform (xyz) on npm, you can configure the JavaScript SDK as follows:
 
 ```LeanStorage
 const AV = require('leancloud-storage/core');
@@ -435,7 +435,7 @@ AV.setAdapters(adapters);
 setAdapters(adapters);
 ```
 
-Precompiled UMD files are also available, in case you can not or do not want to use npm:
+Precompiled UMD files are also available, in case you cannot or do not want to use npm:
 
 ```LeanStorage
 https://cdn.jsdelivr.net/npm/leancloud-storage@{{jssdkversion}}/dist/av-core-min.js
@@ -450,7 +450,7 @@ https://cdn.jsdelivr.net/npm/leancloud-realtime@{{jsimsdkversion}}/dist/im.min.j
 not supported
 ```
 
-You can implement own adapter for the target platform.
+You can implement your own adapter for a target platform.
 Interface definitions for adapters can be found in the [@leancloud/adapter-types] package.
 You can also search for adapters contributed by other developers with the keyword [platform-adapters].
 
@@ -852,7 +852,7 @@ do {
 }
 ```
 
-Hit `Run` to start debugging. This can be done in either host machine or virtual machine.
+Hit `Run` to start debugging. This can be done in either a host machine or virtual machine.
 {% endif %}
 {% if platform_name === "JavaScript" %}
 Then add the following code into your project:
