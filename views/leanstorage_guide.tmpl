@@ -2381,8 +2381,8 @@ _ = query.getFirst { result in
 {% endif %}
 
 You can add a minus prefix to the attribute name for inverted selection.
-For example, if you do not care about the post author, `-author`.
-The inverted selection also applies to preserved attributes, and can be used with dot notation, e.g. `-pubUser.createdAt`.
+For example, if you do not care about the post author, use `-author`.
+The inverted selection also applies to preserved attributes, and can be used with dot notations, e.g. `-pubUser.createdAt`.
 
 {% if platform_name === "Objective-C" or platform_name === "JavaScript" or platform_name === "Python" or platform_name === "Java" or platform_name === "Swift" %}
 The unselected fields can be fetched later with `{% if platform_name === "Objective-C" %}fetchInBackgroundWithBlock{% endif %}{% if platform_name === "JavaScript" %}fetch{% endif %}{% if platform_name === "Python" %}fetch{% endif %}{% if platform_name === "Java" %}fetchInBackground{% endif %}{% if platform_name === "Swift" %}fetch{% endif %}`. See [Refreshing Objects](#refreshing-objects).
