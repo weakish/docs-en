@@ -41,11 +41,6 @@ See [LeanMessage Overview](realtime_v2.html#clientId,-user,-and-log-in) for more
 Assuming that there is a user named "Tom". Now let's create an `IMClient` instance for him:
 
 ```js
-var realtime = new Realtime({
-  appId: 'your-app-id',
-  appKey: 'your-app-key',
-  plugins: [TypedMessagesPlugin], // Register plugins for rich media messages
-});
 // Tom logs in with his name as clientId
 realtime.createIMClient('Tom').then(function(tom) {
   // Successfully logged in
@@ -1447,8 +1442,8 @@ Notes:
 The diagram above may look complicated, but the code itself is quite simple since the image gets automatically uploaded when being sent with `send` method:
 
 ```js
-var AV = require('leancloud-storage');
-var { ImageMessage } = require('leancloud-realtime-plugin-typed-messages');
+// ImageMessage and other rich media messages depends on LeanStorage service.
+// Refer to SDK setup guide for details on how to import and initialize SDKs.
 
 var fileUploadControl = $('#photoFileUpload')[0];
 var file = new AV.File('avatar.jpg', fileUploadControl.files[0]);
