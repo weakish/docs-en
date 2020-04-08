@@ -121,8 +121,6 @@ Then go to [Dashboard > Messaging > SMS > Settings > SMS settings](https://conso
 - Enabled: The app is able to incorporate features related to SMS, including verification when there are users performing sensitive operations, logging in at unusual locations, making payments, etc.
 - Disabled: Requests for sending and verifying verification codes will be rejected. Note that this won't affect verification for user accounts.
 
-{{ include.checkbox(true) }}**Allow international numbers**
-
 ### Setting up Default Signatures
 
 A signature helps your users identify the sender of the messages they received. Before you start sending your first message, you need to go to your app's [Dashboard > Messaging > SMS > Settings](https://console.leancloud.app/messaging.html?appid={{appid}}#/message/sms/conf) and set up a default signature (the first signature you created automatically becomes the default one):
