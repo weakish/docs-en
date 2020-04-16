@@ -40,10 +40,10 @@ todo.set('title',   'R&D Weekly Meeting');
 todo.set('content', 'All team members, Tue 2pm');
 
 // Save the object to the cloud
-todo.save().then(function (todo) {
+todo.save().then((todo) => {
   // Execute any logic that should take place after the object is saved
   console.log('Object saved. objectId: ' + todo.id);
-}, function (error) {
+}, (error) => {
   // Execute any logic that should take place if the save fails
 });
 ```
@@ -451,10 +451,10 @@ todo.set('title', 'Sign up for Marathon');
 todo.set('priority', 2);
 
 // Save the object to the cloud
-todo.save().then(function (todo) {
+todo.save().then((todo) => {
   // Execute any logic that should take place after the object is saved
   console.log('Object saved. objectId: ' + todo.id);
-}, function (error) {
+}, (error) => {
   // Execute any logic that should take place if the save fails
 });
 ```
@@ -599,7 +599,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% if platform_name === "JavaScript" %}
 ```js
 const query = new AV.Query('Todo');
-query.get('582570f38ac247004f39c24b').then(function (todo) {
+query.get('582570f38ac247004f39c24b').then((todo) => {
   // todo is the instance of the Todo object with objectId 582570f38ac247004f39c24b
   const title     = todo.get('title');
   const priority  = todo.get('priority');
@@ -690,7 +690,7 @@ Sometimes you may want to get all the fields back at one time without calling `g
 
 ```js
 const query = new AV.Query('Todo');
-query.get('582570f38ac247004f39c24b').then(function (todo) {
+query.get('582570f38ac247004f39c24b').then((todo) => {
   console.log(todo.toJSON());
   // {
   //   createdAt: "2017-03-08T11:25:07.804Z",
@@ -720,7 +720,7 @@ AVObject *todo = [AVObject objectWithClassName:@"Todo" objectId:@"582570f38ac247
 {% if platform_name === "JavaScript" %}
 ```js
 const todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
-todo.fetch().then(function (todo) {
+todo.fetch().then((todo) => {
   // todo is refreshed
 });
 ```
@@ -778,7 +778,7 @@ NSArray *keys = [NSArray arrayWithObjects:@"priority", @"location", nil];
 const todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
 todo.fetch({
   keys: 'priority, location'
-}).then(function (todo) {
+}).then((todo) => {
   // Only priority and location will be retrieved and refreshed
 });
 ```
@@ -913,9 +913,9 @@ account.save(null, {
   // All the fields will be returned if the object is new,
   // otherwise only fields with changes will be returned.
   fetchWhenSave: true
-}).then(function (account) {
+}).then((account) => {
   console.log('Balance: ', account.get('balance'));
-}, function (error) {
+}, (error) => {
   if (error.code === 305) {
     console.error('Insufficient balance. Operation failed!');
   }
@@ -1380,9 +1380,9 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% if platform_name === "JavaScript" %}
 ```js
 const query = new AV.Query('Todo');
-query.find().then(function (todos) {
+query.find().then((todos) => {
   // Get a collection of todos to work on
-  todos.forEach(function (todo) {
+  todos.forEach((todo) => {
     // Update value
     todo.set('isComplete', true);
   });
@@ -1693,7 +1693,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Student"];
 ```js
 const query = new AV.Query('Student');
 query.equalTo('lastName', 'Smith');
-query.find().then(function (students) {
+query.find().then((students) => {
   // students is an array of Student objects satisfying conditions
 });
 ```
@@ -1970,7 +1970,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```js
 const query = new AV.Query('Todo');
 query.equalTo('priority', 2);
-query.first().then(function (todo) {
+query.first().then((todo) => {
   // todo is the first Todo object satisfying conditions
 });
 ```
@@ -2293,7 +2293,7 @@ const countryQuery = new AV.Query('Country');
 countryQuery.equalTo('language', 'English');
 // Match Student's nationality with Country's name
 studentQuery.matchesKeyInQuery('nationality', 'name', countryQuery);
-studentQuery.find().then(function (students) {
+studentQuery.find().then((students) => {
   // students contains John Doe and Tom Sawyer
 });
 ```
@@ -2316,7 +2316,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```js
 const query = new AV.Query('Todo');
 query.select(['title', 'content']);
-query.first().then(function (todo) {
+query.first().then((todo) => {
   const title = todo.get('title'); // √
   const content = todo.get('content'); // √
   const notes = todo.get('notes'); // undefined
@@ -2797,7 +2797,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 const post = AV.Object.createWithoutData('Post', '57328ca079bc44005c2472d0');
 const query = new AV.Query('Comment');
 query.equalTo('post', post);
-query.find().then(function (comments) {
+query.find().then((comments) => {
   // comments contains the comments for the post
 });
 ```
@@ -2947,9 +2947,9 @@ query.limit(10);
 // Include the related post together with each comment
 query.include('post');
 
-query.find().then(function (comments) {
+query.find().then((comments) => {
   // comments contains the last 10 comments including the post associated with each
-  comments.forEach(function (comment) {
+  comments.forEach((comment) => {
     // This does not require a network access
     const post = comment.get('post');
   });
@@ -3149,7 +3149,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```js
 const query = new AV.Query('Todo');
 query.equalTo('isComplete', true);
-query.count().then(function (count) {
+query.count().then((count) => {
   console.log(count + " todos completed.");
 });
 ```
@@ -3580,7 +3580,7 @@ self.liveQuery.delegate = self;
 {% if platform_name === "JavaScript" %}
 ```js
 const query = new AV.Query('Todo');
-query.subscribe().then(function (liveQuery) {
+query.subscribe().then((liveQuery) => {
   // Query becomes live after getting a subscription
 });
 ```
@@ -3624,8 +3624,8 @@ self.liveQuery.delegate = self;
 {% if platform_name === "JavaScript" %}
 ```js
 const query = new AV.Query('Todo');
-query.subscribe().then(function (liveQuery) {
-  liveQuery.on('create', function (newTodo) {
+query.subscribe().then((liveQuery) => {
+  liveQuery.on('create', (newTodo) => {
     console.log(newTodo.get('title')); // Update Portfolio
   });
 });
@@ -3663,7 +3663,7 @@ If someone updates this `Todo` by changing its `content` to `Add my recent paint
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-liveQuery.on('update', function (updatedTodo, updatedKeys) {
+liveQuery.on('update', (updatedTodo, updatedKeys) => {
   console.log(updatedTodo.get('content')); // Add my recent paintings
 });
 ```
@@ -3705,7 +3705,7 @@ A `create` event will be triggered when a new `{{ baseObjectName }}` is created 
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-liveQuery.on('create', function (object) {
+liveQuery.on('create', (object) => {
   console.log('Object created.');
 });
 ```
@@ -3736,7 +3736,7 @@ An `update` event will be triggered when an existing `{{ baseObjectName }}` fulf
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-liveQuery.on('update', function (object, updatedKeys) {
+liveQuery.on('update', (object, updatedKeys) => {
   console.log('Object updated.');
 });
 ```
@@ -3767,7 +3767,7 @@ An `enter` event will be triggered when an existing `{{ baseObjectName }}`'s old
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-liveQuery.on('enter', function (object, updatedKeys) {
+liveQuery.on('enter', (object, updatedKeys) => {
   console.log('Object entered.');
 });
 ```
@@ -3802,7 +3802,7 @@ A `leave` event will be triggered when an existing `{{ baseObjectName }}`'s old 
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-liveQuery.on('leave', function (object, updatedKeys) {
+liveQuery.on('leave', (object, updatedKeys) => {
   console.log('Object left.');
 });
 ```
@@ -3833,7 +3833,7 @@ A `delete` event will be triggered when an existing `{{ baseObjectName }}` fulfi
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-liveQuery.on('delete', function (object) {
+liveQuery.on('delete', (object) => {
   console.log('Object deleted.');
 });
 ```
@@ -3864,7 +3864,7 @@ A `login` event will be triggered when a user successfully logs in to your app. 
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-liveQuery.on('login', function (user) {
+liveQuery.on('login', (user) => {
   console.log('User logged in.');
 });
 ```
@@ -3897,7 +3897,7 @@ You can cancel a subscription to stop receiving events regarding `{{ baseQueryCl
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-liveQuery.unsubscribe().then(function () {
+liveQuery.unsubscribe().then(() => {
   // Successfully unsubscribed
 });
 ```
@@ -4180,9 +4180,9 @@ By saving a file, you store it into the cloud and get a permanent URL pointing t
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-file.save().then(function (file) {
+file.save().then((file) => {
   console.log('File uploaded. objectId: ' + file.id);
-}, function (error) {
+}, (error) => {
   // The file either could not be read or could not be saved to LeanCloud
 });
 ```
@@ -4237,9 +4237,9 @@ To preserve original file name in the resulting url, pass the `keepFileName` par
 ```js
 const data = [0x4c, 0x65, 0x61, 0x6e, 0x43, 0x6c, 0x6f, 0x75, 0x64];
 const file = new AV.File('resume.txt', data);
-file.save({ keepFileName: true }).then(function (file) {
+file.save({ keepFileName: true }).then((file) => {
   console.log(file.url); // https://your-file-domain/5112b94e0536e995741c/resume.txt
-}, function (error) {
+}, (error) => {
   console.error(error);
 });
 ```
@@ -4336,11 +4336,11 @@ query.exists('attachments');
 // Include attachments with each todo
 query.include('attachments');
 
-query.find().then(function (todos) {
-  todos.forEach(function (todo) {
+query.find().then((todos) => {
+  todos.forEach((todo) => {
     // Get attachments array for each todo
     const attachments = todo.get('attachments');
-    attachments.forEach(function (attachment) {
+    attachments.forEach((attachment) => {
       // Each attachment is an AV.File instance
       console.log('URL of the attachment: ', attachment.get('url'));
     });
@@ -4390,7 +4390,7 @@ You can monitor the progress of uploading and display that to the user:
 {% if platform_name === "JavaScript" %}
 ```js
 file.save({
-  onprogress: function (progress) {
+  onprogress: (progress) => {
     console.log(progress);
     // {
     //   loaded:  1024,
@@ -4398,7 +4398,7 @@ file.save({
     //   percent: 50
     // }
   }
-}).then(function (file) {
+}).then((file) => {
   // Things to do after saving
 });
 ```
@@ -4453,7 +4453,7 @@ When uploading a file, you can attach additional properties to it with `metaData
 ```js
 // Set metadata
 file.metaData('author', 'LeanCloud');
-file.save().then(function (file) {
+file.save().then((file) => {
   // Get all metadata
   const metadata = file.metaData();
   // Get author
@@ -4639,16 +4639,16 @@ Each asynchronous method in LeanCloud JavaScript SDK returns a `Promise` which c
 const query = new AV.Query('Todo');
 query.equalTo('priority', 1);
 // find is asynchronous which gives back a Promise that then can be called on
-query.find().then(function (todos) {
+query.find().then((todos) => {
   // Returns a list of objects
   const todo = todos[0];
   todo.set('notes', 'Needs to be finished today.');
   // save is also asynchronous which gives back a Promise that you can return here and chain another Promise afterwards
   return todo.save();
-}).then(function () {
+}).then(() => {
   // The Promise returned by save method
   console.log('Successfully updated todo.');
-}).catch(function (error) {
+}).catch((error) => {
   // Put catch at the very end of Promise chain which catches all the errors
   console.error(error);
 });
@@ -4659,9 +4659,9 @@ query.find().then(function (todos) {
 Each `Promise` has a method called `then` which takes in two callbacks. The first callback is called when the `Promise` is `resolved` (runs successfully) while the second one is called when it is `rejected` (gets error):
 
 ```js
-todo.save().then(function (todo) {
+todo.save().then((todo) => {
   console.log('Successfully updated todo.');
-}, function (error) {
+}, (error) => {
   console.error(error);
 });
 ```
@@ -4671,9 +4671,9 @@ The second callback is optional.
 You may also implement your logic with `catch`:
 
 ```js
-todo.save().then(function (todo) {
+todo.save().then((todo) => {
   console.log('Successfully updated todo.');
-}).catch(function (error) {
+}).catch((error) => {
   console.error(error);
 });
 ```
@@ -4690,15 +4690,15 @@ const chapterIds = [
   '581aff915bbb500059ca8d0b'  // Chapter Three
 ];
 
-new AV.Query('Chapter').get(chapterIds[0]).then(function (chapterOne) {
+new AV.Query('Chapter').get(chapterIds[0]).then((chapterOne) => {
   // Add contents to the page
   addHtmlToPage(chapterOne.get('content'));
   // Return the new Promise
   return new AV.Query('Chapter').get(chapterIds[1]);
-}).then(function (chapterTwo) {
+}).then((chapterTwo) => {
   addHtmlToPage(chapterTwo.get('content'));
   return new AV.Query('Chapter').get(chapterIds[2]);
-}).then(function (chapterThree) {
+}).then((chapterThree) => {
   addHtmlToPage(chapterThree.get('content'));
   // Done
 });
@@ -4713,19 +4713,19 @@ It is a common practice to attach an error handling function at the end of a `Pr
 The code above can be rewritten with `catch` in the following way:
 
 ```js
-new AV.Query('Chapter').get(chapterIds[0]).then(function (chapterOne) {
+new AV.Query('Chapter').get(chapterIds[0]).then((chapterOne) => {
   addHtmlToPage(chapterOne.get('content'));
   // Force an error
   throw new Error('Error');
   return new AV.Query('Chapter').get(chapterIds[1]);
-}).then(function (chapterTwo) {
+}).then((chapterTwo) => {
   // The code here will be ignored
   addHtmlToPage(chapterTwo.get('content'));
   return new AV.Query('Chapter').get(chapterIds[2]);
-}).then(function (chapterThree) {
+}).then((chapterThree) => {
   // The code here will be ignored
   addHtmlToPage(chapterThree.get('content'));
-}).catch(function (error) {
+}).catch((error) => {
   // This error handling function will be called, printing out the error message 'Error'
   console.error(error.message);
 });
@@ -4854,7 +4854,7 @@ query.near('location', point);
 
 // Limit to 10 results
 query.limit(10);
-query.find().then(function (todos) {
+query.find().then((todos) => {
   // todos is an array of Todo objects satisfying conditions
 });
 ```
@@ -5054,10 +5054,10 @@ user.setMobilePhoneNumber('+19490008888');
 // Other fields can be set in the same way as AV.Object
 user.set('gender', 'secret');
 
-user.signUp().then(function (user) {
+user.signUp().then((user) => {
   // Sign-up completed
   console.log('User created. objectId: ' + user.id);
-}, function (error) {
+}, (error) => {
   // Sign-up failed (often because the username is already taken)
 });
 ```
@@ -5234,10 +5234,10 @@ After the verification code is entered by the user, call the following method to
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-AV.User.signUpOrlogInWithMobilePhone('+19490008888', '123456').then(function (user) {
+AV.User.signUpOrlogInWithMobilePhone('+19490008888', '123456').then((user) => {
   // Sign-up completed
   console.log('User created. objectId: ' + user.id);
-}, function (error) {
+}, (error) => {
   // Verification code is incorrect
 });
 ```
@@ -5307,9 +5307,9 @@ The code below logs a user in with username and password:
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-AV.User.logIn('Tom', 'cat!@#123').then(function (user) {
+AV.User.logIn('Tom', 'cat!@#123').then((user) => {
   // Logged in successfully
-}, function (error) {
+}, (error) => {
   // Failed to log in (the password may be incorrect)
 });
 ```
@@ -5369,9 +5369,9 @@ The code below logs a user in with email and password:
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-AV.User.loginWithEmail('tom@leancloud.rocks', 'cat!@#123').then(function (user) {
+AV.User.loginWithEmail('tom@leancloud.rocks', 'cat!@#123').then((user) => {
   // Logged in successfully
-}, function (error) {
+}, (error) => {
   // Failed to log in (the password may be incorrect)
 });
 ```
@@ -5431,9 +5431,9 @@ If you are allowing users to sign up with their phone numbers, you can also let 
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-AV.User.logInWithMobilePhone('+19490008888', 'cat!@#123').then(function (user) {
+AV.User.logInWithMobilePhone('+19490008888', 'cat!@#123').then((user) => {
   // Logged in successfully
-}, function (error) {
+}, (error) => {
   // Failed to log in (the password may be incorrect)
 });
 ```
@@ -5534,9 +5534,9 @@ After the verification code is entered by the user, call the following method to
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-AV.User.logInWithMobilePhoneSmsCode('+19490008888', '123456').then(function (user) {
+AV.User.logInWithMobilePhoneSmsCode('+19490008888', '123456').then((user) => {
   // Logged in successfully
-}, function (error) {
+}, (error) => {
   // Verification code is incorrect
 });
 ```
@@ -5707,9 +5707,9 @@ After the verification code is entered by the user, call the following method an
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-AV.User.verifyMobilePhone('123456').then(function () {
+AV.User.verifyMobilePhone('123456').then(() => {
   // mobilePhoneVerified is set to true
-}, function (error) {
+}, (error) => {
   // Verification code is incorrect
 });
 ```
@@ -5897,9 +5897,9 @@ The code below logs a user in with session token (the session token will be vali
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-AV.User.become('anmlwi96s381m6ca7o7266pzf').then(function (user) {
+AV.User.become('anmlwi96s381m6ca7o7266pzf').then((user) => {
   // Logged in successfully
-}, function (error) {
+}, (error) => {
   // Session token is invalid
 });
 ```
@@ -5969,7 +5969,7 @@ NSString *token = currentUser.sessionToken;
 {% if platform_name === "JavaScript" %}
 ```js
 const currentUser = AV.User.current();
-currentUser.isAuthenticated().then(function (authenticated) {
+currentUser.isAuthenticated().then((authenticated) => {
   if (authenticated) {
     // The session token is valid
   } else {
@@ -6139,9 +6139,9 @@ The code below resets the password of a user after they enter the verification c
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-AV.User.resetPasswordBySmsCode('123456', 'cat!@#123').then(function () {
+AV.User.resetPasswordBySmsCode('123456', 'cat!@#123').then(() => {
   // Password is updated
-}, function (error) {
+}, (error) => {
   // Verification code is incorrect
 });
 ```
@@ -6253,11 +6253,11 @@ const book = new Book();
 const author = AV.User.current();
 book.set('title', 'My Fifth Book');
 book.set('author', author);
-book.save().then(function (book) {
+book.save().then((book) => {
   // Find all the books by the same author
   const query = new AV.Query('Book');
   query.equalTo('author', author);
-  query.find().then(function (books) {
+  query.find().then((books) => {
     // books is an array of Book objects by the same author
   });
 });
@@ -6391,20 +6391,20 @@ The code below illustrates this security policy:
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-const user = AV.User.logIn('Tom', 'cat!@#123').then(function (user) {
+const user = AV.User.logIn('Tom', 'cat!@#123').then((user) => {
   // Attempt to change username
   user.set('username', 'Jerry');
   // Password is hashed and an empty string will be returned
   const password = user.get('password');
   // Save changes
-  user.save().then(function (user) {
+  user.save().then((user) => {
     // This will work since the user is authenticated
 
     // Get the user with a non-authenticated method
     const query = new AV.Query('_User');
-    query.get(user.objectId).then(function (unauthenticatedUser) {
+    query.get(user.objectId).then((unauthenticatedUser) => {
       unauthenticatedUser.set('username', 'Toodle');
-      unauthenticatedUser.save().then(function (unauthenticatedUser) { }, function (error) {
+      unauthenticatedUser.save().then((unauthenticatedUser) => { }, (error) => {
         // This will cause error since the user is unauthenticated
       });
     });
@@ -6546,9 +6546,9 @@ const authData = {
   // Optional
   extra_key: 'content'
 };
-AV.User.loginWithAuthData(authData, 'github').then(function (user) {
+AV.User.loginWithAuthData(authData, 'github').then((user) => {
   // Logged in successfully
-}, function (error) {
+}, (error) => {
   // Failed to log in
 });
 ```
@@ -6661,9 +6661,9 @@ You can unlink a service by setting the `authData` for the service to `null`. Th
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-AV.User.loginWithAuthData(null, 'github').then(function (s) {
+AV.User.loginWithAuthData(null, 'github').then((s) => {
   // Unlinked successfully
-}, function (error) {
+}, (error) => {
   // Failed to unlink
 });
 ```
@@ -6695,7 +6695,7 @@ With the support of anonymous users, you can have your users try the application
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-AV.User.loginAnonymously().then(function (user) {
+AV.User.loginAnonymously().then((user) => {
   // user is the new anonymous user
 });
 ```
@@ -6745,9 +6745,9 @@ const currentUser = AV.User.current();
 user.setUsername('Tom');
 user.setPassword('cat!@#123');
 
-user.signUp().then(function (user) {
+user.signUp().then((user) => {
   // currentUser has become a normal user
-}, function (error) {
+}, (error) => {
   // Sign-up failed (often because the username is already taken)
 });
 ```
