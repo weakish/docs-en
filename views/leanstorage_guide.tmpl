@@ -42,7 +42,7 @@ todo.set('content', 'All team members, Tue 2pm');
 // Save the object to the cloud
 todo.save().then((todo) => {
   // Execute any logic that should take place after the object is saved
-  console.log('Object saved. objectId: ' + todo.id);
+  console.log(`Object saved. objectId: ${todo.id}`);
 }, (error) => {
   // Execute any logic that should take place if the save fails
 });
@@ -220,7 +220,7 @@ const TestObject = AV.Object.extend('TestObject');
 
 // Basic objects
 const number = 2018;
-const string = number + ' Top Hit Songs';
+const string = `${number} Top Hit Songs`;
 const date   = new Date();
 const array  = [string, number];
 const object = {
@@ -453,7 +453,7 @@ todo.set('priority', 2);
 // Save the object to the cloud
 todo.save().then((todo) => {
   // Execute any logic that should take place after the object is saved
-  console.log('Object saved. objectId: ' + todo.id);
+  console.log(`Object saved. objectId: ${todo.id}`);
 }, (error) => {
   // Execute any logic that should take place if the save fails
 });
@@ -914,7 +914,7 @@ account.save(null, {
   // otherwise only fields with changes will be returned.
   fetchWhenSave: true
 }).then((account) => {
-  console.log('Balance: ', account.get('balance'));
+  console.log(`Balance: ${account.get('balance')}`);
 }, (error) => {
   if (error.code === 305) {
     console.error('Insufficient balance. Operation failed!');
@@ -3150,7 +3150,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 const query = new AV.Query('Todo');
 query.equalTo('isComplete', true);
 query.count().then((count) => {
-  console.log(count + " todos completed.");
+  console.log(`${count} todos completed.`);
 });
 ```
 {% endif %}
@@ -4181,7 +4181,7 @@ By saving a file, you store it into the cloud and get a permanent URL pointing t
 {% if platform_name === "JavaScript" %}
 ```js
 file.save().then((file) => {
-  console.log('File uploaded. objectId: ' + file.id);
+  console.log(`File uploaded. objectId: ${file.id}`);
 }, (error) => {
   // The file either could not be read or could not be saved to LeanCloud
 });
@@ -4342,7 +4342,7 @@ query.find().then((todos) => {
     const attachments = todo.get('attachments');
     attachments.forEach((attachment) => {
       // Each attachment is an AV.File instance
-      console.log('URL of the attachment: ', attachment.get('url'));
+      console.log(`URL of the attachment: ${attachment.get('url')}`);
     });
   });
 });
@@ -5056,7 +5056,7 @@ user.set('gender', 'secret');
 
 user.signUp().then((user) => {
   // Sign-up completed
-  console.log('User created. objectId: ' + user.id);
+  console.log(`User created. objectId: ${user.id}`);
 }, (error) => {
   // Sign-up failed (often because the username is already taken)
 });
@@ -5236,7 +5236,7 @@ After the verification code is entered by the user, call the following method to
 ```js
 AV.User.signUpOrlogInWithMobilePhone('+19490008888', '123456').then((user) => {
   // Sign-up completed
-  console.log('User created. objectId: ' + user.id);
+  console.log(`User created. objectId: ${user.id}`);
 }, (error) => {
   // Verification code is incorrect
 });
