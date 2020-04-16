@@ -30,10 +30,10 @@ AVObject *todo = [AVObject objectWithClassName:@"Todo"];
 {% if platform_name === "JavaScript" %}
 ```js
 // Declare a class
-var Todo = AV.Object.extend('Todo');
+const Todo = AV.Object.extend('Todo');
 
 // Create an object
-var todo = new Todo();
+const todo = new Todo();
 
 // Set values of fields
 todo.set('title',   'R&D Weekly Meeting');
@@ -216,23 +216,23 @@ AVObject *testObject = [AVObject objectWithClassName:@"TestObject"];
 {% if platform_name === "JavaScript" %}
 ```js
 // Declare a class
-var TestObject = AV.Object.extend('TestObject');
+const TestObject = AV.Object.extend('TestObject');
 
 // Basic objects
-var number = 2018;
-var string = number + ' Top Hit Songs';
-var date   = new Date();
-var array  = [string, number];
-var object = {
+const number = 2018;
+const string = number + ' Top Hit Songs';
+const date   = new Date();
+const array  = [string, number];
+const object = {
   number: number,
   string: string
 };
 
 // An AV.Object with another class
-var pointer = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
+const pointer = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
 
 // Create an object
-var testObject = new TestObject();
+const testObject = new TestObject();
 testObject.set('testNumber',  number);
 testObject.set('testString',  string);
 testObject.set('testDate',    date);
@@ -356,13 +356,13 @@ AVObject *todo = [[AVObject alloc] initWithClassName:@"Todo"];
 {% if platform_name === "JavaScript" %}
 ```js
 // Create a new subclass of AV.Object
-var Todo = AV.Object.extend('Todo');
+const Todo = AV.Object.extend('Todo');
 
 // Create a new instance of that class
-var todo = new Todo();
+const todo = new Todo();
 
 // You can also use the AV.Object constructor directly
-var todo = new AV.Object('Todo');
+const todo = new AV.Object('Todo');
 ```
 {% endif %}
 {% if platform_name === "Python" %}
@@ -441,10 +441,10 @@ AVObject *todo = [AVObject objectWithClassName:@"Todo"];
 {% if platform_name === "JavaScript" %}
 ```js
 // Declare a class
-var Todo = AV.Object.extend('Todo');
+const Todo = AV.Object.extend('Todo');
 
 // Create an object
-var todo = new Todo();
+const todo = new Todo();
 
 // Set values of fields
 todo.set('title', 'Sign up for Marathon');
@@ -598,16 +598,16 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 query.get('582570f38ac247004f39c24b').then(function (todo) {
   // todo is the instance of the Todo object with objectId 582570f38ac247004f39c24b
-  var title     = todo.get('title');
-  var priority  = todo.get('priority');
+  const title     = todo.get('title');
+  const priority  = todo.get('priority');
 
   // Acquire special properties
-  var objectId  = todo.id;
-  var updatedAt = todo.updatedAt;
-  var createdAt = todo.createdAt;
+  const objectId  = todo.id;
+  const updatedAt = todo.updatedAt;
+  const createdAt = todo.createdAt;
 });
 ```
 {% endif %}
@@ -689,7 +689,7 @@ If you try to access a field or property that doesn't exist, the SDK will not ra
 Sometimes you may want to get all the fields back at one time without calling `get` on each field of the object. This could be helpful when you implement data binding. To do so, call `toJSON` on `AV.Object`:
 
 ```js
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 query.get('582570f38ac247004f39c24b').then(function (todo) {
   console.log(todo.toJSON());
   // {
@@ -719,7 +719,7 @@ AVObject *todo = [AVObject objectWithClassName:@"Todo" objectId:@"582570f38ac247
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
+const todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
 todo.fetch().then(function (todo) {
   // todo is refreshed
 });
@@ -775,7 +775,7 @@ NSArray *keys = [NSArray arrayWithObjects:@"priority", @"location", nil];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
+const todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
 todo.fetch({
   keys: 'priority, location'
 }).then(function (todo) {
@@ -815,7 +815,7 @@ AVObject *todo = [AVObject objectWithClassName:@"Todo" objectId:@"582570f38ac247
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
+const todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
 todo.set('content', 'Weekly meeting has been rescheduled to Wed 3pm for this week.');
 todo.save();
 ```
@@ -902,9 +902,9 @@ option.fetchWhenSave = YES;
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var account = AV.Object.createWithoutData('Account', '5745557f71cfe40068c6abe0');
+const account = AV.Object.createWithoutData('Account', '5745557f71cfe40068c6abe0');
 // Atomically decrease balance by 100
-var amount = -100;
+const amount = -100;
 account.increment('balance', amount);
 account.save(null, {
   // Add the condition
@@ -1079,13 +1079,13 @@ AVObject *todo = [AVObject objectWithClassName:@"Todo"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var alarm1 = new Date('2018-04-30T07:10:00');
-var alarm2 = new Date('2018-04-30T07:20:00');
-var alarm3 = new Date('2018-04-30T07:30:00');
+const alarm1 = new Date('2018-04-30T07:10:00');
+const alarm2 = new Date('2018-04-30T07:20:00');
+const alarm3 = new Date('2018-04-30T07:30:00');
 
-var alarms = [alarm1, alarm2, alarm3];
+const alarms = [alarm1, alarm2, alarm3];
 
-var todo = new AV.Object('Todo');
+const todo = new AV.Object('Todo');
 todo.addUnique('alarms', alarms);
 todo.save();
 ```
@@ -1194,7 +1194,7 @@ AVObject *todo = [AVObject objectWithClassName:@"Todo" objectId:@"582570f38ac247
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
+const todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
 todo.destroy();
 ```
 {% endif %}
@@ -1235,7 +1235,7 @@ _ = todo.delete { result in
 You can delete a given field of an object with the `unset` method:
 
 ```js
-var todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
+const todo = AV.Object.createWithoutData('Todo', '582570f38ac247004f39c24b');
 
 // The priority field will be removed
 todo.unset('priority');
@@ -1276,7 +1276,7 @@ You can create, save, delete, or fetch multiple objects within a single request:
 {% if platform_name === "JavaScript" %}
 ```js
 // Create an array for storing AV.Objects
-var objects = [];
+const objects = [];
 
 // Batch create and update
 AV.Object.saveAll(objects);
@@ -1379,7 +1379,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 query.find().then(function (todos) {
   // Get a collection of todos to work on
   todos.forEach(function (todo) {
@@ -1510,12 +1510,12 @@ AVObject *comment = [[AVObject alloc] initWithClassName:@"Comment"];
 {% if platform_name === "JavaScript" %}
 ```js
 // Create a post
-var post = new AV.Object('Post');
+const post = new AV.Object('Post');
 post.set('title', 'I am starving!');
 post.set('content', 'Hmmm, where should I go for lunch?');
 
 // Create a comment
-var comment = new AV.Object('Comment');
+const comment = new AV.Object('Comment');
 comment.set('content', 'KFC is the best!');
 
 // Add the post as a property of the comment
@@ -1614,7 +1614,7 @@ AVObject *post = [AVObject objectWithClassName:@"Post" objectId:@"57328ca079bc44
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var post = AV.Object.createWithoutData('Post', '57328ca079bc44005c2472d0');
+const post = AV.Object.createWithoutData('Post', '57328ca079bc44005c2472d0');
 comment.set('post', post);
 ```
 {% endif %}
@@ -1691,7 +1691,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Student"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Student');
+const query = new AV.Query('Student');
 query.equalTo('lastName', 'Smith');
 query.find().then(function (students) {
   // students is an array of Student objects satisfying conditions
@@ -1968,7 +1968,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 query.equalTo('priority', 2);
 query.first().then(function (todo) {
   // todo is the first Todo object satisfying conditions
@@ -2070,7 +2070,7 @@ query.skip = 20;
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 query.equalTo('priority', 2);
 query.limit(10);
 query.skip(20);
@@ -2287,8 +2287,8 @@ Ming Li | China
 The following code looks for all the students who are from English-speaking countries:
 
 ```js
-var studentQuery = new AV.Query('Student');
-var countryQuery = new AV.Query('Country');
+const studentQuery = new AV.Query('Student');
+const countryQuery = new AV.Query('Country');
 // Get all English-speaking countries
 countryQuery.equalTo('language', 'English');
 // Match Student's nationality with Country's name
@@ -2314,12 +2314,12 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 query.select(['title', 'content']);
 query.first().then(function (todo) {
-  var title = todo.get('title'); // √
-  var content = todo.get('content'); // √
-  var notes = todo.get('notes'); // undefined
+  const title = todo.get('title'); // √
+  const content = todo.get('content'); // √
+  const notes = todo.get('notes'); // undefined
 });
 ```
 {% endif %}
@@ -2401,7 +2401,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 // SQL equivalent: title LIKE 'lunch%'
 query.startsWith('title', 'lunch');
 ```
@@ -2447,7 +2447,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 // SQL equivalent: title LIKE '%lunch%'
 query.contains('title', 'lunch');
 ```
@@ -2497,9 +2497,9 @@ If you are looking for string values that do not contain a particular string, us
 </code></pre>
 {% endif %}
 {% if platform_name === "JavaScript" %}
-<pre><code class="lang-js">var query = new AV.Query('Todo');
+<pre><code class="lang-js">const query = new AV.Query('Todo');
 // 'title' without 'ticket' (case-insensitive)
-var regExp = new RegExp('{{ regex(true) | safe }}, 'i');
+const regExp = new RegExp('{{ regex(true) | safe }}, 'i');
 query.matches('title', regExp);
 </code></pre>
 {% endif %}
@@ -2665,7 +2665,7 @@ AVQuery *priorityOneOrTwo = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObj
 {% if platform_name === "JavaScript" %}
 ```js
 // Single query
-var priorityOneOrTwo = new AV.Query('Todo');
+const priorityOneOrTwo = new AV.Query('Todo');
 priorityOneOrTwo.containedIn('priority', [1, 2]);
 // Mission completed :)
 
@@ -2674,13 +2674,13 @@ priorityOneOrTwo.containedIn('priority', [1, 2]);
 // ---------------
 
 // Multiple queries
-var priorityOne = new AV.Query('Todo');
+const priorityOne = new AV.Query('Todo');
 priorityOne.equalTo('priority', 1);
 
-var priorityTwo = new AV.Query('Todo');
+const priorityTwo = new AV.Query('Todo');
 priorityTwo.equalTo('priority', 2);
 
-var priorityOneOrTwo = AV.Query.or(priorityOne, priorityTwo);
+const priorityOneOrTwo = AV.Query.or(priorityOne, priorityTwo);
 // Kind of verbose :(
 ```
 {% endif %}
@@ -2794,8 +2794,8 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var post = AV.Object.createWithoutData('Post', '57328ca079bc44005c2472d0');
-var query = new AV.Query('Comment');
+const post = AV.Object.createWithoutData('Post', '57328ca079bc44005c2472d0');
+const query = new AV.Query('Comment');
 query.equalTo('post', post);
 query.find().then(function (comments) {
   // comments contains the comments for the post
@@ -2864,10 +2864,10 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var innerQuery = new AV.Query('Post');
+const innerQuery = new AV.Query('Post');
 innerQuery.exists('image');
 
-var query = new AV.Query('Comment');
+const query = new AV.Query('Comment');
 query.matchesQuery('post', innerQuery);
 ```
 {% endif %}
@@ -2936,7 +2936,7 @@ query.limit = 10;
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Comment');
+const query = new AV.Query('Comment');
 
 // Retrieve the most recent ones
 query.descending('createdAt');
@@ -2951,7 +2951,7 @@ query.find().then(function (comments) {
   // comments contains the last 10 comments including the post associated with each
   comments.forEach(function (comment) {
     // This does not require a network access
-    var post = comment.get('post');
+    const post = comment.get('post');
   });
 });
 ```
@@ -3147,7 +3147,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 query.equalTo('isComplete', true);
 query.count().then(function (count) {
   console.log(count + " todos completed.");
@@ -3216,13 +3216,13 @@ AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:priori
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var priorityQuery = new AV.Query('Todo');
+const priorityQuery = new AV.Query('Todo');
 priorityQuery.greaterThanOrEqualTo('priority', 3);
 
-var isCompleteQuery = new AV.Query('Todo');
+const isCompleteQuery = new AV.Query('Todo');
 isCompleteQuery.equalTo('isComplete', true);
 
-var query = AV.Query.or(priorityQuery, isCompleteQuery);
+const query = AV.Query.or(priorityQuery, isCompleteQuery);
 ```
 {% endif %}
 {% if platform_name === "Python" %}
@@ -3299,13 +3299,13 @@ AVQuery *query = [AVQuery andQueryWithSubqueries:[NSArray arrayWithObjects:start
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var startDateQuery = new AV.Query('Todo');
+const startDateQuery = new AV.Query('Todo');
 startDateQuery.greaterThanOrEqualTo('createdAt', new Date('2016-11-13 00:00:00'));
 
-var endDateQuery = new AV.Query('Todo');
+const endDateQuery = new AV.Query('Todo');
 endDateQuery.lessThan('createdAt', new Date('2016-12-03 00:00:00'));
 
-var query = AV.Query.and(startDateQuery, endDateQuery);
+const query = AV.Query.and(startDateQuery, endDateQuery);
 ```
 {% endif %}
 {% if platform_name === "Python" %}
@@ -3397,18 +3397,18 @@ AVQuery *query = [AVQuery andQueryWithSubqueries:[NSArray arrayWithObjects:creat
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var createdAtQuery = new AV.Query('Todo');
+const createdAtQuery = new AV.Query('Todo');
 createdAtQuery.greaterThanOrEqualTo('createdAt', new Date('2018-04-30'));
 createdAtQuery.lessThan('createdAt', new Date('2018-05-01'));
 
-var locationQuery = new AV.Query('Todo');
+const locationQuery = new AV.Query('Todo');
 locationQuery.doesNotExist('location');
 
-var priorityQuery = new AV.Query('Todo');
+const priorityQuery = new AV.Query('Todo');
 priorityQuery.equalTo('priority', 3);
 
-var orQuery = AV.Query.or(locationQuery, priorityQuery);
-var query = AV.Query.and(createdAtQuery, orQuery);
+const orQuery = AV.Query.or(locationQuery, priorityQuery);
+const query = AV.Query.and(createdAtQuery, orQuery);
 ```
 {% endif %}
 {% if platform_name === "Python" %}
@@ -3534,7 +3534,7 @@ See [Installing SDK](#installing-sdk) for more details.
 {% if platform_name === "JavaScript" %}
 ```js
 // No need to require leancloud-storage if the following line is present
-var AV = require('leancloud-storage/live-query');
+const AV = require('leancloud-storage/live-query');
 ```
 
 Or load it with the following `<script>` tag:
@@ -3579,7 +3579,7 @@ self.liveQuery.delegate = self;
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 query.subscribe().then(function (liveQuery) {
   // Query becomes live after getting a subscription
 });
@@ -3623,7 +3623,7 @@ self.liveQuery.delegate = self;
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 query.subscribe().then(function (liveQuery) {
   liveQuery.on('create', function (newTodo) {
     console.log(newTodo.get('title')); // Update Portfolio
@@ -3960,16 +3960,16 @@ AVFile *file = [AVFile fileWithData:data name:@"resume.txt"];
 You can create a file from a base64-encoded string:
 
 ```js
-var data = { base64: 'TGVhbkNsb3Vk' };
+const data = { base64: 'TGVhbkNsb3Vk' };
 // resume.txt is the file name
-var file = new AV.File('resume.txt', data);
+const file = new AV.File('resume.txt', data);
 ```
 
 You can also create a file from an array of byte values:
 
 ```js
-var data = [0x4c, 0x65, 0x61, 0x6e, 0x43, 0x6c, 0x6f, 0x75, 0x64];
-var file = new AV.File('resume.txt', data);
+const data = [0x4c, 0x65, 0x61, 0x6e, 0x43, 0x6c, 0x6f, 0x75, 0x64];
+const file = new AV.File('resume.txt', data);
 ```
 
 What's more, you can also create a file from a Blob (in Browser), and Buffer or Stream (in Node.js).
@@ -3977,8 +3977,8 @@ What's more, you can also create a file from a Blob (in Browser), and Buffer or
 For React Native applications, you can create a file from a local path:
 
 ```js
-var data = { blob: { uri: localFileUri } }
-var file = new AV.File('resume.txt', data)
+const data = { blob: { uri: localFileUri } }
+const file = new AV.File('resume.txt', data)
 ```
 
 {% endif %}
@@ -4035,7 +4035,7 @@ AVFile *file = [AVFile fileWithRemoteURL:[NSURL URLWithString:@"https://leanclou
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var file = AV.File.withURL(
+const file = AV.File.withURL(
   'logo.png',
   'https://leancloud.cn/assets/imgs/press/Logo%20-%20Blue%20Padding.a60eb2fa.png'
 );
@@ -4078,7 +4078,7 @@ LeanCloud will auto-detect the type of the file you are uploading based on the f
 
 {% if platform_name === "JavaScript" %}
 ```js
-var file = new AV.File('resume.txt', data, 'application/json');
+const file = new AV.File('resume.txt', data, 'application/json');
 ```
 {% endif %}
 {% if platform_name === "Python" %}
@@ -4126,10 +4126,10 @@ AVFile *file = [AVFile fileWithLocalPath:imagePath error:&error];
 Then get a reference to that file in a click handler:
 
 ```js
-var avatarUpload = document.getElementById('avatar-upload');
+const avatarUpload = document.getElementById('avatar-upload');
 if (avatarUpload.files.length) {
-  var localFile = avatarUpload.files[0];
-  var file = new AV.File('avatar.jpg', localFile);
+  const localFile = avatarUpload.files[0];
+  const file = new AV.File('avatar.jpg', localFile);
 }
 ```
 {% endif %}
@@ -4235,8 +4235,8 @@ A file successfully uploaded can be found in the `_File` class and cannot be mod
 To preserve original file name in the resulting url, pass the `keepFileName` parameter to the `save` method:
 
 ```js
-var data = [0x4c, 0x65, 0x61, 0x6e, 0x43, 0x6c, 0x6f, 0x75, 0x64];
-var file = new AV.File('resume.txt', data);
+const data = [0x4c, 0x65, 0x61, 0x6e, 0x43, 0x6c, 0x6f, 0x75, 0x64];
+const file = new AV.File('resume.txt', data);
 file.save({ keepFileName: true }).then(function (file) {
   console.log(file.url); // https://your-file-domain/5112b94e0536e995741c/resume.txt
 }, function (error) {
@@ -4258,8 +4258,8 @@ AVObject *todo = [AVObject objectWithClassName:@"Todo"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var Todo = AV.Object.extend('Todo');
-var todo = new Todo();
+const Todo = AV.Object.extend('Todo');
+const todo = new Todo();
 todo.set('title', 'Get Cakes');
 // attachments is an Array field
 todo.add('attachments', file);
@@ -4329,7 +4329,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% if platform_name === "JavaScript" %}
 ```js
 // Get all todos with the same title and contain attachments
-var query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 query.equalTo('title', 'Get Cakes');
 query.exists('attachments');
 
@@ -4339,7 +4339,7 @@ query.include('attachments');
 query.find().then(function (todos) {
   todos.forEach(function (todo) {
     // Get attachments array for each todo
-    var attachments = todo.get('attachments');
+    const attachments = todo.get('attachments');
     attachments.forEach(function (attachment) {
       // Each attachment is an AV.File instance
       console.log('URL of the attachment: ', attachment.get('url'));
@@ -4455,13 +4455,13 @@ When uploading a file, you can attach additional properties to it with `metaData
 file.metaData('author', 'LeanCloud');
 file.save().then(function (file) {
   // Get all metadata
-  var metadata = file.metaData();
+  const metadata = file.metaData();
   // Get author
-  var author = file.metaData('author');
+  const author = file.metaData('author');
   // Get file name
-  var fileName = file.get('name');
+  const fileName = file.get('name');
   // Get size (not available for files created from base64-encoded strings or URLs)
-  var size = file.size();
+  const size = file.size();
 });
 ```
 {% endif %}
@@ -4556,7 +4556,7 @@ AVFile *file = [AVFile getFileWithObjectId:@"552e0a27e4b0643b709e891e"];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var file = AV.File.createWithoutData('552e0a27e4b0643b709e891e');
+const file = AV.File.createWithoutData('552e0a27e4b0643b709e891e');
 file.destroy();
 ```
 {% endif %}
@@ -4636,12 +4636,12 @@ You can set up your own CDN to improve the speed your users access the files sto
 Each asynchronous method in LeanCloud JavaScript SDK returns a `Promise` which can be used to handle the completion and exception of the method. The example below updates an `AV.Object` after it is being queried:
 
 ```js
-let query = new AV.Query('Todo');
+const query = new AV.Query('Todo');
 query.equalTo('priority', 1);
 // find is asynchronous which gives back a Promise that then can be called on
 query.find().then(function (todos) {
   // Returns a list of objects
-  let todo = todos[0];
+  const todo = todos[0];
   todo.set('notes', 'Needs to be finished today.');
   // save is also asynchronous which gives back a Promise that you can return here and chain another Promise afterwards
   return todo.save();
@@ -4684,7 +4684,7 @@ Promise allows you to connect asynchronous requests elegantly according to the o
 
 ```js
 // Add contents to the page following the order of chapters
-let chapterIds = [
+const chapterIds = [
   '584e1c408e450a006c676162', // Chapter One
   '584e1c43128fe10058b01cf5', // Chapter Two
   '581aff915bbb500059ca8d0b'  // Chapter Three
@@ -4738,10 +4738,10 @@ new AV.Query('Chapter').get(chapterIds[0]).then(function (chapterOne) {
 ```js
 async function example() {
   try {
-    let query = new AV.Query('Todo');
+    const query = new AV.Query('Todo');
     query.equalTo('priority', 1);
-    let todos = await query.find();
-    let todo = todos[0];
+    const todos = await query.find();
+    const todo = todos[0];
     todo.set('notes', 'Needs to be finished today.');
     return await todo.save();
   } catch (error) {
@@ -4768,11 +4768,11 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var point = new AV.GeoPoint(39.9, 116.4);
+const point = new AV.GeoPoint(39.9, 116.4);
 
 // Other ways of creating the same AV.GeoPoint
-var point = new AV.GeoPoint([39.9, 116.4]);
-var point = new AV.GeoPoint({ latitude: 39.9, longitude: 116.4 });
+const point = new AV.GeoPoint([39.9, 116.4]);
+const point = new AV.GeoPoint({ latitude: 39.9, longitude: 116.4 });
 ```
 {% endif %}
 {% if platform_name === "Python" %}
@@ -4848,8 +4848,8 @@ query.limit = 10;
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
-var point = new AV.GeoPoint(39.9, 116.4);
+const query = new AV.Query('Todo');
+const point = new AV.GeoPoint(39.9, 116.4);
 query.near('location', point);
 
 // Limit to 10 results
@@ -4939,9 +4939,9 @@ AVGeoPoint *northeast = [AVGeoPoint geoPointWithLatitude:40 longitude:118];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var query = new AV.Query('Todo');
-var southwest = new AV.GeoPoint(30, 115);
-var northeast = new AV.GeoPoint(40, 118);
+const query = new AV.Query('Todo');
+const southwest = new AV.GeoPoint(30, 115);
+const northeast = new AV.GeoPoint(40, 118);
 query.withinGeoBox('location', southwest, northeast);
 ```
 {% endif %}
@@ -5041,7 +5041,7 @@ user.mobilePhoneNumber = @"+19490008888";
 {% if platform_name === "JavaScript" %}
 ```js
 // Create an instance
-var user = new AV.User();
+const user = new AV.User();
 
 // Same as user.set('username', 'Tom')
 user.setUsername('Tom');
@@ -5777,7 +5777,7 @@ if (currentUser != nil) {
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var currentUser = AV.User.current();
+const currentUser = AV.User.current();
 if (currentUser) {
   // Redirect to the home page
 } else {
@@ -5837,7 +5837,7 @@ AVUser *currentUser = [AVUser currentUser];
 AV.User.logOut();
 
 // currentUser becomes null
-var currentUser = AV.User.current();
+const currentUser = AV.User.current();
 ```
 {% endif %}
 {% if platform_name === "Python" %}
@@ -5968,7 +5968,7 @@ NSString *token = currentUser.sessionToken;
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var currentUser = AV.User.current();
+const currentUser = AV.User.current();
 currentUser.isAuthenticated().then(function (authenticated) {
   if (authenticated) {
     // The session token is valid
@@ -6198,7 +6198,7 @@ AVQuery *userQuery = [AVUser query];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var userQuery = new AV.Query('_User');
+const userQuery = new AV.Query('_User');
 ```
 {% endif %}
 {% if platform_name === "Python" %}
@@ -6248,14 +6248,14 @@ AVUser *author = [AVUser currentUser];
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var Book = AV.Object.extend('Book');
-var book = new Book();
-var author = AV.User.current();
+const Book = AV.Object.extend('Book');
+const book = new Book();
+const author = AV.User.current();
 book.set('title', 'My Fifth Book');
 book.set('author', author);
 book.save().then(function (book) {
   // Find all the books by the same author
-  var query = new AV.Query('Book');
+  const query = new AV.Query('Book');
   query.equalTo('author', author);
   query.find().then(function (books) {
     // books is an array of Book objects by the same author
@@ -6391,17 +6391,17 @@ The code below illustrates this security policy:
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var user = AV.User.logIn('Tom', 'cat!@#123').then(function (user) {
+const user = AV.User.logIn('Tom', 'cat!@#123').then(function (user) {
   // Attempt to change username
   user.set('username', 'Jerry');
   // Password is hashed and an empty string will be returned
-  var password = user.get('password');
+  const password = user.get('password');
   // Save changes
   user.save().then(function (user) {
     // This will work since the user is authenticated
 
     // Get the user with a non-authenticated method
-    var query = new AV.Query('_User');
+    const query = new AV.Query('_User');
     query.get(user.objectId).then(function (unauthenticatedUser) {
       unauthenticatedUser.set('username', 'Toodle');
       unauthenticatedUser.save().then(function (unauthenticatedUser) { }, function (error) {
@@ -6538,7 +6538,7 @@ LeanCloud allows you to link your users with services like GitHub, Twitter, and 
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var authData = {
+const authData = {
   // Required
   uid:           'UID',
   access_token:  'ACCESS_TOKEN',
@@ -6740,7 +6740,7 @@ user.password = @"cat!@#123";
 {% if platform_name === "JavaScript" %}
 ```js
 // currentUser is the anonymous user
-var currentUser = AV.User.current();
+const currentUser = AV.User.current();
 
 user.setUsername('Tom');
 user.setPassword('cat!@#123');
@@ -6787,7 +6787,7 @@ if (currentUser.isAnonymous) {
 {% endif %}
 {% if platform_name === "JavaScript" %}
 ```js
-var currentUser = AV.User.current();
+const currentUser = AV.User.current();
 if (currentUser.isAnonymous()) {
   // currentUser is anonymous
 } else {
@@ -6839,7 +6839,7 @@ AV.Push.send({
 Here is another example sending a push notification to a specific user:
 
 ```js
-var query = new AV.Query('_Installation');
+const query = new AV.Query('_Installation');
 query.equalTo('installationId', installationId);
 AV.Push.send({
   where: query,
