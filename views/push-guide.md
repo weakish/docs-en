@@ -328,6 +328,7 @@ prod | optional |**Only applicable to iOS devices.** When using Token Authentica
 topic | optional | **Only applicable when pushing to iOS devices using Token Authentication.** The APNs Topic is required for Token Authentication. iOS SDKs will automatically use the bundle ID of the iOS application as `apnsTopic`. However, you have to manually specify them under the following circumstances: 1. The iOS SDK version is earlier than v4.2.0; 2. Not using iOS SDK (for example, you are developing a React Native application); 3. Using a `topic` different from the bundle ID.
 apns_team_id | optional | **Only applicable when pushing to iOS devices using Token Authentication.**  The Team ID is required for Token Authentication. Generally, if there are no duplicated APNs Topics for all of your Team IDs, or if you have specified the `apnsTeamId` attribute of the installation beforehand, LeanCloud will automatically send push notifications with the Team ID matched. Otherwise, you will need to manually specify this parameter and ensure all the targeted devices have the specified Team ID.
 flow_control | optional | Targets per second. If specified, LeanCloud will throttle the pushes. The minimum value is 1000. If a value less than 1000 is specified, it will be treated as 1000.
+_notificationChannel | optional | Android channel id. Required for Android 8.0+.
 
 Below are examples of some common use cases.
 Refer to [Queries](rest_api.html#queries) section for more information.
