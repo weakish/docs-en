@@ -2000,7 +2000,7 @@ To do so, you need to use a specific schema of `authData`, with the following ke
 
 - `unionid`: the user's UnionID;
 - `main_account`: `true` indicates current authenticating information will be used as the main account;
-- `platform`: the platform of the UnionID, whose name can be specified by the developer, such as `weibo`, `weixn`, `qq` and so on.
+- `platform`: the platform of the UnionID, whose name can be specified by the developer, such as `weibo`, `weixin`, `qq` and so on.
 
 Let's look at an example of WeChat UnionID.
 
